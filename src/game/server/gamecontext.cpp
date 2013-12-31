@@ -116,7 +116,11 @@ class CCharacter *CGameContext::GetPlayerChar(int ClientID)
 	return m_apPlayers[ClientID]->GetCharacter();
 }
 
+<<<<<<< HEAD
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
+=======
+void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount, int64_t Mask)
+>>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	float a = 3 * 3.14159f / 2 + Angle;
 	//float a = get_angle(dir);
@@ -135,7 +139,11 @@ void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
 	}
 }
 
+<<<<<<< HEAD
 void CGameContext::CreateHammerHit(vec2 Pos)
+=======
+void CGameContext::CreateHammerHit(vec2 Pos, int64_t Mask)
+>>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	// create the event
 	CNetEvent_HammerHit *pEvent = (CNetEvent_HammerHit *)m_Events.Create(NETEVENTTYPE_HAMMERHIT, sizeof(CNetEvent_HammerHit));
@@ -177,7 +185,11 @@ void CGameContext::CreateLoveEvent(vec2 Pos)
 	m_LoveDots.add(State);
 }
 
+<<<<<<< HEAD
 void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage, int TakeDamageMode)
+=======
+void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage, int ActivatedTeam, int64_t Mask)
+>>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	// create the event
 	CNetEvent_Explosion *pEvent = (CNetEvent_Explosion *)m_Events.Create(NETEVENTTYPE_EXPLOSION, sizeof(CNetEvent_Explosion));
@@ -266,7 +278,11 @@ void create_smoke(vec2 Pos)
 	}
 }*/
 
+<<<<<<< HEAD
 void CGameContext::CreatePlayerSpawn(vec2 Pos)
+=======
+void CGameContext::CreatePlayerSpawn(vec2 Pos, int64_t Mask)
+>>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	// create the event
 	CNetEvent_Spawn *ev = (CNetEvent_Spawn *)m_Events.Create(NETEVENTTYPE_SPAWN, sizeof(CNetEvent_Spawn));
@@ -277,7 +293,11 @@ void CGameContext::CreatePlayerSpawn(vec2 Pos)
 	}
 }
 
+<<<<<<< HEAD
 void CGameContext::CreateDeath(vec2 Pos, int ClientID)
+=======
+void CGameContext::CreateDeath(vec2 Pos, int ClientID, int64_t Mask)
+>>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	// create the event
 	CNetEvent_Death *pEvent = (CNetEvent_Death *)m_Events.Create(NETEVENTTYPE_DEATH, sizeof(CNetEvent_Death));
@@ -289,7 +309,7 @@ void CGameContext::CreateDeath(vec2 Pos, int ClientID)
 	}
 }
 
-void CGameContext::CreateSound(vec2 Pos, int Sound, int Mask)
+void CGameContext::CreateSound(vec2 Pos, int Sound, int64_t Mask)
 {
 	if (Sound < 0)
 		return;
@@ -3789,3 +3809,44 @@ const char *CGameContext::Version() { return GAME_VERSION; }
 const char *CGameContext::NetVersion() { return GAME_NETVERSION; }
 
 IGameServer *CreateGameServer() { return new CGameContext; }
+
+void CGameContext::List(int ClientID, const char* filter)
+{
+	int total = 0;
+	char buf[256];
+	int bufcnt = 0;
+	if (filter[0])
+		str_format(buf, sizeof(buf), "Listing players with \"%s\" in name:", filter);
+	else
+		str_format(buf, sizeof(buf), "Listing all players:", filter);
+	SendChatTarget(ClientID, buf);
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			total++;
+			const char* name = Server()->ClientName(i);
+			if (str_find_nocase(name, filter) == NULL)
+				continue;
+			if (bufcnt + str_length(name) + 4 > 256)
+			{
+				SendChatTarget(ClientID, buf);
+				bufcnt = 0;
+			}
+			if (bufcnt != 0)
+			{
+				str_format(&buf[bufcnt], sizeof(buf) - bufcnt, ", %s", name);
+				bufcnt += 2 + str_length(name);
+			}
+			else
+			{
+				str_format(&buf[bufcnt], sizeof(buf) - bufcnt, "%s", name);
+				bufcnt += str_length(name);
+			}
+		}
+	}
+	if (bufcnt != 0)
+		SendChatTarget(ClientID, buf);
+	str_format(buf, sizeof(buf), "%d players online", total);
+	SendChatTarget(ClientID, buf);
+}

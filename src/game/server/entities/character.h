@@ -204,6 +204,7 @@ public:
 	int m_NinjaVelocityBuff;
 	int m_NinjaStrengthBuff;
 	int m_NinjaAmmoBuff;
+	int m_RefreshTime;
 
 public:
 	void DestroyChildEntities();

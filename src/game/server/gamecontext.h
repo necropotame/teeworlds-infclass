@@ -19,6 +19,14 @@
 #include "gameworld.h"
 #include "player.h"
 
+#ifdef _MSC_VER
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
 /*
 	Tick
 		Game Context (CGameContext::tick)
@@ -166,6 +174,7 @@ public:
 	void SendEmoticon(int ClientID, int Emoticon);
 	void SendWeaponPickup(int ClientID, int Weapon);
 
+	void List(int ClientID, const char* filter);
 
 	//
 	void CheckPureTuning();
@@ -253,6 +262,8 @@ private:
 	int m_VoteBanClientID;
 	
 	class CBroadcastState
+	static void ConList(IConsole::IResult *pResult, void *pUserData);
+
 	{
 	public:
 		int m_NoChangeTick;
@@ -304,8 +315,8 @@ public:
 /* INFECTION MODIFICATION END *****************************************/
 };
 
-inline int CmaskAll() { return -1; }
-inline int CmaskOne(int ClientID) { return 1<<ClientID; }
-inline int CmaskAllExceptOne(int ClientID) { return 0x7fffffff^CmaskOne(ClientID); }
-inline bool CmaskIsSet(int Mask, int ClientID) { return (Mask&CmaskOne(ClientID)) != 0; }
+inline int64_t CmaskAll() { return -1LL; }
+inline int64_t CmaskOne(int ClientID) { return 1LL<<ClientID; }
+inline int64_t CmaskAllExceptOne(int ClientID) { return CmaskAll()^CmaskOne(ClientID); }
+inline bool CmaskIsSet(int64_t Mask, int ClientID) { return (Mask&CmaskOne(ClientID)) != 0; }
 #endif

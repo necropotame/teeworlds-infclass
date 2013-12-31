@@ -340,4 +340,45 @@ Messages = [
 		NetStringStrict("m_Value"),
 		NetStringStrict("m_Reason"),
 	]),
+	
+	NetMessage("Cl_IsDDRace", []),
+
+	NetMessage("Sv_DDRaceTime", [
+		NetIntAny("m_Time"),
+		NetIntAny("m_Check"),
+		NetIntRange("m_Finish", 0, 1),
+	]),
+	
+	NetMessage("Sv_Record", [
+		NetIntAny("m_ServerTimeBest"),
+		NetIntAny("m_PlayerTimeBest"),
+	]),
+	
+	NetMessage("Sv_PlayerTime", [
+		NetIntAny("m_Time"),
+		NetIntRange("m_ClientID", 0, 'MAX_CLIENTS-1'),
+	]),
+	
+	NetMessage("Cl_TeamsState", [
+		NetIntAny("m_Tee0"),
+		NetIntAny("m_Tee1"),
+		NetIntAny("m_Tee2"),
+		NetIntAny("m_Tee3"),
+		NetIntAny("m_Tee4"),
+		NetIntAny("m_Tee5"),
+		NetIntAny("m_Tee6"),
+		NetIntAny("m_Tee7"),
+		NetIntAny("m_Tee8"),
+		NetIntAny("m_Tee9"),
+		NetIntAny("m_Tee10"),
+		NetIntAny("m_Tee11"),
+		NetIntAny("m_Tee12"),
+		NetIntAny("m_Tee13"),
+		NetIntAny("m_Tee14"),
+		NetIntAny("m_Tee15"),
+	]),
+	NetMessage("Cl_ShowOthers", [
+		NetBool("m_Show"),
+	]),
+	NetMessage("Cl_IsDDRace64", []),
 ]
