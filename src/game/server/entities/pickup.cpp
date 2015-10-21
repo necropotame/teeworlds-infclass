@@ -89,6 +89,9 @@ void CPickup::Tick()
 				break;
 
 			case POWERUP_NINJA:
+/* INFECTION MODIFICATION START ***************************************/
+				if(!pChr->IsInfected())
+/* INFECTION MODIFICATION END *****************************************/
 				{
 					// activate ninja on target player
 					pChr->GiveNinja();

@@ -29,6 +29,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 	// do scoreing
 	if(!pKiller || Weapon == WEAPON_GAME)
 		return 0;
+		
 	if(pKiller == pVictim->GetPlayer())
 	{
 		if(pVictim->GetClass() != PLAYERCLASS_BOOMER)
@@ -36,15 +37,14 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			pVictim->GetPlayer()->m_Score--; // suicide
 		}
 	}
-	else
+	else if(!pKiller->IsInfected())
 	{
-		if(IsTeamplay() && pVictim->GetPlayer()->GetTeam() == pKiller->GetTeam())
-			pKiller->m_Score--; // teamkill
-		else
-			pKiller->m_Score++; // normal kill
+		pKiller->m_Score++; // normal kill
 	}
+	
 	if(Weapon == WEAPON_SELF)
 		pVictim->GetPlayer()->m_RespawnTick = Server()->Tick()+Server()->TickSpeed()*3.0f;
+		
 	return 0;
 }
 

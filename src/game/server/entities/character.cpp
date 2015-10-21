@@ -885,7 +885,13 @@ void CCharacter::Die(int Killer, int Weapon)
 		GameServer()->CreateExplosion(m_Pos + vec2(0, -32), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
 	}
 	
-	m_pPlayer->StartInfection();
+	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[Killer];
+	if(pKillerPlayer->IsInfected() && !m_pPlayer->IsInfected())
+	{
+		m_pPlayer->StartInfection();
+		pKillerPlayer->m_Score += 2;
+	}
+	
 /* INFECTION MODIFICATION END *****************************************/
 }
 
