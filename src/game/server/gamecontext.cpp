@@ -652,6 +652,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 
 			pPlayer->m_LastChat = Server()->Tick();
 			
+			
+/* INFECTION MODIFICATION START ***************************************/
 			if(
 				(str_comp_nocase(pMsg->m_pMessage,"\\info") == 0) ||
 				(str_comp_nocase(pMsg->m_pMessage,"/info") == 0)
@@ -668,16 +670,54 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				(str_comp_nocase(pMsg->m_pMessage,"/cmdlist") == 0)
 			)
 			{
-				CNetMsg_Sv_Chat Msg;
-				Msg.m_Team = 0;
-				Msg.m_ClientID = -1;
-				Msg.m_pMessage = "List of commands\n\\info : Information about this mod";
-				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				CNetMsg_Sv_Chat Msg1;
+				Msg1.m_Team = 0;
+				Msg1.m_ClientID = -1;
+				Msg1.m_pMessage = "List of commands";
+				Server()->SendPackMsg(&Msg1, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				CNetMsg_Sv_Chat Msg2;
+				Msg2.m_Team = 0;
+				Msg2.m_ClientID = -1;
+				Msg2.m_pMessage = "/info : Information about this mod";
+				Server()->SendPackMsg(&Msg2, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				CNetMsg_Sv_Chat Msg3;
+				Msg3.m_Team = 0;
+				Msg3.m_ClientID = -1;
+				Msg3.m_pMessage = "/help : Rules of this gametype";
+				Server()->SendPackMsg(&Msg3, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\help") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/help") == 0)
+			)
+			{
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "Humans start by choosing their class";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "Humans can build structures using the hammer";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "When a human taken damage from a zombie, he became infected";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
 			}
 			else
 			{
 				SendChat(ClientID, Team, pMsg->m_pMessage);
 			}
+/* INFECTION MODIFICATION END *****************************************/
 		}
 		else if(MsgID == NETMSGTYPE_CL_CALLVOTE)
 		{
