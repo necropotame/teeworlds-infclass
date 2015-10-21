@@ -24,6 +24,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	
 /* INFECTION MODIFICATION START ***************************************/
 	m_class = PLAYERCLASS_NONE;
+	StartInfection();
 /* INFECTION MODIFICATION END *****************************************/
 }
 
