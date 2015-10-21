@@ -23,6 +23,11 @@ public:
 		ENTTYPE_PICKUP,
 		ENTTYPE_FLAG,
 		ENTTYPE_CHARACTER,
+/* INFECTION MODIFICATION START ***************************************/
+		ENTTYPE_BARRIER,
+		ENTTYPE_BOMB,
+		ENTTYPE_CLASSCHOOSER,
+/* INFECTION MODIFICATION END *****************************************/
 		NUM_ENTTYPES
 	};
 

@@ -21,6 +21,10 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_SpectatorID = SPEC_FREEVIEW;
 	m_LastActionTick = Server()->Tick();
 	m_TeamChangeTick = Server()->Tick();
+	
+/* INFECTION MODIFICATION START ***************************************/
+	m_class = PLAYERCLASS_NONE;
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 CPlayer::~CPlayer()
@@ -290,3 +294,97 @@ void CPlayer::TryRespawn()
 	m_pCharacter->Spawn(this, SpawnPos);
 	GameServer()->CreatePlayerSpawn(SpawnPos);
 }
+
+/* INFECTION MODIFICATION START ***************************************/
+int CPlayer::GetClass()
+{
+	return m_class;
+}
+
+void CPlayer::SetClassSkin(int newClass)
+{
+	switch(newClass)
+	{
+		case PLAYERCLASS_ENGINEER:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "limekitty", sizeof(m_TeeInfos.m_SkinName));
+			//~ m_TeeInfos.m_ColorBody = 1169488;
+			//~ m_TeeInfos.m_ColorFeet = 458752;
+			Server()->SetClientClan(GetCID(), "Engineer");
+			break;
+		case PLAYERCLASS_SOLDIER:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "brownbear", sizeof(m_TeeInfos.m_SkinName));
+			//~ m_TeeInfos.m_ColorBody = 1169488;
+			//~ m_TeeInfos.m_ColorFeet = 458752;
+			Server()->SetClientClan(GetCID(), "Soldier");
+			break;
+		case PLAYERCLASS_MEDIC:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
+			//~ m_TeeInfos.m_ColorBody = 1169488;
+			//~ m_TeeInfos.m_ColorFeet = 458752;
+			Server()->SetClientClan(GetCID(), "Medic");
+			break;
+		case PLAYERCLASS_ZOMBIE:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			Server()->SetClientClan(GetCID(), "[Zombie]");
+			break;
+		case PLAYERCLASS_BOOMER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "saddo", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			Server()->SetClientClan(GetCID(), "[Boomer]");
+			break;
+		case PLAYERCLASS_HUNTER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "warpaint", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			Server()->SetClientClan(GetCID(), "[Hunter]");
+			break;
+		default:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
+			//~ m_TeeInfos.m_ColorBody = 1169488;
+			//~ m_TeeInfos.m_ColorFeet = 458752;
+			Server()->SetClientClan(GetCID(), "");
+	}
+}
+
+void CPlayer::SetClass(int newClass)
+{
+	if(m_class == newClass)
+		return;
+	
+	m_class = newClass;
+	
+	SetClassSkin(newClass);
+	
+	if(m_pCharacter)
+	{
+		m_pCharacter->SetClass(newClass);
+	}
+}
+
+void CPlayer::StartInfection()
+{
+	if(IsInfected())
+		return;
+	
+	int random = rand()%4;
+	
+	if(random == 0) SetClass(PLAYERCLASS_BOOMER);
+	else if(random == 1) SetClass(PLAYERCLASS_HUNTER);
+	else SetClass(PLAYERCLASS_ZOMBIE);
+}
+
+bool CPlayer::IsInfected() const
+{
+	return (m_class > END_HUMANCLASS);
+}
+/* INFECTION MODIFICATION END *****************************************/

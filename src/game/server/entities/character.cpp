@@ -45,10 +45,19 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_ProximityRadius = ms_PhysSize;
 	m_Health = 0;
 	m_Armor = 0;
+	
+/* INFECTION MODIFICATION START ***************************************/
+	m_AirJumpCounter = 0;
+	m_FirstShot = true;
+	
+	m_pClassChooser = 0;
+	m_pBarrier = 0;
+	m_pBomb = 0;
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 void CCharacter::Reset()
-{
+{	
 	Destroy();
 }
 
@@ -78,11 +87,24 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 
 	GameServer()->m_pController->OnCharacterSpawn(this);
 
+/* INFECTION MODIFICATION START ***************************************/
+	ClassSpawnAttributes();
+	DestroyChildEntities();
+	if(GetClass() == PLAYERCLASS_NONE)
+	{
+		OpenClassChooser();
+	}
+/* INFECTION MODIFICATION END *****************************************/
+
 	return true;
 }
 
 void CCharacter::Destroy()
 {
+/* INFECTION MODIFICATION START ***************************************/
+	DestroyChildEntities();
+/* INFECTION MODIFICATION END *****************************************/
+
 	GameServer()->m_World.m_Core.m_apCharacters[m_pPlayer->GetCID()] = 0;
 	m_Alive = false;
 }
@@ -247,6 +269,11 @@ void CCharacter::FireWeapon()
 	if(m_ReloadTimer != 0)
 		return;
 
+/* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() == PLAYERCLASS_NONE)
+		return;
+/* INFECTION MODIFICATION END *****************************************/
+
 	DoWeaponSwitch();
 	vec2 Direction = normalize(vec2(m_LatestInput.m_TargetX, m_LatestInput.m_TargetY));
 
@@ -285,42 +312,92 @@ void CCharacter::FireWeapon()
 	{
 		case WEAPON_HAMMER:
 		{
-			// reset objects Hit
-			m_NumObjectsHit = 0;
-			GameServer()->CreateSound(m_Pos, SOUND_HAMMER_FIRE);
-
-			CCharacter *apEnts[MAX_CLIENTS];
-			int Hits = 0;
-			int Num = GameServer()->m_World.FindEntities(ProjStartPos, m_ProximityRadius*0.5f, (CEntity**)apEnts,
-														MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
-
-			for (int i = 0; i < Num; ++i)
+/* INFECTION MODIFICATION START ***************************************/
+			if(GetClass() == PLAYERCLASS_ENGINEER)
 			{
-				CCharacter *pTarget = apEnts[i];
-
-				if ((pTarget == this) || GameServer()->Collision()->IntersectLine(ProjStartPos, pTarget->m_Pos, NULL, NULL))
-					continue;
-
-				// set his velocity to fast upward (for now)
-				if(length(pTarget->m_Pos-ProjStartPos) > 0.0f)
-					GameServer()->CreateHammerHit(pTarget->m_Pos-normalize(pTarget->m_Pos-ProjStartPos)*m_ProximityRadius*0.5f);
-				else
-					GameServer()->CreateHammerHit(ProjStartPos);
-
-				vec2 Dir;
-				if (length(pTarget->m_Pos - m_Pos) > 0.0f)
-					Dir = normalize(pTarget->m_Pos - m_Pos);
-				else
-					Dir = vec2(0.f, -1.f);
-
-				pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
-					m_pPlayer->GetCID(), m_ActiveWeapon);
-				Hits++;
+				if(m_pBarrier)
+				{
+					GameServer()->m_World.DestroyEntity(m_pBarrier);
+					m_pBarrier = 0;
+				}
+					
+				if(m_FirstShot)
+				{
+					m_FirstShot = false;
+					m_FirstShotCoord = m_Pos;
+				}
+				else if(distance(m_FirstShotCoord, m_Pos) > 10.0)
+				{
+					m_FirstShot = true;
+					
+					CBarrier *pBarrier = new CBarrier(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
+					m_pBarrier = pBarrier;
+					
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				}
 			}
+			else if(GetClass() == PLAYERCLASS_SOLDIER)
+			{
+				if(m_pBomb)
+				{
+					m_pBomb->Explode();
+				}
+				else
+				{
+					CBomb *pBomb = new CBomb(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
+					m_pBomb = pBomb;
+					
+					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+				}
+					
+			}
+			else if(GetClass() == PLAYERCLASS_BOOMER)
+			{
+				Die(m_pPlayer->GetCID(), WEAPON_WORLD);
+			}
+			else
+			{
+/* INFECTION MODIFICATION END *****************************************/
+				// reset objects Hit
+				m_NumObjectsHit = 0;
+				GameServer()->CreateSound(m_Pos, SOUND_HAMMER_FIRE);
 
-			// if we Hit anything, we have to wait for the reload
-			if(Hits)
-				m_ReloadTimer = Server()->TickSpeed()/3;
+				CCharacter *apEnts[MAX_CLIENTS];
+				int Hits = 0;
+				int Num = GameServer()->m_World.FindEntities(ProjStartPos, m_ProximityRadius*0.5f, (CEntity**)apEnts,
+															MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
+
+				for (int i = 0; i < Num; ++i)
+				{
+					CCharacter *pTarget = apEnts[i];
+
+					if ((pTarget == this) || GameServer()->Collision()->IntersectLine(ProjStartPos, pTarget->m_Pos, NULL, NULL))
+						continue;
+
+					// set his velocity to fast upward (for now)
+					if(length(pTarget->m_Pos-ProjStartPos) > 0.0f)
+						GameServer()->CreateHammerHit(pTarget->m_Pos-normalize(pTarget->m_Pos-ProjStartPos)*m_ProximityRadius*0.5f);
+					else
+						GameServer()->CreateHammerHit(ProjStartPos);
+
+					vec2 Dir;
+					if (length(pTarget->m_Pos - m_Pos) > 0.0f)
+						Dir = normalize(pTarget->m_Pos - m_Pos);
+					else
+						Dir = vec2(0.f, -1.f);
+
+					pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
+						m_pPlayer->GetCID(), m_ActiveWeapon);
+					Hits++;
+				}
+
+				// if we Hit anything, we have to wait for the reload
+				if(Hits)
+					m_ReloadTimer = Server()->TickSpeed()/3;
+					
+/* INFECTION MODIFICATION START ***************************************/
+			}
+/* INFECTION MODIFICATION END *****************************************/
 
 		} break;
 
@@ -469,9 +546,41 @@ void CCharacter::HandleWeapons()
 			m_aWeapons[m_ActiveWeapon].m_AmmoRegenStart = -1;
 		}
 	}
+	
+/* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() == PLAYERCLASS_ZOMBIE)
+	{
+		if(m_Core.m_HookedPlayer >= 0)
+		{
+			CCharacter *VictimChar = GameServer()->GetPlayerChar(m_Core.m_HookedPlayer);
+			if(VictimChar)
+			{
+				if(m_PoisonTick + Server()->TickSpeed()*0.5 < Server()->Tick())
+				{
+					m_PoisonTick = Server()->Tick();
+					VictimChar->TakeDamage(vec2(0.0f,0.0f), 1, m_pPlayer->GetCID(), WEAPON_NINJA);
+				}
+			}
+		}
+	}
+/* INFECTION MODIFICATION END *****************************************/
 
 	return;
 }
+
+/* INFECTION MODIFICATION START ***************************************/
+void CCharacter::RemoveAllGun()
+{
+	m_aWeapons[WEAPON_GUN].m_Got = false;
+	m_aWeapons[WEAPON_GUN].m_Ammo = 0;
+	m_aWeapons[WEAPON_RIFLE].m_Got = false;
+	m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
+	m_aWeapons[WEAPON_GRENADE].m_Got = false;
+	m_aWeapons[WEAPON_GRENADE].m_Ammo = 0;
+	m_aWeapons[WEAPON_SHOTGUN].m_Got = false;
+	m_aWeapons[WEAPON_SHOTGUN].m_Ammo = 0;
+}
+/* INFECTION MODIFICATION END *****************************************/
 
 bool CCharacter::GiveWeapon(int Weapon, int Ammo)
 {
@@ -574,6 +683,44 @@ void CCharacter::Tick()
 	// handle Weapons
 	HandleWeapons();
 
+/* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() == PLAYERCLASS_HUNTER)
+	{
+		if(IsGrounded()) m_AirJumpCounter = 0;
+		if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < 1)
+		{
+			m_Core.m_Jumped &= ~2;
+			m_AirJumpCounter++;
+		}
+	}
+	
+	if(m_pClassChooser)
+	{
+		if(GetClass() != PLAYERCLASS_NONE)
+		{
+			GameServer()->m_World.DestroyEntity(m_pClassChooser);
+			m_pClassChooser = 0;
+		}
+		else
+		{
+			m_pClassChooser->m_Pos = m_Pos;
+			m_pClassChooser->SetCursor(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
+			
+			if(m_Input.m_Fire&1)
+			{
+				int ccRes = m_pClassChooser->SelectClass();
+				if(ccRes)
+				{				
+					GameServer()->m_World.DestroyEntity(m_pClassChooser);
+					m_pClassChooser = 0;
+					
+					m_pPlayer->SetClass(ccRes);
+				}
+			}
+		}
+	}
+/* INFECTION MODIFICATION END *****************************************/
+
 	// Previnput
 	m_PrevInput = m_Input;
 	return;
@@ -674,6 +821,10 @@ void CCharacter::TickPaused()
 		++m_aWeapons[m_ActiveWeapon].m_AmmoRegenStart;
 	if(m_EmoteStop > -1)
 		++m_EmoteStop;
+		
+/* INFECTION MODIFICATION START ***************************************/
+	++m_PoisonTick;
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 bool CCharacter::IncreaseHealth(int Amount)
@@ -722,14 +873,31 @@ void CCharacter::Die(int Killer, int Weapon)
 	GameServer()->m_World.RemoveEntity(this);
 	GameServer()->m_World.m_Core.m_apCharacters[m_pPlayer->GetCID()] = 0;
 	GameServer()->CreateDeath(m_Pos, m_pPlayer->GetCID());
+	
+/* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() == PLAYERCLASS_BOOMER)
+	{
+		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
+		GameServer()->CreateExplosion(m_Pos, m_pPlayer->GetCID(), WEAPON_HAMMER, false);
+		GameServer()->CreateExplosion(m_Pos + vec2(32, 0), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
+		GameServer()->CreateExplosion(m_Pos + vec2(-32, 0), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
+		GameServer()->CreateExplosion(m_Pos + vec2(0, 32), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
+		GameServer()->CreateExplosion(m_Pos + vec2(0, -32), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
+	}
+	
+	m_pPlayer->StartInfection();
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 {
 	m_Core.m_Vel += Force;
 
-	if(GameServer()->m_pController->IsFriendlyFire(m_pPlayer->GetCID(), From) && !g_Config.m_SvTeamdamage)
+/* INFECTION MODIFICATION START ***************************************/
+	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
+	if(pKillerPlayer && pKillerPlayer->IsInfected() == IsInfected() && From != m_pPlayer->GetCID())
 		return false;
+/* INFECTION MODIFICATION END *****************************************/
 
 	// m_pPlayer only inflicts half damage on self
 	if(From == m_pPlayer->GetCID())
@@ -787,6 +955,16 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		}
 		GameServer()->CreateSound(GameServer()->m_apPlayers[From]->m_ViewPos, SOUND_HIT, Mask);
 	}
+	
+/* INFECTION MODIFICATION START ***************************************/
+	if(GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected())
+	{
+		if(!(GameServer()->m_apPlayers[From]->GetClass() == PLAYERCLASS_ZOMBIE && Weapon == WEAPON_NINJA))
+		{
+			m_pPlayer->StartInfection();
+		}
+	}
+/* INFECTION MODIFICATION END *****************************************/
 
 	// check for death
 	if(m_Health <= 0)
@@ -876,3 +1054,109 @@ void CCharacter::Snap(int SnappingClient)
 
 	pCharacter->m_PlayerFlags = GetPlayer()->m_PlayerFlags;
 }
+
+/* INFECTION MODIFICATION START ***************************************/
+void CCharacter::OpenClassChooser()
+{
+	GameServer()->SendBroadcast("Choose your class", m_pPlayer->GetCID());
+	if(!m_pClassChooser)
+	{
+		m_pClassChooser = new CClassChooser(GameWorld(), m_Pos, m_pPlayer->GetCID());
+	}
+}
+
+int CCharacter::GetClass()
+{
+	return m_pPlayer->GetClass();
+}
+
+void CCharacter::ClassSpawnAttributes()
+{
+	switch(GetClass())
+	{
+		case PLAYERCLASS_ENGINEER:
+			m_Health = 10;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, 10);
+			GiveWeapon(WEAPON_RIFLE, 10);
+			m_ActiveWeapon = WEAPON_RIFLE;
+			GameServer()->SendBroadcast("Engineer : Can build wall with hammer", m_pPlayer->GetCID());
+			break;
+		case PLAYERCLASS_SOLDIER:
+			m_Health = 10;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, 10);
+			GiveWeapon(WEAPON_GRENADE, 10);
+			m_ActiveWeapon = WEAPON_GRENADE;
+			GameServer()->SendBroadcast("Soldier : Can pose remote bombs with hammer, and recharge it with grenades", m_pPlayer->GetCID());
+			break;
+		case PLAYERCLASS_MEDIC:
+			m_Health = 10;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, 10);
+			GiveWeapon(WEAPON_SHOTGUN, 10);
+			m_ActiveWeapon = WEAPON_SHOTGUN;
+			GameServer()->SendBroadcast("Medic : Can cure infected", m_pPlayer->GetCID());
+			break;
+		case PLAYERCLASS_NONE:
+			m_Health = 10;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			break;
+		case PLAYERCLASS_ZOMBIE:
+			m_Health = 10;
+			RemoveAllGun();
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			GameServer()->SendBroadcast("Zombie : Drain health by hooking players", m_pPlayer->GetCID());
+			break;
+		case PLAYERCLASS_BOOMER:
+			m_Health = 10;
+			RemoveAllGun();
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			GameServer()->SendBroadcast("Boomer : Can only perform kamikaze attack", m_pPlayer->GetCID());
+			break;
+		case PLAYERCLASS_HUNTER:
+			m_Health = 10;
+			RemoveAllGun();
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			GameServer()->SendBroadcast("Hunter : Has triple jump", m_pPlayer->GetCID());
+			break;
+	}
+}
+
+void CCharacter::DestroyChildEntities()
+{
+	if(m_pBarrier)
+	{
+		GameServer()->m_World.DestroyEntity(m_pBarrier);
+		m_pBarrier = 0;
+	}
+	if(m_pBomb)
+	{
+		GameServer()->m_World.DestroyEntity(m_pBomb);
+		m_pBomb = 0;
+	}
+	if(m_pClassChooser)
+	{
+		GameServer()->m_World.DestroyEntity(m_pClassChooser);
+		m_pClassChooser = 0;
+	}
+	m_FirstShot = true;
+}
+
+void CCharacter::SetClass(int ClassChoosed)
+{
+	ClassSpawnAttributes();
+	DestroyChildEntities();
+	
+	GameServer()->CreatePlayerSpawn(m_Pos);
+}
+
+bool CCharacter::IsInfected() const
+{
+	return m_pPlayer->IsInfected();
+}
+/* INFECTION MODIFICATION END *****************************************/

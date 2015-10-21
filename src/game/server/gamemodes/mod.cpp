@@ -2,14 +2,18 @@
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include "mod.h"
 
+/* INFECTION MODIFICATION START ***************************************/
+#include <game/server/player.h>
+#include <engine/shared/config.h>
+#include <game/mapitems.h>
+/* INFECTION MODIFICATION END *****************************************/
+
 CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 : IGameController(pGameServer)
 {
-	// Exchange this to a string that identifies your game mode.
-	// DM, TDM and CTF are reserved for teeworlds original modes.
-	m_pGameType = "MOD";
-
-	//m_GameFlags = GAMEFLAG_TEAMS; // GAMEFLAG_TEAMS makes it a two-team gamemode
+/* INFECTION MODIFICATION START ***************************************/
+	m_pGameType = "InfClass";
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 void CGameControllerMOD::Tick()
@@ -18,3 +22,136 @@ void CGameControllerMOD::Tick()
 
 	IGameController::Tick();
 }
+
+/* INFECTION MODIFICATION START ***************************************/
+int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)
+{
+	// do scoreing
+	if(!pKiller || Weapon == WEAPON_GAME)
+		return 0;
+	if(pKiller == pVictim->GetPlayer())
+	{
+		if(pVictim->GetClass() != PLAYERCLASS_BOOMER)
+		{
+			pVictim->GetPlayer()->m_Score--; // suicide
+		}
+	}
+	else
+	{
+		if(IsTeamplay() && pVictim->GetPlayer()->GetTeam() == pKiller->GetTeam())
+			pKiller->m_Score--; // teamkill
+		else
+			pKiller->m_Score++; // normal kill
+	}
+	if(Weapon == WEAPON_SELF)
+		pVictim->GetPlayer()->m_RespawnTick = Server()->Tick()+Server()->TickSpeed()*3.0f;
+	return 0;
+}
+
+void CGameControllerMOD::OnCharacterSpawn(class CCharacter *pChr)
+{
+	// default health
+	pChr->IncreaseHealth(10);
+
+	// give default weapons
+	pChr->GiveWeapon(WEAPON_HAMMER, -1);
+}
+
+void CGameControllerMOD::PostReset()
+{
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(GameServer()->m_apPlayers[i])
+		{
+			GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);
+		}
+	}
+	
+	IGameController::PostReset();
+}
+
+void CGameControllerMOD::OnPlayerInfoChange(class CPlayer *pP)
+{
+	pP->SetClassSkin(pP->GetClass());
+}
+
+void CGameControllerMOD::DoWincheck()
+{	
+	int countZombie = 0;
+	int countHuman = 0;
+	
+	for(int i = 0; i < MAX_CLIENTS; i ++)
+	{
+		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+		
+		if(!pPlayer) continue;
+		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+		
+		if(pPlayer->IsInfected()) countZombie++;
+		else countHuman++;
+	}
+	
+	if(countZombie + countHuman < 2) return;
+	
+	if(m_RoundStartTick + Server()->TickSpeed()*10 < Server()->Tick())
+	{
+		if(countZombie <= 0)
+		{
+			for(int i = 0; i < MAX_CLIENTS; i ++)
+			{
+				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+				
+				if(!pPlayer) continue;
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+				
+				if(pPlayer->GetClass() == PLAYERCLASS_NONE)
+				{
+					pPlayer->SetClass(START_HUMANCLASS +1 + rand()%(END_HUMANCLASS - START_HUMANCLASS - 1));
+				}
+			}
+		
+			bool searchForZombie = true;
+			while(searchForZombie)
+			{
+				int id = rand()%MAX_CLIENTS;
+				if(GameServer()->m_apPlayers[id])
+				{
+					searchForZombie = false;
+					GameServer()->m_apPlayers[id]->StartInfection();
+				}
+			}
+		}
+	
+		if(m_GameOverTick != -1)
+			return;
+			
+		if(countHuman == 0 && countZombie > 1)
+		{
+			GameServer()->SendBroadcast("Infected won this round", -1);
+			EndRound();
+		}
+	}
+	
+	if(g_Config.m_SvTimelimit > 0 && (Server()->Tick()-m_RoundStartTick) >= g_Config.m_SvTimelimit*Server()->TickSpeed()*60)
+	{
+		if(countHuman)
+		{
+			GameServer()->SendBroadcast("Human won this round", -1);
+		}
+		else
+		{
+			GameServer()->SendBroadcast("Infected won this round", -1);
+		}
+		EndRound();
+	}
+}
+
+bool CGameControllerMOD::PickupAllowed(int Index)
+{
+	if(Index == ENTITY_POWERUP_NINJA) return g_Config.m_SvPowerups;
+	else if(Index == ENTITY_WEAPON_SHOTGUN) return false;
+	else if(Index == ENTITY_WEAPON_GRENADE) return false;
+	else if(Index == ENTITY_WEAPON_RIFLE) return false;
+	else return true;
+}
+/* INFECTION MODIFICATION END *****************************************/

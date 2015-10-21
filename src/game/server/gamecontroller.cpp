@@ -127,6 +127,11 @@ bool IGameController::CanSpawn(int Team, vec2 *pOutPos)
 
 bool IGameController::OnEntity(int Index, vec2 Pos)
 {
+/* INFECTION MODIFICATION START ***************************************/
+	if(!PickupAllowed(Index))
+		return false;
+/* INFECTION MODIFICATION END *****************************************/
+	
 	int Type = -1;
 	int SubType = 0;
 
@@ -155,11 +160,13 @@ bool IGameController::OnEntity(int Index, vec2 Pos)
 		Type = POWERUP_WEAPON;
 		SubType = WEAPON_RIFLE;
 	}
-	else if(Index == ENTITY_POWERUP_NINJA && g_Config.m_SvPowerups)
+/* INFECTION MODIFICATION START ***************************************/
+	else if(Index == ENTITY_POWERUP_NINJA)
 	{
 		Type = POWERUP_NINJA;
 		SubType = WEAPON_NINJA;
 	}
+/* INFECTION MODIFICATION END *****************************************/
 
 	if(Type != -1)
 	{
@@ -732,3 +739,11 @@ int IGameController::ClampTeam(int Team)
 		return Team&1;
 	return 0;
 }
+
+/* INFECTION MODIFICATION START ***************************************/
+bool IGameController::PickupAllowed(int Index)
+{
+	if(Index == ENTITY_POWERUP_NINJA) return g_Config.m_SvPowerups;
+	else return true;
+}
+/* INFECTION MODIFICATION END *****************************************/

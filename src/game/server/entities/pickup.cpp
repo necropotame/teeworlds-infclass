@@ -49,7 +49,9 @@ void CPickup::Tick()
 		switch (m_Type)
 		{
 			case POWERUP_HEALTH:
-				if(pChr->IncreaseHealth(1))
+/* INFECTION MODIFICATION START ***************************************/
+				if(!pChr->IsInfected() && pChr->IncreaseHealth(1))
+/* INFECTION MODIFICATION END *****************************************/
 				{
 					GameServer()->CreateSound(m_Pos, SOUND_PICKUP_HEALTH);
 					RespawnTime = g_pData->m_aPickups[m_Type].m_Respawntime;
@@ -57,7 +59,9 @@ void CPickup::Tick()
 				break;
 
 			case POWERUP_ARMOR:
-				if(pChr->IncreaseArmor(1))
+/* INFECTION MODIFICATION START ***************************************/
+				if(!pChr->IsInfected() && pChr->IncreaseArmor(1))
+/* INFECTION MODIFICATION END *****************************************/
 				{
 					GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
 					RespawnTime = g_pData->m_aPickups[m_Type].m_Respawntime;

@@ -142,6 +142,10 @@ public:
 	int ClampTeam(int Team);
 
 	virtual void PostReset();
+	
+/* INFECTION MODIFICATION START ***************************************/
+	virtual bool PickupAllowed(int Type);
+/* INFECTION MODIFICATION END *****************************************/
 };
 
 #endif

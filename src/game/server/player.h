@@ -107,6 +107,18 @@ private:
 	bool m_Spawning;
 	int m_ClientID;
 	int m_Team;
+
+/* INFECTION MODIFICATION START ***************************************/
+private:
+	int m_class;
+	
+public:
+	int GetClass();
+	void SetClassSkin(int newClass);
+	void SetClass(int newClass);
+	bool IsInfected() const;
+	void StartInfection();
+/* INFECTION MODIFICATION END *****************************************/
 };
 
 #endif
