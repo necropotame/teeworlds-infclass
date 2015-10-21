@@ -385,9 +385,19 @@ void CCharacter::FireWeapon()
 						Dir = normalize(pTarget->m_Pos - m_Pos);
 					else
 						Dir = vec2(0.f, -1.f);
-
-					pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
-						m_pPlayer->GetCID(), m_ActiveWeapon);
+					
+/* INFECTION MODIFICATION START ***************************************/
+					if(IsInfected() && pTarget->IsInfected())
+					{
+						pTarget->IncreaseHealth(2);
+						pTarget->IncreaseArmor(2);
+					}
+					else
+					{
+						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
+							m_pPlayer->GetCID(), m_ActiveWeapon);
+					}
+/* INFECTION MODIFICATION END *****************************************/
 					Hits++;
 				}
 
