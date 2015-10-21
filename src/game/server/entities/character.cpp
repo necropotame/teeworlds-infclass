@@ -888,9 +888,9 @@ void CCharacter::Die(int Killer, int Weapon)
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[Killer];
 	if(pKillerPlayer->IsInfected() && !m_pPlayer->IsInfected())
 	{
-		m_pPlayer->StartInfection();
 		pKillerPlayer->m_Score += 2;
 	}
+	m_pPlayer->StartInfection();
 	
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -968,6 +968,13 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		if(!(GameServer()->m_apPlayers[From]->GetClass() == PLAYERCLASS_ZOMBIE && Weapon == WEAPON_NINJA))
 		{
 			m_pPlayer->StartInfection();
+		
+			CNetMsg_Sv_KillMsg Msg;
+			Msg.m_Killer = From;
+			Msg.m_Victim = m_pPlayer->GetCID();
+			Msg.m_Weapon = WEAPON_HAMMER;
+			Msg.m_ModeSpecial = 0;
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, -1);
 		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
