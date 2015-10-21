@@ -651,8 +651,33 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				return;
 
 			pPlayer->m_LastChat = Server()->Tick();
-
-			SendChat(ClientID, Team, pMsg->m_pMessage);
+			
+			if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\info") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/info") == 0)
+			)
+			{
+				CNetMsg_Sv_Chat Msg;
+				Msg.m_Team = 0;
+				Msg.m_ClientID = -1;
+				Msg.m_pMessage = "InfectionClass, by necropotame (version 0.1)";
+				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\cmdlist") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/cmdlist") == 0)
+			)
+			{
+				CNetMsg_Sv_Chat Msg;
+				Msg.m_Team = 0;
+				Msg.m_ClientID = -1;
+				Msg.m_pMessage = "List of commands\n\\info : Information about this mod";
+				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+			}
+			else
+			{
+				SendChat(ClientID, Team, pMsg->m_pMessage);
+			}
 		}
 		else if(MsgID == NETMSGTYPE_CL_CALLVOTE)
 		{
