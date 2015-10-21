@@ -20,6 +20,7 @@ public:
 	virtual void OnCharacterSpawn(class CCharacter *pChr);
 	virtual void OnPlayerInfoChange(class CPlayer *pP);
 	virtual void DoWincheck();
+	virtual bool CanSpawn(CPlayer* pPlayer, vec2 *pPos);
 	virtual bool PickupAllowed(int Index);
 /* INFECTION MODIFICATION END *****************************************/
 };

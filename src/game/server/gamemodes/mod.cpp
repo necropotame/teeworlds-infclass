@@ -146,6 +146,32 @@ void CGameControllerMOD::DoWincheck()
 	}
 }
 
+bool CGameControllerMOD::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
+{
+	CSpawnEval Eval;
+	int Team = pPlayer->GetTeam();
+
+	// spectators can't spawn
+	if(Team == TEAM_SPECTATORS)
+		return false;
+
+	Team = (pPlayer->IsInfected() ? TEAM_RED : TEAM_BLUE);
+	
+	Eval.m_FriendlyTeam = Team;
+
+	// first try own team spawn, then normal spawn and then enemy
+	EvaluateSpawnType(&Eval, 1+(Team&1));
+	if(!Eval.m_Got)
+	{
+		EvaluateSpawnType(&Eval, 0);
+		if(!Eval.m_Got)
+			EvaluateSpawnType(&Eval, 1+((Team+1)&1));
+	}
+
+	*pOutPos = Eval.m_Pos;
+	return Eval.m_Got;
+}
+
 bool CGameControllerMOD::PickupAllowed(int Index)
 {
 	if(Index == ENTITY_POWERUP_NINJA) return g_Config.m_SvPowerups;

@@ -92,8 +92,10 @@ void IGameController::EvaluateSpawnType(CSpawnEval *pEval, int Type)
 	}
 }
 
-bool IGameController::CanSpawn(int Team, vec2 *pOutPos)
+/* INFECTION MODIFICATION START ***************************************/
+bool IGameController::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 {
+	int Team = pPlayer->GetTeam();
 	CSpawnEval Eval;
 
 	// spectators can't spawn
@@ -123,6 +125,7 @@ bool IGameController::CanSpawn(int Team, vec2 *pOutPos)
 	*pOutPos = Eval.m_Pos;
 	return Eval.m_Got;
 }
+/* INFECTION MODIFICATION END *****************************************/
 
 
 bool IGameController::OnEntity(int Index, vec2 Pos)

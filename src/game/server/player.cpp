@@ -287,8 +287,10 @@ void CPlayer::TryRespawn()
 {
 	vec2 SpawnPos;
 
-	if(!GameServer()->m_pController->CanSpawn(m_Team, &SpawnPos))
+/* INFECTION MODIFICATION START ***************************************/
+	if(!GameServer()->m_pController->CanSpawn(this, &SpawnPos))
 		return;
+/* INFECTION MODIFICATION END *****************************************/
 
 	m_Spawning = false;
 	m_pCharacter = new(m_ClientID) CCharacter(&GameServer()->m_World);
