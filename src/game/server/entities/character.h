@@ -9,6 +9,12 @@
 
 #include <game/gamecore.h>
 
+/* INFECTION MODIFICATION START ***************************************/
+#include <game/server/entities/classchooser.h>
+#include <game/server/entities/bomb.h>
+#include <game/server/entities/barrier.h>
+/* INFECTION MODIFICATION END *****************************************/
+
 enum
 {
 	WEAPON_GAME = -3, // team switching etc
@@ -131,6 +137,29 @@ private:
 	CCharacterCore m_SendCore; // core that we should send
 	CCharacterCore m_ReckoningCore; // the dead reckoning core
 
+/* INFECTION MODIFICATION START ***************************************/
+private:
+	int m_AirJumpCounter;
+	bool m_FirstShot;
+	vec2 m_FirstShotCoord;
+	int m_PoisonTick;
+	
+	CClassChooser* m_pClassChooser;
+	class CBarrier *m_pBarrier;
+
+public:
+	class CBomb *m_pBomb;
+
+public:
+	void DestroyChildEntities();
+	void ClassSpawnAttributes();
+	void OpenClassChooser();
+	int GetClass();
+	void SetClass(int ClassChoosed);
+	bool IsInfected() const;
+	void Infection(bool v);
+	void RemoveAllGun();
+/* INFECTION MODIFICATION END *****************************************/
 };
 
 #endif
