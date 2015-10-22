@@ -362,6 +362,12 @@ void CPlayer::SetClassSkin(int newClass)
 			m_TeeInfos.m_ColorBody = 16776744;
 			m_TeeInfos.m_ColorFeet = 13168;
 			Server()->SetClientClan(GetCID(), "Witch");
+			
+			if(GetClass() == PLAYERCLASS_WITCH)
+			{
+				GameServer()->SendBroadcast("A witch is coming !", -1);
+				GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
+			}
 			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;
@@ -401,8 +407,6 @@ void CPlayer::StartInfection(bool force)
 	else if(random <= 2) SetClass(PLAYERCLASS_HUNTER);
 	else if(random <= 4) SetClass(PLAYERCLASS_BOOMER);
 	else SetClass(PLAYERCLASS_ZOMBIE);
-	
-	m_knownClass[GetClass()] = true;
 }
 
 bool CPlayer::IsInfected() const

@@ -111,9 +111,10 @@ private:
 /* INFECTION MODIFICATION START ***************************************/
 private:
 	int m_class;
-	bool m_knownClass[NB_PLAYERCLASS];
 	
 public:
+	bool m_knownClass[NB_PLAYERCLASS];
+	
 	int GetClass();
 	void SetClassSkin(int newClass);
 	void SetClass(int newClass);
