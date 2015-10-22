@@ -129,7 +129,7 @@ void CGameControllerMOD::DoWincheck()
 					GameServer()->m_apPlayers[id]->StartInfection();
 					
 					char aBuf[512];
-					str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(m_apPlayers[id]->GetCID()));
+					str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(GameServer()->m_apPlayers[id]->GetCID()));
 					GameServer()->SendChat(-1, -2, aBuf);
 				}
 			}
