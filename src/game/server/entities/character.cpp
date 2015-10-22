@@ -994,6 +994,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		{
 			m_pPlayer->StartInfection();
 			
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%s has infected %s, he got 2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
+			GameServer()->SendChat(-1, -2, aBuf);
+		
 			GameServer()->m_apPlayers[From]->m_Score += 2;
 		
 			CNetMsg_Sv_KillMsg Msg;
@@ -1135,7 +1139,7 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_RIFLE, 10);
 			m_ActiveWeapon = WEAPON_RIFLE;
-			GameServer()->SendBroadcast("Engineer : Can build wall with hammer", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("Engineer : can build wall with hammer", m_pPlayer->GetCID());
 			break;
 		case PLAYERCLASS_SOLDIER:
 			m_Health = 10;
@@ -1143,7 +1147,7 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_GRENADE, 10);
 			m_ActiveWeapon = WEAPON_GRENADE;
-			GameServer()->SendBroadcast("Soldier : Can pose remote bombs with hammer, and recharge it with grenades", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("Soldier : can pose remote bomb with hammer, and recharge it with grenades", m_pPlayer->GetCID());
 			break;
 		case PLAYERCLASS_MEDIC:
 			m_Health = 10;
@@ -1151,7 +1155,7 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_SHOTGUN, 10);
 			m_ActiveWeapon = WEAPON_SHOTGUN;
-			GameServer()->SendBroadcast("Medic : Can cure infected", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("Medic : can cure infected", m_pPlayer->GetCID());
 			break;
 		case PLAYERCLASS_NONE:
 			m_Health = 10;
@@ -1164,7 +1168,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
-			GameServer()->SendBroadcast("Zombie : Drain health by hooking players", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("Zombie : can hit by hooking others", m_pPlayer->GetCID());
 			break;
 		case PLAYERCLASS_BOOMER:
 			m_Health = 10;
@@ -1172,7 +1176,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
-			GameServer()->SendBroadcast("Boomer : Can only perform kamikaze attack", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("Boomer : can (only) do kamikaze attacks", m_pPlayer->GetCID());
 			break;
 		case PLAYERCLASS_HUNTER:
 			m_Health = 10;
@@ -1180,7 +1184,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
-			GameServer()->SendBroadcast("Hunter : Has triple jump", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("Hunter : can jump three times", m_pPlayer->GetCID());
 			break;
 		case PLAYERCLASS_WITCH:
 			m_Health = 10;
@@ -1188,7 +1192,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
-			GameServer()->SendBroadcast("Witch : Zombies spawn around her", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("Witch : can summon infected", m_pPlayer->GetCID());
 			break;
 	}
 }

@@ -40,7 +40,11 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 	}
 	else if(!pKiller->IsInfected())
 	{
-		pKiller->m_Score++; // normal kill
+		char aBuf[512];
+		str_format(aBuf, sizeof(aBuf), "%s has killed a witch, he got 5 points", Server()->ClientName(pKiller->GetCID()));
+		GameServer()->SendChat(-1, -2, aBuf);
+		
+		pKiller->m_Score += (pVictim->GetClass() == PLAYERCLASS_WITCH ? 5 : 1); // normal kill
 	}
 	
 	if(Weapon == WEAPON_SELF)
@@ -123,6 +127,10 @@ void CGameControllerMOD::DoWincheck()
 				{
 					searchForZombie = false;
 					GameServer()->m_apPlayers[id]->StartInfection();
+					
+					char aBuf[512];
+					str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(m_apPlayers[id]->GetCID()));
+					GameServer()->SendChat(-1, -2, aBuf);
 				}
 			}
 		}
