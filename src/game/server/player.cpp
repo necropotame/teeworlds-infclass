@@ -23,6 +23,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_TeamChangeTick = Server()->Tick();
 	
 /* INFECTION MODIFICATION START ***************************************/
+	m_Score = 0;
 	m_class = PLAYERCLASS_NONE;
 	StartInfection();
 /* INFECTION MODIFICATION END *****************************************/

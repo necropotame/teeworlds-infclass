@@ -74,6 +74,11 @@ void CBomb::Snap(int SnappingClient)
 	}
 }
 
+void CBomb::TickPaused()
+{
+	++m_StartTick;
+}
+
 bool CBomb::AddBomb()
 {
 	if(m_nbBomb < MAX_BOMB)

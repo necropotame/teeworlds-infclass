@@ -98,7 +98,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
-		GameServer()->SendBroadcast("A witch is coming !", m_pPlayer->GetCID());
+		GameServer()->SendBroadcast("A witch is coming !", -1);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 	}
 /* INFECTION MODIFICATION END *****************************************/
@@ -909,7 +909,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
 		m_pPlayer->StartInfection(true);
-		GameServer()->SendBroadcast("A witch is dead", m_pPlayer->GetCID());
+		GameServer()->SendBroadcast("A witch is dead", -1);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else

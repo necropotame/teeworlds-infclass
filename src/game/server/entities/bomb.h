@@ -15,6 +15,7 @@ public:
 	virtual void Snap(int SnappingClient);
 	void Explode();
 	bool AddBomb();
+	void TickPaused();
 
 private:
 	int m_StartTick;

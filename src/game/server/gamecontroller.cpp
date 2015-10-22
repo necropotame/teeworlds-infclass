@@ -322,8 +322,10 @@ void IGameController::PostReset()
 		if(GameServer()->m_apPlayers[i])
 		{
 			GameServer()->m_apPlayers[i]->Respawn();
-			GameServer()->m_apPlayers[i]->m_Score = 0;
-			GameServer()->m_apPlayers[i]->m_ScoreStartTick = Server()->Tick();
+/* INFECTION MODIFICATION START ***************************************/
+			//~ GameServer()->m_apPlayers[i]->m_Score = 0;
+			//~ GameServer()->m_apPlayers[i]->m_ScoreStartTick = Server()->Tick();
+/* INFECTION MODIFICATION END *****************************************/
 			GameServer()->m_apPlayers[i]->m_RespawnTick = Server()->Tick()+Server()->TickSpeed()/2;
 		}
 	}
