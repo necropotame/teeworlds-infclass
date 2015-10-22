@@ -146,6 +146,7 @@ private:
 	
 	CClassChooser* m_pClassChooser;
 	class CBarrier *m_pBarrier;
+	int m_FlagID;
 
 public:
 	class CBomb *m_pBomb;

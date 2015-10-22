@@ -53,6 +53,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_pClassChooser = 0;
 	m_pBarrier = 0;
 	m_pBomb = 0;
+	m_FlagID = Server()->SnapNewID();
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -93,6 +94,12 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	if(GetClass() == PLAYERCLASS_NONE)
 	{
 		OpenClassChooser();
+	}
+	
+	if(GetClass() == PLAYERCLASS_WITCH)
+	{
+		GameServer()->SendBroadcast("A witch is coming !", m_pPlayer->GetCID());
+		GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -899,7 +906,16 @@ void CCharacter::Die(int Killer, int Weapon)
 		GameServer()->CreateExplosion(m_Pos + vec2(0, -32), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
 	}
 	
-	m_pPlayer->StartInfection();
+	if(GetClass() == PLAYERCLASS_WITCH)
+	{
+		m_pPlayer->StartInfection(true);
+		GameServer()->SendBroadcast("A witch is dead", m_pPlayer->GetCID());
+		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
+	}
+	else
+	{
+		m_pPlayer->StartInfection(false);
+	}
 	
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -1024,6 +1040,19 @@ void CCharacter::Snap(int SnappingClient)
 {
 	if(NetworkClipped(SnappingClient))
 		return;
+
+/* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() == PLAYERCLASS_WITCH)
+	{
+		CNetObj_Flag *pFlag = (CNetObj_Flag *)Server()->SnapNewItem(NETOBJTYPE_FLAG, m_FlagID, sizeof(CNetObj_Flag));
+		if(!pFlag)
+			return;
+
+		pFlag->m_X = (int)m_Pos.x;
+		pFlag->m_Y = (int)m_Pos.y;
+		pFlag->m_Team = TEAM_RED;
+	}
+/* INFECTION MODIFICATION END ***************************************/
 
 	CNetObj_Character *pCharacter = static_cast<CNetObj_Character *>(Server()->SnapNewItem(NETOBJTYPE_CHARACTER, m_pPlayer->GetCID(), sizeof(CNetObj_Character)));
 	if(!pCharacter)
@@ -1153,7 +1182,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
-			GameServer()->SendBroadcast("Whitch : Zombies spawn around her", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("Witch : Zombies spawn around her", m_pPlayer->GetCID());
 			break;
 	}
 }

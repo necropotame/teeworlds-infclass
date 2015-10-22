@@ -117,7 +117,7 @@ public:
 	void SetClassSkin(int newClass);
 	void SetClass(int newClass);
 	bool IsInfected() const;
-	void StartInfection();
+	void StartInfection(bool force = false);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

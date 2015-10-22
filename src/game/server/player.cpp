@@ -381,9 +381,9 @@ void CPlayer::SetClass(int newClass)
 	}
 }
 
-void CPlayer::StartInfection()
+void CPlayer::StartInfection(bool force)
 {
-	if(IsInfected())
+	if(!force && IsInfected())
 		return;
 	
 	int random = rand()%8;
