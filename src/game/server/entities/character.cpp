@@ -1057,6 +1057,8 @@ void CCharacter::Snap(int SnappingClient)
 	CNetObj_Character *pCharacter = static_cast<CNetObj_Character *>(Server()->SnapNewItem(NETOBJTYPE_CHARACTER, m_pPlayer->GetCID(), sizeof(CNetObj_Character)));
 	if(!pCharacter)
 		return;
+	
+	int EmoteNormal = (IsInfected() ? EMOTE_ANGRY : EMOTE_NORMAL);
 
 	// write down the m_Core
 	if(!m_ReckoningTick || GameServer()->m_World.m_Paused)
@@ -1075,7 +1077,7 @@ void CCharacter::Snap(int SnappingClient)
 	// set emote
 	if (m_EmoteStop < Server()->Tick())
 	{
-		m_EmoteType = EMOTE_NORMAL;
+		m_EmoteType = EmoteNormal;
 		m_EmoteStop = -1;
 	}
 
@@ -1099,7 +1101,7 @@ void CCharacter::Snap(int SnappingClient)
 			pCharacter->m_AmmoCount = m_aWeapons[m_ActiveWeapon].m_Ammo;
 	}
 
-	if(pCharacter->m_Emote == EMOTE_NORMAL)
+	if(pCharacter->m_Emote == EmoteNormal)
 	{
 		if(250 - ((Server()->Tick() - m_LastAction)%(250)) < 5)
 			pCharacter->m_Emote = EMOTE_BLINK;
@@ -1111,7 +1113,7 @@ void CCharacter::Snap(int SnappingClient)
 /* INFECTION MODIFICATION START ***************************************/
 void CCharacter::OpenClassChooser()
 {
-	GameServer()->SendBroadcast("Choose your class", m_pPlayer->GetCID());
+	GameServer()->SendBroadcast("Choose your class by clicking on the weapon", m_pPlayer->GetCID());
 	if(!m_pClassChooser)
 	{
 		m_pClassChooser = new CClassChooser(GameWorld(), m_Pos, m_pPlayer->GetCID());
@@ -1158,6 +1160,7 @@ void CCharacter::ClassSpawnAttributes()
 			break;
 		case PLAYERCLASS_ZOMBIE:
 			m_Health = 10;
+			m_Armor = 0;
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
@@ -1165,6 +1168,7 @@ void CCharacter::ClassSpawnAttributes()
 			break;
 		case PLAYERCLASS_BOOMER:
 			m_Health = 10;
+			m_Armor = 0;
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
@@ -1172,6 +1176,7 @@ void CCharacter::ClassSpawnAttributes()
 			break;
 		case PLAYERCLASS_HUNTER:
 			m_Health = 10;
+			m_Armor = 0;
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
@@ -1179,6 +1184,7 @@ void CCharacter::ClassSpawnAttributes()
 			break;
 		case PLAYERCLASS_WITCH:
 			m_Health = 10;
+			m_Armor = 10;
 			RemoveAllGun();
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;

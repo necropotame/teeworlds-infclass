@@ -713,6 +713,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
 			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class witch") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class witch") == 0)
+			)
+			{
+				m_apPlayers[ClientID]->SetClass(PLAYERCLASS_WITCH);
+			}
 			else
 			{
 				SendChat(ClientID, Team, pMsg->m_pMessage);

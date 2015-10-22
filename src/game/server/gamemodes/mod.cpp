@@ -73,6 +73,10 @@ void CGameControllerMOD::PostReset()
 
 void CGameControllerMOD::OnPlayerInfoChange(class CPlayer *pP)
 {
+	//~ std::cout << "SkinName : " << pP->m_TeeInfos.m_SkinName << std::endl;
+	//~ std::cout << "ColorBody : " << pP->m_TeeInfos.m_ColorBody << std::endl;
+	//~ std::cout << "ColorFeet : " << pP->m_TeeInfos.m_ColorFeet << std::endl;
+	
 	pP->SetClassSkin(pP->GetClass());
 }
 

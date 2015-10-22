@@ -335,28 +335,28 @@ void CPlayer::SetClassSkin(int newClass)
 			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
-			Server()->SetClientClan(GetCID(), "[Zombie]");
+			Server()->SetClientClan(GetCID(), "Zombie");
 			break;
 		case PLAYERCLASS_BOOMER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "saddo", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
-			Server()->SetClientClan(GetCID(), "[Boomer]");
+			Server()->SetClientClan(GetCID(), "Boomer");
 			break;
 		case PLAYERCLASS_HUNTER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "warpaint", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
-			Server()->SetClientClan(GetCID(), "[Hunter]");
+			Server()->SetClientClan(GetCID(), "Hunter");
 			break;
 		case PLAYERCLASS_WITCH:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "redbopp", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
-			m_TeeInfos.m_ColorFeet = 65414;
-			Server()->SetClientClan(GetCID(), "[Witch]");
+			m_TeeInfos.m_ColorBody = 16776744;
+			m_TeeInfos.m_ColorFeet = 13168;
+			Server()->SetClientClan(GetCID(), "Witch");
 			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;
