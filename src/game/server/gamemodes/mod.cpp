@@ -6,7 +6,7 @@
 #include <game/server/player.h>
 #include <engine/shared/config.h>
 #include <game/mapitems.h>
-#include <iostream>
+#include <time.h>
 /* INFECTION MODIFICATION END *****************************************/
 
 CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
@@ -14,6 +14,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 {
 /* INFECTION MODIFICATION START ***************************************/
 	m_pGameType = "InfClass";
+	srand (time(0));
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -40,11 +41,15 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 	}
 	else if(!pKiller->IsInfected())
 	{
-		char aBuf[512];
-		str_format(aBuf, sizeof(aBuf), "%s has killed a witch, he got 5 points", Server()->ClientName(pKiller->GetCID()));
-		GameServer()->SendChat(-1, -2, aBuf);
-		
-		pKiller->m_Score += (pVictim->GetClass() == PLAYERCLASS_WITCH ? 5 : 1); // normal kill
+		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
+		{
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%s has killed a witch, he got 5 points", Server()->ClientName(pKiller->GetCID()));
+			GameServer()->SendChat(-1, -2, aBuf);
+			
+			pKiller->m_Score += 5;
+		}
+		else pKiller->m_Score += 1;
 	}
 	
 	if(Weapon == WEAPON_SELF)

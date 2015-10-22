@@ -20,6 +20,7 @@ enum
 	PLAYERCLASS_WITCH,
 	
 	PLAYERCLASS_MEDIC,
+	NB_PLAYERCLASS,
 };
 
 class CClassChooser : public CEntity

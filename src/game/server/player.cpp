@@ -25,7 +25,12 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 /* INFECTION MODIFICATION START ***************************************/
 	m_Score = 0;
 	m_class = PLAYERCLASS_NONE;
+	for(int i=0; i<NB_PLAYERCLASS; i++)
+	{
+		m_knownClass[i] = false;
+	}
 	StartInfection();
+	
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -396,10 +401,17 @@ void CPlayer::StartInfection(bool force)
 	else if(random <= 2) SetClass(PLAYERCLASS_HUNTER);
 	else if(random <= 4) SetClass(PLAYERCLASS_BOOMER);
 	else SetClass(PLAYERCLASS_ZOMBIE);
+	
+	m_knownClass[GetClass()] = true;
 }
 
 bool CPlayer::IsInfected() const
 {
 	return (m_class > END_HUMANCLASS);
+}
+
+bool CPlayer::IsKownClass(int c)
+{
+	return m_knownClass[c];
 }
 /* INFECTION MODIFICATION END *****************************************/

@@ -111,6 +111,7 @@ private:
 /* INFECTION MODIFICATION START ***************************************/
 private:
 	int m_class;
+	bool m_knownClass[NB_PLAYERCLASS];
 	
 public:
 	int GetClass();
@@ -118,6 +119,7 @@ public:
 	void SetClass(int newClass);
 	bool IsInfected() const;
 	void StartInfection(bool force = false);
+	bool IsKownClass(int c);
 /* INFECTION MODIFICATION END *****************************************/
 };
 
