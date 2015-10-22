@@ -899,11 +899,6 @@ void CCharacter::Die(int Killer, int Weapon)
 		GameServer()->CreateExplosion(m_Pos + vec2(0, -32), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
 	}
 	
-	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[Killer];
-	if(pKillerPlayer->IsInfected() && !m_pPlayer->IsInfected())
-	{
-		pKillerPlayer->m_Score += 2;
-	}
 	m_pPlayer->StartInfection();
 	
 /* INFECTION MODIFICATION END *****************************************/
@@ -978,10 +973,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 	
 /* INFECTION MODIFICATION START ***************************************/
 	if(GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected())
-	{
+	{		
 		if(!(GameServer()->m_apPlayers[From]->GetClass() == PLAYERCLASS_ZOMBIE && Weapon == WEAPON_NINJA))
 		{
 			m_pPlayer->StartInfection();
+			
+			GameServer()->m_apPlayers[From]->m_Score += 2;
 		
 			CNetMsg_Sv_KillMsg Msg;
 			Msg.m_Killer = From;
@@ -1150,6 +1147,13 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			GameServer()->SendBroadcast("Hunter : Has triple jump", m_pPlayer->GetCID());
+			break;
+		case PLAYERCLASS_WITCH:
+			m_Health = 10;
+			RemoveAllGun();
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			GameServer()->SendBroadcast("Whitch : Zombies spawn around her", m_pPlayer->GetCID());
 			break;
 	}
 }

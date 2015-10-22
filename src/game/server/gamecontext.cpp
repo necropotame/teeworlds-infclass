@@ -662,7 +662,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				CNetMsg_Sv_Chat Msg;
 				Msg.m_Team = 0;
 				Msg.m_ClientID = -1;
-				Msg.m_pMessage = "InfectionClass, by necropotame (version 0.1)";
+				Msg.m_pMessage = "InfectionClass, by necropotame (version 0.2)";
 				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 			}
 			else if(

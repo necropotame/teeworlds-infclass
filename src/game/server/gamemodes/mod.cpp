@@ -6,6 +6,7 @@
 #include <game/server/player.h>
 #include <engine/shared/config.h>
 #include <game/mapitems.h>
+#include <iostream>
 /* INFECTION MODIFICATION END *****************************************/
 
 CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
@@ -146,17 +147,77 @@ void CGameControllerMOD::DoWincheck()
 	}
 }
 
+bool CGameControllerMOD::IsSpawnable(vec2 Pos)
+{
+	// check if the position is occupado
+	CCharacter *aEnts[MAX_CLIENTS];
+	int Num = GameServer()->m_World.FindEntities(Pos, 64, (CEntity**)aEnts, MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
+	vec2 Positions[5] = { vec2(0.0f, 0.0f), vec2(-32.0f, 0.0f), vec2(0.0f, -32.0f), vec2(32.0f, 0.0f), vec2(0.0f, 32.0f) };	// start, left, up, right, down
+	int Result = -1;
+	for(int Index = 0; Index < 5 && Result == -1; ++Index)
+	{
+		Result = Index;
+		for(int c = 0; c < Num; ++c)
+			if(GameServer()->Collision()->CheckPoint(Pos+Positions[Index]) ||
+				distance(aEnts[c]->m_Pos, Pos+Positions[Index]) <= aEnts[c]->m_ProximityRadius)
+			{
+				return false;
+			}
+	}
+	return true;
+}
+
 bool CGameControllerMOD::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 {
-	CSpawnEval Eval;
 	int Team = pPlayer->GetTeam();
 
 	// spectators can't spawn
 	if(Team == TEAM_SPECTATORS)
 		return false;
-
+		
+	if(pPlayer->IsInfected() && rand()%2 == 0)
+	{
+		for(int i = 0; i < MAX_CLIENTS; i ++)
+		{
+			CPlayer *pWitch = GameServer()->m_apPlayers[i];
+			
+			if(!pWitch) continue;
+			if(pWitch->GetCID() == pPlayer->GetCID()) continue;
+			if(pWitch->GetClass() != PLAYERCLASS_WITCH) continue;
+			if(!pWitch->GetCharacter()) continue;
+			
+			vec2 spawnTile = vec2(16.0f, 16.0f) + vec2(
+				static_cast<float>(static_cast<int>(round(pWitch->GetCharacter()->m_Pos.x))/32)*32.0,
+				static_cast<float>(static_cast<int>(round(pWitch->GetCharacter()->m_Pos.y))/32)*32.0);
+			
+			for(int j=-1; j<=1; j++)
+			{
+				if(IsSpawnable(vec2(spawnTile.x + j*32.0, spawnTile.y-64.0)))
+				{
+					*pOutPos = spawnTile + vec2(j*32.0, -64.0);
+					return true;
+				}
+				if(IsSpawnable(vec2(spawnTile.x + j*32.0, spawnTile.y+64.0)))
+				{
+					*pOutPos = spawnTile + vec2(j*32.0, 64.0);
+					return true;
+				}
+				if(IsSpawnable(vec2(spawnTile.x-64.0, spawnTile.y + j*32.0)))
+				{
+					*pOutPos = spawnTile + vec2(-64.0, j*32.0);
+					return true;
+				}
+				if(IsSpawnable(vec2(spawnTile.x+64.0, spawnTile.y + j*32.0)))
+				{
+					*pOutPos = spawnTile + vec2(64.0, j*32.0);
+					return true;
+				}
+			}
+		}
+	}
+			
+	CSpawnEval Eval;
 	Team = (pPlayer->IsInfected() ? TEAM_RED : TEAM_BLUE);
-	
 	Eval.m_FriendlyTeam = Team;
 
 	// first try own team spawn, then normal spawn and then enemy

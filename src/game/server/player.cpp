@@ -350,6 +350,13 @@ void CPlayer::SetClassSkin(int newClass)
 			m_TeeInfos.m_ColorFeet = 65414;
 			Server()->SetClientClan(GetCID(), "[Hunter]");
 			break;
+		case PLAYERCLASS_WITCH:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "redbopp", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			Server()->SetClientClan(GetCID(), "[Witch]");
+			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
@@ -379,10 +386,14 @@ void CPlayer::StartInfection()
 	if(IsInfected())
 		return;
 	
-	int random = rand()%4;
+	int random = rand()%8;
 	
-	if(random == 0) SetClass(PLAYERCLASS_BOOMER);
-	else if(random == 1) SetClass(PLAYERCLASS_HUNTER);
+	if(random == 0)
+	{
+		SetClass(PLAYERCLASS_WITCH);
+	}
+	else if(random <= 2) SetClass(PLAYERCLASS_HUNTER);
+	else if(random <= 4) SetClass(PLAYERCLASS_BOOMER);
 	else SetClass(PLAYERCLASS_ZOMBIE);
 }
 

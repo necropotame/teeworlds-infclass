@@ -22,6 +22,9 @@ public:
 	virtual void DoWincheck();
 	virtual bool CanSpawn(CPlayer* pPlayer, vec2 *pPos);
 	virtual bool PickupAllowed(int Index);
+	
+private:
+	bool IsSpawnable(vec2 Pos);
 /* INFECTION MODIFICATION END *****************************************/
 };
 #endif
