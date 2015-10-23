@@ -659,11 +659,27 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				(str_comp_nocase(pMsg->m_pMessage,"/info") == 0)
 			)
 			{
-				CNetMsg_Sv_Chat Msg;
-				Msg.m_Team = 0;
-				Msg.m_ClientID = -1;
-				Msg.m_pMessage = "InfectionClass, by necropotame (version 0.2)";
-				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "InfectionClass, by necropotame (version 0.3)";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "Based on the mod Infection by Gravity";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "Thanks to guenstig werben";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
 			}
 			else if(
 				(str_comp_nocase(pMsg->m_pMessage,"\\cmdlist") == 0) ||
@@ -709,17 +725,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					CNetMsg_Sv_Chat Msg;
 					Msg.m_Team = 0;
 					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "When a human taken damage from a zombie, he became infected";
+					Msg.m_pMessage = "When a human takes damage from a zombie, he become infected";
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
 			}
-			//~ else if(
-				//~ (str_comp_nocase(pMsg->m_pMessage,"\\class witch") == 0) ||
-				//~ (str_comp_nocase(pMsg->m_pMessage,"/class witch") == 0)
-			//~ )
-			//~ {
-				//~ m_apPlayers[ClientID]->SetClass(PLAYERCLASS_WITCH);
-			//~ }
 			else
 			{
 				SendChat(ClientID, Team, pMsg->m_pMessage);
