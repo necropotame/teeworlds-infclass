@@ -1005,10 +1005,11 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		{
 			m_pPlayer->StartInfection();
 			
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%s has infected %s, he got 2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
-			GameServer()->SendChat(-1, -2, aBuf);
+			//char aBuf[512];
+			//str_format(aBuf, sizeof(aBuf), "%s has infected %s, he got 2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
+			//GameServer()->SendChat(-1, -2, aBuf);
 		
+		    //normal kill, so why +2 points?
 			GameServer()->m_apPlayers[From]->m_Score += 2;
 		
 			CNetMsg_Sv_KillMsg Msg;
@@ -1153,7 +1154,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_ActiveWeapon = WEAPON_RIFLE;
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_ENGINEER))
 			{
-				GameServer()->SendBroadcast("Engineer : can build wall with hammer", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("You are a human: Engineer!", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Build walls with your hammer!");
 				m_pPlayer->m_knownClass[PLAYERCLASS_ENGINEER] = true;
 			}
 			break;
@@ -1167,7 +1169,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SOLDIER))
 			{
-				GameServer()->SendBroadcast("Soldier : can pose remote bomb with hammer, and recharge it with grenades", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("You are a human: Soldier!", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Build bombs with your hammer!");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SOLDIER] = true;
 			}
 			break;
@@ -1181,7 +1184,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
 			{
-				GameServer()->SendBroadcast("Medic : can cure infected", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("You are a human: Medic!", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Cure infected humans!");
 				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
 			}
 			break;
@@ -1199,8 +1203,10 @@ void CCharacter::ClassSpawnAttributes()
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_ZOMBIE))
-			{
-				GameServer()->SendBroadcast("Zombie : can hit by hooking others", m_pPlayer->GetCID());
+			{   
+				//normal zombie?
+                GameServer()->SendBroadcast("You are a zombie: Normal!", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Hit by hooking others!");
 				m_pPlayer->m_knownClass[PLAYERCLASS_ZOMBIE] = true;
 			}
 			break;
@@ -1213,7 +1219,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BOOMER))
 			{
-				GameServer()->SendBroadcast("Boomer : can (only) do kamikaze attacks", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("You are a zombie: Boomer!", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You can only do kamikaze attacks!");
 				m_pPlayer->m_knownClass[PLAYERCLASS_BOOMER] = true;
 			}
 			break;
@@ -1226,7 +1233,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_HUNTER))
 			{
-				GameServer()->SendBroadcast("Hunter : can jump three times", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("You are a zombie: Hunter!", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You can jump three times!");
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -1239,7 +1247,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_WITCH))
 			{
-				GameServer()->SendBroadcast("Witch : infected have a chance to spawn near her", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("You are a... Witch!!", m_pPlayer->GetCID());
+                GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Zombies may spawn near you!");
 				m_pPlayer->m_knownClass[PLAYERCLASS_WITCH] = true;
 			}
 			break;
