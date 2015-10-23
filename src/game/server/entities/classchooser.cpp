@@ -16,6 +16,15 @@ CClassChooser::CClassChooser(CGameWorld *pGameWorld, vec2 Pos, int pId)
 	m_PlayerID = pId;
 }
 
+void CClassChooser::Destroy()
+{
+	for(int i=0; i<END_HUMANCLASS - START_HUMANCLASS - 1; i++)
+	{
+		Server()->SnapFreeID(m_IDClass[i]);
+	}
+	delete this;
+}
+
 void CClassChooser::SetCursor(vec2 CurPos)
 {
 	m_CurPos = CurPos;
@@ -35,33 +44,6 @@ int CClassChooser::SelectClass()
 	}
 	return 0;
 }
-
-//~ void CClassChooser::Tick()
-//~ {
-	//~ float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
-	//~ float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
-	//~ vec2 PrevPos = GetPos(Pt);
-	//~ vec2 CurPos = GetPos(Ct);
-	//~ int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, &CurPos, 0);
-	//~ CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
-	//~ CCharacter *TargetChr = GameServer()->m_World.IntersectCharacter(PrevPos, CurPos, 6.0f, CurPos, OwnerChar);
-//~ 
-	//~ m_LifeSpan--;
-//~ 
-	//~ if(TargetChr || Collide || m_LifeSpan < 0 || GameLayerClipped(CurPos))
-	//~ {
-		//~ if(m_LifeSpan >= 0 || m_Weapon == WEAPON_GRENADE)
-			//~ GameServer()->CreateSound(CurPos, m_SoundImpact);
-//~ 
-		//~ if(m_Explosive)
-			//~ GameServer()->CreateExplosion(CurPos, m_Owner, m_Weapon, false);
-//~ 
-		//~ else if(TargetChr)
-			//~ TargetChr->TakeDamage(m_Direction * max(0.001f, m_Force), m_Damage, m_Owner, m_Weapon);
-//~ 
-		//~ GameServer()->m_World.DestroyEntity(this);
-	//~ }
-//~ }
 
 void CClassChooser::Snap(int SnappingClient)
 {	

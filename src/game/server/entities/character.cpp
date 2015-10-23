@@ -104,6 +104,7 @@ void CCharacter::Destroy()
 {
 /* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
+	Server()->SnapFreeID(m_FlagID);
 /* INFECTION MODIFICATION END *****************************************/
 
 	GameServer()->m_World.m_Core.m_apCharacters[m_pPlayer->GetCID()] = 0;

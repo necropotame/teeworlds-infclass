@@ -13,6 +13,7 @@ public:
 	CBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner);
 
 	virtual void Snap(int SnappingClient);
+	void Destroy();
 	void Explode();
 	bool AddBomb();
 	void TickPaused();

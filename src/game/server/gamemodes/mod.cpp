@@ -109,20 +109,21 @@ void CGameControllerMOD::DoWincheck()
 	
 	if(m_RoundStartTick + Server()->TickSpeed()*10 < Server()->Tick())
 	{
+		for(int i = 0; i < MAX_CLIENTS; i ++)
+		{
+			CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+			
+			if(!pPlayer) continue;
+			if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+			
+			if(pPlayer->GetClass() == PLAYERCLASS_NONE)
+			{
+				pPlayer->SetClass(START_HUMANCLASS +1 + rand()%(END_HUMANCLASS - START_HUMANCLASS - 1));
+			}
+		}
+			
 		if(countZombie <= 0)
 		{
-			for(int i = 0; i < MAX_CLIENTS; i ++)
-			{
-				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-				
-				if(!pPlayer) continue;
-				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-				
-				if(pPlayer->GetClass() == PLAYERCLASS_NONE)
-				{
-					pPlayer->SetClass(START_HUMANCLASS +1 + rand()%(END_HUMANCLASS - START_HUMANCLASS - 1));
-				}
-			}
 		
 			bool searchForZombie = true;
 			while(searchForZombie)

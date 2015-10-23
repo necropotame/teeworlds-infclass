@@ -729,6 +729,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
 			}
+			//~ else if(
+				//~ (str_comp_nocase(pMsg->m_pMessage,"\\restart") == 0) ||
+				//~ (str_comp_nocase(pMsg->m_pMessage,"/restart") == 0)
+			//~ )
+			//~ {
+				//~ m_pController->EndRound();
+			//~ }
 			else
 			{
 				SendChat(ClientID, Team, pMsg->m_pMessage);

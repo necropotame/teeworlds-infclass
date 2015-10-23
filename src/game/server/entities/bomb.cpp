@@ -19,6 +19,15 @@ CBomb::CBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 	}
 }
 
+void CBomb::Destroy()
+{
+	for(int i=0; i<MAX_BOMB; i++)
+	{
+		Server()->SnapFreeID(m_IDBomb[i]);
+	}
+	delete this;
+}
+
 void CBomb::Explode()
 {
 	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
