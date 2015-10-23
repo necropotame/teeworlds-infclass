@@ -392,11 +392,16 @@ void CCharacter::FireWeapon()
 					{
 						pTarget->IncreaseHealth(2);
 						pTarget->IncreaseArmor(2);
+						pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
+						pTarget->m_EmoteType = EMOTE_HAPPY;
+						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+						
 					}
 					else
 					{
 						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
 							m_pPlayer->GetCID(), m_ActiveWeapon);
+	
 					}
 /* INFECTION MODIFICATION END *****************************************/
 					Hits++;
