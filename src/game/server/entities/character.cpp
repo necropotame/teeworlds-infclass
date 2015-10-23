@@ -920,8 +920,19 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 
 /* INFECTION MODIFICATION START ***************************************/
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
-	if(pKillerPlayer && pKillerPlayer->IsInfected() == IsInfected() && From != m_pPlayer->GetCID())
-		return false;
+	
+	if(From != m_pPlayer->GetCID() && pKillerPlayer)
+	{
+		if(IsInfected())
+		{
+			if(pKillerPlayer->IsInfected()) return false;
+		}
+		else
+		{
+			//If the player is a new infected, don't infected other -> nobody knows that he is infected.
+			if(!pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
+		}
+	}
 /* INFECTION MODIFICATION END *****************************************/
 
 	// m_pPlayer only inflicts half damage on self
@@ -1128,6 +1139,7 @@ void CCharacter::ClassSpawnAttributes()
 	switch(GetClass())
 	{
 		case PLAYERCLASS_ENGINEER:
+			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, 10);
@@ -1140,6 +1152,7 @@ void CCharacter::ClassSpawnAttributes()
 			}
 			break;
 		case PLAYERCLASS_SOLDIER:
+			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, 10);
@@ -1153,6 +1166,7 @@ void CCharacter::ClassSpawnAttributes()
 			}
 			break;
 		case PLAYERCLASS_MEDIC:
+			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, 10);
@@ -1166,6 +1180,7 @@ void CCharacter::ClassSpawnAttributes()
 			}
 			break;
 		case PLAYERCLASS_NONE:
+			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
@@ -1218,7 +1233,7 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_WITCH))
 			{
-				GameServer()->SendBroadcast("Witch : can summon infected", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("Witch : infected have a chance to spawn near her", m_pPlayer->GetCID());
 				m_pPlayer->m_knownClass[PLAYERCLASS_WITCH] = true;
 			}
 			break;

@@ -25,6 +25,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 /* INFECTION MODIFICATION START ***************************************/
 	m_Score = 0;
 	m_class = PLAYERCLASS_NONE;
+	m_InfectionTick = -1;
 	for(int i=0; i<NB_PLAYERCLASS; i++)
 	{
 		m_knownClass[i] = false;
@@ -362,12 +363,6 @@ void CPlayer::SetClassSkin(int newClass)
 			m_TeeInfos.m_ColorBody = 16776744;
 			m_TeeInfos.m_ColorFeet = 13168;
 			Server()->SetClientClan(GetCID(), "Witch");
-			
-			if(GetClass() == PLAYERCLASS_WITCH)
-			{
-				GameServer()->SendBroadcast("A witch is coming !", -1);
-				GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
-			}
 			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;
@@ -398,11 +393,23 @@ void CPlayer::StartInfection(bool force)
 	if(!force && IsInfected())
 		return;
 	
+	
+	if(!IsInfected())
+	{
+		m_InfectionTick = Server()->Tick();
+	}
+	
 	int random = rand()%8;
 	
 	if(random == 0)
 	{
 		SetClass(PLAYERCLASS_WITCH);
+		
+		if(GetClass() == PLAYERCLASS_WITCH)
+		{
+			GameServer()->SendBroadcast("A witch is coming !", -1);
+			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
+		}
 	}
 	else if(random <= 2) SetClass(PLAYERCLASS_HUNTER);
 	else if(random <= 4) SetClass(PLAYERCLASS_BOOMER);

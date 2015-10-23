@@ -114,6 +114,7 @@ private:
 	
 public:
 	bool m_knownClass[NB_PLAYERCLASS];
+	int m_InfectionTick;
 	
 	int GetClass();
 	void SetClassSkin(int newClass);

@@ -192,7 +192,7 @@ bool CGameControllerMOD::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	if(Team == TEAM_SPECTATORS)
 		return false;
 		
-	if(pPlayer->IsInfected() && rand()%2 == 0)
+	if(pPlayer->IsInfected() && rand()%3 > 0)
 	{
 		for(int i = 0; i < MAX_CLIENTS; i ++)
 		{
