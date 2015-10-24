@@ -44,8 +44,9 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
 		{
 			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%s has killed a witch, he got 5 points", Server()->ClientName(pKiller->GetCID()));
-			GameServer()->SendChat(-1, -2, aBuf);
+			//str_format(aBuf, sizeof(aBuf), "%s has killed a witch, he got 5 points", Server()->ClientName(pKiller->GetCID()));
+			str_format(aBuf, sizeof(aBuf), "You killed a witch, +5 points!");
+			GameServer()->SendChatTarget(pKiller->GetCID(), aBuf);
 			
 			pKiller->m_Score += 5;
 		}
@@ -135,8 +136,9 @@ void CGameControllerMOD::DoWincheck()
 					GameServer()->m_apPlayers[id]->StartInfection();
 					
 					char aBuf[512];
-					str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(GameServer()->m_apPlayers[id]->GetCID()));
-					GameServer()->SendChat(-1, -2, aBuf);
+					//str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(GameServer()->m_apPlayers[id]->GetCID()));
+					str_format(aBuf, sizeof(aBuf), "You are infected!");
+					GameServer()->SendChatTarget(GameServer()->m_apPlayers[id]->GetCID(), aBuf);
 				}
 			}
 		}
