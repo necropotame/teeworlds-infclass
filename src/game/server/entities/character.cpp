@@ -355,7 +355,7 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_BOOMER)
 			{
-				Die(m_pPlayer->GetCID(), WEAPON_WORLD);
+				Die(m_pPlayer->GetCID(), WEAPON_SELF);
 			}
 			else
 			{
@@ -1005,9 +1005,9 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		{
 			m_pPlayer->StartInfection();
 			
-			//char aBuf[512];
-			//str_format(aBuf, sizeof(aBuf), "%s has infected %s, he got 2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
-			//GameServer()->SendChat(-1, -2, aBuf);
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%s has infected %s, he got 2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
+			GameServer()->SendChat(-1, -2, aBuf);
 		
 		    //normal kill, so why +2 points?
 			GameServer()->m_apPlayers[From]->m_Score += 2;
@@ -1154,8 +1154,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_ActiveWeapon = WEAPON_RIFLE;
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_ENGINEER))
 			{
-				GameServer()->SendBroadcast("You are a human: Engineer!", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Build walls with your hammer!");
+				GameServer()->SendBroadcast("You are a human: Engineer", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Build walls with your hammer");
 				m_pPlayer->m_knownClass[PLAYERCLASS_ENGINEER] = true;
 			}
 			break;
@@ -1169,8 +1169,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SOLDIER))
 			{
-				GameServer()->SendBroadcast("You are a human: Soldier!", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Build bombs with your hammer!");
+				GameServer()->SendBroadcast("You are a human: Soldier", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Build bombs with your hammer, recharge it with grenade");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SOLDIER] = true;
 			}
 			break;
@@ -1184,8 +1184,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
 			{
-				GameServer()->SendBroadcast("You are a human: Medic!", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Cure infected humans!");
+				GameServer()->SendBroadcast("You are a human: Medic", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Cure infected humans");
 				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
 			}
 			break;
@@ -1205,8 +1205,8 @@ void CCharacter::ClassSpawnAttributes()
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_ZOMBIE))
 			{   
 				//normal zombie?
-                GameServer()->SendBroadcast("You are a zombie: Normal!", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Hit by hooking others!");
+                GameServer()->SendBroadcast("You are an infected: Zombie", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Hit by hooking others");
 				m_pPlayer->m_knownClass[PLAYERCLASS_ZOMBIE] = true;
 			}
 			break;
@@ -1219,8 +1219,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BOOMER))
 			{
-				GameServer()->SendBroadcast("You are a zombie: Boomer!", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You can only do kamikaze attacks!");
+				GameServer()->SendBroadcast("You are an infected: Boomer", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You can only do kamikaze attacks");
 				m_pPlayer->m_knownClass[PLAYERCLASS_BOOMER] = true;
 			}
 			break;
@@ -1233,8 +1233,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_HUNTER))
 			{
-				GameServer()->SendBroadcast("You are a zombie: Hunter!", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You can jump three times!");
+				GameServer()->SendBroadcast("You are an infected: Hunter", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You can jump three times");
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -1247,8 +1247,8 @@ void CCharacter::ClassSpawnAttributes()
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_WITCH))
 			{
-				GameServer()->SendBroadcast("You are a... Witch!!", m_pPlayer->GetCID());
-                GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Zombies may spawn near you!");
+				GameServer()->SendBroadcast("You are an infected: Witch", m_pPlayer->GetCID());
+                GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Infected may spawn near you");
 				m_pPlayer->m_knownClass[PLAYERCLASS_WITCH] = true;
 			}
 			break;

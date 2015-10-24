@@ -403,12 +403,34 @@ void CPlayer::StartInfection(bool force)
 	
 	if(random == 0)
 	{
-		SetClass(PLAYERCLASS_WITCH);
-		
-		if(GetClass() == PLAYERCLASS_WITCH)
+		bool thereIsAnInfected = false;
+		for(int i = 0; i < MAX_CLIENTS; i++)
 		{
-			GameServer()->SendBroadcast("A witch is coming !", -1);
-			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
+			CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+			
+			if(!pPlayer) continue;
+			if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+			
+			if(pPlayer->IsInfected())
+			{
+				thereIsAnInfected = true;
+				break;
+			}
+		}
+		
+		if(thereIsAnInfected)
+		{
+			SetClass(PLAYERCLASS_WITCH);
+			
+			if(GetClass() == PLAYERCLASS_WITCH)
+			{
+				GameServer()->SendBroadcast("A witch is coming !", -1);
+				GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
+			}
+		}
+		else
+		{
+			SetClass(PLAYERCLASS_ZOMBIE);
 		}
 	}
 	else if(random <= 2) SetClass(PLAYERCLASS_HUNTER);
