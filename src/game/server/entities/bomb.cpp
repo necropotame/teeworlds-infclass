@@ -21,6 +21,12 @@ CBomb::CBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 
 void CBomb::Destroy()
 {
+	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
+	if(OwnerChar && OwnerChar->m_pBomb == this)
+	{
+		OwnerChar->m_pBomb = 0;
+	}
+	
 	for(int i=0; i<MAX_BOMB; i++)
 	{
 		Server()->SnapFreeID(m_IDBomb[i]);
@@ -28,9 +34,17 @@ void CBomb::Destroy()
 	delete this;
 }
 
+void CBomb::Reset()
+{
+	GameServer()->m_World.DestroyEntity(this);
+}
+
 void CBomb::Explode()
 {
 	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
+	if(!OwnerChar)
+		return;
+		
 	vec2 dir = normalize(OwnerChar->m_Pos - m_Pos);
 	
 	
@@ -56,8 +70,7 @@ void CBomb::Explode()
 	
 	if(m_nbBomb == 0)
 	{
-		Destroy();
-		OwnerChar->m_pBomb = 0;
+		GameServer()->m_World.DestroyEntity(this);
 	}
 }
 

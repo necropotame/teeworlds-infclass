@@ -144,12 +144,13 @@ private:
 	vec2 m_FirstShotCoord;
 	int m_PoisonTick;
 	
-	CClassChooser* m_pClassChooser;
-	class CBarrier *m_pBarrier;
 	int m_FlagID;
+	int m_AntiFireTick;
 
 public:
-	class CBomb *m_pBomb;
+	CClassChooser* m_pClassChooser;
+	CBarrier* m_pBarrier;
+	CBomb* m_pBomb;
 
 public:
 	void DestroyChildEntities();

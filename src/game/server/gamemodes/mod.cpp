@@ -46,6 +46,8 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			char aBuf[512];
 			str_format(aBuf, sizeof(aBuf), "%s has killed a witch, he got 5 points", Server()->ClientName(pKiller->GetCID()));
 			GameServer()->SendChat(-1, -2, aBuf);
+			//str_format(aBuf, sizeof(aBuf), "You killed a witch, +5 points!");
+			//GameServer()->SendChatTarget(pKiller->GetCID(), aBuf);
 			
 			pKiller->m_Score += 5;
 		}
@@ -90,7 +92,10 @@ void CGameControllerMOD::OnPlayerInfoChange(class CPlayer *pP)
 }
 
 void CGameControllerMOD::DoWincheck()
-{	
+{
+	if(GameServer()->m_DebugMode)
+		return;
+	
 	int countZombie = 0;
 	int countHuman = 0;
 	
@@ -137,6 +142,8 @@ void CGameControllerMOD::DoWincheck()
 					char aBuf[512];
 					str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(GameServer()->m_apPlayers[id]->GetCID()));
 					GameServer()->SendChat(-1, -2, aBuf);
+					//str_format(aBuf, sizeof(aBuf), "You are infected!");
+					//GameServer()->SendChatTarget(GameServer()->m_apPlayers[id]->GetCID(), aBuf);
 				}
 			}
 		}
@@ -146,7 +153,7 @@ void CGameControllerMOD::DoWincheck()
 			
 		if(countHuman == 0 && countZombie > 1)
 		{
-			GameServer()->SendBroadcast("Infected won this round", -1);
+			GameServer()->SendChat(-1, -2, "Infected won this round");
 			EndRound();
 		}
 	}
@@ -155,11 +162,11 @@ void CGameControllerMOD::DoWincheck()
 	{
 		if(countHuman)
 		{
-			GameServer()->SendBroadcast("Human won this round", -1);
+			GameServer()->SendChat(-1, -2, "Human won this round");
 		}
 		else
 		{
-			GameServer()->SendBroadcast("Infected won this round", -1);
+			GameServer()->SendChat(-1, -2, "Infected won this round");
 		}
 		EndRound();
 	}
