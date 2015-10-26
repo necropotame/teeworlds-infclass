@@ -29,6 +29,7 @@ public:
 	CClassChooser(CGameWorld *pGameWorld, vec2 Pos, int pId);
 
 	virtual void Destroy();
+	virtual void Reset();
 	virtual void Snap(int SnappingClient);
 	
 	void SetCursor(vec2 CurPos);

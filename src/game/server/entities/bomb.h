@@ -14,6 +14,7 @@ public:
 
 	virtual void Snap(int SnappingClient);
 	void Destroy();
+	void Reset();
 	void Explode();
 	bool AddBomb();
 	void TickPaused();

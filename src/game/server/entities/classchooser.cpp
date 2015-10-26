@@ -18,11 +18,22 @@ CClassChooser::CClassChooser(CGameWorld *pGameWorld, vec2 Pos, int pId)
 
 void CClassChooser::Destroy()
 {
+	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_PlayerID);
+	if(OwnerChar && OwnerChar->m_pClassChooser == this)
+	{
+		OwnerChar->m_pClassChooser = 0;
+	}
+	
 	for(int i=0; i<END_HUMANCLASS - START_HUMANCLASS - 1; i++)
 	{
 		Server()->SnapFreeID(m_IDClass[i]);
 	}
 	delete this;
+}
+
+void CClassChooser::Reset()
+{
+	GameServer()->m_World.DestroyEntity(this);
 }
 
 void CClassChooser::SetCursor(vec2 CurPos)

@@ -174,6 +174,14 @@ public:
 	virtual const char *GameType();
 	virtual const char *Version();
 	virtual const char *NetVersion();
+	
+/* INFECTION MODIFICATION START ***************************************/
+public:
+	int m_DebugMode;
+
+private:
+	static void ConDebugMode(IConsole::IResult *pResult, void *pUserData);
+/* INFECTION MODIFICATION END *****************************************/
 };
 
 inline int CmaskAll() { return -1; }

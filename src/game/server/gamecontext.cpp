@@ -677,7 +677,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					CNetMsg_Sv_Chat Msg;
 					Msg.m_Team = 0;
 					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "Thanks to guenstig werben";
+					Msg.m_pMessage = "Thanks to guenstig werben and Defeater";
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
 			}
@@ -686,21 +686,34 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				(str_comp_nocase(pMsg->m_pMessage,"/cmdlist") == 0)
 			)
 			{
-				CNetMsg_Sv_Chat Msg1;
-				Msg1.m_Team = 0;
-				Msg1.m_ClientID = -1;
-				Msg1.m_pMessage = "List of commands";
-				Server()->SendPackMsg(&Msg1, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				CNetMsg_Sv_Chat Msg2;
-				Msg2.m_Team = 0;
-				Msg2.m_ClientID = -1;
-				Msg2.m_pMessage = "/info : Information about this mod";
-				Server()->SendPackMsg(&Msg2, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				CNetMsg_Sv_Chat Msg3;
-				Msg3.m_Team = 0;
-				Msg3.m_ClientID = -1;
-				Msg3.m_pMessage = "/help : Rules of this gametype";
-				Server()->SendPackMsg(&Msg3, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "List of commands";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "/info : Information about this mod";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "/help : Rules of the game";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "/class <engineer|soldier> : Choose your class (only when the round start)";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
 			}
 			else if(
 				(str_comp_nocase(pMsg->m_pMessage,"\\help") == 0) ||
@@ -729,13 +742,80 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
 			}
-			//~ else if(
-				//~ (str_comp_nocase(pMsg->m_pMessage,"\\restart") == 0) ||
-				//~ (str_comp_nocase(pMsg->m_pMessage,"/restart") == 0)
-			//~ )
-			//~ {
-				//~ m_pController->EndRound();
-			//~ }
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class engineer") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class engineer") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE || m_DebugMode))
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ENGINEER);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class soldier") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class soldier") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE || m_DebugMode))
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SOLDIER);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class zombie") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class zombie") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && m_DebugMode)
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ZOMBIE);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class hunter") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class hunter") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && m_DebugMode)
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_HUNTER);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class boomer") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class boomer") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && m_DebugMode)
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_BOOMER);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class witch") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class witch") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && m_DebugMode)
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_WITCH);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class none") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class none") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && m_DebugMode)
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_NONE);
+					if(m_apPlayers[ClientID]->GetCharacter())
+					{
+						m_apPlayers[ClientID]->GetCharacter()->OpenClassChooser();
+					}
+				}
+			}
 			else
 			{
 				SendChat(ClientID, Team, pMsg->m_pMessage);
@@ -1517,6 +1597,27 @@ void CGameContext::ConVote(IConsole::IResult *pResult, void *pUserData)
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
 }
 
+
+/* INFECTION MODIFICATION START ***************************************/
+void CGameContext::ConDebugMode(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	
+	if(!pResult->NumArguments()) pSelf->m_DebugMode = 1;
+	else if(pResult->GetInteger(0) == 1) pSelf->m_DebugMode = 1;
+	else pSelf->m_DebugMode = 0;
+	
+	if(pSelf->m_DebugMode)
+	{
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Debug Mode Enabled");
+	}
+	else
+	{
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Debug Mode Disabled");
+	}
+}
+/* INFECTION MODIFICATION END *****************************************/
+
 void CGameContext::ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	pfnCallback(pResult, pCallbackUserData);
@@ -1556,6 +1657,10 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("force_vote", "ss?r", CFGFLAG_SERVER, ConForceVote, this, "Force a voting option");
 	Console()->Register("clear_votes", "", CFGFLAG_SERVER, ConClearVotes, this, "Clears the voting options");
 	Console()->Register("vote", "r", CFGFLAG_SERVER, ConVote, this, "Force a vote to yes/no");
+	
+/* INFECTION MODIFICATION START ***************************************/
+	Console()->Register("debugmode", "i", CFGFLAG_SERVER, ConDebugMode, this, "Enable debug mode");
+/* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);
 }

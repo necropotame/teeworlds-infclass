@@ -10,6 +10,7 @@ class CBarrier : public CEntity
 public:
 	CBarrier(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, int Owner);
 
+	virtual void Destroy();
 	virtual void Reset();
 	virtual void Tick();
 	virtual void TickPaused();

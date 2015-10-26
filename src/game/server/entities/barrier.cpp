@@ -24,6 +24,15 @@ CBarrier::CBarrier(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner)
 	GameWorld()->InsertEntity(this);
 }
 
+void CBarrier::Destroy()
+{
+	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
+	if(OwnerChar && OwnerChar->m_pBarrier == this)
+	{
+		OwnerChar->m_pBarrier = 0;
+	}
+}
+
 void CBarrier::Reset()
 {
 	GameServer()->m_World.DestroyEntity(this);
@@ -37,7 +46,7 @@ void CBarrier::Tick()
 	{
 		GameServer()->m_World.DestroyEntity(this);
 	}
-	
+	else
 	{
 		// Find other players
 		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())

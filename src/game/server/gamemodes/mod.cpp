@@ -92,7 +92,10 @@ void CGameControllerMOD::OnPlayerInfoChange(class CPlayer *pP)
 }
 
 void CGameControllerMOD::DoWincheck()
-{	
+{
+	if(GameServer()->m_DebugMode)
+		return;
+	
 	int countZombie = 0;
 	int countHuman = 0;
 	

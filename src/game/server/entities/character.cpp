@@ -54,6 +54,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_pBarrier = 0;
 	m_pBomb = 0;
 	m_FlagID = Server()->SnapNewID();
+	m_AntiFireTick = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -89,6 +90,8 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	GameServer()->m_pController->OnCharacterSpawn(this);
 
 /* INFECTION MODIFICATION START ***************************************/
+	m_AntiFireTick = Server()->Tick();
+
 	ClassSpawnAttributes();
 	DestroyChildEntities();
 	if(GetClass() == PLAYERCLASS_NONE)
@@ -268,6 +271,10 @@ void CCharacter::HandleWeaponSwitch()
 
 void CCharacter::FireWeapon()
 {
+	//Wait 1 second after spawning
+	if(Server()->Tick() - m_AntiFireTick < Server()->TickSpeed())
+		return;
+		
 	if(m_ReloadTimer != 0)
 		return;
 
@@ -732,6 +739,8 @@ void CCharacter::Tick()
 					m_pClassChooser = 0;
 					
 					m_pPlayer->SetClass(ccRes);
+					
+					m_AntiFireTick = Server()->Tick();
 				}
 			}
 		}
