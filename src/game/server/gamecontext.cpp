@@ -1088,7 +1088,11 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				return;
 
 			pPlayer->m_LastKill = Server()->Tick();
-			pPlayer->KillCharacter(WEAPON_SELF);
+			
+            if (pPlayer->GetCharacter()->Protected())
+				SendChatTarget(pPlayer->GetCID(), "Error: Spawnprotection");
+			else
+				pPlayer->KillCharacter(WEAPON_SELF);
 		}
 	}
 	else

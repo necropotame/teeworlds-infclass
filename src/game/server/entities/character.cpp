@@ -8,6 +8,7 @@
 #include "character.h"
 #include "laser.h"
 #include "projectile.h"
+#include "spawnprotect.h"
 
 //input count
 struct CInputCount
@@ -98,6 +99,8 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	{
 		OpenClassChooser();
 	}
+	m_SpawnProtection = Server()->Tick();
+	new CSpawProtect(GameWorld(), m_pPlayer->GetCID());
 /* INFECTION MODIFICATION END *****************************************/
 
 	return true;
@@ -873,6 +876,9 @@ void CCharacter::Die(int Killer, int Weapon)
 {
 /* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
+	
+	if(Protected())
+	   return;
 /* INFECTION MODIFICATION END *****************************************/
 	
 	// we got to wait 0.5 secs before respawning
@@ -934,7 +940,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 	m_Core.m_Vel += Force;
 
 /* INFECTION MODIFICATION START ***************************************/
-	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
+	if(Protected())
+	   return false;
+    
+    CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
 	
 	if(From != m_pPlayer->GetCID() && pKillerPlayer)
 	{
@@ -1295,5 +1304,13 @@ void CCharacter::SetClass(int ClassChoosed)
 bool CCharacter::IsInfected() const
 {
 	return m_pPlayer->IsInfected();
+}
+
+bool CCharacter::Protected()
+{
+	if(m_SpawnProtection + 3 * Server()->TickSpeed() > Server()->Tick())
+		return true;
+
+	return false;
 }
 /* INFECTION MODIFICATION END *****************************************/

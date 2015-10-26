@@ -146,6 +146,8 @@ private:
 	
 	int m_FlagID;
 	int m_AntiFireTick;
+	
+	int m_SpawnProtection;
 
 public:
 	CClassChooser* m_pClassChooser;
@@ -161,6 +163,8 @@ public:
 	bool IsInfected() const;
 	void Infection(bool v);
 	void RemoveAllGun();
+	
+	bool Protected();
 /* INFECTION MODIFICATION END *****************************************/
 };
 
