@@ -28,6 +28,10 @@ private:
 	float m_Force;
 	int m_StartTick;
 	bool m_Explosive;
+	
+/* INFECTION MODIFICATION START ***************************************/
+	int m_PortalTick;
+/* INFECTION MODIFICATION END *****************************************/
 };
 
 #endif

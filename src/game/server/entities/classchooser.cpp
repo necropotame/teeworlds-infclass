@@ -78,7 +78,7 @@ void CClassChooser::Snap(int SnappingClient)
 			case PLAYERCLASS_SOLDIER:
 				pP->m_Subtype = WEAPON_GRENADE;
 				break;
-			case PLAYERCLASS_MEDIC:
+			case PLAYERCLASS_SCIENTIST:
 				pP->m_Subtype = WEAPON_SHOTGUN;
 				break;
 			case PLAYERCLASS_ENGINEER:

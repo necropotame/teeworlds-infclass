@@ -131,6 +131,8 @@ public:
 	//
 /* INFECTION MODIFICATION START ***************************************/
 	virtual bool CanSpawn(CPlayer* pPlayer, vec2 *pPos);
+	virtual int ChooseHumanClass(CPlayer* pPlayer);
+	virtual int ChooseInfectedClass(CPlayer* pPlayer);
 /* INFECTION MODIFICATION END *****************************************/
 
 	/*

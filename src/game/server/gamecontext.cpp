@@ -711,7 +711,21 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					CNetMsg_Sv_Chat Msg;
 					Msg.m_Team = 0;
 					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/class <engineer|soldier> : Choose your class (only when the round start)";
+					Msg.m_pMessage = "/help witch : Informations about the witch";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "/help class : Informations about how to choose your class";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "/class <engineer|soldier|scientist> : Choose your class (only when the round start)";
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
 			}
@@ -743,6 +757,53 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				}
 			}
 			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\help witch") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/help witch") == 0)
+			)
+			{
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "The witch acts as a moving infected spawner";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "Dead infected has automatically a chance to spawn nearby her";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "When dead, the witch disappears";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\help class") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/help class") == 0)
+			)
+			{
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "As human, you can choose your class by clicking on the floating weapons around you, but only at the beginning of the round";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "As infected, a random class is attributed to you and you can't change it";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+			}
+			else if(
 				(str_comp_nocase(pMsg->m_pMessage,"\\class engineer") == 0) ||
 				(str_comp_nocase(pMsg->m_pMessage,"/class engineer") == 0)
 			)
@@ -760,6 +821,16 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				if(m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE || m_DebugMode))
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SOLDIER);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class scientist") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class scientist") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE || m_DebugMode))
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SCIENTIST);
 				}
 			}
 			else if(
@@ -800,6 +871,27 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				if(m_apPlayers[ClientID] && m_DebugMode)
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_WITCH);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class undead") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class undead") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && m_DebugMode)
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_UNDEAD);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class random") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class random") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && m_DebugMode)
+				{
+					int c = m_pController->ChooseInfectedClass(m_apPlayers[ClientID]);
+					m_apPlayers[ClientID]->SetClass(c);
 				}
 			}
 			else if(

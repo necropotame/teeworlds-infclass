@@ -53,8 +53,12 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_pClassChooser = 0;
 	m_pBarrier = 0;
 	m_pBomb = 0;
+	m_pPortal[0] = 0;
+	m_pPortal[1] = 0;
 	m_FlagID = Server()->SnapNewID();
 	m_AntiFireTick = 0;
+	m_PortalTick = 0;
+	m_IsFrozen = false;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -91,6 +95,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 
 /* INFECTION MODIFICATION START ***************************************/
 	m_AntiFireTick = Server()->Tick();
+	m_PortalTick = 0;
 
 	ClassSpawnAttributes();
 	DestroyChildEntities();
@@ -360,6 +365,27 @@ void CCharacter::FireWeapon()
 				}
 					
 			}
+			else if(GetClass() == PLAYERCLASS_SCIENTIST)
+			{
+				if(m_pPortal[0] && m_pPortal[1])
+				{
+					GameServer()->m_World.DestroyEntity(m_pPortal[0]);
+					GameServer()->m_World.DestroyEntity(m_pPortal[1]);
+					m_pPortal[0] = 0;
+					m_pPortal[1] = 0;
+				}
+				
+				if(!m_pPortal[0])
+				{
+					m_pPortal[0] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 0);
+				}
+				else
+				{
+					m_pPortal[1] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 1);
+					m_pPortal[1]->Link(m_pPortal[0]);
+					GameServer()->CreateSound(m_Pos, SOUND_CTF_RETURN);
+				}
+			}
 			else if(GetClass() == PLAYERCLASS_BOOMER)
 			{
 				Die(m_pPlayer->GetCID(), WEAPON_SELF);
@@ -467,7 +493,7 @@ void CCharacter::FireWeapon()
 					ProjStartPos,
 					vec2(cosf(a), sinf(a))*Speed,
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_ShotgunLifetime),
-					1, 0, 0, -1, WEAPON_SHOTGUN);
+					1, 0, 10.0f, -1, WEAPON_SHOTGUN);
 
 				// pack the Projectile and send it to the client Directly
 				CNetObj_Projectile p;
@@ -572,6 +598,22 @@ void CCharacter::HandleWeapons()
 	}
 	
 /* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() == PLAYERCLASS_SCIENTIST && m_ActiveWeapon != WEAPON_SHOTGUN)
+	{
+		int AmmoRegenTimeSG = g_pData->m_Weapons.m_aId[WEAPON_SHOTGUN].m_Ammoregentime;
+		if(m_aWeapons[WEAPON_SHOTGUN].m_AmmoRegenStart < 0)
+		{
+			m_aWeapons[WEAPON_SHOTGUN].m_AmmoRegenStart = Server()->Tick();
+		}
+		
+		if ((Server()->Tick() - m_aWeapons[WEAPON_SHOTGUN].m_AmmoRegenStart) >= AmmoRegenTimeSG * Server()->TickSpeed() / 1000)
+		{
+			// Add some ammo
+			m_aWeapons[WEAPON_SHOTGUN].m_Ammo = min(m_aWeapons[WEAPON_SHOTGUN].m_Ammo + 1, 10);
+			m_aWeapons[WEAPON_SHOTGUN].m_AmmoRegenStart = -1;
+		}
+	}
+	
 	if(GetClass() == PLAYERCLASS_ZOMBIE)
 	{
 		if(m_Core.m_HookedPlayer >= 0)
@@ -682,6 +724,15 @@ void CCharacter::ResetInput()
 
 void CCharacter::Tick()
 {
+/* INFECTION MODIFICATION START ***************************************/
+	if(m_IsFrozen && Server()->Tick() - m_FrozenTick > Server()->TickSpeed()*10.0f)
+	{
+		m_IsFrozen = false;
+		m_Health = 10.0;
+		GameServer()->CreatePlayerSpawn(m_Pos);
+	}
+/* INFECTION MODIFICATION END *****************************************/
+	
 	if(m_pPlayer->m_ForceBalanced)
 	{
 		char Buf[128];
@@ -689,6 +740,14 @@ void CCharacter::Tick()
 		GameServer()->SendBroadcast(Buf, m_pPlayer->GetCID());
 
 		m_pPlayer->m_ForceBalanced = false;
+	}
+	
+	if(m_IsFrozen)
+	{
+		m_Input.m_Jump = 0;
+		m_Input.m_Direction = 0;
+		m_Input.m_Hook = 0;
+		m_Input.m_Fire = 0;
 	}
 
 	m_Core.m_Input = m_Input;
@@ -837,6 +896,7 @@ void CCharacter::TickDefered()
 
 void CCharacter::TickPaused()
 {
+	++m_FrozenTick;
 	++m_AttackTick;
 	++m_DamageTakenTick;
 	++m_Ninja.m_ActivationTick;
@@ -850,6 +910,7 @@ void CCharacter::TickPaused()
 		
 /* INFECTION MODIFICATION START ***************************************/
 	++m_PoisonTick;
+	++m_PortalTick;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -871,6 +932,17 @@ bool CCharacter::IncreaseArmor(int Amount)
 
 void CCharacter::Die(int Killer, int Weapon)
 {
+	if(m_IsFrozen)
+		return;
+		
+	if(GetClass() == PLAYERCLASS_UNDEAD && Killer != m_pPlayer->GetCID())
+	{
+		m_IsFrozen = true;
+		m_FrozenTick = Server()->Tick();
+		GameServer()->SendBroadcast("You are frozen for 10 seconds", m_pPlayer->GetCID());
+		return;
+	}
+	
 /* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
 /* INFECTION MODIFICATION END *****************************************/
@@ -918,7 +990,13 @@ void CCharacter::Die(int Killer, int Weapon)
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
 		m_pPlayer->StartInfection(true);
-		GameServer()->SendBroadcast("A witch is dead", -1);
+		GameServer()->SendBroadcast("The witch is dead", -1);
+		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
+	}
+	else if(GetClass() == PLAYERCLASS_UNDEAD)
+	{
+		m_pPlayer->StartInfection(true);
+		GameServer()->SendBroadcast("The undead is finally dead", -1);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else
@@ -1014,11 +1092,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		{
 			m_pPlayer->StartInfection();
 			
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%s has infected %s, he got 2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
-			GameServer()->SendChat(-1, -2, aBuf);
+			//~ char aBuf[512];
+			//~ str_format(aBuf, sizeof(aBuf), "%s has infected %s, he got 2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
+			//~ GameServer()->SendChat(-1, -2, aBuf);
 		
-		    //normal kill, so why +2 points?
 			GameServer()->m_apPlayers[From]->m_Score += 2;
 		
 			CNetMsg_Sv_KillMsg Msg;
@@ -1084,7 +1161,8 @@ void CCharacter::Snap(int SnappingClient)
 		return;
 	
 	int EmoteNormal = (IsInfected() ? EMOTE_ANGRY : EMOTE_NORMAL);
-
+	if(IsFrozen()) EmoteNormal = EMOTE_BLINK;
+	
 	// write down the m_Core
 	if(!m_ReckoningTick || GameServer()->m_World.m_Paused)
 	{
@@ -1155,6 +1233,7 @@ void CCharacter::ClassSpawnAttributes()
 	switch(GetClass())
 	{
 		case PLAYERCLASS_ENGINEER:
+			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			GiveWeapon(WEAPON_HAMMER, -1);
@@ -1169,6 +1248,7 @@ void CCharacter::ClassSpawnAttributes()
 			}
 			break;
 		case PLAYERCLASS_SOLDIER:
+			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			GiveWeapon(WEAPON_HAMMER, -1);
@@ -1183,7 +1263,8 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_SOLDIER] = true;
 			}
 			break;
-		case PLAYERCLASS_MEDIC:
+		case PLAYERCLASS_SCIENTIST:
+			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			GiveWeapon(WEAPON_HAMMER, -1);
@@ -1191,11 +1272,11 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_SHOTGUN, 10);
 			m_ActiveWeapon = WEAPON_SHOTGUN;
 			
-			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SCIENTIST))
 			{
-				GameServer()->SendBroadcast("You are a human: Medic", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Cure infected humans");
-				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
+				GameServer()->SendBroadcast("You are a human: Scientist", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Open portals with your hammer");
+				m_pPlayer->m_knownClass[PLAYERCLASS_SCIENTIST] = true;
 			}
 			break;
 		case PLAYERCLASS_NONE:
@@ -1247,6 +1328,20 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
+		case PLAYERCLASS_UNDEAD:
+			m_Health = 10;
+			m_Armor = 0;
+			RemoveAllGun();
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_UNDEAD))
+			{
+				GameServer()->SendBroadcast("You are an infected: Undead", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You froze 10 seconds instead of dying");
+				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
+			}
+			break;
 		case PLAYERCLASS_WITCH:
 			m_Health = 10;
 			m_Armor = 10;
@@ -1276,6 +1371,16 @@ void CCharacter::DestroyChildEntities()
 		GameServer()->m_World.DestroyEntity(m_pBomb);
 		m_pBomb = 0;
 	}
+	if(m_pPortal[0])
+	{
+		GameServer()->m_World.DestroyEntity(m_pPortal[0]);
+		m_pPortal[0] = 0;
+	}
+	if(m_pPortal[1])
+	{
+		GameServer()->m_World.DestroyEntity(m_pPortal[1]);
+		m_pPortal[1] = 0;
+	}
 	if(m_pClassChooser)
 	{
 		GameServer()->m_World.DestroyEntity(m_pClassChooser);
@@ -1295,5 +1400,10 @@ void CCharacter::SetClass(int ClassChoosed)
 bool CCharacter::IsInfected() const
 {
 	return m_pPlayer->IsInfected();
+}
+
+bool CCharacter::IsFrozen() const
+{
+	return m_IsFrozen;
 }
 /* INFECTION MODIFICATION END *****************************************/

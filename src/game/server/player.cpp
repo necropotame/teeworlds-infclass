@@ -329,6 +329,13 @@ void CPlayer::SetClassSkin(int newClass)
 			//~ m_TeeInfos.m_ColorFeet = 458752;
 			Server()->SetClientClan(GetCID(), "Soldier");
 			break;
+		case PLAYERCLASS_SCIENTIST:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
+			//~ m_TeeInfos.m_ColorBody = 1169488;
+			//~ m_TeeInfos.m_ColorFeet = 458752;
+			Server()->SetClientClan(GetCID(), "Scientist");
+			break;
 		case PLAYERCLASS_MEDIC:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
@@ -356,6 +363,13 @@ void CPlayer::SetClassSkin(int newClass)
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
 			Server()->SetClientClan(GetCID(), "Hunter");
+			break;
+		case PLAYERCLASS_UNDEAD:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "redstripe", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3014400;
+			m_TeeInfos.m_ColorFeet = 13168;
+			Server()->SetClientClan(GetCID(), "Undead");
 			break;
 		case PLAYERCLASS_WITCH:
 			m_TeeInfos.m_UseCustomColor = 1;
@@ -399,43 +413,9 @@ void CPlayer::StartInfection(bool force)
 		m_InfectionTick = Server()->Tick();
 	}
 	
-	int random = rand()%8;
+	int c = GameServer()->m_pController->ChooseInfectedClass(this);
 	
-	if(random == 0)
-	{
-		bool thereIsAnInfected = false;
-		for(int i = 0; i < MAX_CLIENTS; i++)
-		{
-			CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-			
-			if(!pPlayer) continue;
-			if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-			
-			if(pPlayer->IsInfected())
-			{
-				thereIsAnInfected = true;
-				break;
-			}
-		}
-		
-		if(thereIsAnInfected)
-		{
-			SetClass(PLAYERCLASS_WITCH);
-			
-			if(GetClass() == PLAYERCLASS_WITCH)
-			{
-				GameServer()->SendBroadcast("A witch is coming !", -1);
-				GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
-			}
-		}
-		else
-		{
-			SetClass(PLAYERCLASS_ZOMBIE);
-		}
-	}
-	else if(random <= 2) SetClass(PLAYERCLASS_HUNTER);
-	else if(random <= 4) SetClass(PLAYERCLASS_BOOMER);
-	else SetClass(PLAYERCLASS_ZOMBIE);
+	SetClass(c);
 }
 
 bool CPlayer::IsInfected() const

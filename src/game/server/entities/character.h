@@ -13,6 +13,7 @@
 #include <game/server/entities/classchooser.h>
 #include <game/server/entities/bomb.h>
 #include <game/server/entities/barrier.h>
+#include <game/server/entities/portal.h>
 /* INFECTION MODIFICATION END *****************************************/
 
 enum
@@ -130,7 +131,12 @@ private:
 	} m_Ninja;
 
 	// the player core for the physics
+/* INFECTION MODIFICATION START ***************************************/
+public:
 	CCharacterCore m_Core;
+	
+private:
+/* INFECTION MODIFICATION START ***************************************/
 
 	// info for dead reckoning
 	int m_ReckoningTick; // tick that we are performing dead reckoning From
@@ -146,11 +152,16 @@ private:
 	
 	int m_FlagID;
 	int m_AntiFireTick;
+	
+	bool m_IsFrozen;
+	int m_FrozenTick;
 
 public:
 	CClassChooser* m_pClassChooser;
 	CBarrier* m_pBarrier;
 	CBomb* m_pBomb;
+	CPortal* m_pPortal[2];
+	int m_PortalTick;
 
 public:
 	void DestroyChildEntities();
@@ -161,6 +172,7 @@ public:
 	bool IsInfected() const;
 	void Infection(bool v);
 	void RemoveAllGun();
+	bool IsFrozen() const;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

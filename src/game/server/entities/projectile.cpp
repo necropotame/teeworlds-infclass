@@ -1,5 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
+#include <base/math.h>
+#include <base/vmath.h>
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include "projectile.h"
@@ -80,8 +82,25 @@ void CProjectile::Tick()
 
 		GameServer()->m_World.DestroyEntity(this);
 	}
-	
 /* INFECTION MODIFICATION START ***************************************/
+	else if(Server()->Tick() - m_PortalTick >= Server()->TickSpeed()/2.0)
+	{
+		// Find portals
+		for(CPortal *p = (CPortal*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_PORTAL); p; p = (CPortal *)p->TypeNext())
+		{
+			if(!p->m_pLinkedPortal)
+				continue;
+				
+			vec2 IntersectPos = closest_point_on_line(PrevPos, CurPos, p->m_Pos);
+			float Len = distance(p->m_Pos, IntersectPos);
+			if(Len < 48.0f)
+			{
+				m_PortalTick = Server()->Tick();
+				m_Pos = p->m_pLinkedPortal->m_Pos + (m_Pos - p->m_Pos);
+			}
+		}
+	}
+	
 	if(m_Weapon == WEAPON_GRENADE)
 	{
 		for(CBomb *bomb = (CBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BOMB); bomb; bomb = (CBomb *)bomb->TypeNext())
@@ -99,6 +118,9 @@ void CProjectile::Tick()
 void CProjectile::TickPaused()
 {
 	++m_StartTick;
+/* INFECTION MODIFICATION START ***************************************/
+	++m_PortalTick;
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 void CProjectile::FillInfo(CNetObj_Projectile *pProj)

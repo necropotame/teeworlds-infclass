@@ -751,4 +751,14 @@ bool IGameController::PickupAllowed(int Index)
 	if(Index == ENTITY_POWERUP_NINJA) return g_Config.m_SvPowerups;
 	else return true;
 }
+
+int IGameController::ChooseHumanClass(CPlayer* pPlayer)
+{
+	return PLAYERCLASS_ENGINEER;
+}
+
+int IGameController::ChooseInfectedClass(CPlayer* pPlayer)
+{
+	return PLAYERCLASS_ZOMBIE;
+}
 /* INFECTION MODIFICATION END *****************************************/

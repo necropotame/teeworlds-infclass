@@ -27,6 +27,7 @@ public:
 		ENTTYPE_BARRIER,
 		ENTTYPE_BOMB,
 		ENTTYPE_CLASSCHOOSER,
+		ENTTYPE_PORTAL,
 /* INFECTION MODIFICATION END *****************************************/
 		NUM_ENTTYPES
 	};

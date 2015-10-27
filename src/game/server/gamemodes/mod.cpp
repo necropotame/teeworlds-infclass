@@ -7,6 +7,7 @@
 #include <engine/shared/config.h>
 #include <game/mapitems.h>
 #include <time.h>
+#include <iostream>
 /* INFECTION MODIFICATION END *****************************************/
 
 CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
@@ -15,6 +16,35 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 /* INFECTION MODIFICATION START ***************************************/
 	m_pGameType = "InfClass";
 	srand (time(0));
+	
+	m_TotalProbInfectedClass = 0.0;
+	
+	m_ClassProbability[PLAYERCLASS_ZOMBIE] = 1.0f;
+	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	
+	m_ClassProbability[PLAYERCLASS_HUNTER] = 0.6666f * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_HUNTER];
+	
+	m_ClassProbability[PLAYERCLASS_BOOMER] = 0.6666f * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_BOOMER];
+	
+	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_WITCH];
+	
+	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.05 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_UNDEAD];
+	
+	m_TotalProbHumanClass = 0.0;
+	
+	m_ClassProbability[PLAYERCLASS_ENGINEER] = 1.0f;
+	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_ENGINEER];
+	
+	m_ClassProbability[PLAYERCLASS_SOLDIER] = 1.0f;
+	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SOLDIER];
+	
+	m_ClassProbability[PLAYERCLASS_SCIENTIST] = 1.0f;
+	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SCIENTIST];
+	
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -84,9 +114,9 @@ void CGameControllerMOD::PostReset()
 
 void CGameControllerMOD::OnPlayerInfoChange(class CPlayer *pP)
 {
-	//~ std::cout << "SkinName : " << pP->m_TeeInfos.m_SkinName << std::endl;
-	//~ std::cout << "ColorBody : " << pP->m_TeeInfos.m_ColorBody << std::endl;
-	//~ std::cout << "ColorFeet : " << pP->m_TeeInfos.m_ColorFeet << std::endl;
+	std::cout << "SkinName : " << pP->m_TeeInfos.m_SkinName << std::endl;
+	std::cout << "ColorBody : " << pP->m_TeeInfos.m_ColorBody << std::endl;
+	std::cout << "ColorFeet : " << pP->m_TeeInfos.m_ColorFeet << std::endl;
 	
 	pP->SetClassSkin(pP->GetClass());
 }
@@ -123,7 +153,7 @@ void CGameControllerMOD::DoWincheck()
 			
 			if(pPlayer->GetClass() == PLAYERCLASS_NONE)
 			{
-				pPlayer->SetClass(START_HUMANCLASS +1 + rand()%(END_HUMANCLASS - START_HUMANCLASS - 1));
+				pPlayer->SetClass(ChooseHumanClass(pPlayer));
 			}
 		}
 			
@@ -265,5 +295,99 @@ bool CGameControllerMOD::PickupAllowed(int Index)
 	else if(Index == ENTITY_WEAPON_GRENADE) return false;
 	else if(Index == ENTITY_WEAPON_RIFLE) return false;
 	else return true;
+}
+
+int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
+{
+	float random = frandom();
+	
+	random -= m_ClassProbability[PLAYERCLASS_SCIENTIST]/m_TotalProbHumanClass;
+	if(random < 0.0f)
+	{
+		return PLAYERCLASS_SCIENTIST;
+	}
+	
+	random -= m_ClassProbability[PLAYERCLASS_SOLDIER]/m_TotalProbHumanClass;
+	if(random < 0.0f)
+	{
+		return PLAYERCLASS_SOLDIER;
+	}
+	
+	return PLAYERCLASS_ENGINEER;
+}
+
+int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
+{
+	float random = frandom();
+	float TotalProbInfectedClass = m_TotalProbInfectedClass;
+	
+	//Get information about existing infected
+	bool thereIsAWitch = false;
+	int nbInfected = 0;
+	bool thereIsAnUndead = false;
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+		
+		if(!pPlayer) continue;
+		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+		
+		if(pPlayer->IsInfected()) nbInfected++;
+		if(pPlayer->GetClass() == PLAYERCLASS_WITCH) thereIsAWitch = true;
+		if(pPlayer->GetClass() == PLAYERCLASS_UNDEAD) thereIsAnUndead = true;
+	}
+	
+	//Check if undeads are enabled
+	bool undeadEnabled = true;
+	if(nbInfected < 2 || thereIsAnUndead)
+	{
+		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_UNDEAD];
+		undeadEnabled = false;
+	}
+	
+	//Check if witches are enabled
+	bool witchEnabled = true;
+	if(nbInfected < 2 || thereIsAWitch)
+	{
+		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_WITCH];
+		witchEnabled = false;
+	}
+	
+	//Find the random class
+	if(undeadEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_UNDEAD]/TotalProbInfectedClass;
+		if(random < 0.0f)
+		{
+			GameServer()->SendBroadcast("The undead is coming !", -1);
+			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
+			return PLAYERCLASS_UNDEAD;
+		}
+	}
+	
+	if(witchEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_WITCH]/TotalProbInfectedClass;
+		if(random < 0.0f)
+		{
+			GameServer()->SendBroadcast("The witch is coming !", -1);
+			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
+			return PLAYERCLASS_WITCH;
+		}
+	}
+	
+	random -= m_ClassProbability[PLAYERCLASS_BOOMER]/TotalProbInfectedClass;
+	if(random < 0.0f)
+	{
+		return PLAYERCLASS_BOOMER;
+	}
+	
+	random -= m_ClassProbability[PLAYERCLASS_HUNTER]/TotalProbInfectedClass;
+	if(random < 0.0f)
+	{
+		return PLAYERCLASS_HUNTER;
+	}
+	
+	return PLAYERCLASS_ZOMBIE;
 }
 /* INFECTION MODIFICATION END *****************************************/
