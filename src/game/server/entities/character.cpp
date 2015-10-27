@@ -431,6 +431,13 @@ void CCharacter::FireWeapon()
 						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 						
 					}
+					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
+					{
+						pTarget->IncreaseArmor(1);
+						pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
+						pTarget->m_EmoteType = EMOTE_HAPPY;
+						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+					}
 					else
 					{
 						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
@@ -453,6 +460,43 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_GUN:
 		{
+/* INFECTION MODIFICATION START ***************************************/
+			if(GetClass() == PLAYERCLASS_MEDIC)
+			{
+				int ShotSpread = 2;
+
+				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
+				Msg.AddInt(ShotSpread*2+1);
+
+				for(int i = -ShotSpread; i <= ShotSpread; ++i)
+				{
+					float Spreading[] = {-0.05f, -0.025f, 0, -0.025f, -0.05f};
+					float a = GetAngle(Direction);
+					a += Spreading[i+2];
+					float v = 1-(absolute(i)/(float)ShotSpread);
+					float Speed = mix((float)GameServer()->Tuning()->m_ShotgunSpeeddiff, 1.0f, v);
+					CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_SHOTGUN,
+						m_pPlayer->GetCID(),
+						ProjStartPos,
+						vec2(cosf(a), sinf(a))*Speed,
+						(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime/2.0),
+						1, 0, 10.0f, -1, WEAPON_GUN);
+
+					// pack the Projectile and send it to the client Directly
+					CNetObj_Projectile p;
+					pProj->FillInfo(&p);
+
+					for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+						Msg.AddInt(((int *)&p)[i]);
+				}
+
+				Server()->SendMsg(&Msg, 0,m_pPlayer->GetCID());
+
+				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+			}
+			else
+			{
+/* INFECTION MODIFICATION END *****************************************/
 			CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
 				m_pPlayer->GetCID(),
 				ProjStartPos,
@@ -472,6 +516,9 @@ void CCharacter::FireWeapon()
 			Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
 
 			GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+/* INFECTION MODIFICATION START ***************************************/
+			}
+/* INFECTION MODIFICATION END *****************************************/
 		} break;
 
 		case WEAPON_SHOTGUN:
@@ -575,7 +622,13 @@ void CCharacter::HandleWeapons()
 	FireWeapon();
 
 	// ammo regen
+/* INFECTION MODIFICATION START ***************************************/
 	int AmmoRegenTime = g_pData->m_Weapons.m_aId[m_ActiveWeapon].m_Ammoregentime;
+	if(GetClass() == PLAYERCLASS_MEDIC && m_ActiveWeapon == WEAPON_GUN)
+	{
+		AmmoRegenTime /= 2.0;
+	}
+	
 	if(AmmoRegenTime)
 	{
 		// If equipped and not active, regen ammo?
@@ -597,7 +650,6 @@ void CCharacter::HandleWeapons()
 		}
 	}
 	
-/* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_SCIENTIST && m_ActiveWeapon != WEAPON_SHOTGUN)
 	{
 		int AmmoRegenTimeSG = g_pData->m_Weapons.m_aId[WEAPON_SHOTGUN].m_Ammoregentime;
@@ -1277,6 +1329,21 @@ void CCharacter::ClassSpawnAttributes()
 				GameServer()->SendBroadcast("You are a human: Scientist", m_pPlayer->GetCID());
 				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Open portals with your hammer");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SCIENTIST] = true;
+			}
+			break;
+		case PLAYERCLASS_MEDIC:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, 10);
+			m_ActiveWeapon = WEAPON_GUN;
+			
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
+			{
+				GameServer()->SendBroadcast("You are a human: Medic", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Heal humans with you hammer");
+				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
 			}
 			break;
 		case PLAYERCLASS_NONE:

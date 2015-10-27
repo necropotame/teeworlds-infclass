@@ -337,10 +337,10 @@ void CPlayer::SetClassSkin(int newClass)
 			Server()->SetClientClan(GetCID(), "Scientist");
 			break;
 		case PLAYERCLASS_MEDIC:
-			m_TeeInfos.m_UseCustomColor = 0;
+			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
-			//~ m_TeeInfos.m_ColorBody = 1169488;
-			//~ m_TeeInfos.m_ColorFeet = 458752;
+			m_TeeInfos.m_ColorBody = 255;
+			m_TeeInfos.m_ColorFeet = 65280;
 			Server()->SetClientClan(GetCID(), "Medic");
 			break;
 		case PLAYERCLASS_ZOMBIE:
