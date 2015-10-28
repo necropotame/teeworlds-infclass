@@ -1135,8 +1135,8 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 			m_pPlayer->StartInfection();
 			
 			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "You have infected %s, +2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
-			GameServer()->SendChatTarget(m_pPlayer->GetCID(), aBuf);
+			str_format(aBuf, sizeof(aBuf), "You have infected %s, +2 points", Server()->ClientName(m_pPlayer->GetCID()));
+			GameServer()->SendChatTarget(From, aBuf);
 		
 			GameServer()->m_apPlayers[From]->m_Score += 2;
 		

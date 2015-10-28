@@ -321,7 +321,7 @@ bool CGameControllerMOD::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 
 bool CGameControllerMOD::PickupAllowed(int Index)
 {
-	if(Index == ENTITY_POWERUP_NINJA) return g_Config.m_SvPowerups;
+	if(Index == ENTITY_POWERUP_NINJA) return false;
 	else if(Index == ENTITY_WEAPON_SHOTGUN) return false;
 	else if(Index == ENTITY_WEAPON_GRENADE) return false;
 	else if(Index == ENTITY_WEAPON_RIFLE) return false;
