@@ -31,7 +31,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_WITCH];
 	
-	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.05 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.1 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_UNDEAD];
 	
 	m_TotalProbHumanClass = 0.0;
@@ -42,7 +42,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_SOLDIER] = 1.0f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SOLDIER];
 	
-	m_ClassProbability[PLAYERCLASS_SCIENTIST] = 1.0f;
+	m_ClassProbability[PLAYERCLASS_SCIENTIST] = 0.5f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SCIENTIST];
 	
 /* INFECTION MODIFICATION END *****************************************/
@@ -73,12 +73,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 	{
 		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
 		{
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%s has killed a witch, he got 5 points", Server()->ClientName(pKiller->GetCID()));
-			GameServer()->SendChat(-1, -2, aBuf);
-			//str_format(aBuf, sizeof(aBuf), "You killed a witch, +5 points!");
-			//GameServer()->SendChatTarget(pKiller->GetCID(), aBuf);
-			
+			GameServer()->SendChatTarget(pKiller->GetCID(), "You killed a witch, +5 points");	
 			pKiller->m_Score += 5;
 		}
 		else pKiller->m_Score += 1;
@@ -159,21 +154,29 @@ void CGameControllerMOD::DoWincheck()
 			
 		if(countZombie <= 0)
 		{
-		
-			bool searchForZombie = true;
-			while(searchForZombie)
+			float InfectionProb = 1.0/static_cast<float>(countHuman);
+			float random = frandom();
+			
+			for(int i = 0; i < MAX_CLIENTS; i ++)
 			{
-				int id = rand()%MAX_CLIENTS;
-				if(GameServer()->m_apPlayers[id])
+				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+				
+				if(!pPlayer) continue;
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+				
+				if(random < InfectionProb)
 				{
-					searchForZombie = false;
-					GameServer()->m_apPlayers[id]->StartInfection();
+					GameServer()->m_apPlayers[i]->StartInfection();
 					
 					char aBuf[512];
-					str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(GameServer()->m_apPlayers[id]->GetCID()));
+					str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(GameServer()->m_apPlayers[i]->GetCID()));
 					GameServer()->SendChat(-1, -2, aBuf);
-					//str_format(aBuf, sizeof(aBuf), "You are infected!");
-					//GameServer()->SendChatTarget(GameServer()->m_apPlayers[id]->GetCID(), aBuf);
+					
+					break;
+				}
+				else
+				{
+					random -= InfectionProb;
 				}
 			}
 		}
@@ -183,7 +186,14 @@ void CGameControllerMOD::DoWincheck()
 			
 		if(countHuman == 0 && countZombie > 1)
 		{
-			GameServer()->SendChat(-1, -2, "Infected won this round");
+			float RoundDuration = static_cast<float>((Server()->Tick()-m_RoundStartTick)/((float)Server()->TickSpeed()))/60.0f;
+			int Minutes = static_cast<int>(RoundDuration);
+			int Seconds = static_cast<int>((RoundDuration - Minutes)*60.0f);
+			
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "Infected won this round in %i:%s%i minutes", Minutes,((Seconds < 10) ? "0" : ""), Seconds);
+			GameServer()->SendChat(-1, -2, aBuf);
+			
 			EndRound();
 		}
 	}
@@ -192,11 +202,32 @@ void CGameControllerMOD::DoWincheck()
 	{
 		if(countHuman)
 		{
-			GameServer()->SendChat(-1, -2, "Human won this round");
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%i human%s won this round", countHuman, (countHuman>1 ? "s" : ""));
+			GameServer()->SendChat(-1, -2, aBuf);
+			
+			for(int i = 0; i < MAX_CLIENTS; i ++)
+			{
+				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+				
+				if(!pPlayer) continue;
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+				
+				if(!pPlayer->IsInfected())
+				{
+					pPlayer->m_Score += 5;
+					
+					pPlayer->SetClass(ChooseHumanClass(pPlayer));
+					GameServer()->SendChatTarget(i, "You survive, +5 points");
+				}
+			}
+				
 		}
 		else
 		{
-			GameServer()->SendChat(-1, -2, "Infected won this round");
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "Infected won this round in %i minutes", g_Config.m_SvTimelimit);
+			GameServer()->SendChat(-1, -2, aBuf);
 		}
 		EndRound();
 	}

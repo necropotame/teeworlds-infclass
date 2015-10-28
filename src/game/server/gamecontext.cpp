@@ -833,16 +833,16 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SCIENTIST);
 				}
 			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class medic") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class medic") == 0)
-			)
-			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_MEDIC);
-				}
-			}
+			//~ else if(
+				//~ (str_comp_nocase(pMsg->m_pMessage,"\\class medic") == 0) ||
+				//~ (str_comp_nocase(pMsg->m_pMessage,"/class medic") == 0)
+			//~ )
+			//~ {
+				//~ if(m_apPlayers[ClientID] && m_DebugMode)
+				//~ {
+					//~ m_apPlayers[ClientID]->SetClass(PLAYERCLASS_MEDIC);
+				//~ }
+			//~ }
 			else if(
 				(str_comp_nocase(pMsg->m_pMessage,"\\class zombie") == 0) ||
 				(str_comp_nocase(pMsg->m_pMessage,"/class zombie") == 0)
@@ -851,6 +851,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				if(m_apPlayers[ClientID] && m_DebugMode)
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ZOMBIE);
+					
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class zombie", Server()->ClientName(ClientID));
+					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				}
 			}
 			else if(
@@ -861,6 +865,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				if(m_apPlayers[ClientID] && m_DebugMode)
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_HUNTER);
+					
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class hunter", Server()->ClientName(ClientID));
+					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				}
 			}
 			else if(
@@ -871,6 +879,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				if(m_apPlayers[ClientID] && m_DebugMode)
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_BOOMER);
+					
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class boomer", Server()->ClientName(ClientID));
+					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				}
 			}
 			else if(
@@ -881,6 +893,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				if(m_apPlayers[ClientID] && m_DebugMode)
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_WITCH);
+					
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class witch", Server()->ClientName(ClientID));
+					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				}
 			}
 			else if(
@@ -891,6 +907,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				if(m_apPlayers[ClientID] && m_DebugMode)
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_UNDEAD);
+					
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class undead", Server()->ClientName(ClientID));
+					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				}
 			}
 			else if(
@@ -902,6 +922,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				{
 					int c = m_pController->ChooseInfectedClass(m_apPlayers[ClientID]);
 					m_apPlayers[ClientID]->SetClass(c);
+					
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class random", Server()->ClientName(ClientID));
+					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				}
 			}
 			else if(
@@ -916,6 +940,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					{
 						m_apPlayers[ClientID]->GetCharacter()->OpenClassChooser();
 					}
+					
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class none", Server()->ClientName(ClientID));
+					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				}
 			}
 			else
@@ -1712,10 +1740,12 @@ void CGameContext::ConDebugMode(IConsole::IResult *pResult, void *pUserData)
 	if(pSelf->m_DebugMode)
 	{
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Debug Mode Enabled");
+		pSelf->SendChat(-1, CGameContext::CHAT_ALL, "Debug Mode Enabled");
 	}
 	else
 	{
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Debug Mode Disabled");
+		pSelf->SendChat(-1, CGameContext::CHAT_ALL, "Debug Mode Disabled");
 	}
 }
 /* INFECTION MODIFICATION END *****************************************/

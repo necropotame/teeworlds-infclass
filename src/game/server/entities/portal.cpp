@@ -86,13 +86,26 @@ void CPortal::Tick()
 
 void CPortal::Snap(int SnappingClient)
 {
-	if(!m_pLinkedPortal)
-		return;
-		
-	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
-	float angle = fmodf(time*pi/2, 2.0f*pi);
+	float Radius = 64.0f;
+	float Speed = 1.0f;
+	int NbBullet = MAX_PORTALBULLET;
 	
-	for(int i=0; i<MAX_PORTALBULLET; i++)
+	if(!m_pLinkedPortal)
+	{
+		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+		if(pClient && !pClient->IsInfected())
+		{
+			Radius = 32.0f;
+			Speed = -0.5f;
+			NbBullet = MAX_PORTALBULLET/2;
+		}
+		else return;
+	}
+	
+	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
+	float angle = fmodf(Speed*time*pi/2, 2.0f*pi);
+	
+	for(int i=0; i<NbBullet; i++)
 	{
 		if(NetworkClipped(SnappingClient))
 			return;
@@ -101,10 +114,10 @@ void CPortal::Snap(int SnappingClient)
 		if(!pP)
 			return;
 		
-		float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(MAX_PORTALBULLET);
+		float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(NbBullet);
 
-		pP->m_X = static_cast<int>(m_Pos.x + 64.0*cos(shiftedAngle));
-		pP->m_Y = static_cast<int>(m_Pos.y + 64.0*sin(shiftedAngle));
+		pP->m_X = static_cast<int>(m_Pos.x + Radius*cos(shiftedAngle));
+		pP->m_Y = static_cast<int>(m_Pos.y + Radius*sin(shiftedAngle));
 		pP->m_Type = POWERUP_ARMOR;
 		pP->m_Subtype = 0;
 	}

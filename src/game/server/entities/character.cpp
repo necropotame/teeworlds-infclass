@@ -367,23 +367,30 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
-				if(m_pPortal[0] && m_pPortal[1])
+				if(m_Pos.y > -200.0f)
 				{
-					GameServer()->m_World.DestroyEntity(m_pPortal[0]);
-					GameServer()->m_World.DestroyEntity(m_pPortal[1]);
-					m_pPortal[0] = 0;
-					m_pPortal[1] = 0;
-				}
-				
-				if(!m_pPortal[0])
-				{
-					m_pPortal[0] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 0);
+					if(m_pPortal[0] && m_pPortal[1])
+					{
+						GameServer()->m_World.DestroyEntity(m_pPortal[0]);
+						GameServer()->m_World.DestroyEntity(m_pPortal[1]);
+						m_pPortal[0] = 0;
+						m_pPortal[1] = 0;
+					}
+					
+					if(!m_pPortal[0])
+					{
+						m_pPortal[0] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 0);
+					}
+					else
+					{
+						m_pPortal[1] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 1);
+						m_pPortal[1]->Link(m_pPortal[0]);
+						GameServer()->CreateSound(m_Pos, SOUND_CTF_RETURN);
+					}
 				}
 				else
 				{
-					m_pPortal[1] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 1);
-					m_pPortal[1]->Link(m_pPortal[0]);
-					GameServer()->CreateSound(m_Pos, SOUND_CTF_RETURN);
+					GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Warning: Portals can't be opened in high altitude");
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_BOOMER)
@@ -1144,9 +1151,9 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		{
 			m_pPlayer->StartInfection();
 			
-			//~ char aBuf[512];
-			//~ str_format(aBuf, sizeof(aBuf), "%s has infected %s, he got 2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
-			//~ GameServer()->SendChat(-1, -2, aBuf);
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "You have infected %s, +2 points", Server()->ClientName(From), Server()->ClientName(m_pPlayer->GetCID()));
+			GameServer()->SendChatTarget(m_pPlayer->GetCID(), aBuf);
 		
 			GameServer()->m_apPlayers[From]->m_Score += 2;
 		
