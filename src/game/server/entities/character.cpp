@@ -621,7 +621,6 @@ void CCharacter::HandleWeapons()
 		int MaxAmmo = 10;
 		if(GetClass() == PLAYERCLASS_NINJA && i == WEAPON_GRENADE)
 		{
-			AmmoRegenTime *= 3;
 			MaxAmmo = 3;
 		}
 		
