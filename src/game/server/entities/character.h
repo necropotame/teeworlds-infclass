@@ -23,6 +23,12 @@ enum
 	WEAPON_WORLD = -1, // death tiles etc
 };
 
+enum
+{
+	FREEZEREASON_FLASH = 0,
+	FREEZEREASON_UNDEAD = 1
+};
+
 class CCharacter : public CEntity
 {
 	MACRO_ALLOC_POOL_ID()
@@ -128,6 +134,7 @@ private:
 		int m_ActivationTick;
 		int m_CurrentMoveTime;
 		int m_OldVelAmount;
+		int m_NbStrike;
 	} m_Ninja;
 
 	// the player core for the physics
@@ -154,7 +161,8 @@ private:
 	int m_AntiFireTick;
 	
 	bool m_IsFrozen;
-	int m_FrozenTick;
+	int m_FrozenTime;
+	int m_FreezeReason;
 
 public:
 	CClassChooser* m_pClassChooser;
@@ -172,6 +180,7 @@ public:
 	bool IsInfected() const;
 	void Infection(bool v);
 	void RemoveAllGun();
+	void Freeze(float Time, int Reason);
 	bool IsFrozen() const;
 /* INFECTION MODIFICATION END *****************************************/
 };

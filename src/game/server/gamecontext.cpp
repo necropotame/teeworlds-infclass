@@ -833,16 +833,16 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SCIENTIST);
 				}
 			}
-			//~ else if(
-				//~ (str_comp_nocase(pMsg->m_pMessage,"\\class medic") == 0) ||
-				//~ (str_comp_nocase(pMsg->m_pMessage,"/class medic") == 0)
-			//~ )
-			//~ {
-				//~ if(m_apPlayers[ClientID] && m_DebugMode)
-				//~ {
-					//~ m_apPlayers[ClientID]->SetClass(PLAYERCLASS_MEDIC);
-				//~ }
-			//~ }
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\class ninja") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/class ninja") == 0)
+			)
+			{
+				if(m_apPlayers[ClientID] && m_DebugMode)
+				{
+					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_NINJA);
+				}
+			}
 			else if(
 				(str_comp_nocase(pMsg->m_pMessage,"\\class zombie") == 0) ||
 				(str_comp_nocase(pMsg->m_pMessage,"/class zombie") == 0)

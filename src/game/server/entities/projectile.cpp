@@ -4,6 +4,7 @@
 #include <base/vmath.h>
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
+#include <game/server/entities/growingexplosion.h>
 #include "projectile.h"
 
 CProjectile::CProjectile(CGameWorld *pGameWorld, int Type, int Owner, vec2 Pos, vec2 Dir, int Span,
@@ -23,6 +24,11 @@ CProjectile::CProjectile(CGameWorld *pGameWorld, int Type, int Owner, vec2 Pos, 
 	m_Explosive = Explosive;
 
 	GameWorld()->InsertEntity(this);
+	
+/* INFECTION MODIFICATION START ***************************************/
+	m_IsFlashGrenade = false;
+	m_StartPos = Pos;
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 void CProjectile::Reset()
@@ -69,20 +75,30 @@ void CProjectile::Tick()
 
 	m_LifeSpan--;
 
+/* INFECTION MODIFICATION START ***************************************/
 	if(TargetChr || Collide || m_LifeSpan < 0 || GameLayerClipped(CurPos))
 	{
 		if(m_LifeSpan >= 0 || m_Weapon == WEAPON_GRENADE)
 			GameServer()->CreateSound(CurPos, m_SoundImpact);
 
-		if(m_Explosive)
+		if(m_IsFlashGrenade)
+		{
+			vec2 Dir = normalize(PrevPos - CurPos);
+			if(length(Dir) > 1.1) Dir = normalize(m_StartPos - CurPos);
+			
+			new CGrowingExplosion(GameWorld(), CurPos, Dir);
+		}
+		else if(m_Explosive)
+		{
 			GameServer()->CreateExplosion(CurPos, m_Owner, m_Weapon, false);
-
+		}
 		else if(TargetChr)
+		{
 			TargetChr->TakeDamage(m_Direction * max(0.001f, m_Force), m_Damage, m_Owner, m_Weapon);
+		}
 
 		GameServer()->m_World.DestroyEntity(this);
 	}
-/* INFECTION MODIFICATION START ***************************************/
 	else if(Server()->Tick() - m_PortalTick >= Server()->TickSpeed()/2.0)
 	{
 		// Find portals
@@ -101,7 +117,7 @@ void CProjectile::Tick()
 		}
 	}
 	
-	if(m_Weapon == WEAPON_GRENADE)
+	if(m_Weapon == WEAPON_GRENADE && !m_IsFlashGrenade)
 	{
 		for(CBomb *bomb = (CBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BOMB); bomb; bomb = (CBomb *)bomb->TypeNext())
 		{
@@ -144,3 +160,10 @@ void CProjectile::Snap(int SnappingClient)
 	if(pProj)
 		FillInfo(pProj);
 }
+
+/* INFECTION MODIFICATION START ***************************************/
+void CProjectile::FlashGrenade()
+{
+	m_IsFlashGrenade = true;
+}
+/* INFECTION MODIFICATION END *****************************************/

@@ -31,6 +31,11 @@ private:
 	
 /* INFECTION MODIFICATION START ***************************************/
 	int m_PortalTick;
+	bool m_IsFlashGrenade;
+	vec2 m_StartPos;
+	
+public:
+	void FlashGrenade();
 /* INFECTION MODIFICATION END *****************************************/
 };
 

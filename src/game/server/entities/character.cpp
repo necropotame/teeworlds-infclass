@@ -59,6 +59,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_AntiFireTick = 0;
 	m_PortalTick = 0;
 	m_IsFrozen = false;
+	m_FrozenTime = -1;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -148,15 +149,17 @@ void CCharacter::HandleNinja()
 	if(m_ActiveWeapon != WEAPON_NINJA)
 		return;
 
-	if ((Server()->Tick() - m_Ninja.m_ActivationTick) > (g_pData->m_Weapons.m_Ninja.m_Duration * Server()->TickSpeed() / 1000))
-	{
-		// time's up, return
-		m_aWeapons[WEAPON_NINJA].m_Got = false;
-		m_ActiveWeapon = m_LastWeapon;
-
-		SetWeapon(m_ActiveWeapon);
-		return;
-	}
+/* INFECTION MODIFICATION START ***************************************/
+	//~ if ((Server()->Tick() - m_Ninja.m_ActivationTick) > (g_pData->m_Weapons.m_Ninja.m_Duration * Server()->TickSpeed() / 1000))
+	//~ {
+		//~ // time's up, return
+		//~ m_aWeapons[WEAPON_NINJA].m_Got = false;
+		//~ m_ActiveWeapon = m_LastWeapon;
+//~ 
+		//~ SetWeapon(m_ActiveWeapon);
+		//~ return;
+	//~ }
+/* INFECTION MODIFICATION END *****************************************/
 
 	// force ninja Weapon
 	SetWeapon(WEAPON_NINJA);
@@ -225,9 +228,13 @@ void CCharacter::HandleNinja()
 
 void CCharacter::DoWeaponSwitch()
 {
-	// make sure we can switch
-	if(m_ReloadTimer != 0 || m_QueuedWeapon == -1 || m_aWeapons[WEAPON_NINJA].m_Got)
+/* INFECTION MODIFICATION START ***************************************/
+	if(m_ReloadTimer != 0 || m_QueuedWeapon == -1)
 		return;
+		
+	if(m_aWeapons[WEAPON_NINJA].m_Got && GetClass() != PLAYERCLASS_NINJA)
+		return;
+/* INFECTION MODIFICATION END *****************************************/
 
 	// switch Weapon
 	SetWeapon(m_QueuedWeapon);
@@ -276,9 +283,11 @@ void CCharacter::HandleWeaponSwitch()
 
 void CCharacter::FireWeapon()
 {
+/* INFECTION MODIFICATION START ***************************************/
 	//Wait 1 second after spawning
 	if(Server()->Tick() - m_AntiFireTick < Server()->TickSpeed())
 		return;
+/* INFECTION MODIFICATION END *****************************************/
 		
 	if(m_ReloadTimer != 0)
 		return;
@@ -367,7 +376,7 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
-				if(m_Pos.y > -200.0f)
+				if(m_Pos.y > -640.0f)
 				{
 					if(m_pPortal[0] && m_pPortal[1])
 					{
@@ -467,43 +476,6 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_GUN:
 		{
-/* INFECTION MODIFICATION START ***************************************/
-			if(GetClass() == PLAYERCLASS_MEDIC)
-			{
-				int ShotSpread = 2;
-
-				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-				Msg.AddInt(ShotSpread*2+1);
-
-				for(int i = -ShotSpread; i <= ShotSpread; ++i)
-				{
-					float Spreading[] = {-0.05f, -0.025f, 0, -0.025f, -0.05f};
-					float a = GetAngle(Direction);
-					a += Spreading[i+2];
-					float v = 1-(absolute(i)/(float)ShotSpread);
-					float Speed = mix((float)GameServer()->Tuning()->m_ShotgunSpeeddiff, 1.0f, v);
-					CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_SHOTGUN,
-						m_pPlayer->GetCID(),
-						ProjStartPos,
-						vec2(cosf(a), sinf(a))*Speed,
-						(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime/2.0),
-						1, 0, 10.0f, -1, WEAPON_GUN);
-
-					// pack the Projectile and send it to the client Directly
-					CNetObj_Projectile p;
-					pProj->FillInfo(&p);
-
-					for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-						Msg.AddInt(((int *)&p)[i]);
-				}
-
-				Server()->SendMsg(&Msg, 0,m_pPlayer->GetCID());
-
-				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
-			}
-			else
-			{
-/* INFECTION MODIFICATION END *****************************************/
 			CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
 				m_pPlayer->GetCID(),
 				ProjStartPos,
@@ -523,9 +495,6 @@ void CCharacter::FireWeapon()
 			Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
 
 			GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
-/* INFECTION MODIFICATION START ***************************************/
-			}
-/* INFECTION MODIFICATION END *****************************************/
 		} break;
 
 		case WEAPON_SHOTGUN:
@@ -571,6 +540,13 @@ void CCharacter::FireWeapon()
 				(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeLifetime),
 				1, true, 0, SOUND_GRENADE_EXPLODE, WEAPON_GRENADE);
 
+/* INFECTION MODIFICATION START ***************************************/
+			if(GetClass() == PLAYERCLASS_NINJA)
+			{
+				pProj->FlashGrenade();
+			}
+/* INFECTION MODIFICATION END *****************************************/
+
 			// pack the Projectile and send it to the client Directly
 			CNetObj_Projectile p;
 			pProj->FillInfo(&p);
@@ -592,14 +568,23 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_NINJA:
 		{
-			// reset Hit objects
-			m_NumObjectsHit = 0;
+/* INFECTION MODIFICATION START ***************************************/
+			if(m_Ninja.m_NbStrike)
+			{
+				m_Ninja.m_NbStrike--;
+				
+/* INFECTION MODIFICATION END *****************************************/
+				// reset Hit objects
+				m_NumObjectsHit = 0;
 
-			m_Ninja.m_ActivationDir = Direction;
-			m_Ninja.m_CurrentMoveTime = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
-			m_Ninja.m_OldVelAmount = length(m_Core.m_Vel);
+				m_Ninja.m_ActivationDir = Direction;
+				m_Ninja.m_CurrentMoveTime = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
+				m_Ninja.m_OldVelAmount = length(m_Core.m_Vel);
 
-			GameServer()->CreateSound(m_Pos, SOUND_NINJA_FIRE);
+				GameServer()->CreateSound(m_Pos, SOUND_NINJA_HIT);
+/* INFECTION MODIFICATION START ***************************************/
+			}
+/* INFECTION MODIFICATION END *****************************************/
 		} break;
 
 	}
@@ -630,46 +615,30 @@ void CCharacter::HandleWeapons()
 
 	// ammo regen
 /* INFECTION MODIFICATION START ***************************************/
-	int AmmoRegenTime = g_pData->m_Weapons.m_aId[m_ActiveWeapon].m_Ammoregentime;
-	if(GetClass() == PLAYERCLASS_MEDIC && m_ActiveWeapon == WEAPON_GUN)
+	for(int i=WEAPON_GUN; i<=WEAPON_RIFLE; i++)
 	{
-		AmmoRegenTime /= 2.0;
-	}
-	
-	if(AmmoRegenTime)
-	{
-		// If equipped and not active, regen ammo?
-		if (m_ReloadTimer <= 0)
+		int AmmoRegenTime = g_pData->m_Weapons.m_aId[i].m_Ammoregentime;
+		int MaxAmmo = 10;
+		if(GetClass() == PLAYERCLASS_NINJA && i == WEAPON_GRENADE)
 		{
-			if (m_aWeapons[m_ActiveWeapon].m_AmmoRegenStart < 0)
-				m_aWeapons[m_ActiveWeapon].m_AmmoRegenStart = Server()->Tick();
-
-			if ((Server()->Tick() - m_aWeapons[m_ActiveWeapon].m_AmmoRegenStart) >= AmmoRegenTime * Server()->TickSpeed() / 1000)
-			{
-				// Add some ammo
-				m_aWeapons[m_ActiveWeapon].m_Ammo = min(m_aWeapons[m_ActiveWeapon].m_Ammo + 1, 10);
-				m_aWeapons[m_ActiveWeapon].m_AmmoRegenStart = -1;
-			}
-		}
-		else
-		{
-			m_aWeapons[m_ActiveWeapon].m_AmmoRegenStart = -1;
-		}
-	}
-	
-	if(GetClass() == PLAYERCLASS_SCIENTIST && m_ActiveWeapon != WEAPON_SHOTGUN)
-	{
-		int AmmoRegenTimeSG = g_pData->m_Weapons.m_aId[WEAPON_SHOTGUN].m_Ammoregentime;
-		if(m_aWeapons[WEAPON_SHOTGUN].m_AmmoRegenStart < 0)
-		{
-			m_aWeapons[WEAPON_SHOTGUN].m_AmmoRegenStart = Server()->Tick();
+			AmmoRegenTime *= 3;
+			MaxAmmo = 3;
 		}
 		
-		if ((Server()->Tick() - m_aWeapons[WEAPON_SHOTGUN].m_AmmoRegenStart) >= AmmoRegenTimeSG * Server()->TickSpeed() / 1000)
+		if(AmmoRegenTime)
 		{
-			// Add some ammo
-			m_aWeapons[WEAPON_SHOTGUN].m_Ammo = min(m_aWeapons[WEAPON_SHOTGUN].m_Ammo + 1, 10);
-			m_aWeapons[WEAPON_SHOTGUN].m_AmmoRegenStart = -1;
+			if (m_ReloadTimer <= 0 || i != m_ActiveWeapon)
+			{
+				if (m_aWeapons[i].m_AmmoRegenStart < 0)
+					m_aWeapons[i].m_AmmoRegenStart = Server()->Tick();
+
+				if ((Server()->Tick() - m_aWeapons[i].m_AmmoRegenStart) >= AmmoRegenTime * Server()->TickSpeed() / 1000)
+				{
+					// Add some ammo
+					m_aWeapons[i].m_Ammo = min(m_aWeapons[i].m_Ammo + 1, MaxAmmo);
+					m_aWeapons[i].m_AmmoRegenStart = -1;
+				}
+			}
 		}
 	}
 	
@@ -784,11 +753,24 @@ void CCharacter::ResetInput()
 void CCharacter::Tick()
 {
 /* INFECTION MODIFICATION START ***************************************/
-	if(m_IsFrozen && Server()->Tick() - m_FrozenTick > Server()->TickSpeed()*10.0f)
+	--m_FrozenTime;
+	if(m_IsFrozen && m_FrozenTime <= 0)
 	{
 		m_IsFrozen = false;
-		m_Health = 10.0;
+		m_FrozenTime = -1;
+		
+		if(m_FreezeReason == FREEZEREASON_UNDEAD)
+		{
+			m_Health = 10.0;
+		}
+		
 		GameServer()->CreatePlayerSpawn(m_Pos);
+	}
+	
+	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded())
+	{
+		m_Ninja.m_ActivationTick = Server()->Tick();
+		m_Ninja.m_NbStrike = 3;
 	}
 /* INFECTION MODIFICATION END *****************************************/
 	
@@ -806,7 +788,6 @@ void CCharacter::Tick()
 		m_Input.m_Jump = 0;
 		m_Input.m_Direction = 0;
 		m_Input.m_Hook = 0;
-		m_Input.m_Fire = 0;
 	}
 
 	m_Core.m_Input = m_Input;
@@ -823,9 +804,12 @@ void CCharacter::Tick()
 	}
 
 	// handle Weapons
-	HandleWeapons();
-
 /* INFECTION MODIFICATION START ***************************************/
+	if(!IsFrozen())
+	{
+		HandleWeapons();
+	}
+
 	if(GetClass() == PLAYERCLASS_HUNTER)
 	{
 		if(IsGrounded()) m_AirJumpCounter = 0;
@@ -955,7 +939,6 @@ void CCharacter::TickDefered()
 
 void CCharacter::TickPaused()
 {
-	++m_FrozenTick;
 	++m_AttackTick;
 	++m_DamageTakenTick;
 	++m_Ninja.m_ActivationTick;
@@ -991,18 +974,13 @@ bool CCharacter::IncreaseArmor(int Amount)
 
 void CCharacter::Die(int Killer, int Weapon)
 {
-	if(m_IsFrozen)
-		return;
-		
+/* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_UNDEAD && Killer != m_pPlayer->GetCID())
 	{
-		m_IsFrozen = true;
-		m_FrozenTick = Server()->Tick();
-		GameServer()->SendBroadcast("You are frozen for 10 seconds", m_pPlayer->GetCID());
+		Freeze(10.0, FREEZEREASON_UNDEAD);
 		return;
 	}
 	
-/* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
 /* INFECTION MODIFICATION END *****************************************/
 	
@@ -1036,7 +1014,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	GameServer()->CreateDeath(m_Pos, m_pPlayer->GetCID());
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetClass() == PLAYERCLASS_BOOMER)
+	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen())
 	{
 		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 		GameServer()->CreateExplosion(m_Pos, m_pPlayer->GetCID(), WEAPON_HAMMER, false);
@@ -1085,6 +1063,11 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 			if(!pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
 		}
 	}
+	
+	//~ if(m_Ninja.m_CurrentMoveTime > 0 && GetClass() == PLAYERCLASS_NINJA)
+		//~ return false;
+	
+	
 /* INFECTION MODIFICATION END *****************************************/
 
 	// m_pPlayer only inflicts half damage on self
@@ -1220,7 +1203,7 @@ void CCharacter::Snap(int SnappingClient)
 		return;
 	
 	int EmoteNormal = (IsInfected() ? EMOTE_ANGRY : EMOTE_NORMAL);
-	if(IsFrozen()) EmoteNormal = EMOTE_BLINK;
+	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
 	
 	// write down the m_Core
 	if(!m_ReckoningTick || GameServer()->m_World.m_Paused)
@@ -1338,19 +1321,22 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_SCIENTIST] = true;
 			}
 			break;
-		case PLAYERCLASS_MEDIC:
+		case PLAYERCLASS_NINJA:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
-			GiveWeapon(WEAPON_HAMMER, -1);
+			m_aWeapons[WEAPON_HAMMER].m_Got = false;
 			GiveWeapon(WEAPON_GUN, 10);
-			m_ActiveWeapon = WEAPON_GUN;
+			GiveWeapon(WEAPON_GRENADE, 3);
+			m_aWeapons[WEAPON_NINJA].m_Got = true;
+			m_aWeapons[WEAPON_NINJA].m_Ammo = -1;
+			m_ActiveWeapon = WEAPON_NINJA;
 			
-			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_NINJA))
 			{
-				GameServer()->SendBroadcast("You are a human: Medic", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Heal humans with you hammer");
-				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
+				GameServer()->SendBroadcast("You are a human: Ninja", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Throw flash grenades with your hammer");
+				m_pPlayer->m_knownClass[PLAYERCLASS_NINJA] = true;
 			}
 			break;
 		case PLAYERCLASS_NONE:
@@ -1474,6 +1460,20 @@ void CCharacter::SetClass(int ClassChoosed)
 bool CCharacter::IsInfected() const
 {
 	return m_pPlayer->IsInfected();
+}
+
+void CCharacter::Freeze(float Time, int Reason)
+{
+	if(m_IsFrozen)
+		return;
+	
+	m_IsFrozen = true;
+	m_FrozenTime = Server()->TickSpeed()*Time;
+	m_FreezeReason = Reason;
+	
+	char aBuf[512];
+	str_format(aBuf, sizeof(aBuf), "You are frozen for %i seconds", static_cast<int>(Time));
+	GameServer()->SendBroadcast(aBuf, m_pPlayer->GetCID());
 }
 
 bool CCharacter::IsFrozen() const

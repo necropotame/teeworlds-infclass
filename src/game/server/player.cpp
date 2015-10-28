@@ -318,30 +318,24 @@ void CPlayer::SetClassSkin(int newClass)
 		case PLAYERCLASS_ENGINEER:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "limekitty", sizeof(m_TeeInfos.m_SkinName));
-			//~ m_TeeInfos.m_ColorBody = 1169488;
-			//~ m_TeeInfos.m_ColorFeet = 458752;
 			Server()->SetClientClan(GetCID(), "Engineer");
 			break;
 		case PLAYERCLASS_SOLDIER:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "brownbear", sizeof(m_TeeInfos.m_SkinName));
-			//~ m_TeeInfos.m_ColorBody = 1169488;
-			//~ m_TeeInfos.m_ColorFeet = 458752;
 			Server()->SetClientClan(GetCID(), "Soldier");
 			break;
 		case PLAYERCLASS_SCIENTIST:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
-			//~ m_TeeInfos.m_ColorBody = 1169488;
-			//~ m_TeeInfos.m_ColorFeet = 458752;
 			Server()->SetClientClan(GetCID(), "Scientist");
 			break;
-		case PLAYERCLASS_MEDIC:
+		case PLAYERCLASS_NINJA:
 			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
+			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 255;
-			m_TeeInfos.m_ColorFeet = 65280;
-			Server()->SetClientClan(GetCID(), "Medic");
+			m_TeeInfos.m_ColorFeet = 0;
+			Server()->SetClientClan(GetCID(), "Ninja");
 			break;
 		case PLAYERCLASS_ZOMBIE:
 			m_TeeInfos.m_UseCustomColor = 1;
