@@ -665,6 +665,7 @@ void CCharacter::HandleWeapons()
 /* INFECTION MODIFICATION START ***************************************/
 void CCharacter::RemoveAllGun()
 {
+	m_aWeapons[WEAPON_NINJA].m_Got = false;
 	m_aWeapons[WEAPON_GUN].m_Got = false;
 	m_aWeapons[WEAPON_GUN].m_Ammo = 0;
 	m_aWeapons[WEAPON_RIFLE].m_Got = false;
@@ -1278,6 +1279,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_RIFLE, 10);
@@ -1293,6 +1295,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_GRENADE, 10);
@@ -1309,6 +1312,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_SHOTGUN, 10);
@@ -1342,6 +1346,7 @@ void CCharacter::ClassSpawnAttributes()
 		case PLAYERCLASS_NONE:
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			break;
@@ -1349,6 +1354,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_Armor = 0;
 			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
@@ -1364,6 +1370,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_Armor = 0;
 			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
@@ -1378,6 +1385,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_Armor = 0;
 			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
@@ -1392,6 +1400,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_Armor = 0;
 			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
@@ -1406,6 +1415,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_Armor = 10;
 			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
