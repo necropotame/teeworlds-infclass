@@ -34,6 +34,11 @@ void CGameContext::Construct(int Resetting)
 	m_pVoteOptionLast = 0;
 	m_NumVoteOptions = 0;
 	m_LockTeams = 0;
+	
+/* INFECTION MODIFICATION START ***************************************/
+	m_FinalExplosionTick = -1;
+/* INFECTION MODIFICATION END *****************************************/
+
 
 	if(Resetting==NO_RESET)
 		m_pVoteOptionHeap = new CHeap();
@@ -1780,6 +1785,13 @@ void CGameContext::ConDebugMode(IConsole::IResult *pResult, void *pUserData)
 		pSelf->SendChat(-1, CGameContext::CHAT_ALL, "Debug Mode Disabled");
 	}
 }
+
+void CGameContext::ConFinalExplosion(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	
+	pSelf->m_FinalExplosionTick = pSelf->Server()->Tick() + 5*pSelf->Server()->TickSpeed();
+}
 /* INFECTION MODIFICATION END *****************************************/
 
 void CGameContext::ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
@@ -1824,6 +1836,7 @@ void CGameContext::OnConsoleInit()
 	
 /* INFECTION MODIFICATION START ***************************************/
 	Console()->Register("debugmode", "i", CFGFLAG_SERVER, ConDebugMode, this, "Enable debug mode");
+	Console()->Register("finalexplosion", "", CFGFLAG_SERVER, ConFinalExplosion, this, "Create final explosion");
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);

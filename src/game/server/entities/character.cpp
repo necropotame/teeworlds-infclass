@@ -595,11 +595,29 @@ void CCharacter::HandleWeapons()
 /* INFECTION MODIFICATION START ***************************************/
 	for(int i=WEAPON_GUN; i<=WEAPON_RIFLE; i++)
 	{
-		int AmmoRegenTime = g_pData->m_Weapons.m_aId[i].m_Ammoregentime;
+		int AmmoRegenTime = 0;
 		int MaxAmmo = 10;
-		if(GetClass() == PLAYERCLASS_NINJA && i == WEAPON_GRENADE)
+		
+		if(i == WEAPON_GUN)
 		{
+			AmmoRegenTime = 500;
+		}
+		else if(i == WEAPON_SHOTGUN && GetClass() == PLAYERCLASS_SCIENTIST)
+		{
+			AmmoRegenTime = 2000;
+		}
+		else if(GetClass() == PLAYERCLASS_NINJA && i == WEAPON_GRENADE)
+		{
+			AmmoRegenTime = 7000;
 			MaxAmmo = 5;
+		}
+		else if(GetClass() == PLAYERCLASS_SOLDIER && i == WEAPON_GRENADE)
+		{
+			AmmoRegenTime = 5000;
+		}
+		else if(GetClass() == PLAYERCLASS_ENGINEER && i == WEAPON_RIFLE)
+		{
+			AmmoRegenTime = 3500;
 		}
 		
 		if(AmmoRegenTime)
@@ -735,7 +753,7 @@ void CCharacter::Tick()
 	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded())
 	{
 		m_Ninja.m_ActivationTick = Server()->Tick();
-		m_Ninja.m_NbStrike = 3;
+		m_Ninja.m_NbStrike = 2;
 	}
 	
 	if(m_IsFrozen)
@@ -970,7 +988,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	GameServer()->CreateDeath(m_Pos, m_pPlayer->GetCID());
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen())
+	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME)
 	{
 		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 		GameServer()->CreateExplosion(m_Pos, m_pPlayer->GetCID(), WEAPON_HAMMER, false);

@@ -12,10 +12,11 @@ class CGameControllerMOD : public IGameController
 {
 public:
 	CGameControllerMOD(class CGameContext *pGameServer);
+	virtual ~CGameControllerMOD();
 	virtual void Tick();
 	// add more virtual functions here if you wish
 	
-/* INFECTION MODIFICATION START ***************************************/
+	virtual bool OnEntity(int Index, vec2 Pos);
 	virtual void PostReset();
 	virtual int OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon);
 	virtual void OnCharacterSpawn(class CCharacter *pChr);
@@ -33,6 +34,10 @@ private:
 	float m_ClassProbability[NB_PLAYERCLASS];
 	float m_TotalProbInfectedClass;
 	float m_TotalProbHumanClass;
-/* INFECTION MODIFICATION END *****************************************/
+	
+	int m_MapWidth;
+	int m_MapHeight;
+	int* m_GrowingMap;
+	bool m_ExplosionStarted;
 };
 #endif

@@ -111,7 +111,7 @@ void CGrowingExplosion::Tick()
 			continue;
 		
 		int tileX = MAXGROWING + static_cast<int>(round(p->m_Pos.x))/32 - m_SeedX;
-		int tileY = MAXGROWING + static_cast<int>(round(p->m_Pos.x))/32 - m_SeedY;
+		int tileY = MAXGROWING + static_cast<int>(round(p->m_Pos.y))/32 - m_SeedY;
 		
 		if(tileX < 0 || tileX >= GROWINGMAP_LENGTH || tileY < 0 || tileY >= GROWINGMAP_LENGTH)
 			continue;
