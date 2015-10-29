@@ -118,7 +118,12 @@ void CPortal::Snap(int SnappingClient)
 
 		pP->m_X = static_cast<int>(m_Pos.x + Radius*cos(shiftedAngle));
 		pP->m_Y = static_cast<int>(m_Pos.y + Radius*sin(shiftedAngle));
-		pP->m_Type = POWERUP_ARMOR;
+		//~ if(SnappingClient == m_Owner)
+		//~ {
+			//~ pP->m_Type = POWERUP_HEALTH;
+		//~ }
+		//~ else
+			pP->m_Type = POWERUP_ARMOR;
 		pP->m_Subtype = 0;
 	}
 }

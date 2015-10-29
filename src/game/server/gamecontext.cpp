@@ -725,7 +725,14 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					CNetMsg_Sv_Chat Msg;
 					Msg.m_Team = 0;
 					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/class <engineer|soldier|scientist> : Choose your class (only when the round start)";
+					Msg.m_pMessage = "/class <engineer|soldier|scientist|ninja> : Choose your class (only when the round start)";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "/customskin <none|me|all> : Show player skin instead of class-based skin for, respectively nobody, me as human or all human";
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
 			}
@@ -802,6 +809,27 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					Msg.m_pMessage = "As infected, a random class is attributed to you and you can't change it";
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\customskin all") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/customskin all") == 0)
+			)
+			{
+				m_apPlayers[ClientID]->m_ShowCustomSkin = 2;
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\customskin me") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/customskin me") == 0)
+			)
+			{
+				m_apPlayers[ClientID]->m_ShowCustomSkin = 1;
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\customskin none") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/customskin none") == 0)
+			)
+			{
+				m_apPlayers[ClientID]->m_ShowCustomSkin = 0;
 			}
 			else if(
 				(str_comp_nocase(pMsg->m_pMessage,"\\class engineer") == 0) ||
@@ -1195,10 +1223,14 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			}
 			Server()->SetClientClan(ClientID, pMsg->m_pClan);
 			Server()->SetClientCountry(ClientID, pMsg->m_Country);
-			str_copy(pPlayer->m_TeeInfos.m_SkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_SkinName));
-			pPlayer->m_TeeInfos.m_UseCustomColor = pMsg->m_UseCustomColor;
-			pPlayer->m_TeeInfos.m_ColorBody = pMsg->m_ColorBody;
-			pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
+			
+/* INFECTION MODIFICATION START ***************************************/
+			str_copy(pPlayer->m_TeeInfos.m_CustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_CustomSkinName));
+			//~ pPlayer->m_TeeInfos.m_UseCustomColor = pMsg->m_UseCustomColor;
+			//~ pPlayer->m_TeeInfos.m_ColorBody = pMsg->m_ColorBody;
+			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
+/* INFECTION MODIFICATION END *****************************************/
+
 			m_pController->OnPlayerInfoChange(pPlayer);
 		}
 		else if (MsgID == NETMSGTYPE_CL_EMOTICON && !m_World.m_Paused)
@@ -1235,10 +1267,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			Server()->SetClientName(ClientID, pMsg->m_pName);
 			Server()->SetClientClan(ClientID, pMsg->m_pClan);
 			Server()->SetClientCountry(ClientID, pMsg->m_Country);
-			str_copy(pPlayer->m_TeeInfos.m_SkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_SkinName));
-			pPlayer->m_TeeInfos.m_UseCustomColor = pMsg->m_UseCustomColor;
-			pPlayer->m_TeeInfos.m_ColorBody = pMsg->m_ColorBody;
-			pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
+			str_copy(pPlayer->m_TeeInfos.m_CustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_CustomSkinName));
+			//~ pPlayer->m_TeeInfos.m_UseCustomColor = pMsg->m_UseCustomColor;
+			//~ pPlayer->m_TeeInfos.m_ColorBody = pMsg->m_ColorBody;
+			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
 			m_pController->OnPlayerInfoChange(pPlayer);
 
 			// send vote options

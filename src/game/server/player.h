@@ -67,6 +67,9 @@ public:
 	struct
 	{
 		char m_SkinName[64];
+/* INFECTION MODIFICATION START ***************************************/
+		char m_CustomSkinName[64];
+/* INFECTION MODIFICATION END *****************************************/
 		int m_UseCustomColor;
 		int m_ColorBody;
 		int m_ColorFeet;
@@ -122,6 +125,7 @@ public:
 	bool IsInfected() const;
 	void StartInfection(bool force = false);
 	bool IsKownClass(int c);
+	int m_ShowCustomSkin;
 /* INFECTION MODIFICATION END *****************************************/
 };
 
