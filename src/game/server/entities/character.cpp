@@ -599,12 +599,12 @@ void CCharacter::HandleWeapons()
 		int MaxAmmo = 10;
 		if(GetClass() == PLAYERCLASS_NINJA && i == WEAPON_GRENADE)
 		{
-			MaxAmmo = 3;
+			MaxAmmo = 5;
 		}
 		
 		if(AmmoRegenTime)
 		{
-			if (m_ReloadTimer <= 0 || i != m_ActiveWeapon)
+			if(m_ReloadTimer <= 0)
 			{
 				if (m_aWeapons[i].m_AmmoRegenStart < 0)
 					m_aWeapons[i].m_AmmoRegenStart = Server()->Tick();
@@ -1295,7 +1295,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_GRENADE, 3);
+			GiveWeapon(WEAPON_GRENADE, 5);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_NINJA))
