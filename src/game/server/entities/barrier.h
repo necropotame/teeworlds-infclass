@@ -20,6 +20,7 @@ private:
 	vec2 m_Pos2;
 	int m_Owner;
 	int m_LifeSpan;
+	int m_EndPointID;
 };
 
 #endif

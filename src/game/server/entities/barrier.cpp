@@ -22,10 +22,13 @@ CBarrier::CBarrier(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner)
 	m_Owner = Owner;
 	m_LifeSpan = Server()->TickSpeed()*g_BarrierLifeSpan;
 	GameWorld()->InsertEntity(this);
+	m_EndPointID = Server()->SnapNewID();
 }
 
 void CBarrier::Destroy()
 {
+	Server()->SnapFreeID(m_EndPointID);
+	
 	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 	if(OwnerChar && OwnerChar->m_pBarrier == this)
 	{
@@ -73,13 +76,27 @@ void CBarrier::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient))
 		return;
 
-	CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));
-	if(!pObj)
-		return;
+	{
+		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));
+		if(!pObj)
+			return;
 
-	pObj->m_X = (int)m_Pos.x;
-	pObj->m_Y = (int)m_Pos.y;
-	pObj->m_FromX = (int)m_Pos2.x;
-	pObj->m_FromY = (int)m_Pos2.y;
-	pObj->m_StartTick = Server()->Tick();
+		pObj->m_X = (int)m_Pos.x;
+		pObj->m_Y = (int)m_Pos.y;
+		pObj->m_FromX = (int)m_Pos2.x;
+		pObj->m_FromY = (int)m_Pos2.y;
+		pObj->m_StartTick = Server()->Tick();
+	}
+	{
+		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_EndPointID, sizeof(CNetObj_Laser)));
+		if(!pObj)
+			return;
+
+		pObj->m_X = (int)m_Pos2.x;
+		pObj->m_Y = (int)m_Pos2.y;
+		pObj->m_FromX = (int)m_Pos2.x;
+		pObj->m_FromY = (int)m_Pos2.y;
+		pObj->m_StartTick = Server()->Tick();
+		
+	}
 }
