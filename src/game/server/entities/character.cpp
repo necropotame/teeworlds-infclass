@@ -146,23 +146,10 @@ bool CCharacter::IsGrounded()
 
 void CCharacter::HandleNinja()
 {
-	if(m_ActiveWeapon != WEAPON_NINJA)
-		return;
-
 /* INFECTION MODIFICATION START ***************************************/
-	//~ if ((Server()->Tick() - m_Ninja.m_ActivationTick) > (g_pData->m_Weapons.m_Ninja.m_Duration * Server()->TickSpeed() / 1000))
-	//~ {
-		//~ // time's up, return
-		//~ m_aWeapons[WEAPON_NINJA].m_Got = false;
-		//~ m_ActiveWeapon = m_LastWeapon;
-//~ 
-		//~ SetWeapon(m_ActiveWeapon);
-		//~ return;
-	//~ }
+	if(GetClass() != PLAYERCLASS_NINJA || m_ActiveWeapon != WEAPON_HAMMER)
+		return;
 /* INFECTION MODIFICATION END *****************************************/
-
-	// force ninja Weapon
-	SetWeapon(WEAPON_NINJA);
 
 	m_Ninja.m_CurrentMoveTime--;
 
@@ -230,9 +217,6 @@ void CCharacter::DoWeaponSwitch()
 {
 /* INFECTION MODIFICATION START ***************************************/
 	if(m_ReloadTimer != 0 || m_QueuedWeapon == -1)
-		return;
-		
-	if(m_aWeapons[WEAPON_NINJA].m_Got && GetClass() != PLAYERCLASS_NINJA)
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -402,6 +386,22 @@ void CCharacter::FireWeapon()
 					GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Warning: Portals can't be opened in high altitude");
 				}
 			}
+			else if(GetClass() == PLAYERCLASS_NINJA)
+			{
+				if(m_Ninja.m_NbStrike)
+				{
+					m_Ninja.m_NbStrike--;
+					
+					// reset Hit objects
+					m_NumObjectsHit = 0;
+
+					m_Ninja.m_ActivationDir = Direction;
+					m_Ninja.m_CurrentMoveTime = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
+					m_Ninja.m_OldVelAmount = length(m_Core.m_Vel);
+
+					GameServer()->CreateSound(m_Pos, SOUND_NINJA_HIT);
+				}
+			}
 			else if(GetClass() == PLAYERCLASS_BOOMER)
 			{
 				Die(m_pPlayer->GetCID(), WEAPON_SELF);
@@ -565,28 +565,6 @@ void CCharacter::FireWeapon()
 			new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID());
 			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 		} break;
-
-		case WEAPON_NINJA:
-		{
-/* INFECTION MODIFICATION START ***************************************/
-			if(m_Ninja.m_NbStrike)
-			{
-				m_Ninja.m_NbStrike--;
-				
-/* INFECTION MODIFICATION END *****************************************/
-				// reset Hit objects
-				m_NumObjectsHit = 0;
-
-				m_Ninja.m_ActivationDir = Direction;
-				m_Ninja.m_CurrentMoveTime = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
-				m_Ninja.m_OldVelAmount = length(m_Core.m_Vel);
-
-				GameServer()->CreateSound(m_Pos, SOUND_NINJA_HIT);
-/* INFECTION MODIFICATION START ***************************************/
-			}
-/* INFECTION MODIFICATION END *****************************************/
-		} break;
-
 	}
 
 	m_AttackTick = Server()->Tick();
@@ -664,7 +642,6 @@ void CCharacter::HandleWeapons()
 /* INFECTION MODIFICATION START ***************************************/
 void CCharacter::RemoveAllGun()
 {
-	m_aWeapons[WEAPON_NINJA].m_Got = false;
 	m_aWeapons[WEAPON_GUN].m_Got = false;
 	m_aWeapons[WEAPON_GUN].m_Ammo = 0;
 	m_aWeapons[WEAPON_RIFLE].m_Got = false;
@@ -685,18 +662,6 @@ bool CCharacter::GiveWeapon(int Weapon, int Ammo)
 		return true;
 	}
 	return false;
-}
-
-void CCharacter::GiveNinja()
-{
-	m_Ninja.m_ActivationTick = Server()->Tick();
-	m_aWeapons[WEAPON_NINJA].m_Got = true;
-	m_aWeapons[WEAPON_NINJA].m_Ammo = -1;
-	if (m_ActiveWeapon != WEAPON_NINJA)
-		m_LastWeapon = m_ActiveWeapon;
-	m_ActiveWeapon = WEAPON_NINJA;
-
-	GameServer()->CreateSound(m_Pos, SOUND_PICKUP_NINJA);
 }
 
 void CCharacter::SetEmote(int Emote, int Tick)
@@ -772,16 +737,6 @@ void CCharacter::Tick()
 		m_Ninja.m_ActivationTick = Server()->Tick();
 		m_Ninja.m_NbStrike = 3;
 	}
-/* INFECTION MODIFICATION END *****************************************/
-	
-	if(m_pPlayer->m_ForceBalanced)
-	{
-		char Buf[128];
-		str_format(Buf, sizeof(Buf), "You were moved to %s due to team balancing", GameServer()->m_pController->GetTeamName(m_pPlayer->GetTeam()));
-		GameServer()->SendBroadcast(Buf, m_pPlayer->GetCID());
-
-		m_pPlayer->m_ForceBalanced = false;
-	}
 	
 	if(m_IsFrozen)
 	{
@@ -789,6 +744,7 @@ void CCharacter::Tick()
 		m_Input.m_Direction = 0;
 		m_Input.m_Hook = 0;
 	}
+/* INFECTION MODIFICATION END *****************************************/
 
 	m_Core.m_Input = m_Input;
 	m_Core.Tick(true);
@@ -1232,7 +1188,16 @@ void CCharacter::Snap(int SnappingClient)
 	pCharacter->m_Health = 0;
 	pCharacter->m_Armor = 0;
 
-	pCharacter->m_Weapon = m_ActiveWeapon;
+/* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() == PLAYERCLASS_NINJA && m_ActiveWeapon == WEAPON_HAMMER)
+	{
+		pCharacter->m_Weapon = WEAPON_NINJA;
+	}
+	else
+	{
+		pCharacter->m_Weapon = m_ActiveWeapon;
+	}
+/* INFECTION MODIFICATION END *****************************************/
 	pCharacter->m_AttackTick = m_AttackTick;
 
 	pCharacter->m_Direction = m_Input.m_Direction;
@@ -1328,12 +1293,10 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
-			m_aWeapons[WEAPON_HAMMER].m_Got = false;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_GRENADE, 3);
-			m_aWeapons[WEAPON_NINJA].m_Got = true;
-			m_aWeapons[WEAPON_NINJA].m_Ammo = -1;
-			m_ActiveWeapon = WEAPON_NINJA;
+			m_ActiveWeapon = WEAPON_HAMMER;
 			
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_NINJA))
 			{

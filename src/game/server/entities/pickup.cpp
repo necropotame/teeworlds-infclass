@@ -94,7 +94,7 @@ void CPickup::Tick()
 /* INFECTION MODIFICATION END *****************************************/
 				{
 					// activate ninja on target player
-					pChr->GiveNinja();
+					//pChr->GiveNinja();
 					RespawnTime = g_pData->m_aPickups[m_Type].m_Respawntime;
 
 					// loop through all players, setting their emotes
