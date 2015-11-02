@@ -427,6 +427,14 @@ int CServer::Init()
 	}
 
 	m_CurrentGameTick = 0;
+		
+/* INFECTION MODIFICATION START ***************************************/
+	SetAmmoRegenTime(INFWEAPON_GUN, 500);
+	SetAmmoRegenTime(INFWEAPON_ENGINEER_RIFLE, 6000);
+	SetAmmoRegenTime(INFWEAPON_SOLDIER_GRENADE, 7000);
+	SetAmmoRegenTime(INFWEAPON_SCIENTIST_SHOTGUN, 2000);
+	SetAmmoRegenTime(INFWEAPON_NINJA_GRENADE, 10000);
+/* INFECTION MODIFICATION END *****************************************/
 
 	return 0;
 }
@@ -1731,4 +1739,16 @@ int main(int argc, const char **argv) // ignore_convention
 	delete pConfig;
 	return 0;
 }
+
+/* INFECTION MODIFICATION START ***************************************/
+int CServer::GetAmmoRegenTime(int WID)
+{
+	return m_InfAmmoRegenTime[WID];
+}
+
+void CServer::SetAmmoRegenTime(int WID, int Time)
+{
+	m_InfAmmoRegenTime[WID] = Time;
+}
+/* INFECTION MODIFICATION END *****************************************/
 

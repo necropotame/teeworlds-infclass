@@ -42,6 +42,9 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_SCIENTIST] = 0.5f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SCIENTIST];
 	
+	m_ClassProbability[PLAYERCLASS_NINJA] = 0.5f;
+	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_NINJA];
+	
 	m_GrowingMap = 0;
 	
 	m_ExplosionStarted = false;
@@ -114,7 +117,7 @@ void CGameControllerMOD::Tick()
 	
 	//After 10 seconds, start the infection and choose a random class for human
 	if(TheGameCanBePlayed && m_RoundStartTick + Server()->TickSpeed()*10 < Server()->Tick())
-	{
+	{		
 		for(int i = 0; i < MAX_CLIENTS; i ++)
 		{
 			CPlayer *pPlayer = GameServer()->m_apPlayers[i];
@@ -551,4 +554,13 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	}
 	
 	return PLAYERCLASS_ZOMBIE;
+}
+
+bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
+{
+	if(PlayerClass == PLAYERCLASS_ENGINEER) return true;
+	else if(PlayerClass == PLAYERCLASS_SOLDIER) return true;
+	else if(PlayerClass == PLAYERCLASS_NINJA) return true;
+	else if(PlayerClass == PLAYERCLASS_SCIENTIST) return true;
+	else return false;
 }

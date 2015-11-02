@@ -26,6 +26,7 @@ public:
 	virtual bool PickupAllowed(int Index);
 	virtual int ChooseHumanClass(CPlayer* pPlayer);
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
+	virtual bool IsChoosableClass(int PlayerClass);
 	
 private:
 	bool IsSpawnable(vec2 Pos);

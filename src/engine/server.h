@@ -5,6 +5,18 @@
 #include "kernel.h"
 #include "message.h"
 
+/* INFECTION MODIFICATION START ***************************************/
+enum
+{
+	INFWEAPON_GUN,
+	INFWEAPON_ENGINEER_RIFLE,
+	INFWEAPON_SOLDIER_GRENADE,
+	INFWEAPON_SCIENTIST_SHOTGUN,
+	INFWEAPON_NINJA_GRENADE,
+	NB_INFWEAPON
+};
+/* INFECTION MODIFICATION END *****************************************/
+
 class IServer : public IInterface
 {
 	MACRO_INTERFACE("server", 0)
@@ -66,6 +78,11 @@ public:
 
 	virtual void DemoRecorder_HandleAutoStart() = 0;
 	virtual bool DemoRecorder_IsRecording() = 0;
+	
+/* INFECTION MODIFICATION START ***************************************/
+	virtual int GetAmmoRegenTime(int WID) = 0;
+	virtual void SetAmmoRegenTime(int WID, int Time) = 0;
+/* INFECTION MODIFICATION END *****************************************/
 };
 
 class IGameServer : public IInterface

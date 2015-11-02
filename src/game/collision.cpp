@@ -45,6 +45,11 @@ void CCollision::Init(class CLayers *pLayers)
 		case TILE_NOHOOK:
 			m_pTiles[i].m_Index = COLFLAG_SOLID|COLFLAG_NOHOOK;
 			break;
+/* INFECTION MODIFICATION START ***************************************/
+		case TILE_INFECTION:
+			m_pTiles[i].m_Index = COLFLAG_INFECTION;
+			break;
+/* INFECTION MODIFICATION END *****************************************/
 		default:
 			m_pTiles[i].m_Index = 0;
 		}
@@ -202,3 +207,10 @@ void CCollision::MoveBox(vec2 *pInoutPos, vec2 *pInoutVel, vec2 Size, float Elas
 	*pInoutPos = Pos;
 	*pInoutVel = Vel;
 }
+
+/* INFECTION MODIFICATION START ***************************************/
+bool CCollision::CheckPointInfection(float x, float y)
+{
+	return GetTile(x, y)&COLFLAG_INFECTION;
+}
+/* INFECTION MODIFICATION END *****************************************/

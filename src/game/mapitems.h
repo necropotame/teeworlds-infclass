@@ -46,6 +46,9 @@ enum
 	TILE_SOLID,
 	TILE_DEATH,
 	TILE_NOHOOK,
+/* INFECTION MODIFICATION START ***************************************/
+	TILE_INFECTION,
+/* INFECTION MODIFICATION END *****************************************/
 
 	TILEFLAG_VFLIP=1,
 	TILEFLAG_HFLIP=2,

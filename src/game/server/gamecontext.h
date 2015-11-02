@@ -36,6 +36,7 @@
 			All players (CPlayer::snap)
 
 */
+
 class CGameContext : public IGameServer
 {
 	IServer *m_pServer;
@@ -176,13 +177,9 @@ public:
 	virtual const char *NetVersion();
 	
 /* INFECTION MODIFICATION START ***************************************/
-public:
-	int m_DebugMode;
-	int m_FinalExplosionTick;
-
 private:
-	static void ConDebugMode(IConsole::IResult *pResult, void *pUserData);
-	static void ConFinalExplosion(IConsole::IResult *pResult, void *pUserData);
+	static void ConSetClass(IConsole::IResult *pResult, void *pUserData);
+	static void ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

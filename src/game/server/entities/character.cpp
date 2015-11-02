@@ -600,24 +600,24 @@ void CCharacter::HandleWeapons()
 		
 		if(i == WEAPON_GUN)
 		{
-			AmmoRegenTime = 500;
+			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_GUN);
 		}
 		else if(i == WEAPON_SHOTGUN && GetClass() == PLAYERCLASS_SCIENTIST)
 		{
-			AmmoRegenTime = 2000;
+			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_SCIENTIST_SHOTGUN);
 		}
 		else if(GetClass() == PLAYERCLASS_NINJA && i == WEAPON_GRENADE)
 		{
-			AmmoRegenTime = 7000;
+			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_NINJA_GRENADE);
 			MaxAmmo = 5;
 		}
 		else if(GetClass() == PLAYERCLASS_SOLDIER && i == WEAPON_GRENADE)
 		{
-			AmmoRegenTime = 5000;
+			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_SOLDIER_GRENADE);
 		}
 		else if(GetClass() == PLAYERCLASS_ENGINEER && i == WEAPON_RIFLE)
 		{
-			AmmoRegenTime = 3500;
+			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_ENGINEER_RIFLE);
 		}
 		
 		if(AmmoRegenTime)
@@ -736,6 +736,12 @@ void CCharacter::ResetInput()
 void CCharacter::Tick()
 {
 /* INFECTION MODIFICATION START ***************************************/
+	//Check is the character is in toxic gaz
+	if(!IsInfected() && GameServer()->Collision()->CheckPointInfection(m_Pos.x, m_Pos.y))
+	{
+		m_pPlayer->StartInfection();
+	}
+
 	--m_FrozenTime;
 	if(m_IsFrozen && m_FrozenTime <= 0)
 	{
@@ -1241,7 +1247,7 @@ void CCharacter::Snap(int SnappingClient)
 /* INFECTION MODIFICATION START ***************************************/
 void CCharacter::OpenClassChooser()
 {
-	GameServer()->SendBroadcast("Choose your class by clicking on the weapon", m_pPlayer->GetCID());
+	GameServer()->SendBroadcast("Choose your class by clicking on the weapon, or wait random selection", m_pPlayer->GetCID());
 	if(!m_pClassChooser)
 	{
 		m_pClassChooser = new CClassChooser(GameWorld(), m_Pos, m_pPlayer->GetCID());

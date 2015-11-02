@@ -761,4 +761,9 @@ int IGameController::ChooseInfectedClass(CPlayer* pPlayer)
 {
 	return PLAYERCLASS_ZOMBIE;
 }
+
+bool IGameController::IsChoosableClass(int PlayerClass)
+{
+	return false;
+}
 /* INFECTION MODIFICATION END *****************************************/

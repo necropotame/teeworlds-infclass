@@ -12,15 +12,17 @@
 */
 class IGameController
 {
-	vec2 m_aaSpawnPoints[3][64];
-	int m_aNumSpawnPoints[3];
-	
 	class CGameContext *m_pGameServer;
 	class IServer *m_pServer;
 
 protected:
 	CGameContext *GameServer() const { return m_pGameServer; }
 	IServer *Server() const { return m_pServer; }
+
+/* INFECTION MODIFICATION START ***************************************/
+	vec2 m_aaSpawnPoints[3][64];
+	int m_aNumSpawnPoints[3];
+/* INFECTION MODIFICATION START ***************************************/
 
 	struct CSpawnEval
 	{
@@ -133,6 +135,7 @@ public:
 	virtual bool CanSpawn(CPlayer* pPlayer, vec2 *pPos);
 	virtual int ChooseHumanClass(CPlayer* pPlayer);
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
+	virtual bool IsChoosableClass(int PlayerClass);
 /* INFECTION MODIFICATION END *****************************************/
 
 	/*

@@ -237,6 +237,13 @@ public:
 	virtual void SnapFreeID(int ID);
 	virtual void *SnapNewItem(int Type, int ID, int Size);
 	void SnapSetStaticsize(int ItemType, int Size);
+	
+/* INFECTION MODIFICATION START ***************************************/
+public:
+	int m_InfAmmoRegenTime[NB_INFWEAPON];
+	virtual int GetAmmoRegenTime(int WID);
+	virtual void SetAmmoRegenTime(int WID, int Time);
+/* INFECTION MODIFICATION END *****************************************/
 };
 
 #endif

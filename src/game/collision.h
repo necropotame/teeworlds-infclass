@@ -21,6 +21,9 @@ public:
 		COLFLAG_SOLID=1,
 		COLFLAG_DEATH=2,
 		COLFLAG_NOHOOK=4,
+/* INFECTION MODIFICATION START ***************************************/
+		COLFLAG_INFECTION=8,
+/* INFECTION MODIFICATION END *****************************************/
 	};
 
 	CCollision();
@@ -34,6 +37,10 @@ public:
 	void MovePoint(vec2 *pInoutPos, vec2 *pInoutVel, float Elasticity, int *pBounces);
 	void MoveBox(vec2 *pInoutPos, vec2 *pInoutVel, vec2 Size, float Elasticity);
 	bool TestBox(vec2 Pos, vec2 Size);
+	
+/* INFECTION MODIFICATION START ***************************************/
+	bool CheckPointInfection(float x, float y);
+/* INFECTION MODIFICATION END *****************************************/
 };
 
 #endif

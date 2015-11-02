@@ -34,11 +34,6 @@ void CGameContext::Construct(int Resetting)
 	m_pVoteOptionLast = 0;
 	m_NumVoteOptions = 0;
 	m_LockTeams = 0;
-	
-/* INFECTION MODIFICATION START ***************************************/
-	m_FinalExplosionTick = -1;
-/* INFECTION MODIFICATION END *****************************************/
-
 
 	if(Resetting==NO_RESET)
 		m_pVoteOptionHeap = new CHeap();
@@ -841,7 +836,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				(str_comp_nocase(pMsg->m_pMessage,"/class engineer") == 0)
 			)
 			{
-				if(m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE || m_DebugMode))
+				if(m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ENGINEER);
 				}
@@ -851,7 +846,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				(str_comp_nocase(pMsg->m_pMessage,"/class soldier") == 0)
 			)
 			{
-				if(m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE || m_DebugMode))
+				if(m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SOLDIER);
 				}
@@ -861,7 +856,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				(str_comp_nocase(pMsg->m_pMessage,"/class scientist") == 0)
 			)
 			{
-				if(m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE || m_DebugMode))
+				if(m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SCIENTIST);
 				}
@@ -871,112 +866,9 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				(str_comp_nocase(pMsg->m_pMessage,"/class ninja") == 0)
 			)
 			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
+				if(m_pController->IsChoosableClass(PLAYERCLASS_NINJA) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
 				{
 					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_NINJA);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class zombie") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class zombie") == 0)
-			)
-			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ZOMBIE);
-					
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class zombie", Server()->ClientName(ClientID));
-					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class hunter") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class hunter") == 0)
-			)
-			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_HUNTER);
-					
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class hunter", Server()->ClientName(ClientID));
-					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class boomer") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class boomer") == 0)
-			)
-			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_BOOMER);
-					
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class boomer", Server()->ClientName(ClientID));
-					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class witch") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class witch") == 0)
-			)
-			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_WITCH);
-					
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class witch", Server()->ClientName(ClientID));
-					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class undead") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class undead") == 0)
-			)
-			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_UNDEAD);
-					
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class undead", Server()->ClientName(ClientID));
-					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class random") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class random") == 0)
-			)
-			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
-				{
-					int c = m_pController->ChooseInfectedClass(m_apPlayers[ClientID]);
-					m_apPlayers[ClientID]->SetClass(c);
-					
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class random", Server()->ClientName(ClientID));
-					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class none") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class none") == 0)
-			)
-			{
-				if(m_apPlayers[ClientID] && m_DebugMode)
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_NONE);
-					if(m_apPlayers[ClientID]->GetCharacter())
-					{
-						m_apPlayers[ClientID]->GetCharacter()->OpenClassChooser();
-					}
-					
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "'%s' used the command /class none", Server()->ClientName(ClientID));
-					SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 				}
 			}
 			else
@@ -1766,31 +1658,67 @@ void CGameContext::ConVote(IConsole::IResult *pResult, void *pUserData)
 
 
 /* INFECTION MODIFICATION START ***************************************/
-void CGameContext::ConDebugMode(IConsole::IResult *pResult, void *pUserData)
+void CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
+	int PlayerID = pResult->GetInteger(0);
+	const char *pClassName = pResult->GetString(1);
+
+	CPlayer* pPlayer = pSelf->m_apPlayers[PlayerID];
 	
-	if(!pResult->NumArguments()) pSelf->m_DebugMode = 1;
-	else if(pResult->GetInteger(0) == 1) pSelf->m_DebugMode = 1;
-	else pSelf->m_DebugMode = 0;
-	
-	if(pSelf->m_DebugMode)
+	if(!pPlayer)
+		return;
+
+	if(str_comp(pClassName, "engineer") == 0) pPlayer->SetClass(PLAYERCLASS_ENGINEER);
+	else if(str_comp(pClassName, "soldier") == 0) pPlayer->SetClass(PLAYERCLASS_SOLDIER);
+	else if(str_comp(pClassName, "scientist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIENTIST);
+	else if(str_comp(pClassName, "ninja") == 0) pPlayer->SetClass(PLAYERCLASS_NINJA);
+	else if(str_comp(pClassName, "zombie") == 0) pPlayer->SetClass(PLAYERCLASS_ZOMBIE);
+	else if(str_comp(pClassName, "hunter") == 0) pPlayer->SetClass(PLAYERCLASS_HUNTER);
+	else if(str_comp(pClassName, "boomer") == 0) pPlayer->SetClass(PLAYERCLASS_BOOMER);
+	else if(str_comp(pClassName, "undead") == 0) pPlayer->SetClass(PLAYERCLASS_UNDEAD);
+	else if(str_comp(pClassName, "witch") == 0) pPlayer->SetClass(PLAYERCLASS_WITCH);
+	else if(str_comp(pClassName, "none") == 0)
 	{
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Debug Mode Enabled");
-		pSelf->SendChat(-1, CGameContext::CHAT_ALL, "Debug Mode Enabled");
+		pPlayer->SetClass(PLAYERCLASS_NONE);
+		CCharacter* pChar = pPlayer->GetCharacter();
+		if(pChar)
+		{
+			pChar->OpenClassChooser();
+		}
 	}
 	else
 	{
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Debug Mode Disabled");
-		pSelf->SendChat(-1, CGameContext::CHAT_ALL, "Debug Mode Disabled");
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "inf_set_class", "Unknown class");
+		return;
 	}
+	
+	char aBuf[256];
+	str_format(aBuf, sizeof(aBuf), "The admin change the class of %s to %s", pSelf->Server()->ClientName(PlayerID), pClassName);
+	pSelf->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 }
 
-void CGameContext::ConFinalExplosion(IConsole::IResult *pResult, void *pUserData)
+void CGameContext::ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
+	const char *pWeaponName = pResult->GetString(0);
+	int NewValue = pResult->GetInteger(1);
+	int WeapondId = 0;
 	
-	pSelf->m_FinalExplosionTick = pSelf->Server()->Tick() + 5*pSelf->Server()->TickSpeed();
+	if(NewValue < 0) NewValue = 0;
+	
+	if(str_comp(pWeaponName, "gun") == 0) WeapondId = INFWEAPON_GUN;
+	else if(str_comp(pWeaponName, "guns") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
+	else if(str_comp(pWeaponName, "soldier_grenade") == 0) WeapondId = INFWEAPON_SOLDIER_GRENADE;
+	else if(str_comp(pWeaponName, "scientist_shotgun") == 0) WeapondId = INFWEAPON_SCIENTIST_SHOTGUN;
+	else if(str_comp(pWeaponName, "ninja_grenade") == 0) WeapondId = INFWEAPON_NINJA_GRENADE;
+	else if(str_comp(pWeaponName, "engineer_rifle") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
+	else
+	{
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "set_ammo_regen", "No such weapon");
+	}
+	
+	pSelf->Server()->SetAmmoRegenTime(WeapondId, NewValue);
 }
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -1835,8 +1763,8 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("vote", "r", CFGFLAG_SERVER, ConVote, this, "Force a vote to yes/no");
 	
 /* INFECTION MODIFICATION START ***************************************/
-	Console()->Register("debugmode", "i", CFGFLAG_SERVER, ConDebugMode, this, "Enable debug mode");
-	Console()->Register("finalexplosion", "", CFGFLAG_SERVER, ConFinalExplosion, this, "Create final explosion");
+	Console()->Register("inf_set_class", "is", CFGFLAG_SERVER, ConSetClass, this, "Set the class of a player");
+	Console()->Register("inf_set_ammo_regen", "si", CFGFLAG_SERVER, ConSetAmmoRegen, this, "Set the ammo regeneration time per weapon");
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);
