@@ -756,7 +756,7 @@ void CCharacter::Tick()
 		GameServer()->CreatePlayerSpawn(m_Pos);
 	}
 	
-	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded())
+	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_Ninja.m_CurrentMoveTime <= 0)
 	{
 		m_Ninja.m_ActivationTick = Server()->Tick();
 		m_Ninja.m_NbStrike = 2;

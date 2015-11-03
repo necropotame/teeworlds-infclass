@@ -137,10 +137,45 @@ void CPlayer::Snap(int SnappingClient)
 		return;
 
 	StrToInts(&pClientInfo->m_Name0, 4, Server()->ClientName(m_ClientID));
-	StrToInts(&pClientInfo->m_Clan0, 3, Server()->ClientClan(m_ClientID));
+	
+/* INFECTION MODIFICATION STRAT ***************************************/
+	//~ StrToInts(&pClientInfo->m_Clan0, 3, Server()->ClientClan(m_ClientID));
+	
+	switch(GetClass())
+	{
+		case PLAYERCLASS_ENGINEER:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
+			break;
+		case PLAYERCLASS_SOLDIER:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
+			break;
+		case PLAYERCLASS_SCIENTIST:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
+			break;
+		case PLAYERCLASS_NINJA:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
+			break;
+		case PLAYERCLASS_ZOMBIE:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Zombie");
+			break;
+		case PLAYERCLASS_BOOMER:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
+			break;
+		case PLAYERCLASS_HUNTER:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
+			break;
+		case PLAYERCLASS_UNDEAD:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
+			break;
+		case PLAYERCLASS_WITCH:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
+			break;
+		default:
+			StrToInts(&pClientInfo->m_Clan0, 3, "Human");
+	}
+	
 	pClientInfo->m_Country = Server()->ClientCountry(m_ClientID);
 
-/* INFECTION MODIFICATION STRAT ***************************************/
 	if(
 		GameServer()->m_apPlayers[SnappingClient] && !IsInfected() &&
 		(
@@ -334,65 +369,54 @@ void CPlayer::SetClassSkin(int newClass)
 		case PLAYERCLASS_ENGINEER:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "limekitty", sizeof(m_TeeInfos.m_SkinName));
-			Server()->SetClientClan(GetCID(), "Engineer");
 			break;
 		case PLAYERCLASS_SOLDIER:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "brownbear", sizeof(m_TeeInfos.m_SkinName));
-			Server()->SetClientClan(GetCID(), "Soldier");
 			break;
 		case PLAYERCLASS_SCIENTIST:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
-			Server()->SetClientClan(GetCID(), "Scientist");
 			break;
 		case PLAYERCLASS_NINJA:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 255;
 			m_TeeInfos.m_ColorFeet = 0;
-			Server()->SetClientClan(GetCID(), "Ninja");
 			break;
 		case PLAYERCLASS_ZOMBIE:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
-			Server()->SetClientClan(GetCID(), "Zombie");
 			break;
 		case PLAYERCLASS_BOOMER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "saddo", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
-			Server()->SetClientClan(GetCID(), "Boomer");
 			break;
 		case PLAYERCLASS_HUNTER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "warpaint", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
-			Server()->SetClientClan(GetCID(), "Hunter");
 			break;
 		case PLAYERCLASS_UNDEAD:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "redstripe", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3014400;
 			m_TeeInfos.m_ColorFeet = 13168;
-			Server()->SetClientClan(GetCID(), "Undead");
 			break;
 		case PLAYERCLASS_WITCH:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "redbopp", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 16776744;
 			m_TeeInfos.m_ColorFeet = 13168;
-			Server()->SetClientClan(GetCID(), "Witch");
 			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
-			//~ m_TeeInfos.m_ColorBody = 1169488;
-			//~ m_TeeInfos.m_ColorFeet = 458752;
 			Server()->SetClientClan(GetCID(), "");
 	}
 }

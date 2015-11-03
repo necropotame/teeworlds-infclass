@@ -2,6 +2,7 @@
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <base/math.h>
 #include <base/vmath.h>
+#include <iostream>
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include "growingexplosion.h"
@@ -31,7 +32,7 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir)
 	}
 	
 	m_SeedX = static_cast<int>(round(m_SeedPos.x))/32;
-	m_SeedY = static_cast<int>(round(m_SeedPos.x))/32;
+	m_SeedY = static_cast<int>(round(m_SeedPos.y))/32;
 	
 	for(int j=0; j<GROWINGMAP_LENGTH; j++)
 	{
@@ -104,14 +105,17 @@ void CGrowingExplosion::Tick()
 	// Find other players
 	for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 	{
+		int tileX = MAXGROWING + static_cast<int>(round(p->m_Pos.x))/32 - m_SeedX;
+		int tileY = MAXGROWING + static_cast<int>(round(p->m_Pos.y))/32 - m_SeedY;
+		
+		std::cout << "TILEChar : " << tileX << ", " << tileY << std::endl;
+		std::cout << "Seed : " << m_SeedX << ", " << m_SeedY << std::endl;
+		
 		if(!p->IsInfected())
 			continue;
 			
 		if(p->IsFrozen())
 			continue;
-		
-		int tileX = MAXGROWING + static_cast<int>(round(p->m_Pos.x))/32 - m_SeedX;
-		int tileY = MAXGROWING + static_cast<int>(round(p->m_Pos.y))/32 - m_SeedY;
 		
 		if(tileX < 0 || tileX >= GROWINGMAP_LENGTH || tileY < 0 || tileY >= GROWINGMAP_LENGTH)
 			continue;

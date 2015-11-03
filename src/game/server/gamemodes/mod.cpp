@@ -284,7 +284,6 @@ void CGameControllerMOD::Tick()
 					{
 						pPlayer->m_Score += 5;
 						
-						pPlayer->SetClass(ChooseHumanClass(pPlayer));
 						GameServer()->SendChatTarget(i, "You have survived, +5 points");
 					}
 				}
@@ -340,6 +339,7 @@ void CGameControllerMOD::OnCharacterSpawn(class CCharacter *pChr)
 
 void CGameControllerMOD::PostReset()
 {
+	std::cout << "PostReset" << std::endl;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		if(GameServer()->m_apPlayers[i])
