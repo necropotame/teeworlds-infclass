@@ -48,6 +48,7 @@ enum
 	TILE_NOHOOK,
 /* INFECTION MODIFICATION START ***************************************/
 	TILE_INFECTION,
+	TILE_NOPORTAL,
 /* INFECTION MODIFICATION END *****************************************/
 
 	TILEFLAG_VFLIP=1,

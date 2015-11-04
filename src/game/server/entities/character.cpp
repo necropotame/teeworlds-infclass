@@ -56,6 +56,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_pPortal[0] = 0;
 	m_pPortal[1] = 0;
 	m_FlagID = Server()->SnapNewID();
+	m_BarrierHintID = Server()->SnapNewID();
 	m_AntiFireTick = 0;
 	m_PortalTick = 0;
 	m_IsFrozen = false;
@@ -114,6 +115,7 @@ void CCharacter::Destroy()
 /* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
 	Server()->SnapFreeID(m_FlagID);
+	Server()->SnapFreeID(m_BarrierHintID);
 /* INFECTION MODIFICATION END *****************************************/
 
 	GameServer()->m_World.m_Core.m_apCharacters[m_pPlayer->GetCID()] = 0;
@@ -147,7 +149,7 @@ bool CCharacter::IsGrounded()
 void CCharacter::HandleNinja()
 {
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetClass() != PLAYERCLASS_NINJA || m_ActiveWeapon != WEAPON_HAMMER)
+	if(GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_NINJA_HAMMER)
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -360,7 +362,13 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
-				if(m_Pos.y > -640.0f)
+				//Check anti portal tile
+				vec2 portalTile = vec2(16.0f, 16.0f) + vec2(
+					static_cast<float>(static_cast<int>(round(m_Pos.x))/32)*32.0,
+					static_cast<float>(static_cast<int>(round(m_Pos.y))/32)*32.0);
+				
+				//Check is the tile is occuped, and if the direction is valide
+				if(!GameServer()->Collision()->CheckPointFlag(portalTile, CCollision::COLFLAG_NOPORTAL))
 				{
 					if(m_pPortal[0] && m_pPortal[1])
 					{
@@ -376,14 +384,12 @@ void CCharacter::FireWeapon()
 					}
 					else
 					{
-						m_pPortal[1] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 1);
-						m_pPortal[1]->Link(m_pPortal[0]);
-						GameServer()->CreateSound(m_Pos, SOUND_CTF_RETURN);
+						if(distance(m_Pos, m_pPortal[0]->m_Pos) > 128.0)
+						{
+							m_pPortal[1] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 1);
+							m_pPortal[1]->Link(m_pPortal[0]);
+						}
 					}
-				}
-				else
-				{
-					GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Warning: Portals can't be opened in high altitude");
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_NINJA)
@@ -573,7 +579,7 @@ void CCharacter::FireWeapon()
 		m_aWeapons[m_ActiveWeapon].m_Ammo--;
 
 	if(!m_ReloadTimer)
-		m_ReloadTimer = g_pData->m_Weapons.m_aId[m_ActiveWeapon].m_Firedelay * Server()->TickSpeed() / 1000;
+		m_ReloadTimer = Server()->GetFireDelay(GetInfWeaponID(m_ActiveWeapon)) * Server()->TickSpeed() / 1000;
 }
 
 void CCharacter::HandleWeapons()
@@ -595,30 +601,8 @@ void CCharacter::HandleWeapons()
 /* INFECTION MODIFICATION START ***************************************/
 	for(int i=WEAPON_GUN; i<=WEAPON_RIFLE; i++)
 	{
-		int AmmoRegenTime = 0;
-		int MaxAmmo = 10;
-		
-		if(i == WEAPON_GUN)
-		{
-			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_GUN);
-		}
-		else if(i == WEAPON_SHOTGUN && GetClass() == PLAYERCLASS_SCIENTIST)
-		{
-			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_SCIENTIST_SHOTGUN);
-		}
-		else if(GetClass() == PLAYERCLASS_NINJA && i == WEAPON_GRENADE)
-		{
-			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_NINJA_GRENADE);
-			MaxAmmo = 5;
-		}
-		else if(GetClass() == PLAYERCLASS_SOLDIER && i == WEAPON_GRENADE)
-		{
-			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_SOLDIER_GRENADE);
-		}
-		else if(GetClass() == PLAYERCLASS_ENGINEER && i == WEAPON_RIFLE)
-		{
-			AmmoRegenTime = Server()->GetAmmoRegenTime(INFWEAPON_ENGINEER_RIFLE);
-		}
+		int AmmoRegenTime = Server()->GetAmmoRegenTime(GetInfWeaponID(i));
+		int MaxAmmo = Server()->GetMaxAmmo(GetInfWeaponID(i));
 		
 		if(AmmoRegenTime)
 		{
@@ -673,10 +657,12 @@ void CCharacter::RemoveAllGun()
 
 bool CCharacter::GiveWeapon(int Weapon, int Ammo)
 {
-	if(m_aWeapons[Weapon].m_Ammo < g_pData->m_Weapons.m_aId[Weapon].m_Maxammo || !m_aWeapons[Weapon].m_Got)
+	int MaxAmmo = Server()->GetMaxAmmo(GetInfWeaponID(Weapon));
+	
+	if(m_aWeapons[Weapon].m_Ammo < MaxAmmo || !m_aWeapons[Weapon].m_Got)
 	{
 		m_aWeapons[Weapon].m_Got = true;
-		m_aWeapons[Weapon].m_Ammo = min(g_pData->m_Weapons.m_aId[Weapon].m_Maxammo, Ammo);
+		m_aWeapons[Weapon].m_Ammo = min(MaxAmmo, Ammo);
 		return true;
 	}
 	return false;
@@ -737,7 +723,7 @@ void CCharacter::Tick()
 {
 /* INFECTION MODIFICATION START ***************************************/
 	//Check is the character is in toxic gaz
-	if(!IsInfected() && GameServer()->Collision()->CheckPointInfection(m_Pos.x, m_Pos.y))
+	if(!IsInfected() && GameServer()->Collision()->CheckPointFlag(m_Pos, CCollision::COLFLAG_INFECTION))
 	{
 		m_pPlayer->StartInfection();
 	}
@@ -1176,6 +1162,22 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Y = (int)m_Pos.y;
 		pFlag->m_Team = TEAM_RED;
 	}
+	if(GetClass() == PLAYERCLASS_ENGINEER && !m_pBarrier && !m_FirstShot)
+	{
+		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+		if(pClient && !pClient->IsInfected())
+		{
+			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_BarrierHintID, sizeof(CNetObj_Laser)));
+			if(!pObj)
+				return;
+
+			pObj->m_X = (int)m_FirstShotCoord.x;
+			pObj->m_Y = (int)m_FirstShotCoord.y;
+			pObj->m_FromX = (int)m_FirstShotCoord.x;
+			pObj->m_FromY = (int)m_FirstShotCoord.y;
+			pObj->m_StartTick = Server()->Tick();
+		}
+	}
 /* INFECTION MODIFICATION END ***************************************/
 
 	CNetObj_Character *pCharacter = static_cast<CNetObj_Character *>(Server()->SnapNewItem(NETOBJTYPE_CHARACTER, m_pPlayer->GetCID(), sizeof(CNetObj_Character)));
@@ -1213,7 +1215,7 @@ void CCharacter::Snap(int SnappingClient)
 	pCharacter->m_Armor = 0;
 
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetClass() == PLAYERCLASS_NINJA && m_ActiveWeapon == WEAPON_HAMMER)
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_NINJA_HAMMER)
 	{
 		pCharacter->m_Weapon = WEAPON_NINJA;
 	}
@@ -1475,5 +1477,65 @@ void CCharacter::Freeze(float Time, int Reason)
 bool CCharacter::IsFrozen() const
 {
 	return m_IsFrozen;
+}
+
+bool CCharacter::IsTeleportable()
+{
+	return (Server()->Tick() - m_PortalTick >= Server()->TickSpeed()/2.0f);
+}
+
+int CCharacter::GetInfWeaponID(int WID)
+{
+	if(WID == WEAPON_HAMMER)
+	{
+		switch(GetClass())
+		{
+			case PLAYERCLASS_NINJA:
+				return INFWEAPON_NINJA_HAMMER;
+			default:
+				return INFWEAPON_HAMMER;
+		}
+	}
+	else if(WID == WEAPON_GUN)
+	{
+		return INFWEAPON_GUN;
+	}
+	else if(WID == WEAPON_SHOTGUN)
+	{
+		switch(GetClass())
+		{
+			case PLAYERCLASS_SCIENTIST:
+				return INFWEAPON_SCIENTIST_SHOTGUN;
+			default:
+				return INFWEAPON_SHOTGUN;
+		}
+	}
+	else if(WID == WEAPON_GRENADE)
+	{
+		switch(GetClass())
+		{
+			case PLAYERCLASS_SOLDIER:
+				return INFWEAPON_SOLDIER_GRENADE;
+			case PLAYERCLASS_NINJA:
+				return INFWEAPON_NINJA_GRENADE;
+			default:
+				return INFWEAPON_GRENADE;
+		}
+	}
+	else if(WID == WEAPON_RIFLE)
+	{
+		switch(GetClass())
+		{
+			case PLAYERCLASS_ENGINEER:
+				return INFWEAPON_ENGINEER_RIFLE;
+			default:
+				return INFWEAPON_RIFLE;
+		}
+	}
+	else if(WID == WEAPON_NINJA)
+	{
+		return INFWEAPON_NINJA;
+	}
+	else return INFWEAPON_NONE;
 }
 /* INFECTION MODIFICATION END *****************************************/

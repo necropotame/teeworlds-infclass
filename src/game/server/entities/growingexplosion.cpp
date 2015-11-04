@@ -2,7 +2,6 @@
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <base/math.h>
 #include <base/vmath.h>
-#include <iostream>
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include "growingexplosion.h"
@@ -107,9 +106,6 @@ void CGrowingExplosion::Tick()
 	{
 		int tileX = MAXGROWING + static_cast<int>(round(p->m_Pos.x))/32 - m_SeedX;
 		int tileY = MAXGROWING + static_cast<int>(round(p->m_Pos.y))/32 - m_SeedY;
-		
-		std::cout << "TILEChar : " << tileX << ", " << tileY << std::endl;
-		std::cout << "Seed : " << m_SeedX << ", " << m_SeedY << std::endl;
 		
 		if(!p->IsInfected())
 			continue;

@@ -91,12 +91,19 @@ void CBarrier::Snap(int SnappingClient)
 		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_EndPointID, sizeof(CNetObj_Laser)));
 		if(!pObj)
 			return;
-
-		pObj->m_X = (int)m_Pos2.x;
-		pObj->m_Y = (int)m_Pos2.y;
-		pObj->m_FromX = (int)m_Pos2.x;
-		pObj->m_FromY = (int)m_Pos2.y;
-		pObj->m_StartTick = Server()->Tick();
 		
+		vec2 Pos = m_Pos2;
+		
+		if(SnappingClient == m_Owner)
+		{
+			float lifeSpanPercent = static_cast<float>(m_LifeSpan)/static_cast<float>(Server()->TickSpeed()*g_BarrierLifeSpan);
+			Pos = m_Pos + (m_Pos2 - m_Pos)*lifeSpanPercent;
+		}
+
+		pObj->m_X = (int)Pos.x;
+		pObj->m_Y = (int)Pos.y;
+		pObj->m_FromX = (int)Pos.x;
+		pObj->m_FromY = (int)Pos.y;
+		pObj->m_StartTick = Server()->Tick();
 	}
 }

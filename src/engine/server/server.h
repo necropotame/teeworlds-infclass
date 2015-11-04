@@ -241,8 +241,17 @@ public:
 /* INFECTION MODIFICATION START ***************************************/
 public:
 	int m_InfAmmoRegenTime[NB_INFWEAPON];
+	int m_InfFireDelay[NB_INFWEAPON];
+	int m_InfMaxAmmo[NB_INFWEAPON];
+	
+	virtual int GetFireDelay(int WID);
+	virtual void SetFireDelay(int WID, int Time);
+	
 	virtual int GetAmmoRegenTime(int WID);
 	virtual void SetAmmoRegenTime(int WID, int Time);
+	
+	virtual int GetMaxAmmo(int WID);
+	virtual void SetMaxAmmo(int WID, int n);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

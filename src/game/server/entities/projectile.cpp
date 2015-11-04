@@ -117,17 +117,16 @@ void CProjectile::Tick()
 		}
 	}
 	
-	if(m_Weapon == WEAPON_GRENADE && !m_IsFlashGrenade)
-	{
-		for(CBomb *bomb = (CBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BOMB); bomb; bomb = (CBomb *)bomb->TypeNext())
-		{
-			if(bomb->m_Owner != m_Owner) continue;
-			//~ GameServer()->SendChat(-1, -2, "AddBomb");
-			if(distance(CurPos, bomb->m_Pos) > bomb->m_DetectionRadius) continue;
-
-			if(bomb->AddBomb()) GameServer()->m_World.DestroyEntity(this);
-		}
-	}
+	//~ if(m_Weapon == WEAPON_GRENADE && !m_IsFlashGrenade)
+	//~ {
+		//~ for(CBomb *bomb = (CBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BOMB); bomb; bomb = (CBomb *)bomb->TypeNext())
+		//~ {
+			//~ if(bomb->m_Owner != m_Owner) continue;
+			//~ if(distance(CurPos, bomb->m_Pos) > bomb->m_DetectionRadius) continue;
+//~ 
+			//~ if(bomb->AddBomb()) GameServer()->m_World.DestroyEntity(this);
+		//~ }
+	//~ }
 /* INFECTION MODIFICATION END *****************************************/
 }
 

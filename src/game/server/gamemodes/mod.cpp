@@ -441,13 +441,7 @@ bool CGameControllerMOD::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	Eval.m_FriendlyTeam = Team;
 
 	// first try own team spawn, then normal spawn and then enemy
-	EvaluateSpawnType(&Eval, 1+(Team&1));
-	if(!Eval.m_Got)
-	{
-		EvaluateSpawnType(&Eval, 0);
-		if(!Eval.m_Got)
-			EvaluateSpawnType(&Eval, 1+((Team+1)&1));
-	}
+	EvaluateSpawnType(&Eval, (pPlayer->IsInfected() ? 1+TEAM_RED : 1+TEAM_BLUE));
 
 	*pOutPos = Eval.m_Pos;
 	return Eval.m_Got;

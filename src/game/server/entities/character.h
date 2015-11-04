@@ -157,6 +157,7 @@ private:
 	int m_PoisonTick;
 	
 	int m_FlagID;
+	int m_BarrierHintID;
 	int m_AntiFireTick;
 	
 	bool m_IsFrozen;
@@ -181,6 +182,8 @@ public:
 	void RemoveAllGun();
 	void Freeze(float Time, int Reason);
 	bool IsFrozen() const;
+	bool IsTeleportable();
+	int GetInfWeaponID(int WID);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

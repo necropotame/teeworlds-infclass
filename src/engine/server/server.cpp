@@ -429,11 +429,44 @@ int CServer::Init()
 	m_CurrentGameTick = 0;
 		
 /* INFECTION MODIFICATION START ***************************************/
+	SetFireDelay(INFWEAPON_NONE, 0);
+	SetFireDelay(INFWEAPON_HAMMER, 125);
+	SetFireDelay(INFWEAPON_GUN, 125);
+	SetFireDelay(INFWEAPON_SHOTGUN, 500);
+	SetFireDelay(INFWEAPON_GRENADE, 500);
+	SetFireDelay(INFWEAPON_RIFLE, 800);
+	SetFireDelay(INFWEAPON_NINJA, 800);
+	SetFireDelay(INFWEAPON_ENGINEER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
+	SetFireDelay(INFWEAPON_SOLDIER_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
+	SetFireDelay(INFWEAPON_SCIENTIST_SHOTGUN, 250);
+	SetFireDelay(INFWEAPON_NINJA_HAMMER, GetFireDelay(INFWEAPON_NINJA));
+	SetFireDelay(INFWEAPON_NINJA_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
+	
+	SetAmmoRegenTime(INFWEAPON_NONE, 0);
+	SetAmmoRegenTime(INFWEAPON_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_GUN, 500);
+	SetAmmoRegenTime(INFWEAPON_SHOTGUN, 0);
+	SetAmmoRegenTime(INFWEAPON_GRENADE, 0);
+	SetAmmoRegenTime(INFWEAPON_RIFLE, 0);
+	SetAmmoRegenTime(INFWEAPON_NINJA, 0);
 	SetAmmoRegenTime(INFWEAPON_ENGINEER_RIFLE, 6000);
 	SetAmmoRegenTime(INFWEAPON_SOLDIER_GRENADE, 7000);
 	SetAmmoRegenTime(INFWEAPON_SCIENTIST_SHOTGUN, 2000);
+	SetAmmoRegenTime(INFWEAPON_NINJA_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_NINJA_GRENADE, 10000);
+	
+	SetMaxAmmo(INFWEAPON_NONE, -1);
+	SetMaxAmmo(INFWEAPON_HAMMER, -1);
+	SetMaxAmmo(INFWEAPON_GUN, 10);
+	SetMaxAmmo(INFWEAPON_SHOTGUN, 10);
+	SetMaxAmmo(INFWEAPON_GRENADE, 10);
+	SetMaxAmmo(INFWEAPON_RIFLE, 10);
+	SetMaxAmmo(INFWEAPON_NINJA, 10);
+	SetMaxAmmo(INFWEAPON_ENGINEER_RIFLE, 10);
+	SetMaxAmmo(INFWEAPON_SOLDIER_GRENADE, 10);
+	SetMaxAmmo(INFWEAPON_SCIENTIST_SHOTGUN, 10);
+	SetMaxAmmo(INFWEAPON_NINJA_HAMMER, -1);
+	SetMaxAmmo(INFWEAPON_NINJA_GRENADE, 5);
 /* INFECTION MODIFICATION END *****************************************/
 
 	return 0;
@@ -1741,6 +1774,16 @@ int main(int argc, const char **argv) // ignore_convention
 }
 
 /* INFECTION MODIFICATION START ***************************************/
+int CServer::GetFireDelay(int WID)
+{
+	return m_InfFireDelay[WID];
+}
+
+void CServer::SetFireDelay(int WID, int Time)
+{
+	m_InfFireDelay[WID] = Time;
+}
+
 int CServer::GetAmmoRegenTime(int WID)
 {
 	return m_InfAmmoRegenTime[WID];
@@ -1749,6 +1792,16 @@ int CServer::GetAmmoRegenTime(int WID)
 void CServer::SetAmmoRegenTime(int WID, int Time)
 {
 	m_InfAmmoRegenTime[WID] = Time;
+}
+
+int CServer::GetMaxAmmo(int WID)
+{
+	return m_InfMaxAmmo[WID];
+}
+
+void CServer::SetMaxAmmo(int WID, int n)
+{
+	m_InfMaxAmmo[WID] = n;
 }
 /* INFECTION MODIFICATION END *****************************************/
 

@@ -23,6 +23,7 @@ public:
 		COLFLAG_NOHOOK=4,
 /* INFECTION MODIFICATION START ***************************************/
 		COLFLAG_INFECTION=8,
+		COLFLAG_NOPORTAL=16,
 /* INFECTION MODIFICATION END *****************************************/
 	};
 
@@ -39,7 +40,7 @@ public:
 	bool TestBox(vec2 Pos, vec2 Size);
 	
 /* INFECTION MODIFICATION START ***************************************/
-	bool CheckPointInfection(float x, float y);
+	bool CheckPointFlag(vec2 Pos, int Flag);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

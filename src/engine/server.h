@@ -8,11 +8,23 @@
 /* INFECTION MODIFICATION START ***************************************/
 enum
 {
+	INFWEAPON_NONE,
+	INFWEAPON_HAMMER,
 	INFWEAPON_GUN,
+	INFWEAPON_SHOTGUN,
+	INFWEAPON_GRENADE,
+	INFWEAPON_RIFLE,
+	INFWEAPON_NINJA,
+	
 	INFWEAPON_ENGINEER_RIFLE,
+	
 	INFWEAPON_SOLDIER_GRENADE,
+	
 	INFWEAPON_SCIENTIST_SHOTGUN,
+	
+	INFWEAPON_NINJA_HAMMER,
 	INFWEAPON_NINJA_GRENADE,
+	
 	NB_INFWEAPON
 };
 /* INFECTION MODIFICATION END *****************************************/
@@ -80,8 +92,14 @@ public:
 	virtual bool DemoRecorder_IsRecording() = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
+	virtual int GetFireDelay(int WID) = 0;
+	virtual void SetFireDelay(int WID, int Time) = 0;
+	
 	virtual int GetAmmoRegenTime(int WID) = 0;
 	virtual void SetAmmoRegenTime(int WID, int Time) = 0;
+	
+	virtual int GetMaxAmmo(int WID) = 0;
+	virtual void SetMaxAmmo(int WID, int n) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 
