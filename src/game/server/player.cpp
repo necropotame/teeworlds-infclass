@@ -1,6 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <new>
+#include <iostream>
 #include <engine/shared/config.h>
 #include "player.h"
 
@@ -30,7 +31,6 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	{
 		m_knownClass[i] = false;
 	}
-	StartInfection();
 	
 	m_ShowCustomSkin = false;
 	
@@ -139,39 +139,54 @@ void CPlayer::Snap(int SnappingClient)
 	StrToInts(&pClientInfo->m_Name0, 4, Server()->ClientName(m_ClientID));
 	
 /* INFECTION MODIFICATION STRAT ***************************************/
-	//~ StrToInts(&pClientInfo->m_Clan0, 3, Server()->ClientClan(m_ClientID));
-	
-	switch(GetClass())
+	if(GetTeam() == TEAM_SPECTATORS)
 	{
-		case PLAYERCLASS_ENGINEER:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
-			break;
-		case PLAYERCLASS_SOLDIER:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
-			break;
-		case PLAYERCLASS_SCIENTIST:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
-			break;
-		case PLAYERCLASS_NINJA:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
-			break;
-		case PLAYERCLASS_ZOMBIE:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Zombie");
-			break;
-		case PLAYERCLASS_BOOMER:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
-			break;
-		case PLAYERCLASS_HUNTER:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
-			break;
-		case PLAYERCLASS_UNDEAD:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
-			break;
-		case PLAYERCLASS_WITCH:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
-			break;
-		default:
-			StrToInts(&pClientInfo->m_Clan0, 3, "Human");
+		StrToInts(&pClientInfo->m_Clan0, 3, Server()->ClientClan(m_ClientID));
+	}
+	else
+	{
+		switch(GetClass())
+		{
+			case PLAYERCLASS_ENGINEER:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Engineer*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
+				break;
+			case PLAYERCLASS_SOLDIER:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Soldier*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
+				break;
+			case PLAYERCLASS_SCIENTIST:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Scientist*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
+				break;
+			case PLAYERCLASS_NINJA:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Ninja*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
+				break;
+			case PLAYERCLASS_ZOMBIE:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Zombie*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Zombie");
+				break;
+			case PLAYERCLASS_BOOMER:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Boomer*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
+				break;
+			case PLAYERCLASS_HUNTER:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Hunter*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
+				break;
+			case PLAYERCLASS_UNDEAD:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Undead*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
+				break;
+			case PLAYERCLASS_WITCH:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Witch*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
+				break;
+			default:
+				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "");
+		}
 	}
 	
 	pClientInfo->m_Country = Server()->ClientCountry(m_ClientID);
@@ -346,7 +361,7 @@ void CPlayer::TryRespawn()
 	vec2 SpawnPos;
 
 /* INFECTION MODIFICATION START ***************************************/
-	if(!GameServer()->m_pController->CanSpawn(this, &SpawnPos))
+	if(!GameServer()->m_pController->PreSpawn(this, &SpawnPos))
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -422,7 +437,7 @@ void CPlayer::SetClassSkin(int newClass)
 }
 
 void CPlayer::SetClass(int newClass)
-{
+{	
 	if(m_class == newClass)
 		return;
 	

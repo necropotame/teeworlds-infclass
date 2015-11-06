@@ -165,7 +165,10 @@ void CPortal::Tick()
 			if(Candidate1 && Candidate2)
 			{
 				Candidate1->m_PortalTick = Server()->Tick();
+				Candidate1->m_LastPortalOwner = m_Owner;
+				
 				Candidate2->m_PortalTick = Server()->Tick();
+				Candidate2->m_LastPortalOwner = m_Owner;
 				
 				vec2 OldPos = Candidate2->m_Core.m_Pos;
 				if(Nearest1) //First portal occupied, swap candidates
@@ -190,6 +193,7 @@ void CPortal::Tick()
 			else if(Candidate1 && !Nearest2)
 			{
 				Candidate1->m_PortalTick = Server()->Tick();
+				Candidate1->m_LastPortalOwner = m_Owner;
 				Candidate1->m_Core.m_Pos = m_pLinkedPortal->m_Pos;
 				Candidate1->m_Pos = Candidate1->m_Core.m_Pos;
 				
@@ -199,6 +203,7 @@ void CPortal::Tick()
 			else if(Candidate2 && !Nearest1)
 			{
 				Candidate2->m_PortalTick = Server()->Tick();
+				Candidate2->m_LastPortalOwner = m_Owner;
 				Candidate2->m_Core.m_Pos = m_Pos;
 				Candidate2->m_Pos = Candidate2->m_Core.m_Pos;
 				

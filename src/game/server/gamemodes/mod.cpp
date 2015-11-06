@@ -28,7 +28,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_WITCH];
 	
-	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.1 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.15 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_UNDEAD];
 	
 	m_TotalProbHumanClass = 0.0;
@@ -51,6 +51,10 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_MapWidth = GameServer()->Collision()->GetWidth();
 	m_MapHeight = GameServer()->Collision()->GetHeight();
 	m_GrowingMap = new int[m_MapWidth*m_MapHeight];
+	
+	m_HumanCounter = 0;
+	m_InfectedCounter = 0;
+	m_InfectedStarted = false;
 	
 	for(int j=0; j<m_MapHeight; j++)
 	{
@@ -94,12 +98,10 @@ bool CGameControllerMOD::OnEntity(int Index, vec2 Pos)
 
 void CGameControllerMOD::Tick()
 {
-	// this is the main part of the gamemode, this function is run every tick
-
 	IGameController::Tick();
 	
-	int countZombie = 0;
-	int countHuman = 0;
+	m_HumanCounter = 0;
+	m_InfectedCounter = 0;
 	
 	//Count type of players
 	for(int i = 0; i < MAX_CLIENTS; i ++)
@@ -109,58 +111,89 @@ void CGameControllerMOD::Tick()
 		if(!pPlayer) continue;
 		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
 		
-		if(pPlayer->IsInfected()) countZombie++;
-		else countHuman++;
+		if(pPlayer->IsInfected()) m_InfectedCounter++;
+		else m_HumanCounter++;
 	}
 	
-	bool TheGameCanBePlayed = (m_GameOverTick == -1 && countHuman + countZombie > 1);
+	m_InfectedStarted = false;
 	
-	//After 10 seconds, start the infection and choose a random class for human
-	if(TheGameCanBePlayed && m_RoundStartTick + Server()->TickSpeed()*10 < Server()->Tick())
-	{		
-		for(int i = 0; i < MAX_CLIENTS; i ++)
-		{
-			CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-			
-			if(!pPlayer) continue;
-			if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-			
-			if(pPlayer->GetClass() == PLAYERCLASS_NONE)
-			{
-				pPlayer->SetClass(ChooseHumanClass(pPlayer));
-			}
-		}
-			
-		if(countZombie <= 0)
-		{
-			float InfectionProb = 1.0/static_cast<float>(countHuman);
-			float random = frandom();
-			
+	//If the game can start ...
+	if(m_GameOverTick == -1 && m_HumanCounter + m_InfectedCounter >= 2)
+	{
+		//If the infection started
+		if(m_RoundStartTick + Server()->TickSpeed()*10 < Server()->Tick())
+		{	
+			m_InfectedStarted = true;
+	
 			for(int i = 0; i < MAX_CLIENTS; i ++)
 			{
 				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
 				
 				if(!pPlayer) continue;
-				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-				
-				if(random < InfectionProb)
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS)
 				{
-					GameServer()->m_apPlayers[i]->StartInfection();
-					
-					char aBuf[512];
-					str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(GameServer()->m_apPlayers[i]->GetCID()));
-					GameServer()->SendChat(-1, -2, aBuf);
-					
-					break;
+					pPlayer->StartInfection();
 				}
-				else
+				else if(pPlayer->GetClass() == PLAYERCLASS_NONE)
 				{
-					random -= InfectionProb;
+					pPlayer->SetClass(ChooseHumanClass(pPlayer));
+				}
+			}
+			
+			//If needed, infect players
+			int nbInfectedNeeded = 2;
+			if(m_InfectedCounter + m_HumanCounter < 3)
+			{
+				nbInfectedNeeded = 1;
+			}
+			
+			while(m_InfectedCounter < nbInfectedNeeded)
+			{
+				float InfectionProb = 1.0/static_cast<float>(m_HumanCounter);
+				float random = frandom();
+				
+				for(int i = 0; i < MAX_CLIENTS; i ++)
+				{
+					CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+					
+					if(!pPlayer) continue;
+					if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+					
+					if(random < InfectionProb)
+					{
+						GameServer()->m_apPlayers[i]->StartInfection();
+						m_InfectedCounter++;
+						m_HumanCounter--;
+						
+						char aBuf[512];
+						str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(i));
+						GameServer()->SendChat(-1, -2, aBuf);
+						
+						break;
+					}
+					else
+					{
+						random -= InfectionProb;
+					}
 				}
 			}
 		}
-	
-		if(countHuman == 0 && countZombie > 1)
+		else
+		{
+			for(int i = 0; i < MAX_CLIENTS; i ++)
+			{
+				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+				
+				if(!pPlayer) continue;
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS)
+				{
+					pPlayer->SetClass(PLAYERCLASS_NONE);
+				}
+			}
+		}
+		
+		//Win check
+		if(m_InfectedStarted && m_HumanCounter == 0 && m_InfectedCounter > 1)
 		{
 			float RoundDuration = static_cast<float>((Server()->Tick()-m_RoundStartTick)/((float)Server()->TickSpeed()))/60.0f;
 			int Minutes = static_cast<int>(RoundDuration);
@@ -170,132 +203,139 @@ void CGameControllerMOD::Tick()
 			str_format(aBuf, sizeof(aBuf), "Infected won this round in %i:%s%i minutes", Minutes,((Seconds < 10) ? "0" : ""), Seconds);
 			GameServer()->SendChat(-1, -2, aBuf);
 			
+			m_InfectedStarted = false;
 			EndRound();
 		}
-	}
-	
-	//Start the final explosion is the time is over
-	if(TheGameCanBePlayed && !m_ExplosionStarted && g_Config.m_SvTimelimit > 0 && (Server()->Tick()-m_RoundStartTick) >= g_Config.m_SvTimelimit*Server()->TickSpeed()*60)
-	{
-		for(CCharacter *p = (CCharacter*) GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
-		{
-			if(p->IsInfected())
-			{
-				GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_GHOST);
-			}
-			else
-			{
-				GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_EYES);
-			}
-		}
-		m_ExplosionStarted = true;
-	}
-	
-	//Do the final explosion
-	if(m_ExplosionStarted)
-	{		
-		bool NewExplosion = false;
 		
-		for(int j=0; j<m_MapHeight; j++)
+		//Start the final explosion if the time is over
+		if(!m_ExplosionStarted && g_Config.m_SvTimelimit > 0 && (Server()->Tick()-m_RoundStartTick) >= g_Config.m_SvTimelimit*Server()->TickSpeed()*60)
 		{
-			for(int i=0; i<m_MapWidth; i++)
+			for(CCharacter *p = (CCharacter*) GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 			{
-				if((m_GrowingMap[j*m_MapWidth+i] & 1) && (
-					(i > 0 && m_GrowingMap[j*m_MapWidth+i-1] & 2) ||
-					(i < m_MapWidth-1 && m_GrowingMap[j*m_MapWidth+i+1] & 2) ||
-					(j > 0 && m_GrowingMap[(j-1)*m_MapWidth+i] & 2) ||
-					(j < m_MapHeight-1 && m_GrowingMap[(j+1)*m_MapWidth+i] & 2)
-				))
+				if(p->IsInfected())
 				{
-					NewExplosion = true;
-					m_GrowingMap[j*m_MapWidth+i] |= 8;
-					m_GrowingMap[j*m_MapWidth+i] &= ~1;
-					if(rand()%10 == 0)
-					{
-						vec2 TilePos = vec2(16.0f, 16.0f) + vec2(i*32.0f, j*32.0f);
-						GameServer()->CreateExplosion(TilePos, -1, WEAPON_GAME, true);
-						GameServer()->CreateSound(TilePos, SOUND_GRENADE_EXPLODE);
-					}
+					GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_GHOST);
+				}
+				else
+				{
+					GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_EYES);
 				}
 			}
+			m_ExplosionStarted = true;
 		}
 		
-		for(int j=0; j<m_MapHeight; j++)
-		{
-			for(int i=0; i<m_MapWidth; i++)
-			{
-				if(m_GrowingMap[j*m_MapWidth+i] & 8)
-				{
-					m_GrowingMap[j*m_MapWidth+i] &= ~8;
-					m_GrowingMap[j*m_MapWidth+i] |= 2;
-				}
-			}
-		}
-		
-		for(CCharacter *p = (CCharacter*) GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
-		{
-			if(!p->IsInfected())
-				continue;
-			
-			int tileX = static_cast<int>(round(p->m_Pos.x))/32;
-			int tileY = static_cast<int>(round(p->m_Pos.y))/32;
-			
-			if(tileX < 0) tileX = 0;
-			if(tileX >= m_MapWidth) tileX = m_MapWidth-1;
-			if(tileY < 0) tileY = 0;
-			if(tileY >= m_MapHeight) tileY = m_MapHeight-1;
-			
-			if(m_GrowingMap[tileY*m_MapWidth+tileX] & 2)
-			{
-				p->Die(-1, WEAPON_GAME);
-			}
-		}
-	
-		//If no more explosions, game over, decide who win
-		if(!NewExplosion)
-		{
-			m_ExplosionStarted = false;
+		//Do the final explosion
+		if(m_ExplosionStarted)
+		{		
+			bool NewExplosion = false;
 			
 			for(int j=0; j<m_MapHeight; j++)
 			{
 				for(int i=0; i<m_MapWidth; i++)
 				{
-					if(!(m_GrowingMap[j*m_MapWidth+i] & 4))
+					if((m_GrowingMap[j*m_MapWidth+i] & 1) && (
+						(i > 0 && m_GrowingMap[j*m_MapWidth+i-1] & 2) ||
+						(i < m_MapWidth-1 && m_GrowingMap[j*m_MapWidth+i+1] & 2) ||
+						(j > 0 && m_GrowingMap[(j-1)*m_MapWidth+i] & 2) ||
+						(j < m_MapHeight-1 && m_GrowingMap[(j+1)*m_MapWidth+i] & 2)
+					))
 					{
-						m_GrowingMap[j*m_MapWidth+i] = 1;
+						NewExplosion = true;
+						m_GrowingMap[j*m_MapWidth+i] |= 8;
+						m_GrowingMap[j*m_MapWidth+i] &= ~1;
+						if(rand()%10 == 0)
+						{
+							vec2 TilePos = vec2(16.0f, 16.0f) + vec2(i*32.0f, j*32.0f);
+							GameServer()->CreateExplosion(TilePos, -1, WEAPON_GAME, true);
+							GameServer()->CreateSound(TilePos, SOUND_GRENADE_EXPLODE);
+						}
 					}
 				}
 			}
 			
-			if(countHuman)
+			for(int j=0; j<m_MapHeight; j++)
 			{
-				char aBuf[512];
-				str_format(aBuf, sizeof(aBuf), "%i human%s won this round", countHuman, (countHuman>1 ? "s" : ""));
-				GameServer()->SendChat(-1, -2, aBuf);
-				
-				for(int i = 0; i < MAX_CLIENTS; i ++)
+				for(int i=0; i<m_MapWidth; i++)
 				{
-					CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-					
-					if(!pPlayer) continue;
-					if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-					
-					if(!pPlayer->IsInfected())
+					if(m_GrowingMap[j*m_MapWidth+i] & 8)
 					{
-						pPlayer->m_Score += 5;
-						
-						GameServer()->SendChatTarget(i, "You have survived, +5 points");
+						m_GrowingMap[j*m_MapWidth+i] &= ~8;
+						m_GrowingMap[j*m_MapWidth+i] |= 2;
 					}
 				}
 			}
-			else
+			
+			for(CCharacter *p = (CCharacter*) GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 			{
-				char aBuf[512];
-				str_format(aBuf, sizeof(aBuf), "Infected won this round in %i minutes", g_Config.m_SvTimelimit);
-				GameServer()->SendChat(-1, -2, aBuf);
+				if(!p->IsInfected())
+					continue;
+				
+				int tileX = static_cast<int>(round(p->m_Pos.x))/32;
+				int tileY = static_cast<int>(round(p->m_Pos.y))/32;
+				
+				if(tileX < 0) tileX = 0;
+				if(tileX >= m_MapWidth) tileX = m_MapWidth-1;
+				if(tileY < 0) tileY = 0;
+				if(tileY >= m_MapHeight) tileY = m_MapHeight-1;
+				
+				if(m_GrowingMap[tileY*m_MapWidth+tileX] & 2)
+				{
+					p->Die(-1, WEAPON_GAME);
+				}
 			}
-			EndRound();
+		
+			//If no more explosions, game over, decide who win
+			if(!NewExplosion)
+			{
+				m_ExplosionStarted = false;
+				
+				for(int j=0; j<m_MapHeight; j++)
+				{
+					for(int i=0; i<m_MapWidth; i++)
+					{
+						if(!(m_GrowingMap[j*m_MapWidth+i] & 4))
+						{
+							m_GrowingMap[j*m_MapWidth+i] = 1;
+						}
+					}
+				}
+				
+				if(m_HumanCounter)
+				{
+					char aBuf[512];
+					str_format(aBuf, sizeof(aBuf), "%i human%s won this round", m_HumanCounter, (m_HumanCounter>1 ? "s" : ""));
+					GameServer()->SendChat(-1, -2, aBuf);
+					
+					for(int i = 0; i < MAX_CLIENTS; i ++)
+					{
+						CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+						
+						if(!pPlayer) continue;
+						if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+						
+						if(!pPlayer->IsInfected())
+						{
+							pPlayer->m_Score += 5;
+							
+							GameServer()->SendChatTarget(i, "You have survived, +5 points");
+						}
+					}
+				}
+				else
+				{
+					char aBuf[512];
+					str_format(aBuf, sizeof(aBuf), "Infected won this round in %i minutes", g_Config.m_SvTimelimit);
+					GameServer()->SendChat(-1, -2, aBuf);
+				}
+				
+				m_InfectedStarted = false;
+				EndRound();
+			}
 		}
+	}
+	else
+	{
+		m_RoundStartTick = Server()->Tick();
 	}
 }
 
@@ -307,7 +347,29 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		
 	if(pKiller == pVictim->GetPlayer())
 	{
-		if(pVictim->GetClass() != PLAYERCLASS_BOOMER)
+		if(!pVictim->IsInfected())
+		{
+			CPlayer* pVictimPlayer = pVictim->GetPlayer();
+			if(pVictimPlayer)
+			{
+				//Death by portal
+				if(Weapon == WEAPON_WORLD && (Server()->Tick() - pVictim->m_PortalTick) < Server()->TickSpeed() && pVictim->m_LastPortalOwner != pVictimPlayer->GetCID())
+				{
+					CPlayer* pBadPlayer = GameServer()->m_apPlayers[pVictim->m_LastPortalOwner];
+					if(pBadPlayer)
+					{
+						char aBuf[512];
+						str_format(aBuf, sizeof(aBuf), "%s have kill %s using portals, -5 points", Server()->ClientName(pVictimPlayer->GetCID()));
+						GameServer()->SendChatTarget(pBadPlayer->GetCID(), aBuf);
+						
+						pBadPlayer->m_Score -= 5;
+					}
+				}
+			}
+			
+			pVictim->GetPlayer()->m_Score--; // suicide
+		}
+		else if(pVictim->GetClass() != PLAYERCLASS_BOOMER)
 		{
 			pVictim->GetPlayer()->m_Score--; // suicide
 		}
@@ -320,6 +382,16 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			pKiller->m_Score += 5;
 		}
 		else pKiller->m_Score += 1;
+		
+		//Add bonus point for ninja
+		if(pVictim->IsFrozen() && pVictim->m_LastFreezer >= 0)
+		{
+			CPlayer* pFreezer = GameServer()->m_apPlayers[pVictim->m_LastFreezer];
+			if(pFreezer)
+			{
+				pFreezer->m_Score += 1;
+			}
+		}
 	}
 	
 	if(Weapon == WEAPON_SELF)
@@ -335,20 +407,6 @@ void CGameControllerMOD::OnCharacterSpawn(class CCharacter *pChr)
 
 	// give default weapons
 	pChr->GiveWeapon(WEAPON_HAMMER, -1);
-}
-
-void CGameControllerMOD::PostReset()
-{
-	std::cout << "PostReset" << std::endl;
-	for(int i = 0; i < MAX_CLIENTS; i++)
-	{
-		if(GameServer()->m_apPlayers[i])
-		{
-			GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);
-		}
-	}
-	
-	IGameController::PostReset();
 }
 
 void CGameControllerMOD::OnPlayerInfoChange(class CPlayer *pP)
@@ -384,18 +442,21 @@ bool CGameControllerMOD::IsSpawnable(vec2 Pos)
 	return true;
 }
 
-bool CGameControllerMOD::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
+bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 {
-	if(pPlayer->IsInfected() && m_ExplosionStarted)
+	// spectators can't spawn
+	if(pPlayer->GetTeam() == TEAM_SPECTATORS)
 		return false;
 	
-	int Team = pPlayer->GetTeam();
-
-	// spectators can't spawn
-	if(Team == TEAM_SPECTATORS)
+	if(m_InfectedStarted)
+	{
+		pPlayer->StartInfection();
+	}
+		
+	if(pPlayer->IsInfected() && m_ExplosionStarted)
 		return false;
 		
-	if(pPlayer->IsInfected() && rand()%3 > 0)
+	if(m_InfectedStarted && pPlayer->IsInfected() && rand()%3 > 0)
 	{
 		for(int i = 0; i < MAX_CLIENTS; i ++)
 		{
@@ -437,11 +498,11 @@ bool CGameControllerMOD::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	}
 			
 	CSpawnEval Eval;
-	Team = (pPlayer->IsInfected() ? TEAM_RED : TEAM_BLUE);
+	int Team = (pPlayer->IsInfected() ? TEAM_RED : TEAM_BLUE);
 	Eval.m_FriendlyTeam = Team;
 
 	// first try own team spawn, then normal spawn and then enemy
-	EvaluateSpawnType(&Eval, (pPlayer->IsInfected() ? 1+TEAM_RED : 1+TEAM_BLUE));
+	EvaluateSpawnType(&Eval, 1+Team);
 
 	*pOutPos = Eval.m_Pos;
 	return Eval.m_Got;
@@ -464,6 +525,12 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	if(random < 0.0f)
 	{
 		return PLAYERCLASS_SCIENTIST;
+	}
+	
+	random -= m_ClassProbability[PLAYERCLASS_NINJA]/m_TotalProbHumanClass;
+	if(random < 0.0f)
+	{
+		return PLAYERCLASS_NINJA;
 	}
 	
 	random -= m_ClassProbability[PLAYERCLASS_SOLDIER]/m_TotalProbHumanClass;

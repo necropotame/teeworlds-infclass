@@ -6,11 +6,12 @@
 #include <game/server/gamecontext.h>
 #include "growingexplosion.h"
 
-CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir)
+CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir, int Owner)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_GROWINGEXPLOSION)
 {
 	m_Pos = Pos;
 	m_StartTick = Server()->Tick();
+	m_Owner = Owner;
 
 	GameWorld()->InsertEntity(this);	
 	
@@ -119,7 +120,7 @@ void CGrowingExplosion::Tick()
 		int k = tileY*GROWINGMAP_LENGTH+tileX;
 		if(m_GrowingMap[k] > 0)
 		{
-			p->Freeze(3.0f, FREEZEREASON_FLASH);
+			p->Freeze(3.0f, m_Owner, FREEZEREASON_FLASH);
 			GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_QUESTION);
 		}
 	}

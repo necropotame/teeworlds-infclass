@@ -60,6 +60,28 @@ void CBarrier::Tick()
 			float Len = distance(p->m_Pos, IntersectPos);
 			if(Len < p->m_ProximityRadius+g_BarrierRadius)
 			{
+				//Check for portal traps
+				if(p->GetClass() != PLAYERCLASS_UNDEAD && (Server()->Tick() - p->m_PortalTick) < Server()->TickSpeed()/2)
+				{
+					CPlayer* pPortalPlayer = GameServer()->m_apPlayers[p->m_LastPortalOwner];
+					if(pPortalPlayer)
+					{
+						pPortalPlayer->m_Score += 1;
+					}
+				}
+				
+				//Check for hook traps. The case when the player is frozen is in the function Die()
+				if(!p->IsFrozen())
+				{
+					for(CCharacter *pHook = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pHook; pHook = (CCharacter *)pHook->TypeNext())
+					{
+						if(p->GetPlayer() && pHook->GetPlayer() && pHook->m_Core.m_HookedPlayer == p->GetPlayer()->GetCID() && pHook->GetPlayer()->GetCID() != m_Owner)
+						{
+							pHook->GetPlayer()->m_Score += 1;
+						}
+					}
+				}
+				
 				p->Die(m_Owner, WEAPON_HAMMER);
 			}
 		}

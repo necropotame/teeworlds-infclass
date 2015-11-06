@@ -93,7 +93,7 @@ void IGameController::EvaluateSpawnType(CSpawnEval *pEval, int Type)
 }
 
 /* INFECTION MODIFICATION START ***************************************/
-bool IGameController::CanSpawn(CPlayer* pPlayer, vec2 *pOutPos)
+bool IGameController::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 {
 	int Team = pPlayer->GetTeam();
 	CSpawnEval Eval;
@@ -217,8 +217,18 @@ const char *IGameController::GetTeamName(int Team)
 static bool IsSeparator(char c) { return c == ';' || c == ' ' || c == ',' || c == '\t'; }
 
 void IGameController::StartRound()
-{
+{	
 	ResetGame();
+	
+/* INFECTION MODIFICATION START ***************************************/
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(GameServer()->m_apPlayers[i])
+		{
+			GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);
+		}
+	}	
+/* INFECTION MODIFICATION END *****************************************/
 
 	m_RoundStartTick = Server()->Tick();
 	m_SuddenDeath = 0;

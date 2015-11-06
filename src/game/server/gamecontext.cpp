@@ -257,8 +257,18 @@ void CGameContext::SendChat(int ChatterClientID, int Team, const char *pText)
 		// send to the clients
 		for(int i = 0; i < MAX_CLIENTS; i++)
 		{
-			if(m_apPlayers[i] && m_apPlayers[i]->GetTeam() == Team)
-				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, i);
+/* INFECTION MODIFICATION START ***************************************/
+			if(m_apPlayers[i])
+			{
+				int PlayerTeam = (m_apPlayers[i]->IsInfected() ? TEAM_RED : TEAM_BLUE );
+				if(m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) PlayerTeam = TEAM_SPECTATORS;
+				
+				if(PlayerTeam == Team)
+				{
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, i);
+				}
+			}
+/* INFECTION MODIFICATION END *****************************************/
 		}
 	}
 }
@@ -615,8 +625,15 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			if(g_Config.m_SvSpamprotection && pPlayer->m_LastChat && pPlayer->m_LastChat+Server()->TickSpeed() > Server()->Tick())
 				return;
 
+/* INFECTION MODIFICATION START ***************************************/
 			CNetMsg_Cl_Say *pMsg = (CNetMsg_Cl_Say *)pRawMsg;
-			int Team = pMsg->m_Team ? pPlayer->GetTeam() : CGameContext::CHAT_ALL;
+			int Team = CGameContext::CHAT_ALL;
+			if(pMsg->m_Team)
+			{
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS) Team = TEAM_SPECTATORS;
+				else Team = (pPlayer->IsInfected() ? TEAM_RED : TEAM_BLUE);
+			}
+/* INFECTION MODIFICATION END *****************************************/
 			
 			// trim right and set maximum length to 128 utf8-characters
 			int Length = 0;
@@ -718,6 +735,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					CNetMsg_Sv_Chat Msg;
 					Msg.m_Team = 0;
 					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "/help undead : Informations about the undead";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
 					Msg.m_pMessage = "/help class : Informations about how to choose your class";
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
@@ -787,6 +811,26 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					Msg.m_Team = 0;
 					Msg.m_ClientID = -1;
 					Msg.m_pMessage = "When dead, the witch disappears";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+			}
+			else if(
+				(str_comp_nocase(pMsg->m_pMessage,"\\help undead") == 0) ||
+				(str_comp_nocase(pMsg->m_pMessage,"/help undead") == 0)
+			)
+			{
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "The undead freezes 10 seconds instead of dying";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+				}
+				{
+					CNetMsg_Sv_Chat Msg;
+					Msg.m_Team = 0;
+					Msg.m_ClientID = -1;
+					Msg.m_pMessage = "When dead by suicide, the undead disappears";
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 				}
 			}

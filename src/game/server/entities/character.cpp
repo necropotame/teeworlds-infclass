@@ -4,6 +4,7 @@
 #include <engine/shared/config.h>
 #include <game/server/gamecontext.h>
 #include <game/mapitems.h>
+#include <iostream>
 
 #include "character.h"
 #include "laser.h"
@@ -98,6 +99,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 /* INFECTION MODIFICATION START ***************************************/
 	m_AntiFireTick = Server()->Tick();
 	m_PortalTick = 0;
+	m_LastPortalOwner = m_pPlayer->GetCID();
 
 	ClassSpawnAttributes();
 	DestroyChildEntities();
@@ -368,7 +370,7 @@ void CCharacter::FireWeapon()
 					static_cast<float>(static_cast<int>(round(m_Pos.y))/32)*32.0);
 				
 				//Check is the tile is occuped, and if the direction is valide
-				if(!GameServer()->Collision()->CheckPointFlag(portalTile, CCollision::COLFLAG_NOPORTAL))
+				if(!GameServer()->Collision()->CheckPointFlag(portalTile, CCollision::COLFLAG_NOPORTAL) && m_Pos.y > -600.0)
 				{
 					if(m_pPortal[0] && m_pPortal[1])
 					{
@@ -723,9 +725,23 @@ void CCharacter::Tick()
 {
 /* INFECTION MODIFICATION START ***************************************/
 	//Check is the character is in toxic gaz
-	if(!IsInfected() && GameServer()->Collision()->CheckPointFlag(m_Pos, CCollision::COLFLAG_INFECTION))
+	if(m_Alive && !IsInfected() && GameServer()->Collision()->CheckPointFlag(m_Pos, CCollision::COLFLAG_INFECTION))
 	{
 		m_pPlayer->StartInfection();
+		
+		//Infection after teleportation
+		if((Server()->Tick() - m_PortalTick) < Server()->TickSpeed() && m_LastPortalOwner != m_pPlayer->GetCID())
+		{
+			CPlayer* pBadPlayer = GameServer()->m_apPlayers[m_LastPortalOwner];
+			if(pBadPlayer)
+			{
+				char aBuf[512];
+				str_format(aBuf, sizeof(aBuf), "You have infected %s using portals, -5 points", Server()->ClientName(m_pPlayer->GetCID()));
+				GameServer()->SendChatTarget(m_LastPortalOwner, aBuf);
+				
+				pBadPlayer->m_Score -= 5;
+			}
+		}
 	}
 
 	--m_FrozenTime;
@@ -943,7 +959,7 @@ void CCharacter::Die(int Killer, int Weapon)
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_UNDEAD && Killer != m_pPlayer->GetCID())
 	{
-		Freeze(10.0, FREEZEREASON_UNDEAD);
+		Freeze(10.0, Killer, FREEZEREASON_UNDEAD);
 		return;
 	}
 	
@@ -1005,8 +1021,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	else
 	{
 		m_pPlayer->StartInfection(false);
-	}
-	
+	}	
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -1101,10 +1116,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 			m_pPlayer->StartInfection();
 			
 			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "You have infected %s, +2 points", Server()->ClientName(m_pPlayer->GetCID()));
+			str_format(aBuf, sizeof(aBuf), "You have infected %s, +3 points", Server()->ClientName(m_pPlayer->GetCID()));
 			GameServer()->SendChatTarget(From, aBuf);
 		
-			GameServer()->m_apPlayers[From]->m_Score += 2;
+			GameServer()->m_apPlayers[From]->m_Score += 3;
 		
 			CNetMsg_Sv_KillMsg Msg;
 			Msg.m_Killer = From;
@@ -1249,7 +1264,6 @@ void CCharacter::Snap(int SnappingClient)
 /* INFECTION MODIFICATION START ***************************************/
 void CCharacter::OpenClassChooser()
 {
-	GameServer()->SendBroadcast("Choose your class by clicking on the weapon, or wait random selection", m_pPlayer->GetCID());
 	if(!m_pClassChooser)
 	{
 		m_pClassChooser = new CClassChooser(GameWorld(), m_Pos, m_pPlayer->GetCID());
@@ -1395,7 +1409,7 @@ void CCharacter::ClassSpawnAttributes()
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_UNDEAD))
 			{
 				GameServer()->SendBroadcast("You are an infected: Undead", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You froze 10 seconds instead of dying");
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You freeze 10 seconds instead of dying");
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -1460,7 +1474,7 @@ bool CCharacter::IsInfected() const
 	return m_pPlayer->IsInfected();
 }
 
-void CCharacter::Freeze(float Time, int Reason)
+void CCharacter::Freeze(float Time, int Player, int Reason)
 {
 	if(m_IsFrozen)
 		return;
@@ -1472,6 +1486,8 @@ void CCharacter::Freeze(float Time, int Reason)
 	char aBuf[512];
 	str_format(aBuf, sizeof(aBuf), "You are frozen for %i seconds", static_cast<int>(Time));
 	GameServer()->SendBroadcast(aBuf, m_pPlayer->GetCID());
+	
+	m_LastFreezer = Player;
 }
 
 bool CCharacter::IsFrozen() const

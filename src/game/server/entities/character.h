@@ -170,6 +170,8 @@ public:
 	CBomb* m_pBomb;
 	CPortal* m_pPortal[2];
 	int m_PortalTick;
+	int m_LastPortalOwner;
+	int m_LastFreezer;
 
 public:
 	void DestroyChildEntities();
@@ -180,7 +182,7 @@ public:
 	bool IsInfected() const;
 	void Infection(bool v);
 	void RemoveAllGun();
-	void Freeze(float Time, int Reason);
+	void Freeze(float Time, int Player, int Reason);
 	bool IsFrozen() const;
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);

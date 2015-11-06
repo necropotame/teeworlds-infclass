@@ -10,13 +10,14 @@
 class CGrowingExplosion : public CEntity
 {
 public:
-	CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir);
+	CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir, int Owner);
 	
 	virtual void Reset();
 	virtual void Tick();
 	virtual void TickPaused();
 
 private:
+	int m_Owner;
 	vec2 m_SeedPos;
 	int m_SeedX;
 	int m_SeedY;

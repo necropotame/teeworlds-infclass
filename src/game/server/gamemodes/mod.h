@@ -17,12 +17,11 @@ public:
 	// add more virtual functions here if you wish
 	
 	virtual bool OnEntity(int Index, vec2 Pos);
-	virtual void PostReset();
 	virtual int OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon);
 	virtual void OnCharacterSpawn(class CCharacter *pChr);
 	virtual void OnPlayerInfoChange(class CPlayer *pP);
 	virtual void DoWincheck();
-	virtual bool CanSpawn(CPlayer* pPlayer, vec2 *pPos);
+	virtual bool PreSpawn(CPlayer* pPlayer, vec2 *pPos);
 	virtual bool PickupAllowed(int Index);
 	virtual int ChooseHumanClass(CPlayer* pPlayer);
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
@@ -40,5 +39,9 @@ private:
 	int m_MapHeight;
 	int* m_GrowingMap;
 	bool m_ExplosionStarted;
+	
+	int m_HumanCounter;
+	int m_InfectedCounter;
+	bool m_InfectedStarted;
 };
 #endif

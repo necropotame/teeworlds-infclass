@@ -86,7 +86,7 @@ void CProjectile::Tick()
 			vec2 Dir = normalize(PrevPos - CurPos);
 			if(length(Dir) > 1.1) Dir = normalize(m_StartPos - CurPos);
 			
-			new CGrowingExplosion(GameWorld(), CurPos, Dir);
+			new CGrowingExplosion(GameWorld(), CurPos, Dir, m_Owner);
 		}
 		else if(m_Explosive)
 		{
