@@ -148,44 +148,34 @@ void CPlayer::Snap(int SnappingClient)
 		switch(GetClass())
 		{
 			case PLAYERCLASS_ENGINEER:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Engineer*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
 				break;
 			case PLAYERCLASS_SOLDIER:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Soldier*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
 				break;
 			case PLAYERCLASS_SCIENTIST:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Scientist*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
 				break;
 			case PLAYERCLASS_NINJA:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Ninja*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
 				break;
 			case PLAYERCLASS_ZOMBIE:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Zombie*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Zombie");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Zombie");
 				break;
 			case PLAYERCLASS_BOOMER:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Boomer*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
 				break;
 			case PLAYERCLASS_HUNTER:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Hunter*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
 				break;
 			case PLAYERCLASS_UNDEAD:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Undead*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
 				break;
 			case PLAYERCLASS_WITCH:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "Witch*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
+				StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
 				break;
 			default:
-				if(Server()->IsAuthed(m_ClientID)) StrToInts(&pClientInfo->m_Clan0, 3, "*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "");
+				StrToInts(&pClientInfo->m_Clan0, 3, "");
 		}
 	}
 	
