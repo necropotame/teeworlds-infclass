@@ -28,6 +28,8 @@ public:
 	int m_Owner;
 	CPortal* m_pLinkedPortal;
 	int m_LifeSpan;
+	bool m_isDeadlyPortal;
+	int m_DeadlyClueTick;
 };
 
 #endif

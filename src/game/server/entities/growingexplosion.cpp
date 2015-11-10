@@ -41,16 +41,16 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 			vec2 Tile = m_SeedPos + vec2(32.0f*(i-MAXGROWING), 32.0f*(j-MAXGROWING));
 			if(GameServer()->Collision()->CheckPoint(Tile) || distance(Tile, m_SeedPos) > MAXGROWING*32.0f)
 			{
-				m_GrowingMap[j*GROWINGMAP_LENGTH+i] = -1;
+				m_GrowingMap[j*GROWINGMAP_LENGTH+i] = -2;
 			}
 			else
 			{
-				m_GrowingMap[j*GROWINGMAP_LENGTH+i] = 0;
+				m_GrowingMap[j*GROWINGMAP_LENGTH+i] = -1;
 			}
 		}
 	}
 	
-	m_GrowingMap[MAXGROWING*GROWINGMAP_LENGTH+MAXGROWING] = 2;
+	m_GrowingMap[MAXGROWING*GROWINGMAP_LENGTH+MAXGROWING] = Server()->Tick();
 	GameServer()->CreateHammerHit(m_SeedPos);
 }
 
@@ -61,7 +61,8 @@ void CGrowingExplosion::Reset()
 
 void CGrowingExplosion::Tick()
 {
-	if((Server()->Tick() - m_StartTick) > Server()->TickSpeed())
+	int tick = Server()->Tick();
+	if((tick - m_StartTick) > Server()->TickSpeed())
 	{
 		GameServer()->m_World.DestroyEntity(this);
 		return;
@@ -71,33 +72,22 @@ void CGrowingExplosion::Tick()
 	{
 		for(int i=0; i<GROWINGMAP_LENGTH; i++)
 		{
-			if(m_GrowingMap[j*GROWINGMAP_LENGTH+i] == 0)
+			if(m_GrowingMap[j*GROWINGMAP_LENGTH+i] == -1)
 			{
 				if(
-					(i > 0 && m_GrowingMap[j*GROWINGMAP_LENGTH+i-1] == 2) ||
-					(i < GROWINGMAP_LENGTH-1 && m_GrowingMap[j*GROWINGMAP_LENGTH+i+1] == 2) ||
-					(j > 0 && m_GrowingMap[(j-1)*GROWINGMAP_LENGTH+i] == 2) ||
-					(j < GROWINGMAP_LENGTH-1 && m_GrowingMap[(j+1)*GROWINGMAP_LENGTH+i] == 2)
+					(i > 0 && m_GrowingMap[j*GROWINGMAP_LENGTH+i-1] < tick && m_GrowingMap[j*GROWINGMAP_LENGTH+i-1] >= 0) ||
+					(i < GROWINGMAP_LENGTH-1 && m_GrowingMap[j*GROWINGMAP_LENGTH+i+1] < tick && m_GrowingMap[j*GROWINGMAP_LENGTH+i+1] >= 0) ||
+					(j > 0 && m_GrowingMap[(j-1)*GROWINGMAP_LENGTH+i] < tick && m_GrowingMap[(j-1)*GROWINGMAP_LENGTH+i] >= 0) ||
+					(j < GROWINGMAP_LENGTH-1 && m_GrowingMap[(j+1)*GROWINGMAP_LENGTH+i] < tick && m_GrowingMap[(j+1)*GROWINGMAP_LENGTH+i] >= 0)
 				)
 				{
-					m_GrowingMap[j*GROWINGMAP_LENGTH+i] = 1;
+					m_GrowingMap[j*GROWINGMAP_LENGTH+i] = tick;
 					
 					if(rand()%10 == 0)
 					{
 						GameServer()->CreateHammerHit(m_SeedPos + vec2(32.0f*(i-MAXGROWING) - 16.0f + frandom()*32.0f, 32.0f*(j-MAXGROWING) - 16.0f + frandom()*32.0f));
 					}
 				}
-			}
-		}
-	}
-	
-	for(int j=0; j<GROWINGMAP_LENGTH; j++)
-	{
-		for(int i=0; i<GROWINGMAP_LENGTH; i++)
-		{
-			if(m_GrowingMap[j*GROWINGMAP_LENGTH+i] == 1)
-			{
-				m_GrowingMap[j*GROWINGMAP_LENGTH+i] = 2;
 			}
 		}
 	}
@@ -118,10 +108,13 @@ void CGrowingExplosion::Tick()
 			continue;
 		
 		int k = tileY*GROWINGMAP_LENGTH+tileX;
-		if(m_GrowingMap[k] > 0)
+		if(m_GrowingMap[k] >= 0)
 		{
-			p->Freeze(3.0f, m_Owner, FREEZEREASON_FLASH);
-			GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_QUESTION);
+			if(tick - m_GrowingMap[k] < Server()->TickSpeed()/4)
+			{
+				p->Freeze(3.0f, m_Owner, FREEZEREASON_FLASH);
+				GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_QUESTION);
+			}
 		}
 	}
 }

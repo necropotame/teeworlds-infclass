@@ -216,6 +216,29 @@ void CGameContext::CreateSoundGlobal(int Sound, int Target)
 	}
 }
 
+/* INFECTION MODIFICATION START ***************************************/
+void CGameContext::CreateDeadlyPortalWarning(vec2 Pos, int Owner)
+{
+	// create the event
+	int Mask = 0;
+	
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(m_apPlayers[i] && !m_apPlayers[i]->IsInfected())
+		{
+			Mask |= CmaskOne(i);
+		}
+	}
+	
+	CNetEvent_Death *pEvent = (CNetEvent_Death *)m_Events.Create(NETEVENTTYPE_DEATH, sizeof(CNetEvent_Death), Mask);
+	if(pEvent)
+	{
+		pEvent->m_X = (int)Pos.x;
+		pEvent->m_Y = (int)Pos.y;
+		pEvent->m_ClientID = Owner;
+	}
+}
+/* INFECTION MODIFICATION END *****************************************/
 
 void CGameContext::SendChatTarget(int To, const char *pText)
 {

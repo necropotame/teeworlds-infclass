@@ -1,6 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <game/server/gamecontext.h>
+#include <iostream>
 #include "portal.h"
 
 const float g_PortalLifeSpan = 30.0;
@@ -21,6 +22,33 @@ CPortal::CPortal(CGameWorld *pGameWorld, vec2 Pos, int Owner, int Num)
 	}
 	
 	m_LifeSpan = Server()->TickSpeed()*g_PortalLifeSpan;
+	m_DeadlyClueTick = -1;
+	m_isDeadlyPortal = false;
+	
+	float yLimit = GameServer()->Collision()->GetHeight()*32.0f;
+	
+	//Check if the portal is over deadzone/infectionzone
+	for(int i=-4; i<=4 && !m_isDeadlyPortal; i++)
+	{
+		float x = m_Pos.x + i*32.0f;
+		float y = m_Pos.y;
+		bool CheckColumn = true;
+		while(CheckColumn)
+		{
+			vec2 CheckPos = vec2(x, y);
+			if(GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_INFECTION) || GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_DEATH))
+			{
+				m_isDeadlyPortal = true;
+				CheckColumn = false;
+			}
+			else if(y > yLimit || GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_SOLID))
+			{
+				CheckColumn = false;
+			}
+			
+			y += 32.0f;
+		}
+	}
 }
 
 void CPortal::Destroy()
@@ -60,6 +88,16 @@ void CPortal::Tick()
 	//Check if the portal is connected
 	if(!m_pLinkedPortal)
 		return;
+		
+	if(m_isDeadlyPortal)
+	{
+		if(m_DeadlyClueTick <= 0)
+		{
+			GameServer()->CreateDeadlyPortalWarning(m_pLinkedPortal->m_Pos, m_Owner);
+			m_DeadlyClueTick = Server()->TickSpeed()/4;
+		}
+		m_DeadlyClueTick--;
+	}
 	
 	m_LifeSpan--;
 	

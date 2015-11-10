@@ -126,6 +126,10 @@ public:
 	void CreateDeath(vec2 Pos, int Who);
 	void CreateSound(vec2 Pos, int Sound, int Mask=-1);
 	void CreateSoundGlobal(int Sound, int Target=-1);
+	
+/* INFECTION MODIFICATION START ***************************************/
+	void CreateDeadlyPortalWarning(vec2 Pos, int Owner);
+/* INFECTION MODIFICATION END *****************************************/
 
 
 	enum

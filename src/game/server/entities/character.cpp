@@ -275,6 +275,9 @@ void CCharacter::FireWeapon()
 	//Wait 1 second after spawning
 	if(Server()->Tick() - m_AntiFireTick < Server()->TickSpeed())
 		return;
+	
+	if(IsFrozen())
+		return;
 /* INFECTION MODIFICATION END *****************************************/
 		
 	if(m_ReloadTimer != 0)
@@ -412,7 +415,10 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_BOOMER)
 			{
-				Die(m_pPlayer->GetCID(), WEAPON_SELF);
+				if(!IsFrozen())
+				{
+					Die(m_pPlayer->GetCID(), WEAPON_SELF);
+				}
 			}
 			else
 			{
@@ -586,6 +592,9 @@ void CCharacter::FireWeapon()
 
 void CCharacter::HandleWeapons()
 {
+	if(IsFrozen())
+		return;
+		
 	//ninja
 	HandleNinja();
 
@@ -787,10 +796,7 @@ void CCharacter::Tick()
 
 	// handle Weapons
 /* INFECTION MODIFICATION START ***************************************/
-	if(!IsFrozen())
-	{
-		HandleWeapons();
-	}
+	HandleWeapons();
 
 	if(GetClass() == PLAYERCLASS_HUNTER)
 	{
