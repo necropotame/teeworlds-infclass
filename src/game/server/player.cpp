@@ -25,6 +25,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	
 /* INFECTION MODIFICATION START ***************************************/
 	m_Score = 0;
+	m_WinAsHuman = 0;
 	m_class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
 	for(int i=0; i<NB_PLAYERCLASS; i++)
@@ -32,7 +33,8 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 		m_knownClass[i] = false;
 	}
 	
-	m_ShowCustomSkin = false;
+	m_ShowCustomSkin = 0;
+	m_AlwaysRandom = 0;
 	
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -148,31 +150,40 @@ void CPlayer::Snap(int SnappingClient)
 		switch(GetClass())
 		{
 			case PLAYERCLASS_ENGINEER:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Engineer*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
 				break;
 			case PLAYERCLASS_SOLDIER:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Soldier*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
 				break;
 			case PLAYERCLASS_SCIENTIST:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Scientist*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
 				break;
 			case PLAYERCLASS_NINJA:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Ninja*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
 				break;
-			case PLAYERCLASS_ZOMBIE:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Zombie");
+			case PLAYERCLASS_SMOKER:
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Smoker*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Smoker");
 				break;
 			case PLAYERCLASS_BOOMER:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Boomer*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
 				break;
 			case PLAYERCLASS_HUNTER:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Hunter*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
 				break;
 			case PLAYERCLASS_UNDEAD:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Undead*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
 				break;
 			case PLAYERCLASS_WITCH:
-				StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
+				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Witch*");
+				else StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
 				break;
 			default:
 				StrToInts(&pClientInfo->m_Clan0, 3, "");
@@ -389,7 +400,7 @@ void CPlayer::SetClassSkin(int newClass)
 			m_TeeInfos.m_ColorBody = 255;
 			m_TeeInfos.m_ColorFeet = 0;
 			break;
-		case PLAYERCLASS_ZOMBIE:
+		case PLAYERCLASS_SMOKER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;

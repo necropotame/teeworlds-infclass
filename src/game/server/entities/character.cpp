@@ -454,11 +454,18 @@ void CCharacter::FireWeapon()
 /* INFECTION MODIFICATION START ***************************************/
 					if(IsInfected() && pTarget->IsInfected())
 					{
-						pTarget->IncreaseHealth(2);
-						pTarget->IncreaseArmor(2);
-						pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
-						pTarget->m_EmoteType = EMOTE_HAPPY;
-						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+						if(pTarget->IsFrozen())
+						{
+							pTarget->Unfreeze();
+						}
+						else
+						{
+							pTarget->IncreaseHealth(2);
+							pTarget->IncreaseArmor(2);
+							pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
+							pTarget->m_EmoteType = EMOTE_HAPPY;
+							pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+						}
 						
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
@@ -632,7 +639,7 @@ void CCharacter::HandleWeapons()
 		}
 	}
 	
-	if(GetClass() == PLAYERCLASS_ZOMBIE)
+	if(GetClass() == PLAYERCLASS_SMOKER)
 	{
 		if(m_Core.m_HookedPlayer >= 0)
 		{
@@ -756,15 +763,7 @@ void CCharacter::Tick()
 	--m_FrozenTime;
 	if(m_IsFrozen && m_FrozenTime <= 0)
 	{
-		m_IsFrozen = false;
-		m_FrozenTime = -1;
-		
-		if(m_FreezeReason == FREEZEREASON_UNDEAD)
-		{
-			m_Health = 10.0;
-		}
-		
-		GameServer()->CreatePlayerSpawn(m_Pos);
+		Unfreeze();
 	}
 	
 	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_Ninja.m_CurrentMoveTime <= 0)
@@ -1117,7 +1116,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 /* INFECTION MODIFICATION START ***************************************/
 	if(GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected())
 	{		
-		if(!(GameServer()->m_apPlayers[From]->GetClass() == PLAYERCLASS_ZOMBIE && Weapon == WEAPON_NINJA))
+		if(!(GameServer()->m_apPlayers[From]->GetClass() == PLAYERCLASS_SMOKER && Weapon == WEAPON_NINJA))
 		{
 			m_pPlayer->StartInfection();
 			
@@ -1358,7 +1357,7 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			break;
-		case PLAYERCLASS_ZOMBIE:
+		case PLAYERCLASS_SMOKER:
 			m_Health = 10;
 			m_Armor = 0;
 			RemoveAllGun();
@@ -1366,12 +1365,12 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			if(!m_pPlayer->IsKownClass(PLAYERCLASS_ZOMBIE))
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SMOKER))
 			{   
 				//normal zombie?
                 GameServer()->SendBroadcast("You are an infected: Zombie", m_pPlayer->GetCID());
 				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Hit by hooking others");
-				m_pPlayer->m_knownClass[PLAYERCLASS_ZOMBIE] = true;
+				m_pPlayer->m_knownClass[PLAYERCLASS_SMOKER] = true;
 			}
 			break;
 		case PLAYERCLASS_BOOMER:
@@ -1494,6 +1493,19 @@ void CCharacter::Freeze(float Time, int Player, int Reason)
 	GameServer()->SendBroadcast(aBuf, m_pPlayer->GetCID());
 	
 	m_LastFreezer = Player;
+}
+
+void CCharacter::Unfreeze()
+{
+	m_IsFrozen = false;
+	m_FrozenTime = -1;
+	
+	if(m_FreezeReason == FREEZEREASON_UNDEAD)
+	{
+		m_Health = 10.0;
+	}
+	
+	GameServer()->CreatePlayerSpawn(m_Pos);
 }
 
 bool CCharacter::IsFrozen() const

@@ -16,19 +16,19 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	
 	m_TotalProbInfectedClass = 0.0;
 	
-	m_ClassProbability[PLAYERCLASS_ZOMBIE] = 1.0f;
-	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_ClassProbability[PLAYERCLASS_SMOKER] = 1.0f;
+	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_SMOKER];
 	
-	m_ClassProbability[PLAYERCLASS_HUNTER] = 0.6666f * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_ClassProbability[PLAYERCLASS_HUNTER] = 0.6666f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_HUNTER];
 	
-	m_ClassProbability[PLAYERCLASS_BOOMER] = 0.6666f * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_ClassProbability[PLAYERCLASS_BOOMER] = 0.6666f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_BOOMER];
 	
-	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25 * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_WITCH];
 	
-	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.15 * m_ClassProbability[PLAYERCLASS_ZOMBIE];
+	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.15 * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_UNDEAD];
 	
 	m_TotalProbHumanClass = 0.0;
@@ -71,6 +71,9 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 			}
 		}
 	}
+	
+	m_NinjaLimit = 4;
+	m_ScientistLimit = 4;
 }
 
 CGameControllerMOD::~CGameControllerMOD()
@@ -194,7 +197,7 @@ void CGameControllerMOD::Tick()
 		
 		//Win check
 		if(m_InfectedStarted && m_HumanCounter == 0 && m_InfectedCounter > 1)
-		{
+		{			
 			float RoundDuration = static_cast<float>((Server()->Tick()-m_RoundStartTick)/((float)Server()->TickSpeed()))/60.0f;
 			int Minutes = static_cast<int>(RoundDuration);
 			int Seconds = static_cast<int>((RoundDuration - Minutes)*60.0f);
@@ -316,6 +319,7 @@ void CGameControllerMOD::Tick()
 						if(!pPlayer->IsInfected())
 						{
 							pPlayer->m_Score += 5;
+							pPlayer->m_WinAsHuman++;
 							
 							GameServer()->SendChatTarget(i, "You have survived, +5 points");
 						}
@@ -520,23 +524,69 @@ bool CGameControllerMOD::PickupAllowed(int Index)
 int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 {
 	float random = frandom();
+	float TotalProbHumanClass = m_TotalProbHumanClass;
 	
-	random -= m_ClassProbability[PLAYERCLASS_SCIENTIST]/m_TotalProbHumanClass;
-	if(random < 0.0f)
+	//Get information about existing infected
+	int nbNinja = 0;
+	int nbScientist = 0;
+	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
-		return PLAYERCLASS_SCIENTIST;
+		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+		
+		if(!pPlayer) continue;
+		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+		
+		if(pPlayer->GetClass() == PLAYERCLASS_NINJA) nbNinja++;
+		if(pPlayer->GetClass() == PLAYERCLASS_SCIENTIST) nbScientist++;
 	}
 	
-	random -= m_ClassProbability[PLAYERCLASS_NINJA]/m_TotalProbHumanClass;
-	if(random < 0.0f)
+	bool scientistEnabled = true;
+	if(nbScientist > m_ScientistLimit || Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) == 0)
 	{
-		return PLAYERCLASS_NINJA;
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SCIENTIST];
+		scientistEnabled = false;
 	}
 	
-	random -= m_ClassProbability[PLAYERCLASS_SOLDIER]/m_TotalProbHumanClass;
-	if(random < 0.0f)
+	bool ninjaEnabled = true;
+	if(nbNinja > m_NinjaLimit || Server()->GetClassAvailability(PLAYERCLASS_NINJA) == 0)
 	{
-		return PLAYERCLASS_SOLDIER;
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_NINJA];
+		ninjaEnabled = false;
+	}
+	
+	bool soldierEnabled = true;
+	if(Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) == 0)
+	{
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SOLDIER];
+		soldierEnabled = false;
+	}
+	
+	if(scientistEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_SCIENTIST]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_SCIENTIST;
+		}
+	}
+	
+	if(ninjaEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_NINJA]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_NINJA;
+		}
+	}
+	
+	
+	if(soldierEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_SOLDIER]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_SOLDIER;
+		}
 	}
 	
 	return PLAYERCLASS_ENGINEER;
@@ -563,9 +613,25 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		if(pPlayer->GetClass() == PLAYERCLASS_UNDEAD) thereIsAnUndead = true;
 	}
 	
+	//Check if hunters are enabled
+	bool hunterEnabled = true;
+	if(Server()->GetClassAvailability(PLAYERCLASS_HUNTER) == 0)
+	{
+		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_HUNTER];
+		hunterEnabled = false;
+	}
+	
+	//Check if boomers are enabled
+	bool boomerEnabled = true;
+	if(Server()->GetClassAvailability(PLAYERCLASS_BOOMER) == 0)
+	{
+		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_BOOMER];
+		boomerEnabled = false;
+	}
+	
 	//Check if undeads are enabled
 	bool undeadEnabled = true;
-	if(nbInfected < 2 || thereIsAnUndead)
+	if(nbInfected < 2 || thereIsAnUndead || (Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) == 0))
 	{
 		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_UNDEAD];
 		undeadEnabled = false;
@@ -573,7 +639,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	//Check if witches are enabled
 	bool witchEnabled = true;
-	if(nbInfected < 2 || thereIsAWitch)
+	if(nbInfected < 2 || thereIsAWitch || (Server()->GetClassAvailability(PLAYERCLASS_WITCH) == 0))
 	{
 		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_WITCH];
 		witchEnabled = false;
@@ -602,26 +668,76 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		}
 	}
 	
-	random -= m_ClassProbability[PLAYERCLASS_BOOMER]/TotalProbInfectedClass;
-	if(random < 0.0f)
+	if(boomerEnabled)
 	{
-		return PLAYERCLASS_BOOMER;
+		random -= m_ClassProbability[PLAYERCLASS_BOOMER]/TotalProbInfectedClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_BOOMER;
+		}
 	}
 	
-	random -= m_ClassProbability[PLAYERCLASS_HUNTER]/TotalProbInfectedClass;
-	if(random < 0.0f)
+	if(hunterEnabled)
 	{
-		return PLAYERCLASS_HUNTER;
+		random -= m_ClassProbability[PLAYERCLASS_HUNTER]/TotalProbInfectedClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_HUNTER;
+		}
 	}
 	
-	return PLAYERCLASS_ZOMBIE;
+	return PLAYERCLASS_SMOKER;
 }
 
 bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 {
-	if(PlayerClass == PLAYERCLASS_ENGINEER) return true;
-	else if(PlayerClass == PLAYERCLASS_SOLDIER) return true;
-	else if(PlayerClass == PLAYERCLASS_NINJA) return true;
-	else if(PlayerClass == PLAYERCLASS_SCIENTIST) return true;
+	if(PlayerClass == PLAYERCLASS_ENGINEER) return (Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) > 1);
+	else if(PlayerClass == PLAYERCLASS_SOLDIER) return (Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) > 1);
+	else if(PlayerClass == PLAYERCLASS_NINJA)
+	{
+		if(Server()->GetClassAvailability(PLAYERCLASS_NINJA) <= 1)
+		{
+			return false;
+		}
+		else
+		{
+			//Get information about existing humans
+			int nbNinja = 0;
+			for(int i = 0; i < MAX_CLIENTS; i++)
+			{
+				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+				
+				if(!pPlayer) continue;
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+				
+				if(pPlayer->GetClass() == PLAYERCLASS_NINJA) nbNinja++;
+			}
+			
+			return (nbNinja < m_NinjaLimit);
+		}
+	}
+	else if(PlayerClass == PLAYERCLASS_SCIENTIST)
+	{
+		if(Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) <= 1)
+		{
+			return false;
+		}
+		else
+		{
+			//Get information about existing humans
+			int nbScientist = 0;
+			for(int i = 0; i < MAX_CLIENTS; i++)
+			{
+				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+				
+				if(!pPlayer) continue;
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+				
+				if(pPlayer->GetClass() == PLAYERCLASS_SCIENTIST) nbScientist++;
+			}
+			
+			return (nbScientist < m_ScientistLimit);
+		}
+	}
 	else return false;
 }

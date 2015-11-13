@@ -694,248 +694,300 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			
 			
 /* INFECTION MODIFICATION START ***************************************/
-			if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\info") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/info") == 0)
-			)
+			if(pMsg->m_pMessage[0] == '/' || pMsg->m_pMessage[0] == '\\')
 			{
+				if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\info") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/info") == 0)
+				)
+				{
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "InfectionClass, by necropotame (version 0.3)";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "Based on the mod Infection by Gravity";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "Thanks to guenstig werben and Defeater";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\cmdlist") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/cmdlist") == 0)
+				)
+				{
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "List of commands";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/info : Information about this mod";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/help : Rules of the game";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/help witch : Informations about the witch";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/help undead : Informations about the undead";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/help class : Informations about how to choose your class";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/class <engineer|soldier|scientist|ninja> : Choose your class (only when the round start)";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/customskin <none|me|all> : Show player skin instead of class-based skin for, respectively nobody, me as human or all human";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/alwaysrandom <0|1> : Choose automatically random class when the round start.";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help") == 0)
+				)
+				{
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "Humans start by choosing their class";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "Humans can build structures using the hammer";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "When a human takes damage from a zombie, he become infected";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help witch") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help witch") == 0)
+				)
+				{
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "The witch acts as a moving infected spawner";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "Dead infected has automatically a chance to spawn nearby her";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "When dead, the witch disappears";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help undead") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help undead") == 0)
+				)
+				{
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "The undead freezes 10 seconds instead of dying";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "When dead by suicide, the undead disappears";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help class") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help class") == 0)
+				)
+				{
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "As human, you can choose your class by clicking on the floating weapons around you, but only at the beginning of the round";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "As infected, a random class is attributed to you and you can't change it";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\customskin all") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/customskin all") == 0)
+				)
+				{
+					m_apPlayers[ClientID]->m_ShowCustomSkin = 2;
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\customskin me") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/customskin me") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"\\customskin") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/customskin") == 0)
+				)
+				{
+					m_apPlayers[ClientID]->m_ShowCustomSkin = 1;
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\customskin none") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/customskin none") == 0)
+				)
+				{
+					m_apPlayers[ClientID]->m_ShowCustomSkin = 0;
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\alwaysrandom 0") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/alwaysrandom 0") == 0)
+				)
+				{
+					m_apPlayers[ClientID]->m_AlwaysRandom = 0;
+					
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "Random class will not be selected automatically when the round start";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\alwaysrandom 1") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/alwaysrandom 1") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"\\alwaysrandom") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/alwaysrandom") == 0)
+				)
+				{
+					m_apPlayers[ClientID]->m_AlwaysRandom = 1;
+					
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "Random class will be selected automatically when the round start";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\class engineer") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/class engineer") == 0)
+				)
+				{
+					if(m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					{
+						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ENGINEER);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\class soldier") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/class soldier") == 0)
+				)
+				{
+					if(m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					{
+						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SOLDIER);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\class scientist") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/class scientist") == 0)
+				)
+				{
+					if(m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					{
+						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SCIENTIST);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\class ninja") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/class ninja") == 0)
+				)
+				{
+					if(m_pController->IsChoosableClass(PLAYERCLASS_NINJA) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					{
+						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_NINJA);
+					}
+				}
+				else
 				{
 					CNetMsg_Sv_Chat Msg;
 					Msg.m_Team = 0;
 					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "InfectionClass, by necropotame (version 0.3)";
+					Msg.m_pMessage = "Command unknown";
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "Based on the mod Infection by Gravity";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "Thanks to guenstig werben and Defeater";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\cmdlist") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/cmdlist") == 0)
-			)
-			{
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "List of commands";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/info : Information about this mod";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/help : Rules of the game";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/help witch : Informations about the witch";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/help undead : Informations about the undead";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/help class : Informations about how to choose your class";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/class <engineer|soldier|scientist|ninja> : Choose your class (only when the round start)";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "/customskin <none|me|all> : Show player skin instead of class-based skin for, respectively nobody, me as human or all human";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\help") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/help") == 0)
-			)
-			{
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "Humans start by choosing their class";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "Humans can build structures using the hammer";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "When a human takes damage from a zombie, he become infected";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\help witch") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/help witch") == 0)
-			)
-			{
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "The witch acts as a moving infected spawner";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "Dead infected has automatically a chance to spawn nearby her";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "When dead, the witch disappears";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\help undead") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/help undead") == 0)
-			)
-			{
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "The undead freezes 10 seconds instead of dying";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "When dead by suicide, the undead disappears";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\help class") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/help class") == 0)
-			)
-			{
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "As human, you can choose your class by clicking on the floating weapons around you, but only at the beginning of the round";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-				{
-					CNetMsg_Sv_Chat Msg;
-					Msg.m_Team = 0;
-					Msg.m_ClientID = -1;
-					Msg.m_pMessage = "As infected, a random class is attributed to you and you can't change it";
-					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\customskin all") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/customskin all") == 0)
-			)
-			{
-				m_apPlayers[ClientID]->m_ShowCustomSkin = 2;
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\customskin me") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/customskin me") == 0)
-			)
-			{
-				m_apPlayers[ClientID]->m_ShowCustomSkin = 1;
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\customskin none") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/customskin none") == 0)
-			)
-			{
-				m_apPlayers[ClientID]->m_ShowCustomSkin = 0;
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class engineer") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class engineer") == 0)
-			)
-			{
-				if(m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ENGINEER);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class soldier") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class soldier") == 0)
-			)
-			{
-				if(m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SOLDIER);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class scientist") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class scientist") == 0)
-			)
-			{
-				if(m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SCIENTIST);
-				}
-			}
-			else if(
-				(str_comp_nocase(pMsg->m_pMessage,"\\class ninja") == 0) ||
-				(str_comp_nocase(pMsg->m_pMessage,"/class ninja") == 0)
-			)
-			{
-				if(m_pController->IsChoosableClass(PLAYERCLASS_NINJA) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
-				{
-					m_apPlayers[ClientID]->SetClass(PLAYERCLASS_NINJA);
 				}
 			}
 			else
@@ -1742,7 +1794,7 @@ void CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "soldier") == 0) pPlayer->SetClass(PLAYERCLASS_SOLDIER);
 	else if(str_comp(pClassName, "scientist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIENTIST);
 	else if(str_comp(pClassName, "ninja") == 0) pPlayer->SetClass(PLAYERCLASS_NINJA);
-	else if(str_comp(pClassName, "zombie") == 0) pPlayer->SetClass(PLAYERCLASS_ZOMBIE);
+	else if(str_comp(pClassName, "smoker") == 0) pPlayer->SetClass(PLAYERCLASS_SMOKER);
 	else if(str_comp(pClassName, "hunter") == 0) pPlayer->SetClass(PLAYERCLASS_HUNTER);
 	else if(str_comp(pClassName, "boomer") == 0) pPlayer->SetClass(PLAYERCLASS_BOOMER);
 	else if(str_comp(pClassName, "undead") == 0) pPlayer->SetClass(PLAYERCLASS_UNDEAD);
@@ -1765,29 +1817,6 @@ void CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	char aBuf[256];
 	str_format(aBuf, sizeof(aBuf), "The admin change the class of %s to %s", pSelf->Server()->ClientName(PlayerID), pClassName);
 	pSelf->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-}
-
-void CGameContext::ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	const char *pWeaponName = pResult->GetString(0);
-	int NewValue = pResult->GetInteger(1);
-	int WeapondId = 0;
-	
-	if(NewValue < 0) NewValue = 0;
-	
-	if(str_comp(pWeaponName, "gun") == 0) WeapondId = INFWEAPON_GUN;
-	else if(str_comp(pWeaponName, "guns") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
-	else if(str_comp(pWeaponName, "soldier_grenade") == 0) WeapondId = INFWEAPON_SOLDIER_GRENADE;
-	else if(str_comp(pWeaponName, "scientist_shotgun") == 0) WeapondId = INFWEAPON_SCIENTIST_SHOTGUN;
-	else if(str_comp(pWeaponName, "ninja_grenade") == 0) WeapondId = INFWEAPON_NINJA_GRENADE;
-	else if(str_comp(pWeaponName, "engineer_rifle") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
-	else
-	{
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "set_ammo_regen", "No such weapon");
-	}
-	
-	pSelf->Server()->SetAmmoRegenTime(WeapondId, NewValue);
 }
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -1833,7 +1862,6 @@ void CGameContext::OnConsoleInit()
 	
 /* INFECTION MODIFICATION START ***************************************/
 	Console()->Register("inf_set_class", "is", CFGFLAG_SERVER, ConSetClass, this, "Set the class of a player");
-	Console()->Register("inf_set_ammo_regen", "si", CFGFLAG_SERVER, ConSetAmmoRegen, this, "Set the ammo regeneration time per weapon");
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);

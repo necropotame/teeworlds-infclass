@@ -183,7 +183,6 @@ public:
 /* INFECTION MODIFICATION START ***************************************/
 private:
 	static void ConSetClass(IConsole::IResult *pResult, void *pUserData);
-	static void ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

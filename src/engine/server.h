@@ -100,6 +100,9 @@ public:
 	
 	virtual int GetMaxAmmo(int WID) = 0;
 	virtual void SetMaxAmmo(int WID, int n) = 0;
+	
+	virtual int GetClassAvailability(int CID) = 0;
+	virtual void SetClassAvailability(int CID, int n) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

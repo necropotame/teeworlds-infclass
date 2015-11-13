@@ -467,6 +467,17 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_SCIENTIST_SHOTGUN, 10);
 	SetMaxAmmo(INFWEAPON_NINJA_HAMMER, -1);
 	SetMaxAmmo(INFWEAPON_NINJA_GRENADE, 5);
+	
+	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
+	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
+	SetClassAvailability(PLAYERCLASS_NINJA, 2);
+	SetClassAvailability(PLAYERCLASS_SCIENTIST, 2);
+	
+	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
+	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
+	SetClassAvailability(PLAYERCLASS_BOOMER, 1);
+	SetClassAvailability(PLAYERCLASS_UNDEAD, 1);
+	SetClassAvailability(PLAYERCLASS_WITCH, 1);
 /* INFECTION MODIFICATION END *****************************************/
 
 	return 0;
@@ -1636,6 +1647,61 @@ void CServer::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void 
 	}
 }
 
+/* INFECTION MODIFICATION START ***************************************/
+void CServer::ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData)
+{
+	CServer *pServer = (CServer*) pUserData;
+	
+	const char *pWeaponName = pResult->GetString(0);
+	int NewValue = pResult->GetInteger(1);
+	int WeapondId = 0;
+	
+	if(NewValue < 0) NewValue = 0;
+	
+	if(str_comp(pWeaponName, "gun") == 0) WeapondId = INFWEAPON_GUN;
+	else if(str_comp(pWeaponName, "guns") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
+	else if(str_comp(pWeaponName, "soldier_grenade") == 0) WeapondId = INFWEAPON_SOLDIER_GRENADE;
+	else if(str_comp(pWeaponName, "scientist_shotgun") == 0) WeapondId = INFWEAPON_SCIENTIST_SHOTGUN;
+	else if(str_comp(pWeaponName, "ninja_grenade") == 0) WeapondId = INFWEAPON_NINJA_GRENADE;
+	else if(str_comp(pWeaponName, "engineer_rifle") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
+	else
+	{
+		pServer->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "inf_set_ammo_regen", "No such weapon");
+	}
+	
+	pServer->SetAmmoRegenTime(WeapondId, NewValue);
+}
+
+void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData)
+{
+	CServer *pServer = (CServer*) pUserData;
+	
+	const char *pClassName = pResult->GetString(0);
+	int NewValue = pResult->GetInteger(1);
+	int ClassId = 0;
+	
+	if(NewValue < 0) NewValue = 0;
+	
+	if(str_comp(pClassName, "engineer") == 0) ClassId = PLAYERCLASS_ENGINEER;
+	else if(str_comp(pClassName, "soldier") == 0) ClassId = PLAYERCLASS_SOLDIER;
+	else if(str_comp(pClassName, "scientist") == 0) ClassId = PLAYERCLASS_SCIENTIST;
+	else if(str_comp(pClassName, "ninja") == 0) ClassId = PLAYERCLASS_NINJA;
+	else if(str_comp(pClassName, "smoker") == 0) ClassId = PLAYERCLASS_SMOKER;
+	else if(str_comp(pClassName, "hunter") == 0) ClassId = PLAYERCLASS_HUNTER;
+	else if(str_comp(pClassName, "boomer") == 0) ClassId = PLAYERCLASS_BOOMER;
+	else if(str_comp(pClassName, "undead") == 0) ClassId = PLAYERCLASS_UNDEAD;
+	else if(str_comp(pClassName, "witch") == 0) ClassId = PLAYERCLASS_WITCH;
+	else
+	{
+		pServer->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "inf_set_class_availability", "No such class");
+	}
+	
+	if(NewValue > 2) NewValue = 2;
+	
+	pServer->SetClassAvailability(ClassId, NewValue);
+}
+/* INFECTION MODIFICATION END *****************************************/
+
 void CServer::RegisterCommands()
 {
 	m_pConsole = Kernel()->RequestInterface<IConsole>();
@@ -1660,6 +1726,11 @@ void CServer::RegisterCommands()
 	Console()->Chain("sv_max_clients_per_ip", ConchainMaxclientsperipUpdate, this);
 	Console()->Chain("mod_command", ConchainModCommandUpdate, this);
 	Console()->Chain("console_output_level", ConchainConsoleOutputLevelUpdate, this);
+
+/* INFECTION MODIFICATION START ***************************************/
+	Console()->Register("inf_set_ammo_regen", "si", CFGFLAG_SERVER, ConSetAmmoRegen, this, "Set the ammo regeneration time per weapon");
+	Console()->Register("inf_set_class_availability", "si", CFGFLAG_SERVER, ConSetClassAvailability, this, "Enable/Disable a class");
+/* INFECTION MODIFICATION END *****************************************/
 
 	// register console commands in sub parts
 	m_ServerBan.InitServerBan(Console(), Storage(), this);
@@ -1803,5 +1874,16 @@ void CServer::SetMaxAmmo(int WID, int n)
 {
 	m_InfMaxAmmo[WID] = n;
 }
+
+int CServer::GetClassAvailability(int CID)
+{
+	return m_InfClassAvailability[CID];
+}
+
+void CServer::SetClassAvailability(int CID, int n)
+{
+	m_InfClassAvailability[CID] = n;
+}
+
 /* INFECTION MODIFICATION END *****************************************/
 

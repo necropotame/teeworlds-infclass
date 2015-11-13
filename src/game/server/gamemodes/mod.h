@@ -43,5 +43,8 @@ private:
 	int m_HumanCounter;
 	int m_InfectedCounter;
 	bool m_InfectedStarted;
+	
+	int m_NinjaLimit;
+	int m_ScientistLimit;
 };
 #endif

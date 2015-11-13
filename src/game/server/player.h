@@ -126,6 +126,9 @@ public:
 	void StartInfection(bool force = false);
 	bool IsKownClass(int c);
 	int m_ShowCustomSkin;
+	int m_AlwaysRandom;
+	
+	int m_WinAsHuman;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

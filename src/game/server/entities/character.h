@@ -184,6 +184,7 @@ public:
 	void RemoveAllGun();
 	void Freeze(float Time, int Player, int Reason);
 	bool IsFrozen() const;
+	void Unfreeze();
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);
 /* INFECTION MODIFICATION END *****************************************/

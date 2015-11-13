@@ -225,7 +225,14 @@ void IGameController::StartRound()
 	{
 		if(GameServer()->m_apPlayers[i])
 		{
-			GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);
+			if(GameServer()->m_apPlayers[i]->m_AlwaysRandom)
+			{
+				GameServer()->m_apPlayers[i]->SetClass(ChooseHumanClass(GameServer()->m_apPlayers[i]));
+			}
+			else
+			{
+				GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);
+			}
 		}
 	}	
 /* INFECTION MODIFICATION END *****************************************/
@@ -769,7 +776,7 @@ int IGameController::ChooseHumanClass(CPlayer* pPlayer)
 
 int IGameController::ChooseInfectedClass(CPlayer* pPlayer)
 {
-	return PLAYERCLASS_ZOMBIE;
+	return PLAYERCLASS_SMOKER;
 }
 
 bool IGameController::IsChoosableClass(int PlayerClass)

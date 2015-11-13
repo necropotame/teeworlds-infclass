@@ -5,6 +5,9 @@
 
 #include <engine/server.h>
 
+/* INFECTION MODIFICATION START ***************************************/
+#include <game/server/classes.h>
+/* INFECTION MODIFICATION END *****************************************/
 
 class CSnapIDPool
 {
@@ -243,6 +246,7 @@ public:
 	int m_InfAmmoRegenTime[NB_INFWEAPON];
 	int m_InfFireDelay[NB_INFWEAPON];
 	int m_InfMaxAmmo[NB_INFWEAPON];
+	int m_InfClassAvailability[NB_PLAYERCLASS];
 	
 	virtual int GetFireDelay(int WID);
 	virtual void SetFireDelay(int WID, int Time);
@@ -252,6 +256,13 @@ public:
 	
 	virtual int GetMaxAmmo(int WID);
 	virtual void SetMaxAmmo(int WID, int n);
+	
+	virtual int GetClassAvailability(int CID);
+	virtual void SetClassAvailability(int CID, int n);
+	
+private:
+	static void ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData);
+	static void ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData);
 /* INFECTION MODIFICATION END *****************************************/
 };
 
