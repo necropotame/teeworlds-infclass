@@ -389,13 +389,11 @@ void CCharacter::FireWeapon()
 					
 					if(!m_pPortal[0])
 					{
-						float Angle = atan2(m_Input.m_TargetY, m_Input.m_TargetX);
-						vec2 Dir = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
 						m_pPortal[0] = new CPortal(GameWorld(), PortalPos, Angle, m_pPlayer->GetCID(), 0);
 					}
 					else
 					{
-						if(distance(m_Pos, m_pPortal[0]->m_Pos) > 128.0)
+						if(distance(m_Pos, m_pPortal[0]->m_Pos) > 64.0)
 						{
 							m_pPortal[1] = new CPortal(GameWorld(), PortalPos, Angle, m_pPlayer->GetCID(), 1);
 							m_pPortal[1]->Link(m_pPortal[0]);
