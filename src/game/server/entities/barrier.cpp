@@ -66,7 +66,7 @@ void CBarrier::Tick()
 					CPlayer* pPortalPlayer = GameServer()->m_apPlayers[p->m_LastPortalOwner];
 					if(pPortalPlayer)
 					{
-						pPortalPlayer->m_Score += 1;
+						pPortalPlayer->IncreaseScore(1);
 					}
 				}
 				
@@ -77,7 +77,7 @@ void CBarrier::Tick()
 					{
 						if(p->GetPlayer() && pHook->GetPlayer() && pHook->m_Core.m_HookedPlayer == p->GetPlayer()->GetCID() && pHook->GetPlayer()->GetCID() != m_Owner)
 						{
-							pHook->GetPlayer()->m_Score += 1;
+							pHook->GetPlayer()->IncreaseScore(1);
 						}
 					}
 				}

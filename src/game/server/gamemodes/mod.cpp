@@ -318,7 +318,7 @@ void CGameControllerMOD::Tick()
 						
 						if(!pPlayer->IsInfected())
 						{
-							pPlayer->m_Score += 5;
+							pPlayer->IncreaseScore(5);
 							pPlayer->m_WinAsHuman++;
 							
 							GameServer()->SendChatTarget(i, "You have survived, +5 points");
@@ -366,16 +366,16 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 						str_format(aBuf, sizeof(aBuf), "%s have kill %s using portals, -5 points", Server()->ClientName(pVictimPlayer->GetCID()));
 						GameServer()->SendChatTarget(pBadPlayer->GetCID(), aBuf);
 						
-						pBadPlayer->m_Score -= 5;
+						pBadPlayer->IncreaseScore(-5);
 					}
 				}
 			}
 			
-			pVictim->GetPlayer()->m_Score--; // suicide
+			pVictim->GetPlayer()->IncreaseScore(-1); // suicide
 		}
 		else if(pVictim->GetClass() != PLAYERCLASS_BOOMER)
 		{
-			pVictim->GetPlayer()->m_Score--; // suicide
+			pVictim->GetPlayer()->IncreaseScore(-1); // suicide
 		}
 	}
 	else if(!pKiller->IsInfected())
@@ -383,9 +383,9 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
 		{
 			GameServer()->SendChatTarget(pKiller->GetCID(), "You killed a witch, +5 points");	
-			pKiller->m_Score += 5;
+			pKiller->IncreaseScore(5);
 		}
-		else pKiller->m_Score += 1;
+		else pKiller->IncreaseScore(1);
 		
 		//Add bonus point for ninja
 		if(pVictim->IsFrozen() && pVictim->m_LastFreezer >= 0)
@@ -393,7 +393,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			CPlayer* pFreezer = GameServer()->m_apPlayers[pVictim->m_LastFreezer];
 			if(pFreezer)
 			{
-				pFreezer->m_Score += 1;
+				pFreezer->IncreaseScore(1);
 			}
 		}
 	}

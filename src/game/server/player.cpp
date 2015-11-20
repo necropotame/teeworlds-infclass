@@ -24,7 +24,9 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_TeamChangeTick = Server()->Tick();
 	
 /* INFECTION MODIFICATION START ***************************************/
-	m_Score = 0;
+	m_Score = Server()->GetClientScore(ClientID);
+	m_ScoreRound = 0;
+	m_ScoreMode = PLAYERSCOREMODE_NORMAL;
 	m_WinAsHuman = 0;
 	m_class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
@@ -32,9 +34,6 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	{
 		m_knownClass[i] = false;
 	}
-	
-	m_ShowCustomSkin = 0;
-	m_AlwaysRandom = 0;
 	
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -98,6 +97,8 @@ void CPlayer::Tick()
 		}
 		else if(m_Spawning && m_RespawnTick <= Server()->Tick())
 			TryRespawn();
+		
+		if(!IsInfected()) m_HumanTime++;
 	}
 	else
 	{
@@ -147,46 +148,67 @@ void CPlayer::Snap(int SnappingClient)
 	}
 	else
 	{
-		switch(GetClass())
+		if(m_ScoreMode == PLAYERSCOREMODE_NORMAL)
 		{
-			case PLAYERCLASS_ENGINEER:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Engineer*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
-				break;
-			case PLAYERCLASS_SOLDIER:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Soldier*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
-				break;
-			case PLAYERCLASS_SCIENTIST:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Scientist*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
-				break;
-			case PLAYERCLASS_NINJA:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Ninja*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
-				break;
-			case PLAYERCLASS_SMOKER:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Smoker*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Smoker");
-				break;
-			case PLAYERCLASS_BOOMER:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Boomer*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
-				break;
-			case PLAYERCLASS_HUNTER:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Hunter*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
-				break;
-			case PLAYERCLASS_UNDEAD:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Undead*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
-				break;
-			case PLAYERCLASS_WITCH:
-				if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Witch*");
-				else StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
-				break;
-			default:
-				StrToInts(&pClientInfo->m_Clan0, 3, "");
+			switch(GetClass())
+			{
+				case PLAYERCLASS_ENGINEER:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Engineer*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
+					break;
+				case PLAYERCLASS_SOLDIER:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Soldier*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
+					break;
+				case PLAYERCLASS_SCIENTIST:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Scientist*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
+					break;
+				case PLAYERCLASS_NINJA:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Ninja*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
+					break;
+				case PLAYERCLASS_SMOKER:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Smoker*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Smoker");
+					break;
+				case PLAYERCLASS_BOOMER:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Boomer*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
+					break;
+				case PLAYERCLASS_HUNTER:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Hunter*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
+					break;
+				case PLAYERCLASS_UNDEAD:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Undead*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
+					break;
+				case PLAYERCLASS_WITCH:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Witch*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
+					break;
+				default:
+					StrToInts(&pClientInfo->m_Clan0, 3, "");
+			}
+		}
+		else if(m_ScoreMode == PLAYERSCOREMODE_ROUNDSCORE)
+		{
+			char aBuf[512];
+			if(m_ScoreRound == 0) StrToInts(&pClientInfo->m_Clan0, 3, "0 pt");
+			else str_format(aBuf, sizeof(aBuf), "%c%i pt", (m_ScoreRound >= 0 ? '+' : '-'), m_ScoreRound);
+			
+			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+		}
+		else
+		{
+			float RoundDuration = static_cast<float>(m_HumanTime/((float)Server()->TickSpeed()))/60.0f;
+			int Minutes = static_cast<int>(RoundDuration);
+			int Seconds = static_cast<int>((RoundDuration - Minutes)*60.0f);
+			
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%i:%s%i min", Minutes,((Seconds < 10) ? "0" : ""), Seconds);
+			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
 		}
 	}
 	
@@ -195,8 +217,8 @@ void CPlayer::Snap(int SnappingClient)
 	if(
 		GameServer()->m_apPlayers[SnappingClient] && !IsInfected() &&
 		(
-			(GameServer()->m_apPlayers[SnappingClient]->m_ShowCustomSkin == 1 && SnappingClient == GetCID()) ||
-			(GameServer()->m_apPlayers[SnappingClient]->m_ShowCustomSkin == 2)
+			(Server()->GetClientCustomSkin(SnappingClient) == 1 && SnappingClient == GetCID()) ||
+			(Server()->GetClientCustomSkin(SnappingClient) == 2)
 		)
 	)
 	{
@@ -216,7 +238,20 @@ void CPlayer::Snap(int SnappingClient)
 	pPlayerInfo->m_Latency = SnappingClient == -1 ? m_Latency.m_Min : GameServer()->m_apPlayers[SnappingClient]->m_aActLatency[m_ClientID];
 	pPlayerInfo->m_Local = 0;
 	pPlayerInfo->m_ClientID = m_ClientID;
-	pPlayerInfo->m_Score = m_Score;
+/* INFECTION MODIFICATION START ***************************************/
+	switch(m_ScoreMode)
+	{
+		case PLAYERSCOREMODE_NORMAL:
+			pPlayerInfo->m_Score = m_Score;
+			break;
+		case PLAYERSCOREMODE_ROUNDSCORE:
+			pPlayerInfo->m_Score = m_ScoreRound;
+			break;
+		case PLAYERSCOREMODE_TIME:
+			pPlayerInfo->m_Score = m_HumanTime/Server()->TickSpeed();
+			break;
+	}
+/* INFECTION MODIFICATION END *****************************************/
 	pPlayerInfo->m_Team = m_Team;
 
 	if(m_ClientID == SnappingClient)
@@ -476,5 +511,16 @@ bool CPlayer::IsInfected() const
 bool CPlayer::IsKownClass(int c)
 {
 	return m_knownClass[c];
+}
+
+void CPlayer::IncreaseScore(int Points)
+{
+	m_Score += Points;
+	m_ScoreRound += Points;
+}
+
+void CPlayer::SetScoreMode(int Mode)
+{
+	m_ScoreMode = Mode;
 }
 /* INFECTION MODIFICATION END *****************************************/

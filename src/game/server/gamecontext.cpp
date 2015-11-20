@@ -891,7 +891,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					(str_comp_nocase(pMsg->m_pMessage,"/customskin all") == 0)
 				)
 				{
-					m_apPlayers[ClientID]->m_ShowCustomSkin = 2;
+					Server()->SetClientCustomSkin(ClientID, 2);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\customskin me") == 0) ||
@@ -900,21 +900,21 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					(str_comp_nocase(pMsg->m_pMessage,"/customskin") == 0)
 				)
 				{
-					m_apPlayers[ClientID]->m_ShowCustomSkin = 1;
+					Server()->SetClientCustomSkin(ClientID, 1);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\customskin none") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/customskin none") == 0)
 				)
 				{
-					m_apPlayers[ClientID]->m_ShowCustomSkin = 0;
+					Server()->SetClientCustomSkin(ClientID, 0);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\alwaysrandom 0") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/alwaysrandom 0") == 0)
 				)
 				{
-					m_apPlayers[ClientID]->m_AlwaysRandom = 0;
+					Server()->SetClientAlwaysRandom(ClientID, 0);
 					
 					{
 						CNetMsg_Sv_Chat Msg;
@@ -931,7 +931,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					(str_comp_nocase(pMsg->m_pMessage,"/alwaysrandom") == 0)
 				)
 				{
-					m_apPlayers[ClientID]->m_AlwaysRandom = 1;
+					Server()->SetClientAlwaysRandom(ClientID, 1);
 					
 					{
 						CNetMsg_Sv_Chat Msg;

@@ -7,6 +7,15 @@
 #include "entities/character.h"
 #include "gamecontext.h"
 
+/* INFECTION MODIFICATION START ***************************************/
+enum
+{
+	PLAYERSCOREMODE_NORMAL = 0,
+	PLAYERSCOREMODE_ROUNDSCORE,
+	PLAYERSCOREMODE_TIME,
+};
+/* INFECTION MODIFICATION END *****************************************/
+
 // player object
 class CPlayer
 {
@@ -114,10 +123,17 @@ private:
 /* INFECTION MODIFICATION START ***************************************/
 private:
 	int m_class;
+	int m_ScoreMode;
 	
 public:
+	int m_ScoreRound;
+	int m_HumanTime;
+	
 	bool m_knownClass[NB_PLAYERCLASS];
 	int m_InfectionTick;
+	
+	void IncreaseScore(int Points);
+	void SetScoreMode(int Mode);
 	
 	int GetClass();
 	void SetClassSkin(int newClass);
@@ -125,8 +141,6 @@ public:
 	bool IsInfected() const;
 	void StartInfection(bool force = false);
 	bool IsKownClass(int c);
-	int m_ShowCustomSkin;
-	int m_AlwaysRandom;
 	
 	int m_WinAsHuman;
 /* INFECTION MODIFICATION END *****************************************/

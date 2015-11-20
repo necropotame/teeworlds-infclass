@@ -92,6 +92,14 @@ public:
 	virtual bool DemoRecorder_IsRecording() = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
+	virtual int GetClientScore(int ClientID) = 0;
+	
+	virtual int GetClientCustomSkin(int ClientID) = 0;
+	virtual void SetClientCustomSkin(int ClientID, int Value) = 0;
+	
+	virtual int GetClientAlwaysRandom(int ClientID) = 0;
+	virtual void SetClientAlwaysRandom(int ClientID, int Value) = 0;
+	
 	virtual int GetFireDelay(int WID) = 0;
 	virtual void SetFireDelay(int WID, int Time) = 0;
 	
@@ -103,6 +111,8 @@ public:
 	
 	virtual int GetClassAvailability(int CID) = 0;
 	virtual void SetClassAvailability(int CID, int n) = 0;
+	
+	virtual int IsClassChooserEnabled() = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

@@ -225,7 +225,7 @@ void IGameController::StartRound()
 	{
 		if(GameServer()->m_apPlayers[i])
 		{
-			if(GameServer()->m_apPlayers[i]->m_AlwaysRandom)
+			if(!Server()->IsClassChooserEnabled() || Server()->GetClientAlwaysRandom(i))
 			{
 				GameServer()->m_apPlayers[i]->SetClass(ChooseHumanClass(GameServer()->m_apPlayers[i]));
 			}
@@ -233,6 +233,9 @@ void IGameController::StartRound()
 			{
 				GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);
 			}
+			
+			GameServer()->m_apPlayers[i]->m_ScoreRound = 0;
+			GameServer()->m_apPlayers[i]->m_HumanTime = 0;
 		}
 	}	
 /* INFECTION MODIFICATION END *****************************************/
@@ -374,13 +377,13 @@ int IGameController::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *
 	if(!pKiller || Weapon == WEAPON_GAME)
 		return 0;
 	if(pKiller == pVictim->GetPlayer())
-		pVictim->GetPlayer()->m_Score--; // suicide
+		pVictim->GetPlayer()->IncreaseScore(-1); // suicide
 	else
 	{
 		if(IsTeamplay() && pVictim->GetPlayer()->GetTeam() == pKiller->GetTeam())
-			pKiller->m_Score--; // teamkill
+			pKiller->IncreaseScore(-1); // teamkill
 		else
-			pKiller->m_Score++; // normal kill
+			pKiller->IncreaseScore(1); // normal kill
 	}
 	if(Weapon == WEAPON_SELF)
 		pVictim->GetPlayer()->m_RespawnTick = Server()->Tick()+Server()->TickSpeed()*3.0f;
@@ -451,11 +454,39 @@ void IGameController::Tick()
 	if(m_GameOverTick != -1)
 	{
 		// game over.. wait for restart
-		if(Server()->Tick() > m_GameOverTick+Server()->TickSpeed()*10)
+		if(Server()->Tick() > m_GameOverTick+Server()->TickSpeed()*12)
 		{
+			for(int i = 0; i < MAX_CLIENTS; i++)
+			{
+				if(GameServer()->m_apPlayers[i])
+				{
+					GameServer()->m_apPlayers[i]->SetScoreMode(PLAYERSCOREMODE_NORMAL);
+				}
+			}
+			
 			CycleMap();
 			StartRound();
 			m_RoundCount++;
+		}
+		else
+		{
+			int ScoreMode = PLAYERSCOREMODE_NORMAL;
+			if((Server()->Tick() - m_GameOverTick) > Server()->TickSpeed() * 8)
+			{
+				ScoreMode = PLAYERSCOREMODE_TIME;
+			}
+			else if((Server()->Tick() - m_GameOverTick) > Server()->TickSpeed() * 4)
+			{
+				ScoreMode = PLAYERSCOREMODE_ROUNDSCORE;
+			}
+			
+			for(int i = 0; i < MAX_CLIENTS; i++)
+			{
+				if(GameServer()->m_apPlayers[i])
+				{
+					GameServer()->m_apPlayers[i]->SetScoreMode(ScoreMode);
+				}
+			}
 		}
 	}
 

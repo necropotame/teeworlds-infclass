@@ -57,7 +57,7 @@ int CGameControllerCTF::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			F->m_Vel = vec2(0,0);
 
 			if(pKiller && pKiller->GetTeam() != pVictim->GetPlayer()->GetTeam())
-				pKiller->m_Score++;
+				pKiller->IncreaseScore(1);
 
 			HadFlag |= 1;
 		}

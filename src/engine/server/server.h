@@ -127,7 +127,12 @@ public:
 
 		const IConsole::CCommandInfo *m_pRconCmdToSend;
 
-		void Reset();
+/* INFECTION MODIFICATION START ***************************************/
+		void Reset(bool ResetScore=true);
+		
+		int m_CustomSkin;
+		int m_AlwaysRandom;
+/* INFECTION MODIFICATION END *****************************************/
 	};
 
 	CClient m_aClients[MAX_CLIENTS];
@@ -243,10 +248,17 @@ public:
 	
 /* INFECTION MODIFICATION START ***************************************/
 public:
+	int m_InfClassChooser;
 	int m_InfAmmoRegenTime[NB_INFWEAPON];
 	int m_InfFireDelay[NB_INFWEAPON];
 	int m_InfMaxAmmo[NB_INFWEAPON];
 	int m_InfClassAvailability[NB_PLAYERCLASS];
+	
+	virtual int GetClientCustomSkin(int ClientID);
+	virtual void SetClientCustomSkin(int ClientID, int Value);
+	
+	virtual int GetClientAlwaysRandom(int ClientID);
+	virtual void SetClientAlwaysRandom(int ClientID, int Value);
 	
 	virtual int GetFireDelay(int WID);
 	virtual void SetFireDelay(int WID, int Time);
@@ -260,9 +272,14 @@ public:
 	virtual int GetClassAvailability(int CID);
 	virtual void SetClassAvailability(int CID, int n);
 	
+	virtual int GetClientScore(int ClientID);
+	
+	virtual int IsClassChooserEnabled();
+	
 private:
 	static void ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData);
 	static void ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData);
+	static void ConClassChooser(IConsole::IResult *pResult, void *pUserData);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

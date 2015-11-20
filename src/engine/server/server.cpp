@@ -30,6 +30,12 @@
 #include "register.h"
 #include "server.h"
 
+/* INFECTION MODIFICATION START ***************************************/
+#include <fstream>
+#include <sstream>
+#include <iostream>
+/* INFECTION MODIFICATION END *****************************************/
+
 #if defined(CONF_FAMILY_WINDOWS)
 	#define _WIN32_WINNT 0x0501
 	#define WIN32_LEAN_AND_MEAN
@@ -252,8 +258,8 @@ void CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 		ConBan(pResult, pUser);
 }
 
-
-void CServer::CClient::Reset()
+/* INFECTION MODIFICATION START ***************************************/
+void CServer::CClient::Reset(bool ResetScore)
 {
 	// reset input
 	for(int i = 0; i < 200; i++)
@@ -265,8 +271,9 @@ void CServer::CClient::Reset()
 	m_LastAckedSnapshot = -1;
 	m_LastInputTick = -1;
 	m_SnapRate = CClient::SNAPRATE_INIT;
-	m_Score = 0;
+	if(ResetScore) m_Score = 0;
 }
+/* INFECTION MODIFICATION END *****************************************/
 
 CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 {
@@ -478,6 +485,8 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_BOOMER, 1);
 	SetClassAvailability(PLAYERCLASS_UNDEAD, 1);
 	SetClassAvailability(PLAYERCLASS_WITCH, 1);
+	
+	m_InfClassChooser = 1;
 /* INFECTION MODIFICATION END *****************************************/
 
 	return 0;
@@ -748,6 +757,12 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 	pThis->m_aClients[ClientID].m_Authed = AUTHED_NO;
 	pThis->m_aClients[ClientID].m_AuthTries = 0;
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
+	
+/* INFECTION MODIFICATION START ***************************************/
+	pThis->m_aClients[ClientID].m_CustomSkin = 0;
+	pThis->m_aClients[ClientID].m_AlwaysRandom = 0;
+/* INFECTION MODIFICATION END *****************************************/
+	
 	pThis->m_aClients[ClientID].Reset();
 	return 0;
 }
@@ -939,7 +954,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				str_format(aBuf, sizeof(aBuf), "player is ready. ClientID=%x addr=%s", ClientID, aAddrStr);
 				Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBuf);
 				m_aClients[ClientID].m_State = CClient::STATE_READY;
-				GameServer()->OnClientConnected(ClientID);
+				GameServer()->OnClientConnected(ClientID);				
 				SendConnectionReady(ClientID);
 			}
 		}
@@ -1286,6 +1301,50 @@ int CServer::LoadMap(const char *pMapName)
 		io_read(File, m_pCurrentMapData, m_CurrentMapSize);
 		io_close(File);
 	}
+	
+/* INFECTION MODIFICATION START ***************************************/
+	{
+		g_Config.m_SvTimelimit = 5;
+		
+		//Open file
+		char MapInfoFilename[512];
+		str_format(MapInfoFilename, sizeof(MapInfoFilename), "maps/%s.mapinfo", pMapName);
+		IOHANDLE File = Storage()->OpenFile(MapInfoFilename, IOFLAG_READ, IStorage::TYPE_ALL);
+		
+		char MapInfoLine[512];
+		bool isEndOfFile = false;
+		while(!isEndOfFile)
+		{
+			isEndOfFile = true;
+			
+			//Load one line
+			int MapInfoLineLenth = 0;
+			char c;
+			while(io_read(File, &c, 1))
+			{
+				isEndOfFile = false;
+				
+				if(c == '\n') break;
+				else
+				{
+					MapInfoLine[MapInfoLineLenth] = c;
+					MapInfoLineLenth++;
+				}
+			}
+			
+			MapInfoLine[MapInfoLineLenth] = 0;
+			
+			//Get the key
+			if(str_comp_nocase_num(MapInfoLine, "timelimit ", 10) == 0)
+			{
+				g_Config.m_SvTimelimit = str_toint(MapInfoLine+10);
+			}
+		}
+		
+		io_close(File);
+	}
+/* INFECTION MODIFICATION END *****************************************/
+	
 	return 1;
 }
 
@@ -1378,7 +1437,9 @@ int CServer::Run()
 							continue;
 
 						SendMap(c);
-						m_aClients[c].Reset();
+/* INFECTION MODIFICATION START ***************************************/
+						m_aClients[c].Reset(false);
+/* INFECTION MODIFICATION END *****************************************/
 						m_aClients[c].m_State = CClient::STATE_CONNECTING;
 					}
 
@@ -1700,6 +1761,15 @@ void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserDat
 	
 	pServer->SetClassAvailability(ClassId, NewValue);
 }
+
+void CServer::ConClassChooser(IConsole::IResult *pResult, void *pUserData)
+{
+	CServer *pServer = (CServer*) pUserData;
+	
+	int NewValue = pResult->GetInteger(0);
+	
+	pServer->m_InfClassChooser = (NewValue > 0 ? 1 : 0);
+}
 /* INFECTION MODIFICATION END *****************************************/
 
 void CServer::RegisterCommands()
@@ -1730,6 +1800,7 @@ void CServer::RegisterCommands()
 /* INFECTION MODIFICATION START ***************************************/
 	Console()->Register("inf_set_ammo_regen", "si", CFGFLAG_SERVER, ConSetAmmoRegen, this, "Set the ammo regeneration time per weapon");
 	Console()->Register("inf_set_class_availability", "si", CFGFLAG_SERVER, ConSetClassAvailability, this, "Enable/Disable a class");
+	Console()->Register("inf_classchooser", "i", CFGFLAG_SERVER, ConClassChooser, this, "Enable/Disable class chooser");
 /* INFECTION MODIFICATION END *****************************************/
 
 	// register console commands in sub parts
@@ -1845,6 +1916,26 @@ int main(int argc, const char **argv) // ignore_convention
 }
 
 /* INFECTION MODIFICATION START ***************************************/
+int CServer::GetClientCustomSkin(int ClientID)
+{
+	return m_aClients[ClientID].m_CustomSkin;
+}
+
+void CServer::SetClientCustomSkin(int ClientID, int Value)
+{
+	m_aClients[ClientID].m_CustomSkin = Value;
+}
+
+int CServer::GetClientAlwaysRandom(int ClientID)
+{
+	return m_aClients[ClientID].m_AlwaysRandom;
+}
+
+void CServer::SetClientAlwaysRandom(int ClientID, int Value)
+{
+	m_aClients[ClientID].m_AlwaysRandom = Value;
+}
+	
 int CServer::GetFireDelay(int WID)
 {
 	return m_InfFireDelay[WID];
@@ -1883,6 +1974,16 @@ int CServer::GetClassAvailability(int CID)
 void CServer::SetClassAvailability(int CID, int n)
 {
 	m_InfClassAvailability[CID] = n;
+}
+
+int CServer::GetClientScore(int ClientID)
+{
+	return m_aClients[ClientID].m_Score;
+}
+
+int CServer::IsClassChooserEnabled()
+{
+	return m_InfClassChooser;
 }
 
 /* INFECTION MODIFICATION END *****************************************/
