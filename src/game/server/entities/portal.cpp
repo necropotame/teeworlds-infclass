@@ -30,27 +30,27 @@ CPortal::CPortal(CGameWorld *pGameWorld, vec2 Pos, float Angle, int Owner, int N
 	float yLimit = GameServer()->Collision()->GetHeight()*32.0f;
 	
 	//Check if the portal is over deadzone/infectionzone
-	for(int i=-4; i<=4 && !m_isDeadlyPortal; i++)
-	{
-		float x = m_Pos.x + i*32.0f;
-		float y = m_Pos.y;
-		bool CheckColumn = true;
-		while(CheckColumn)
-		{
-			vec2 CheckPos = vec2(x, y);
-			if(GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_INFECTION) || GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_DEATH))
-			{
-				m_isDeadlyPortal = true;
-				CheckColumn = false;
-			}
-			else if(y > yLimit || GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_SOLID))
-			{
-				CheckColumn = false;
-			}
-			
-			y += 32.0f;
-		}
-	}
+	//~ for(int i=-4; i<=4 && !m_isDeadlyPortal; i++)
+	//~ {
+		//~ float x = m_Pos.x + i*32.0f;
+		//~ float y = m_Pos.y;
+		//~ bool CheckColumn = true;
+		//~ while(CheckColumn)
+		//~ {
+			//~ vec2 CheckPos = vec2(x, y);
+			//~ if(GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_INFECTION) || GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_DEATH))
+			//~ {
+				//~ m_isDeadlyPortal = true;
+				//~ CheckColumn = false;
+			//~ }
+			//~ else if(y > yLimit || GameServer()->Collision()->CheckPointFlag(CheckPos, CCollision::COLFLAG_SOLID))
+			//~ {
+				//~ CheckColumn = false;
+			//~ }
+			//~ 
+			//~ y += 32.0f;
+		//~ }
+	//~ }
 }
 
 void CPortal::Destroy()
