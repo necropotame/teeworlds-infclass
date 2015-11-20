@@ -5,7 +5,7 @@
 #include <game/server/gamecontext.h>
 #include "portal.h"
 
-const float g_PortalLifeSpan = 30.0;
+const float g_PortalLifeSpan = 60.0;
 
 CPortal::CPortal(CGameWorld *pGameWorld, vec2 Pos, float Angle, int Owner, int Num)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_PORTAL)
@@ -344,13 +344,12 @@ void CPortal::Snap(int SnappingClient)
 	
 	if(!m_pLinkedPortal)
 	{
-		//~ CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
-		//~ if(pClient && !pClient->IsInfected())
-		//~ {
-			//~ Radius = 32.0f;
-		//~ }
-		//~ else return;
-		return;
+		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+		if(pClient && !pClient->IsInfected())
+		{
+			Radius = 32.0f;
+		}
+		else return;
 	}
 	else if(Server()->TickSpeed()*g_PortalLifeSpan - m_LifeSpan < Server()->TickSpeed()/4.0f)
 	{
@@ -376,7 +375,7 @@ void CPortal::Snap(int SnappingClient)
 		float shiftedAngle = angle -pi/2.0f + pi*static_cast<float>(i)/static_cast<float>(NbBullet);
 
 		float dx = 0.0;
-		float dy = 128.0f*static_cast<float>(i)/static_cast<float>(NbBullet) - 64.0f;
+		float dy = 2.0f*Radius*static_cast<float>(i)/static_cast<float>(NbBullet) - Radius;
 
 		pP->m_X = static_cast<int>(m_Pos.x + dx*cos(m_Angle) - dy*sin(m_Angle));
 		pP->m_Y = static_cast<int>(m_Pos.y + dx*sin(m_Angle) + dy*cos(m_Angle));

@@ -225,15 +225,7 @@ void IGameController::StartRound()
 	{
 		if(GameServer()->m_apPlayers[i])
 		{
-			if(!Server()->IsClassChooserEnabled() || Server()->GetClientAlwaysRandom(i))
-			{
-				GameServer()->m_apPlayers[i]->SetClass(ChooseHumanClass(GameServer()->m_apPlayers[i]));
-			}
-			else
-			{
-				GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);
-			}
-			
+			GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);			
 			GameServer()->m_apPlayers[i]->m_ScoreRound = 0;
 			GameServer()->m_apPlayers[i]->m_HumanTime = 0;
 		}

@@ -1276,9 +1276,16 @@ void CCharacter::Snap(int SnappingClient)
 /* INFECTION MODIFICATION START ***************************************/
 void CCharacter::OpenClassChooser()
 {
-	if(!m_pClassChooser)
+	if(!Server()->IsClassChooserEnabled() || Server()->GetClientAlwaysRandom(m_pPlayer->GetCID()))
 	{
-		m_pClassChooser = new CClassChooser(GameWorld(), m_Pos, m_pPlayer->GetCID());
+		m_pPlayer->SetClass(GameServer()->m_pController->ChooseHumanClass(m_pPlayer));
+	}
+	else
+	{
+		if(!m_pClassChooser)
+		{
+			m_pClassChooser = new CClassChooser(GameWorld(), m_Pos, m_pPlayer->GetCID());
+		}
 	}
 }
 
