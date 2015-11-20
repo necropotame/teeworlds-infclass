@@ -367,13 +367,17 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
+				float Angle = atan2(m_Input.m_TargetY, m_Input.m_TargetX);
+				vec2 Dir = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
+				vec2 PortalPos = m_Pos + Dir*128.0f;
+							
 				//Check anti portal tile
 				vec2 portalTile = vec2(16.0f, 16.0f) + vec2(
-					static_cast<float>(static_cast<int>(round(m_Pos.x))/32)*32.0,
-					static_cast<float>(static_cast<int>(round(m_Pos.y))/32)*32.0);
+					static_cast<float>(static_cast<int>(round(PortalPos.x))/32)*32.0,
+					static_cast<float>(static_cast<int>(round(PortalPos.y))/32)*32.0);
 				
 				//Check is the tile is occuped, and if the direction is valide
-				if(!GameServer()->Collision()->CheckPointFlag(portalTile, CCollision::COLFLAG_NOPORTAL) && m_Pos.y > -600.0)
+				if(!GameServer()->Collision()->CheckPointFlag(portalTile, CCollision::COLFLAG_NOPORTAL) && PortalPos.y > -600.0)
 				{
 					if(m_pPortal[0] && m_pPortal[1])
 					{
@@ -387,15 +391,13 @@ void CCharacter::FireWeapon()
 					{
 						float Angle = atan2(m_Input.m_TargetY, m_Input.m_TargetX);
 						vec2 Dir = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
-						m_pPortal[0] = new CPortal(GameWorld(), m_Pos + Dir*128.0f, Angle, m_pPlayer->GetCID(), 0);
+						m_pPortal[0] = new CPortal(GameWorld(), PortalPos, Angle, m_pPlayer->GetCID(), 0);
 					}
 					else
 					{
 						if(distance(m_Pos, m_pPortal[0]->m_Pos) > 128.0)
 						{
-							float Angle = atan2(m_Input.m_TargetY, m_Input.m_TargetX);
-							vec2 Dir = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
-							m_pPortal[1] = new CPortal(GameWorld(), m_Pos + Dir*128.0f, Angle, m_pPlayer->GetCID(), 1);
+							m_pPortal[1] = new CPortal(GameWorld(), PortalPos, Angle, m_pPlayer->GetCID(), 1);
 							m_pPortal[1]->Link(m_pPortal[0]);
 						}
 					}
