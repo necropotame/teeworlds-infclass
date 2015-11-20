@@ -385,13 +385,17 @@ void CCharacter::FireWeapon()
 					
 					if(!m_pPortal[0])
 					{
-						m_pPortal[0] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 0);
+						float Angle = atan2(m_Input.m_TargetY, m_Input.m_TargetX);
+						vec2 Dir = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
+						m_pPortal[0] = new CPortal(GameWorld(), m_Pos + Dir*128.0f, Angle, m_pPlayer->GetCID(), 0);
 					}
 					else
 					{
 						if(distance(m_Pos, m_pPortal[0]->m_Pos) > 128.0)
 						{
-							m_pPortal[1] = new CPortal(GameWorld(), m_Pos, m_pPlayer->GetCID(), 1);
+							float Angle = atan2(m_Input.m_TargetY, m_Input.m_TargetX);
+							vec2 Dir = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
+							m_pPortal[1] = new CPortal(GameWorld(), m_Pos + Dir*128.0f, Angle, m_pPlayer->GetCID(), 1);
 							m_pPortal[1]->Link(m_pPortal[0]);
 						}
 					}
@@ -520,23 +524,26 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_SHOTGUN:
 		{
-			int ShotSpread = 2;
+			int ShotSpread = 3;
 
 			CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
 			Msg.AddInt(ShotSpread*2+1);
 
 			for(int i = -ShotSpread; i <= ShotSpread; ++i)
 			{
-				float Spreading[] = {-0.185f, -0.070f, 0, 0.070f, 0.185f};
+				float Spreading[] = {-0.21f, -0.14f, -0.070f, 0, 0.070f, 0.14f, 0.21f};
 				float a = GetAngle(Direction);
-				a += Spreading[i+2];
+				a += Spreading[i+3] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-m_aWeapons[WEAPON_SHOTGUN].m_Ammo)/10.0f);
 				float v = 1-(absolute(i)/(float)ShotSpread);
 				float Speed = mix((float)GameServer()->Tuning()->m_ShotgunSpeeddiff, 1.0f, v);
+				
+				float LifeTime = GameServer()->Tuning()->m_ShotgunLifetime + 0.1f*static_cast<float>(m_aWeapons[WEAPON_SHOTGUN].m_Ammo)/10.0f;
+				
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_SHOTGUN,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
 					vec2(cosf(a), sinf(a))*Speed,
-					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_ShotgunLifetime),
+					(int)(Server()->TickSpeed()*LifeTime),
 					1, 0, 10.0f, -1, WEAPON_SHOTGUN);
 
 				// pack the Projectile and send it to the client Directly

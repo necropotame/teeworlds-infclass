@@ -106,13 +106,39 @@ void CProjectile::Tick()
 		{
 			if(!p->m_pLinkedPortal)
 				continue;
-				
-			vec2 IntersectPos = closest_point_on_line(PrevPos, CurPos, p->m_Pos);
-			float Len = distance(p->m_Pos, IntersectPos);
-			if(Len < 48.0f)
+			
+			vec2 EndPointVec = vec2(-64.0f*sin(p->m_Angle), 64.0f*cos(p->m_Angle));
+			vec2 EndPoint0 = p->m_Pos + EndPointVec;
+			vec2 EndPoint1 = p->m_Pos - EndPointVec;
+			
+			bool startSide = ((EndPoint1.x - EndPoint0.x)*(PrevPos.y - EndPoint0.y) - (EndPoint1.y - EndPoint0.y)*(PrevPos.x - EndPoint0.x))>0;
+			bool endSide = ((EndPoint1.x - EndPoint0.x)*(CurPos.y - EndPoint0.y) - (EndPoint1.y - EndPoint0.y)*(CurPos.x - EndPoint0.x))>0;
+			
+			if(startSide != endSide)
 			{
-				m_PortalTick = Server()->Tick();
-				m_Pos = p->m_pLinkedPortal->m_Pos + (m_Pos - p->m_Pos);
+				bool side0 = ((EndPoint0.x - PrevPos.x)*(CurPos.y - PrevPos.y) - (EndPoint0.y - PrevPos.y)*(CurPos.x - PrevPos.x))>0;
+				bool side1 = ((EndPoint1.x - PrevPos.x)*(CurPos.y - PrevPos.y) - (EndPoint1.y - PrevPos.y)*(CurPos.x - PrevPos.x))>0;
+				
+				if(side0 != side1)
+				{
+					m_PortalTick = Server()->Tick();
+					
+					float angleDiff = p->m_pLinkedPortal->m_Angle - p->m_Angle;
+					
+					vec2 RelPos = CurPos - p->m_Pos;
+					m_Pos = p->m_pLinkedPortal->m_Pos + vec2(
+						RelPos.x*cos(angleDiff) - RelPos.y*sin(angleDiff),
+						RelPos.x*sin(angleDiff) + RelPos.y*cos(angleDiff)						
+					);
+					
+					vec2 RelDir = normalize(CurPos - PrevPos);
+					m_Direction = vec2(
+						RelDir.x*cos(angleDiff) - RelDir.y*sin(angleDiff),
+						RelDir.x*sin(angleDiff) + RelDir.y*cos(angleDiff)	
+					);
+					
+					m_StartTick = Server()->Tick();
+				}
 			}
 		}
 	}

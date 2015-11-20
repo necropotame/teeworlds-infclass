@@ -73,7 +73,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	}
 	
 	m_NinjaLimit = 4;
-	m_ScientistLimit = 4;
+	m_ScientistLimit = 2;
 }
 
 CGameControllerMOD::~CGameControllerMOD()
