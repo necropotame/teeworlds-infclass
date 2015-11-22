@@ -135,8 +135,8 @@ bool IGameController::OnEntity(int Index, vec2 Pos)
 		return false;
 /* INFECTION MODIFICATION END *****************************************/
 	
-	int Type = -1;
-	int SubType = 0;
+	//~ int Type = -1;
+	//~ int SubType = 0;
 
 	if(Index == ENTITY_SPAWN)
 		m_aaSpawnPoints[0][m_aNumSpawnPoints[0]++] = Pos;
@@ -144,39 +144,39 @@ bool IGameController::OnEntity(int Index, vec2 Pos)
 		m_aaSpawnPoints[1][m_aNumSpawnPoints[1]++] = Pos;
 	else if(Index == ENTITY_SPAWN_BLUE)
 		m_aaSpawnPoints[2][m_aNumSpawnPoints[2]++] = Pos;
-	else if(Index == ENTITY_ARMOR_1)
-		Type = POWERUP_ARMOR;
-	else if(Index == ENTITY_HEALTH_1)
-		Type = POWERUP_HEALTH;
-	else if(Index == ENTITY_WEAPON_SHOTGUN)
-	{
-		Type = POWERUP_WEAPON;
-		SubType = WEAPON_SHOTGUN;
-	}
-	else if(Index == ENTITY_WEAPON_GRENADE)
-	{
-		Type = POWERUP_WEAPON;
-		SubType = WEAPON_GRENADE;
-	}
-	else if(Index == ENTITY_WEAPON_RIFLE)
-	{
-		Type = POWERUP_WEAPON;
-		SubType = WEAPON_RIFLE;
-	}
 /* INFECTION MODIFICATION START ***************************************/
-	else if(Index == ENTITY_POWERUP_NINJA)
-	{
-		Type = POWERUP_NINJA;
-		SubType = WEAPON_NINJA;
-	}
-/* INFECTION MODIFICATION END *****************************************/
+	//~ else if(Index == ENTITY_ARMOR_1)
+		//~ Type = POWERUP_ARMOR;
+	//~ else if(Index == ENTITY_HEALTH_1)
+		//~ Type = POWERUP_HEALTH;
+	//~ else if(Index == ENTITY_WEAPON_SHOTGUN)
+	//~ {
+		//~ Type = POWERUP_WEAPON;
+		//~ SubType = WEAPON_SHOTGUN;
+	//~ }
+	//~ else if(Index == ENTITY_WEAPON_GRENADE)
+	//~ {
+		//~ Type = POWERUP_WEAPON;
+		//~ SubType = WEAPON_GRENADE;
+	//~ }
+	//~ else if(Index == ENTITY_WEAPON_RIFLE)
+	//~ {
+		//~ Type = POWERUP_WEAPON;
+		//~ SubType = WEAPON_RIFLE;
+	//~ }
+	//~ else if(Index == ENTITY_POWERUP_NINJA)
+	//~ {
+		//~ Type = POWERUP_NINJA;
+		//~ SubType = WEAPON_NINJA;
+	//~ }
 
-	if(Type != -1)
-	{
-		CPickup *pPickup = new CPickup(&GameServer()->m_World, Type, SubType);
-		pPickup->m_Pos = Pos;
-		return true;
-	}
+	//~ if(Type != -1)
+	//~ {
+		//~ CPickup *pPickup = new CPickup(&GameServer()->m_World, Type, SubType);
+		//~ pPickup->m_Pos = Pos;
+		//~ return true;
+	//~ }
+/* INFECTION MODIFICATION END *****************************************/
 
 	return false;
 }
