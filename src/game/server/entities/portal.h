@@ -10,7 +10,7 @@
 class CPortal : public CEntity
 {
 public:
-	CPortal(CGameWorld *pGameWorld, vec2 Pos, float Angle, int Owner, int Num);
+	CPortal(CGameWorld *pGameWorld, vec2 Pos, int Owner, int Num);
 
 	virtual void Snap(int SnappingClient);
 	void Destroy();
@@ -24,15 +24,12 @@ private:
 	int m_IDBullet[MAX_PORTALBULLET];
 	int m_Num;
 	
-	bool CheckPosition(vec2 NewPos);
-	
 public:
 	int m_Owner;
 	CPortal* m_pLinkedPortal;
 	int m_LifeSpan;
 	bool m_isDeadlyPortal;
 	int m_DeadlyClueTick;
-	float m_Angle;
 };
 
 #endif

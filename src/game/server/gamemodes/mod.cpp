@@ -45,6 +45,9 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_NINJA] = 0.5f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_NINJA];
 	
+	m_ClassProbability[PLAYERCLASS_MEDIC] = 0.5f;
+	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_MEDIC];
+	
 	m_GrowingMap = 0;
 	
 	m_ExplosionStarted = false;
@@ -73,7 +76,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	}
 	
 	m_NinjaLimit = 4;
-	m_ScientistLimit = 3;
+	m_ScientistLimit = 4;
 }
 
 CGameControllerMOD::~CGameControllerMOD()
@@ -554,6 +557,13 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		ninjaEnabled = false;
 	}
 	
+	bool medicEnabled = true;
+	if(Server()->GetClassAvailability(PLAYERCLASS_MEDIC) == 0)
+	{
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MEDIC];
+		medicEnabled = false;
+	}
+	
 	bool soldierEnabled = true;
 	if(Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) == 0)
 	{
@@ -579,6 +589,14 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		}
 	}
 	
+	if(medicEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_MEDIC]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_MEDIC;
+		}
+	}
 	
 	if(soldierEnabled)
 	{
@@ -693,6 +711,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 {
 	if(PlayerClass == PLAYERCLASS_ENGINEER) return (Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) > 1);
 	else if(PlayerClass == PLAYERCLASS_SOLDIER) return (Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) > 1);
+	else if(PlayerClass == PLAYERCLASS_MEDIC) return (Server()->GetClassAvailability(PLAYERCLASS_MEDIC) > 1);
 	else if(PlayerClass == PLAYERCLASS_NINJA)
 	{
 		if(Server()->GetClassAvailability(PLAYERCLASS_NINJA) <= 1)

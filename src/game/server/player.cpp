@@ -164,6 +164,10 @@ void CPlayer::Snap(int SnappingClient)
 					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Scientist*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
 					break;
+				case PLAYERCLASS_MEDIC:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Medic*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Medic");
+					break;
 				case PLAYERCLASS_NINJA:
 					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Ninja*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
@@ -428,6 +432,10 @@ void CPlayer::SetClassSkin(int newClass)
 		case PLAYERCLASS_SCIENTIST:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_MEDIC:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
 			break;
 		case PLAYERCLASS_NINJA:
 			m_TeeInfos.m_UseCustomColor = 1;

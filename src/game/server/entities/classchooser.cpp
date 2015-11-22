@@ -126,6 +126,9 @@ void CClassChooser::Snap(int SnappingClient)
 			case PLAYERCLASS_SOLDIER:
 				pP->m_Subtype = WEAPON_GRENADE;
 				break;
+			case PLAYERCLASS_MEDIC:
+				pP->m_Subtype = WEAPON_HAMMER;
+				break;
 			case PLAYERCLASS_SCIENTIST:
 				pP->m_Subtype = WEAPON_SHOTGUN;
 				break;
@@ -157,6 +160,9 @@ void CClassChooser::Snap(int SnappingClient)
 			{
 				case PLAYERCLASS_SOLDIER:
 					GameServer()->SendBroadcast("Soldier", m_PlayerID);
+					break;
+				case PLAYERCLASS_MEDIC:
+					GameServer()->SendBroadcast("Medic", m_PlayerID);
 					break;
 				case PLAYERCLASS_SCIENTIST:
 					GameServer()->SendBroadcast("Scientist", m_PlayerID);

@@ -57,6 +57,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_pPortal[0] = 0;
 	m_pPortal[1] = 0;
 	m_FlagID = Server()->SnapNewID();
+	m_HeartID = Server()->SnapNewID();
 	m_BarrierHintID = Server()->SnapNewID();
 	m_AntiFireTick = 0;
 	m_PortalTick = 0;
@@ -117,6 +118,7 @@ void CCharacter::Destroy()
 /* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
 	Server()->SnapFreeID(m_FlagID);
+	Server()->SnapFreeID(m_HeartID);
 	Server()->SnapFreeID(m_BarrierHintID);
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -367,9 +369,7 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
-				float Angle = atan2(m_Input.m_TargetY, m_Input.m_TargetX);
-				vec2 Dir = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
-				vec2 PortalPos = m_Pos + Dir*128.0f;
+				vec2 PortalPos = m_Pos;
 							
 				//Check anti portal tile
 				vec2 portalTile = vec2(16.0f, 16.0f) + vec2(
@@ -389,13 +389,13 @@ void CCharacter::FireWeapon()
 					
 					if(!m_pPortal[0])
 					{
-						m_pPortal[0] = new CPortal(GameWorld(), PortalPos, Angle, m_pPlayer->GetCID(), 0);
+						m_pPortal[0] = new CPortal(GameWorld(), PortalPos, m_pPlayer->GetCID(), 0);
 					}
 					else
 					{
 						if(distance(m_Pos, m_pPortal[0]->m_Pos) > 64.0)
 						{
-							m_pPortal[1] = new CPortal(GameWorld(), PortalPos, Angle, m_pPlayer->GetCID(), 1);
+							m_pPortal[1] = new CPortal(GameWorld(), PortalPos, m_pPlayer->GetCID(), 1);
 							m_pPortal[1]->Link(m_pPortal[0]);
 						}
 					}
@@ -474,7 +474,7 @@ void CCharacter::FireWeapon()
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
 					{
-						pTarget->IncreaseArmor(1);
+						pTarget->IncreaseArmor(2);
 						pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
 						pTarget->m_EmoteType = EMOTE_HAPPY;
 						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
@@ -646,17 +646,28 @@ void CCharacter::HandleWeapons()
 		}
 	}
 	
-	if(GetClass() == PLAYERCLASS_SMOKER)
+	if(IsInfected())
 	{
 		if(m_Core.m_HookedPlayer >= 0)
 		{
 			CCharacter *VictimChar = GameServer()->GetPlayerChar(m_Core.m_HookedPlayer);
 			if(VictimChar)
 			{
-				if(m_PoisonTick + Server()->TickSpeed()*0.5 < Server()->Tick())
+				if(GetClass() == PLAYERCLASS_SMOKER)
 				{
-					m_PoisonTick = Server()->Tick();
-					VictimChar->TakeDamage(vec2(0.0f,0.0f), 2, m_pPlayer->GetCID(), WEAPON_NINJA);
+					if(m_PoisonTick + Server()->TickSpeed()*0.5 < Server()->Tick())
+					{
+						m_PoisonTick = Server()->Tick();
+						VictimChar->TakeDamage(vec2(0.0f,0.0f), 2, m_pPlayer->GetCID(), WEAPON_NINJA);
+					}
+				}
+				else
+				{
+					if(m_PoisonTick + Server()->TickSpeed() < Server()->Tick())
+					{
+						m_PoisonTick = Server()->Tick();
+						VictimChar->TakeDamage(vec2(0.0f,0.0f), 1, m_pPlayer->GetCID(), WEAPON_NINJA);
+					}
 				}
 			}
 		}
@@ -1123,7 +1134,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 /* INFECTION MODIFICATION START ***************************************/
 	if(GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected())
 	{		
-		if(!(GameServer()->m_apPlayers[From]->GetClass() == PLAYERCLASS_SMOKER && Weapon == WEAPON_NINJA))
+		if(Weapon != WEAPON_NINJA)
 		{
 			m_pPlayer->StartInfection();
 			
@@ -1177,7 +1188,7 @@ void CCharacter::Snap(int SnappingClient)
 {
 	if(NetworkClipped(SnappingClient))
 		return;
-
+		
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
@@ -1189,9 +1200,27 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Y = (int)m_Pos.y;
 		pFlag->m_Team = TEAM_RED;
 	}
+	
+	if(m_Health < 5 && m_Armor == 0 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
+	{
+		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+		
+		if(pClient && pClient->GetClass() == PLAYERCLASS_MEDIC)
+		{
+			CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
+			if(!pP)
+				return;
+
+			pP->m_X = (int)m_Pos.x;
+			pP->m_Y = (int)m_Pos.y - 60.0;
+			pP->m_Type = POWERUP_HEALTH;
+		}
+	}
+	
 	if(GetClass() == PLAYERCLASS_ENGINEER && !m_pBarrier && !m_FirstShot)
 	{
 		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+		
 		if(pClient && !pClient->IsInfected())
 		{
 			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_BarrierHintID, sizeof(CNetObj_Laser)));
@@ -1348,6 +1377,23 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_SCIENTIST] = true;
 			}
 			break;
+		case PLAYERCLASS_MEDIC:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, 10);
+			GiveWeapon(WEAPON_SHOTGUN, 10);
+			m_ActiveWeapon = WEAPON_SHOTGUN;
+			
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
+			{
+				GameServer()->SendBroadcast("You are a human: Medic", m_pPlayer->GetCID());
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Heal humans with your hammer");
+				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
+			}
+			break;
 		case PLAYERCLASS_NINJA:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
@@ -1383,7 +1429,7 @@ void CCharacter::ClassSpawnAttributes()
 			{   
 				//normal zombie?
                 GameServer()->SendBroadcast("You are an infected: Zombie", m_pPlayer->GetCID());
-				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: Hit by hooking others");
+				GameServer()->SendChatTarget(m_pPlayer->GetCID(), "Tip: You deal more damage by hooking humans");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SMOKER] = true;
 			}
 			break;
@@ -1554,6 +1600,8 @@ int CCharacter::GetInfWeaponID(int WID)
 		{
 			case PLAYERCLASS_SCIENTIST:
 				return INFWEAPON_SCIENTIST_SHOTGUN;
+			case PLAYERCLASS_MEDIC:
+				return INFWEAPON_MEDIC_SHOTGUN;
 			default:
 				return INFWEAPON_SHOTGUN;
 		}

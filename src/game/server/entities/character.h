@@ -157,6 +157,7 @@ private:
 	int m_PoisonTick;
 	
 	int m_FlagID;
+	int m_HeartID;
 	int m_BarrierHintID;
 	int m_AntiFireTick;
 	
