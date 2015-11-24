@@ -1727,6 +1727,7 @@ void CServer::ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pWeaponName, "guns") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
 	else if(str_comp(pWeaponName, "soldier_grenade") == 0) WeapondId = INFWEAPON_SOLDIER_GRENADE;
 	else if(str_comp(pWeaponName, "scientist_shotgun") == 0) WeapondId = INFWEAPON_SCIENTIST_SHOTGUN;
+	else if(str_comp(pWeaponName, "medic_shotgun") == 0) WeapondId = INFWEAPON_MEDIC_SHOTGUN;
 	else if(str_comp(pWeaponName, "ninja_grenade") == 0) WeapondId = INFWEAPON_NINJA_GRENADE;
 	else if(str_comp(pWeaponName, "engineer_rifle") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
 	else
@@ -1750,6 +1751,7 @@ void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserDat
 	if(str_comp(pClassName, "engineer") == 0) ClassId = PLAYERCLASS_ENGINEER;
 	else if(str_comp(pClassName, "soldier") == 0) ClassId = PLAYERCLASS_SOLDIER;
 	else if(str_comp(pClassName, "scientist") == 0) ClassId = PLAYERCLASS_SCIENTIST;
+	else if(str_comp(pClassName, "medic") == 0) ClassId = PLAYERCLASS_MEDIC;
 	else if(str_comp(pClassName, "ninja") == 0) ClassId = PLAYERCLASS_NINJA;
 	else if(str_comp(pClassName, "smoker") == 0) ClassId = PLAYERCLASS_SMOKER;
 	else if(str_comp(pClassName, "hunter") == 0) ClassId = PLAYERCLASS_HUNTER;
