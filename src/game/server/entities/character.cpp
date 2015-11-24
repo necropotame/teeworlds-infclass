@@ -474,7 +474,7 @@ void CCharacter::FireWeapon()
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
 					{
-						pTarget->IncreaseArmor(2);
+						pTarget->IncreaseArmor(4);
 						pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
 						pTarget->m_EmoteType = EMOTE_HAPPY;
 						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
@@ -1201,7 +1201,7 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Team = TEAM_RED;
 	}
 	
-	if(m_Health < 5 && m_Armor == 0 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
+	if(m_Armor == 0 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
 	{
 		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
 		
@@ -1214,6 +1214,7 @@ void CCharacter::Snap(int SnappingClient)
 			pP->m_X = (int)m_Pos.x;
 			pP->m_Y = (int)m_Pos.y - 60.0;
 			pP->m_Type = POWERUP_HEALTH;
+			pP->m_Subtype = 0;
 		}
 	}
 	

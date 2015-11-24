@@ -1182,6 +1182,24 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				SendBroadcast(aBuf, ClientID);
 				return;
 			}
+			
+/* INFECTION MODIFICATION START ***************************************/
+			if(m_apPlayers[ClientID]->IsInfected() && pMsg->m_Team == TEAM_SPECTATORS) 
+			{
+				int InfectedCount = 0;
+				for(int i = 0; i < MAX_CLIENTS; i++)
+				{
+					 if(m_apPlayers[i] && m_apPlayers[i]->IsInfected() && m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
+						 InfectedCount++;
+				}
+
+				if(InfectedCount <= 2)
+				{
+					 SendBroadcast("You can't join the spectators right now.", ClientID);
+					 return;
+				}
+			}
+/* INFECTION MODIFICATION END *****************************************/
 
 			// Switch team on given client and kill/respawn him
 			if(m_pController->CanJoinTeam(pMsg->m_Team, ClientID))

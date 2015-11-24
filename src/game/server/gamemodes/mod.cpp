@@ -381,6 +381,17 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			pVictim->GetPlayer()->IncreaseScore(-1); // suicide
 		}
 	}
+	else if(pKiller->IsInfected())
+	{
+		if(!pVictim->IsInfected() && Weapon == WEAPON_NINJA)
+		{
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "You have infected %s, +3 points", Server()->ClientName(pVictim->GetPlayer()->GetCID()));
+			GameServer()->SendChatTarget(pKiller->GetCID(), aBuf);
+			
+			pKiller->IncreaseScore(3);
+		}
+	}
 	else if(!pKiller->IsInfected())
 	{
 		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
