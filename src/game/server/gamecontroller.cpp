@@ -452,7 +452,7 @@ void IGameController::Tick()
 			{
 				if(GameServer()->m_apPlayers[i])
 				{
-					GameServer()->m_apPlayers[i]->SetScoreMode(PLAYERSCOREMODE_NORMAL);
+					GameServer()->m_apPlayers[i]->SetScoreMode(Server()->GetClientDefaultScoreMode(i));
 				}
 			}
 			

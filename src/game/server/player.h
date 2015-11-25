@@ -7,15 +7,6 @@
 #include "entities/character.h"
 #include "gamecontext.h"
 
-/* INFECTION MODIFICATION START ***************************************/
-enum
-{
-	PLAYERSCOREMODE_NORMAL = 0,
-	PLAYERSCOREMODE_ROUNDSCORE,
-	PLAYERSCOREMODE_TIME,
-};
-/* INFECTION MODIFICATION END *****************************************/
-
 // player object
 class CPlayer
 {
@@ -124,6 +115,7 @@ private:
 private:
 	int m_class;
 	int m_ScoreMode;
+	int m_DefaultScoreMode;
 	
 public:
 	int m_ScoreRound;

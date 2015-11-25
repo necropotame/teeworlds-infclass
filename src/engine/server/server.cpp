@@ -765,6 +765,7 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 /* INFECTION MODIFICATION START ***************************************/
 	pThis->m_aClients[ClientID].m_CustomSkin = 0;
 	pThis->m_aClients[ClientID].m_AlwaysRandom = 0;
+	pThis->m_aClients[ClientID].m_DefaultScoreMode = PLAYERSCOREMODE_NORMAL;
 /* INFECTION MODIFICATION END *****************************************/
 	
 	pThis->m_aClients[ClientID].Reset();
@@ -1940,6 +1941,16 @@ int CServer::GetClientAlwaysRandom(int ClientID)
 void CServer::SetClientAlwaysRandom(int ClientID, int Value)
 {
 	m_aClients[ClientID].m_AlwaysRandom = Value;
+}
+
+int CServer::GetClientDefaultScoreMode(int ClientID)
+{
+	return m_aClients[ClientID].m_DefaultScoreMode;
+}
+
+void CServer::SetClientDefaultScoreMode(int ClientID, int Value)
+{
+	m_aClients[ClientID].m_DefaultScoreMode = Value;
 }
 	
 int CServer::GetFireDelay(int WID)

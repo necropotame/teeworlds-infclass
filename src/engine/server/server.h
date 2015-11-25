@@ -132,6 +132,7 @@ public:
 		
 		int m_CustomSkin;
 		int m_AlwaysRandom;
+		int m_DefaultScoreMode;
 /* INFECTION MODIFICATION END *****************************************/
 	};
 
@@ -259,6 +260,9 @@ public:
 	
 	virtual int GetClientAlwaysRandom(int ClientID);
 	virtual void SetClientAlwaysRandom(int ClientID, int Value);
+	
+	virtual int GetClientDefaultScoreMode(int ClientID);
+	virtual void SetClientDefaultScoreMode(int ClientID, int Value);
 	
 	virtual int GetFireDelay(int WID);
 	virtual void SetFireDelay(int WID, int Time);

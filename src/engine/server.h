@@ -29,6 +29,13 @@ enum
 	
 	NB_INFWEAPON
 };
+
+enum
+{
+	PLAYERSCOREMODE_NORMAL = 0,
+	PLAYERSCOREMODE_ROUNDSCORE,
+	PLAYERSCOREMODE_TIME,
+};
 /* INFECTION MODIFICATION END *****************************************/
 
 class IServer : public IInterface
@@ -101,6 +108,9 @@ public:
 	
 	virtual int GetClientAlwaysRandom(int ClientID) = 0;
 	virtual void SetClientAlwaysRandom(int ClientID, int Value) = 0;
+	
+	virtual int GetClientDefaultScoreMode(int ClientID) = 0;
+	virtual void SetClientDefaultScoreMode(int ClientID, int Value) = 0;
 	
 	virtual int GetFireDelay(int WID) = 0;
 	virtual void SetFireDelay(int WID, int Time) = 0;

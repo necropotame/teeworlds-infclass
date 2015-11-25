@@ -148,7 +148,24 @@ void CPlayer::Snap(int SnappingClient)
 	}
 	else
 	{
-		if(m_ScoreMode == PLAYERSCOREMODE_NORMAL)
+		if(m_ScoreMode == PLAYERSCOREMODE_ROUNDSCORE)
+		{
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%s%i pt", (m_ScoreRound > 0 ? "+" : ""), m_ScoreRound);
+			
+			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+		}
+		else if(m_ScoreMode == PLAYERSCOREMODE_TIME)
+		{
+			float RoundDuration = static_cast<float>(m_HumanTime/((float)Server()->TickSpeed()))/60.0f;
+			int Minutes = static_cast<int>(RoundDuration);
+			int Seconds = static_cast<int>((RoundDuration - Minutes)*60.0f);
+			
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%i:%s%i min", Minutes,((Seconds < 10) ? "0" : ""), Seconds);
+			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+		}
+		else
 		{
 			switch(GetClass())
 			{
@@ -195,24 +212,6 @@ void CPlayer::Snap(int SnappingClient)
 				default:
 					StrToInts(&pClientInfo->m_Clan0, 3, "");
 			}
-		}
-		else if(m_ScoreMode == PLAYERSCOREMODE_ROUNDSCORE)
-		{
-			char aBuf[512];
-			if(m_ScoreRound == 0) StrToInts(&pClientInfo->m_Clan0, 3, "0 pt");
-			else str_format(aBuf, sizeof(aBuf), "%c%i pt", (m_ScoreRound >= 0 ? '+' : '-'), m_ScoreRound);
-			
-			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
-		}
-		else
-		{
-			float RoundDuration = static_cast<float>(m_HumanTime/((float)Server()->TickSpeed()))/60.0f;
-			int Minutes = static_cast<int>(RoundDuration);
-			int Seconds = static_cast<int>((RoundDuration - Minutes)*60.0f);
-			
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%i:%s%i min", Minutes,((Seconds < 10) ? "0" : ""), Seconds);
-			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
 		}
 	}
 	

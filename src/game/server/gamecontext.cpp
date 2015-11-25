@@ -705,7 +705,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						CNetMsg_Sv_Chat Msg;
 						Msg.m_Team = 0;
 						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "InfectionClass, by necropotame (version 0.3)";
+						Msg.m_pMessage = "InfectionClass, by necropotame (version 0.4)";
 						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 					}
 					{
@@ -719,7 +719,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						CNetMsg_Sv_Chat Msg;
 						Msg.m_Team = 0;
 						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "Thanks to guenstig werben and Defeater";
+						Msg.m_pMessage = "Thanks to guenstig werben, Defeater and Orangus";
 						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 					}
 				}
@@ -774,7 +774,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						CNetMsg_Sv_Chat Msg;
 						Msg.m_Team = 0;
 						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/class <engineer|soldier|scientist|ninja> : Choose your class (only when the round start)";
+						Msg.m_pMessage = "/class <engineer|soldier|medic|scientist|ninja> : Choose your class (only when the round start)";
 						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 					}
 					{
@@ -789,6 +789,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Msg.m_Team = 0;
 						Msg.m_ClientID = -1;
 						Msg.m_pMessage = "/alwaysrandom <0|1> : Choose automatically random class when the round start.";
+						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
+					}
+					{
+						CNetMsg_Sv_Chat Msg;
+						Msg.m_Team = 0;
+						Msg.m_ClientID = -1;
+						Msg.m_pMessage = "/scoremode <default|roundscore|time> : Sorting criteria for scoreboard.";
 						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
 					}
 				}
@@ -942,6 +949,39 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					}
 				}
 				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\scoremode default") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/scoremode default") == 0) 
+				)
+				{
+					Server()->SetClientDefaultScoreMode(ClientID, PLAYERSCOREMODE_NORMAL);
+					if(m_apPlayers[ClientID])
+					{
+						m_apPlayers[ClientID]->SetScoreMode(PLAYERSCOREMODE_NORMAL);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\scoremode roundscore") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/scoremode roundscore") == 0) 
+				)
+				{
+					Server()->SetClientDefaultScoreMode(ClientID, PLAYERSCOREMODE_ROUNDSCORE);
+					if(m_apPlayers[ClientID])
+					{
+						m_apPlayers[ClientID]->SetScoreMode(PLAYERSCOREMODE_ROUNDSCORE);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\scoremode time") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/scoremode time") == 0) 
+				)
+				{
+					Server()->SetClientDefaultScoreMode(ClientID, PLAYERSCOREMODE_TIME);
+					if(m_apPlayers[ClientID])
+					{
+						m_apPlayers[ClientID]->SetScoreMode(PLAYERSCOREMODE_TIME);
+					}
+				}
+				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\class engineer") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/class engineer") == 0)
 				)
@@ -959,6 +999,16 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					if(m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
 					{
 						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SOLDIER);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\class medic") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/class medic") == 0)
+				)
+				{
+					if(m_pController->IsChoosableClass(PLAYERCLASS_MEDIC) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					{
+						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_MEDIC);
 					}
 				}
 				else if(

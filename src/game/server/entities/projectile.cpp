@@ -94,13 +94,16 @@ void CProjectile::Tick()
 		}
 		else if(TargetChr)
 		{
-			if(!OwnerChar->IsInfected() && !TargetChr->IsInfected())
+			if(OwnerChar)
 			{
-				TargetChr->TakeDamage(m_Direction * 0.001f, m_Damage, m_Owner, m_Weapon);
-			}
-			else
-			{
-				TargetChr->TakeDamage(m_Direction * max(0.001f, m_Force), m_Damage, m_Owner, m_Weapon);
+				if(!OwnerChar->IsInfected() && !TargetChr->IsInfected())
+				{
+					TargetChr->TakeDamage(m_Direction * 0.001f, m_Damage, m_Owner, m_Weapon);
+				}
+				else
+				{
+					TargetChr->TakeDamage(m_Direction * max(0.001f, m_Force), m_Damage, m_Owner, m_Weapon);
+				}
 			}
 		}
 
