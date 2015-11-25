@@ -143,60 +143,71 @@ void CClassChooser::Snap(int SnappingClient)
 		ClassIterator++;
 	}
 	
-	if(length(m_CurPos) < 200.0)
+	int ClassUnderCursor = -1;
+	if(length(m_CurPos) <= 200.0)
 	{
 		float angle = atan2(-m_CurPos.y, -m_CurPos.x);
-		
-		int i=0;
-		
+		int Selection = static_cast<int>(NbChoosableClass*(angle/pi));
+			
 		if(length(m_CurPos) > 50.0)
 		{
-			for(i=NbChoosableClass-1; i>=0; i--)
+			if(Selection >= 0 && Selection < NbChoosableClass)
 			{
-				if(angle >= static_cast<float>(i)*pi/static_cast<float>(NbChoosableClass)) break;
+				int ClassIter = 0;
+				for(int i=START_HUMANCLASS+1; i<END_HUMANCLASS; i++)
+				{
+					if(GameServer()->m_pController->IsChoosableClass(i))
+					{
+						if(ClassIter == Selection)
+						{
+							ClassUnderCursor = i;
+							break;
+						}
+						else ClassIter++;
+					}
+				}
+					
+				switch(ClassUnderCursor)
+				{
+					case PLAYERCLASS_SOLDIER:
+						GameServer()->SendBroadcast("Soldier", m_PlayerID);
+						break;
+					case PLAYERCLASS_MEDIC:
+						GameServer()->SendBroadcast("Medic", m_PlayerID);
+						break;
+					case PLAYERCLASS_SCIENTIST:
+						GameServer()->SendBroadcast("Scientist", m_PlayerID);
+						break;
+					case PLAYERCLASS_ENGINEER:
+						GameServer()->SendBroadcast("Engineer", m_PlayerID);
+						break;
+					case PLAYERCLASS_NINJA:
+						GameServer()->SendBroadcast("Ninja", m_PlayerID);
+						break;
+				}
 			}
-			
-			switch(START_HUMANCLASS+i+1)
-			{
-				case PLAYERCLASS_SOLDIER:
-					GameServer()->SendBroadcast("Soldier", m_PlayerID);
-					break;
-				case PLAYERCLASS_MEDIC:
-					GameServer()->SendBroadcast("Medic", m_PlayerID);
-					break;
-				case PLAYERCLASS_SCIENTIST:
-					GameServer()->SendBroadcast("Scientist", m_PlayerID);
-					break;
-				case PLAYERCLASS_ENGINEER:
-					GameServer()->SendBroadcast("Engineer", m_PlayerID);
-					break;
-				case PLAYERCLASS_NINJA:
-					GameServer()->SendBroadcast("Ninja", m_PlayerID);
-					break;
-			}
-			
 		}
 		else
 		{
 			GameServer()->SendBroadcast("Random selection", m_PlayerID);
 			
-			i = rand()%NbChoosableClass;
+			Selection = rand()%NbChoosableClass;
 		}
 		
-		if(i>=0 && i<NbChoosableClass)
+		if(Selection >= 0 && Selection < NbChoosableClass)
 		{
 			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));
 			if(!pObj)
 				return;
 				
-			
-			pObj->m_X = (int)m_Pos.x - 130.0*cos((static_cast<float>(i)+0.5)*stepAngle);
-			pObj->m_Y = (int)m_Pos.y - 130.0*sin((static_cast<float>(i)+0.5)*stepAngle);
+			pObj->m_X = (int)m_Pos.x - 130.0*cos((static_cast<float>(Selection)+0.5)*stepAngle);
+			pObj->m_Y = (int)m_Pos.y - 130.0*sin((static_cast<float>(Selection)+0.5)*stepAngle);
 
 			pObj->m_FromX = (int)m_Pos.x;
 			pObj->m_FromY = (int)m_Pos.y;
 			pObj->m_StartTick = Server()->Tick();
 		}
+		
 	}
 	else
 	{
