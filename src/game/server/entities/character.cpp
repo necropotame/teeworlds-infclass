@@ -1092,30 +1092,26 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		GameServer()->CreateDamageInd(m_Pos, 0, Dmg);
 	}
 
+/* INFECTION MODIFICATION START ***************************************/
 	if(Dmg)
 	{
 		if(m_Armor)
 		{
-			if(Dmg > 1)
-			{
-				m_Health--;
-				Dmg--;
-			}
-
-			if(Dmg > m_Armor)
-			{
-				Dmg -= m_Armor;
-				m_Armor = 0;
-			}
-			else
+			if(Dmg <= m_Armor)
 			{
 				m_Armor -= Dmg;
 				Dmg = 0;
+			}
+			else
+			{
+				Dmg -= m_Armor;
+				m_Armor = 0;
 			}
 		}
 
 		m_Health -= Dmg;
 	}
+/* INFECTION MODIFICATION END *****************************************/
 
 	m_DamageTakenTick = Server()->Tick();
 
