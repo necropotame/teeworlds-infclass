@@ -800,6 +800,20 @@ void CCharacter::Tick()
 
 	m_Core.m_Input = m_Input;
 	m_Core.Tick(true);
+	
+/* INFECTION MODIFICATION START ***************************************/
+	
+	if(!IsInfected() && m_Core.m_HookedPlayer >= 0)
+	{
+		if(GameServer()->m_apPlayers[m_Core.m_HookedPlayer] && !GameServer()->m_apPlayers[m_Core.m_HookedPlayer]->IsInfected())
+		{
+			m_Core.m_HookedPlayer = -1;
+			m_Core.m_HookState = HOOK_RETRACTED;
+			m_Core.m_HookPos = m_Pos;
+		}
+	}
+/* INFECTION MODIFICATION END *****************************************/
+	
 
 	// handle death-tiles and leaving gamelayer
 	if(GameServer()->Collision()->GetCollisionAt(m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f)&CCollision::COLFLAG_DEATH ||
