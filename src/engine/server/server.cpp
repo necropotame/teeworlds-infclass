@@ -110,6 +110,7 @@ int CSnapIDPool::NewID()
 		RemoveFirstTimeout();
 
 	int ID = m_FirstFree;
+	
 	dbg_assert(ID != -1, "id error");
 	if(ID == -1)
 		return ID;
