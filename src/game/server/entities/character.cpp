@@ -101,6 +101,8 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_AntiFireTick = Server()->Tick();
 	m_PortalTick = 0;
 	m_LastPortalOwner = m_pPlayer->GetCID();
+	m_IsFrozen = false;
+	m_FrozenTime = -1;
 
 	ClassSpawnAttributes();
 	DestroyChildEntities();
@@ -114,12 +116,25 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 }
 
 void CCharacter::Destroy()
-{
+{	
 /* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
-	Server()->SnapFreeID(m_FlagID);
-	Server()->SnapFreeID(m_HeartID);
-	Server()->SnapFreeID(m_BarrierHintID);
+	
+	if(m_FlagID >= 0)
+	{
+		Server()->SnapFreeID(m_FlagID);
+		m_FlagID = -1;
+	}
+	if(m_HeartID >= 0)
+	{
+		Server()->SnapFreeID(m_HeartID);
+		m_HeartID = -1;
+	}
+	if(m_BarrierHintID >= 0)
+	{
+		Server()->SnapFreeID(m_BarrierHintID);
+		m_BarrierHintID = -1;
+	}
 /* INFECTION MODIFICATION END *****************************************/
 
 	GameServer()->m_World.m_Core.m_apCharacters[m_pPlayer->GetCID()] = 0;

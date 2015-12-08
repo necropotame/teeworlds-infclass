@@ -91,6 +91,7 @@ void CPlayer::Tick()
 			}
 			else
 			{
+				m_pCharacter->Destroy();
 				delete m_pCharacter;
 				m_pCharacter = 0;
 			}
