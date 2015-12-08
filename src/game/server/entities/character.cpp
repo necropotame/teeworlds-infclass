@@ -116,9 +116,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 }
 
 void CCharacter::Destroy()
-{
-	std::cout << "Destroy CCharacter" << std::endl;
-	
+{	
 /* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
 	
