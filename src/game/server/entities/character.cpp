@@ -359,12 +359,25 @@ void CCharacter::FireWeapon()
 				}
 				else if(distance(m_FirstShotCoord, m_Pos) > 10.0)
 				{
-					m_FirstShot = true;
+					//Check if the barrier is in toxic gases
+					bool isAccepted = true;
+					for(int i=0; i<15; i++)
+					{
+						if(GameServer()->Collision()->CheckPointFlag(m_FirstShotCoord + (m_Pos - m_FirstShotCoord)*(static_cast<float>(i)/14.0f), CCollision::COLFLAG_INFECTION))
+						{
+							isAccepted = false;
+						}
+					}
 					
-					CBarrier *pBarrier = new CBarrier(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
-					m_pBarrier = pBarrier;
-					
-					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					if(isAccepted)
+					{
+						m_FirstShot = true;
+						
+						CBarrier *pBarrier = new CBarrier(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
+						m_pBarrier = pBarrier;
+						
+						GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					}
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_SOLDIER)
