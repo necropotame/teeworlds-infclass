@@ -85,7 +85,7 @@ const char* CGameContext::ms_TextEn[] = {
 		"Press <F3> or <F4> while holding <TAB> to switch the score system",
 	"InfectionClass, by necropotame (version 0.5)\n"
 		"Based on Infection mod by Gravity\n"
-		"Thanks to guenstig werben, Defeater, Orangus and BlinderHeld",
+		"Thanks to guenstig werben, Defeater, Orangus, BlinderHeld and Warpaint",
 	"Rules of the game:\n\n"
 		"InfectionClass is a team game between humans and infected.\n\n"
 		"All players start as human.\n"
@@ -194,7 +194,7 @@ const char* CGameContext::ms_TextFr[] = {
 		"Appuyer sur <F3> or <F4> en maintenant <TAB> permet de changer the système de score",
 	"InfectionClass, par necropotame (version 0.5)\n"
 		"Basé sur le mod Infection, par Gravity\n"
-		"Remerciements à guenstig werben, Defeater, Orangus et BlinderHeld",
+		"Remerciements à guenstig werben, Defeater, Orangus, BlinderHeld et Warpaint",
 	"Règles du jeu :\n\n"
 		"InfectionClass est un jeu d'équipe entre humains et infectés.\n\n"
 		"Tous les joueurs commencent comme humains.\n"
@@ -303,7 +303,7 @@ const char* CGameContext::ms_TextDe[] = {
 		"Drücke <F3> oder <F4> während du <TAB> gedrückt hast, um eine andere Anzeige im Score zu erhalten",
 	"InfectionClass, von necropotame (version 0.5)\n"
 		"Basiert auf den Infection mod von Gravity\n"
-		"Dank an guenstig werben, Defeater, Orangus and BlinderHeld",
+		"Dank an guenstig werben, Defeater, Orangus, BlinderHeld and Warpaint",
 	"Regeln zum Spiel:\n\n"
 		"InfectionClass ist ein Teamspiel. Überlebende gegen Infizierte\n\n"
 		"Alle Spieler starten als Überlebende.\n"
