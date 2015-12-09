@@ -35,11 +35,11 @@ const char* CGameContext::ms_TextEn[] = {
 	"The undead is coming !",
 	"The undead is finally dead",
 	
-	"Infected won the round in %i:2%i minutes",
+	"Infected won the round in %i:%02i minutes",
 	"One human won the round",
 	"%i humans won the round",
 	
-	"Choose your class by clicking on the weapon, or wait for random selection",
+	"Choose your class by clicking on the weapon",
 	"Random choice",
 	
 	"Engineer",
@@ -144,11 +144,11 @@ const char* CGameContext::ms_TextFr[] = {
 	"Le Undead arrive !",
 	"Le Undead est finalement mort",
 	
-	"Les infectés ont gagné la manche en %i:2%i minutes",
+	"Les infectés ont gagné la manche en %i:%02i minutes",
 	"Un humain a gagné la manche",
 	"%i humains ont gagné la manche",
 	
-	"Choisissez votre classe en cliquant sur l'arme correspondante, ou attendez le choix aléatoire",
+	"Choisissez votre classe en cliquant sur l'arme correspondante",
 	"Choix aléatoire",
 	
 	"Engineer",
