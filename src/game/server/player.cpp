@@ -26,6 +26,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 /* INFECTION MODIFICATION START ***************************************/
 	m_Score = Server()->GetClientScore(ClientID);
 	m_NbRound = Server()->GetClientNbRound(ClientID);
+	m_NbInfection = Server()->GetClientNbInfection(ClientID);
 	m_ScoreRound = 0;
 	m_ScoreMode = PLAYERSCOREMODE_NORMAL;
 	m_WinAsHuman = 0;
@@ -56,6 +57,7 @@ void CPlayer::Tick()
 
 	Server()->SetClientScore(m_ClientID, m_Score);
 	Server()->SetClientNbRound(m_ClientID, m_NbRound);
+	Server()->SetClientNbInfection(m_ClientID, m_NbInfection);
 
 	// do latency stuff
 	{
@@ -200,6 +202,26 @@ void CPlayer::Snap(int SnappingClient)
 			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
 			
 			PlayerInfoScore = static_cast<int>(ScorePerRound*10);
+		}
+		else if(SnapScoreMode == PLAYERSCOREMODE_INFECTION)
+		{
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%i inf", m_NbInfection);
+			
+			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+			
+			PlayerInfoScore = m_NbInfection;
+		}
+		else if(SnapScoreMode == PLAYERSCOREMODE_INFECTIONPERROUND)
+		{
+			float InfPerRound = static_cast<float>(m_NbInfection)/static_cast<float>(m_NbRound);
+			
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%.2f inf/rnd", InfPerRound);
+			
+			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+			
+			PlayerInfoScore = static_cast<int>(InfPerRound*10);
 		}
 		else
 		{
@@ -556,6 +578,11 @@ void CPlayer::IncreaseScore(int Points)
 void CPlayer::IncreaseNbRound()
 {
 	m_NbRound++;
+}
+
+void CPlayer::IncreaseNbInfection(int Points)
+{
+	m_NbInfection++;
 }
 
 int CPlayer::GetScoreMode()

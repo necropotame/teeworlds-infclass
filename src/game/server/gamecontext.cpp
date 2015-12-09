@@ -499,6 +499,99 @@ void CGameContext::SendChatTarget_Language(int To, int TextId)
 	}
 }
 
+void CGameContext::SendChatTarget_Language_s(int To, int TextId, const char* Text)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	CNetMsg_Sv_Chat Msg;
+	Msg.m_Team = 0;
+	Msg.m_ClientID = -1;
+	
+	char aBuf[512];
+	Msg.m_pMessage = aBuf;
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			switch(m_apPlayers[i]->GetLanguage())
+			{
+				case LANGUAGE_FR:
+					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Text);	
+					break;
+				default:
+					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Text);	
+					
+			}
+			
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+	}
+}
+
+void CGameContext::SendChatTarget_Language_i(int To, int TextId, int Value)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	CNetMsg_Sv_Chat Msg;
+	Msg.m_Team = 0;
+	Msg.m_ClientID = -1;
+	
+	char aBuf[512];
+	Msg.m_pMessage = aBuf;
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			switch(m_apPlayers[i]->GetLanguage())
+			{
+				case LANGUAGE_FR:
+					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Value);	
+					break;
+				default:
+					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Value);	
+					
+			}
+			
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+	}
+}
+
+void CGameContext::SendChatTarget_Language_ii(int To, int TextId, int Value, int Value2)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	CNetMsg_Sv_Chat Msg;
+	Msg.m_Team = 0;
+	Msg.m_ClientID = -1;
+	
+	char aBuf[512];
+	Msg.m_pMessage = aBuf;
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			switch(m_apPlayers[i]->GetLanguage())
+			{
+				case LANGUAGE_FR:
+					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Value, Value2);	
+					break;
+				default:
+					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Value, Value2);	
+					
+			}
+			
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+	}
+}
+
 void CGameContext::SendMODT_Language(int To, int TextId)
 {
 	if(m_apPlayers[To])

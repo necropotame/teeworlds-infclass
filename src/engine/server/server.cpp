@@ -276,6 +276,7 @@ void CServer::CClient::Reset(bool ResetScore)
 	{
 		m_Score = 0;
 		m_NbRound = 0;
+		m_NbInfection = 0;
 	}
 }
 /* INFECTION MODIFICATION END *****************************************/
@@ -2007,6 +2008,18 @@ int CServer::GetClassAvailability(int CID)
 void CServer::SetClassAvailability(int CID, int n)
 {
 	m_InfClassAvailability[CID] = n;
+}
+
+int CServer::GetClientNbInfection(int ClientID)
+{
+	return m_aClients[ClientID].m_NbInfection;
+}
+
+void CServer::SetClientNbInfection(int ClientID, int Score)
+{
+	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State < CClient::STATE_READY)
+		return;
+	m_aClients[ClientID].m_NbInfection = Score;
 }
 
 int CServer::GetClientNbRound(int ClientID)

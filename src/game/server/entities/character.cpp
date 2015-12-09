@@ -797,10 +797,8 @@ void CCharacter::Tick()
 			CPlayer* pBadPlayer = GameServer()->m_apPlayers[m_LastPortalOwner];
 			if(pBadPlayer)
 			{
-				char aBuf[512];
-				str_format(aBuf, sizeof(aBuf), "You have infected %s using portals, -5 points", Server()->ClientName(m_pPlayer->GetCID()));
-				GameServer()->SendChatTarget(m_LastPortalOwner, aBuf);
-				
+				GameServer()->SendChatTarget_Language_s(m_LastPortalOwner, TEXTID_YOU_PORTAL_INFECTION, Server()->ClientName(m_pPlayer->GetCID()));
+			
 				pBadPlayer->IncreaseScore(-5);
 			}
 		}
@@ -1176,11 +1174,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 		{
 			m_pPlayer->StartInfection();
 			
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "You have infected %s, +3 points", Server()->ClientName(m_pPlayer->GetCID()));
-			GameServer()->SendChatTarget(From, aBuf);
+			GameServer()->SendChatTarget_Language_s(From, TEXTID_YOU_INFECTED_PLAYER, Server()->ClientName(m_pPlayer->GetCID()));
 		
 			GameServer()->m_apPlayers[From]->IncreaseScore(3);
+			GameServer()->m_apPlayers[From]->IncreaseNbInfection(1);
 		
 			CNetMsg_Sv_KillMsg Msg;
 			Msg.m_Killer = From;

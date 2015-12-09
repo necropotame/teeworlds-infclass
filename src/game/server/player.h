@@ -115,6 +115,7 @@ private:
 private:
 	int m_class;
 	int m_NbRound;
+	int m_NbInfection;
 	int m_ScoreMode;
 	int m_DefaultScoreMode;
 	int m_Language;
@@ -128,6 +129,7 @@ public:
 	
 	void IncreaseScore(int Points);
 	void IncreaseNbRound();
+	void IncreaseNbInfection(int Points);
 	int GetScoreMode();
 	void SetScoreMode(int Mode);
 	

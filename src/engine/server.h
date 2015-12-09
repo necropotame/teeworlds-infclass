@@ -35,6 +35,8 @@ enum
 	PLAYERSCOREMODE_NORMAL = 0,
 	PLAYERSCOREMODE_ROUNDSCORE,
 	PLAYERSCOREMODE_SCOREPERROUND,
+	PLAYERSCOREMODE_INFECTION,
+	PLAYERSCOREMODE_INFECTIONPERROUND,
 	PLAYERSCOREMODE_TIME,
 	NB_PLAYERSCOREMODE,
 };
@@ -115,6 +117,9 @@ public:
 	virtual int GetClientNbRound(int ClientID) = 0;
 	virtual void SetClientNbRound(int ClientID, int Score) = 0;
 	
+	virtual int GetClientNbInfection(int ClientID) = 0;
+	virtual void SetClientNbInfection(int ClientID, int Score) = 0;
+	
 	virtual int GetClientCustomSkin(int ClientID) = 0;
 	virtual void SetClientCustomSkin(int ClientID, int Value) = 0;
 	
@@ -176,6 +181,9 @@ public:
 	virtual void SendBroadcast_Language(int To, int TextId) = 0;
 	virtual void SendBroadcast_Language_i(int To, int TextId, int Value) = 0;
 	virtual void SendChatTarget_Language(int To, int TextId) = 0;
+	virtual void SendChatTarget_Language_s(int To, int TextId, const char* Text) = 0;
+	virtual void SendChatTarget_Language_i(int To, int TextId, int Value) = 0;
+	virtual void SendChatTarget_Language_ii(int To, int TextId, int Value, int Value2) = 0;
 	virtual void SendMODT_Language(int To, int TextId) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };

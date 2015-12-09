@@ -131,6 +131,7 @@ public:
 		void Reset(bool ResetScore=true);
 		
 		int m_NbRound;
+		int m_NbInfection;
 		
 		int m_CustomSkin;
 		int m_AlwaysRandom;
@@ -281,6 +282,9 @@ public:
 	
 	virtual int GetClassAvailability(int CID);
 	virtual void SetClassAvailability(int CID, int n);
+	
+	virtual int GetClientNbInfection(int ClientID);
+	virtual void SetClientNbInfection(int ClientID, int Score);
 	
 	virtual int GetClientNbRound(int ClientID);
 	virtual void SetClientNbRound(int ClientID, int Score);

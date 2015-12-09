@@ -171,9 +171,7 @@ void CGameControllerMOD::Tick()
 						m_InfectedCounter++;
 						m_HumanCounter--;
 						
-						char aBuf[512];
-						str_format(aBuf, sizeof(aBuf), "%s has been infected", Server()->ClientName(i));
-						GameServer()->SendChat(-1, -2, aBuf);
+						GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_INFECTED, Server()->ClientName(i));
 						
 						break;
 					}
@@ -205,9 +203,7 @@ void CGameControllerMOD::Tick()
 			int Minutes = static_cast<int>(RoundDuration);
 			int Seconds = static_cast<int>((RoundDuration - Minutes)*60.0f);
 			
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "Infected won this round in %i:%s%i minutes", Minutes,((Seconds < 10) ? "0" : ""), Seconds);
-			GameServer()->SendChat(-1, -2, aBuf);
+			GameServer()->SendChatTarget_Language_ii(-1, TEXTID_WIN_INFECTED, Minutes, Seconds);
 			
 			m_InfectedStarted = false;
 			EndRound();
@@ -308,9 +304,14 @@ void CGameControllerMOD::Tick()
 				
 				if(m_HumanCounter)
 				{
-					char aBuf[512];
-					str_format(aBuf, sizeof(aBuf), "%i human%s won this round", m_HumanCounter, (m_HumanCounter>1 ? "s" : ""));
-					GameServer()->SendChat(-1, -2, aBuf);
+					if(m_HumanCounter > 1)
+					{
+						GameServer()->SendChatTarget_Language(-1, TEXTID_WIN_HUMAN);
+					}
+					else
+					{
+						GameServer()->SendChatTarget_Language_i(-1, TEXTID_WIN_HUMANS, m_HumanCounter);
+					}
 					
 					for(int i = 0; i < MAX_CLIENTS; i ++)
 					{
@@ -324,15 +325,13 @@ void CGameControllerMOD::Tick()
 							pPlayer->IncreaseScore(5);
 							pPlayer->m_WinAsHuman++;
 							
-							GameServer()->SendChatTarget(i, "You have survived, +5 points");
+							GameServer()->SendChatTarget_Language(i, TEXTID_YOU_SURVIVED);
 						}
 					}
 				}
 				else
 				{
-					char aBuf[512];
-					str_format(aBuf, sizeof(aBuf), "Infected won this round in %i:%s%i minutes", g_Config.m_SvTimelimit, "0", 0);
-					GameServer()->SendChat(-1, -2, aBuf);
+					GameServer()->SendChatTarget_Language_ii(-1, TEXTID_WIN_INFECTED, g_Config.m_SvTimelimit, 0);
 				}
 				
 				m_InfectedStarted = false;
@@ -365,10 +364,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 					CPlayer* pBadPlayer = GameServer()->m_apPlayers[pVictim->m_LastPortalOwner];
 					if(pBadPlayer)
 					{
-						char aBuf[512];
-						str_format(aBuf, sizeof(aBuf), "You kill %s using portals, -5 points", Server()->ClientName(pVictimPlayer->GetCID()));
-						GameServer()->SendChatTarget(pBadPlayer->GetCID(), aBuf);
-						
+						GameServer()->SendChatTarget_Language_s(pBadPlayer->GetCID(), TEXTID_YOU_PORTAL_KILL, Server()->ClientName(pVictimPlayer->GetCID()));
 						pBadPlayer->IncreaseScore(-5);
 					}
 				}
@@ -383,20 +379,23 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 	}
 	else if(pKiller->IsInfected())
 	{
-		if(!pVictim->IsInfected() && Weapon == WEAPON_NINJA)
+		CPlayer* pVictimPlayer = pVictim->GetPlayer();
+		if(pVictimPlayer)
 		{
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "You have infected %s, +3 points", Server()->ClientName(pVictim->GetPlayer()->GetCID()));
-			GameServer()->SendChatTarget(pKiller->GetCID(), aBuf);
-			
-			pKiller->IncreaseScore(3);
+			if(!pVictim->IsInfected() && Weapon == WEAPON_NINJA)
+			{
+				GameServer()->SendChatTarget_Language_s(pKiller->GetCID(), TEXTID_YOU_INFECTED_PLAYER, Server()->ClientName(pVictimPlayer->GetCID()));
+				
+				pKiller->IncreaseScore(3);
+				pKiller->IncreaseNbInfection(1);
+			}
 		}
 	}
 	else if(!pKiller->IsInfected())
 	{
 		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
 		{
-			GameServer()->SendChatTarget(pKiller->GetCID(), "You killed a witch, +5 points");	
+			GameServer()->SendChatTarget_Language(pKiller->GetCID(), TEXTID_YOU_KILLED_WITCH);
 			pKiller->IncreaseScore(5);
 		}
 		else pKiller->IncreaseScore(1);
