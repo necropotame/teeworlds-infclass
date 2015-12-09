@@ -355,12 +355,12 @@ const char* CGameContext::GetTextTranslation(int TextId, int Lang)
 	switch(Lang)
 	{
 		case LANGUAGE_FR:
-			return CGameContext::ms_TextFr;
+			return CGameContext::ms_TextFr[TextId];
 		case LANGUAGE_DE:
-			return CGameContext::ms_TextDe;
+			return CGameContext::ms_TextDe[TextId];
 		case LANGUAGE_EN:
 		default:
-			return CGameContext::ms_TextEn;
+			return CGameContext::ms_TextEn[TextId];
 	}
 }
 
@@ -685,7 +685,7 @@ void CGameContext::SendMODT_Language(int To, int TextId)
 	{
 		CNetMsg_Sv_Motd Msg;
 		
-		Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage());
+		Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[To]->GetLanguage());
 		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, To);
 	}
 }

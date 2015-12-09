@@ -277,6 +277,7 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_Score = 0;
 		m_NbRound = 0;
 		m_NbInfection = 0;
+		m_Language = LANGUAGE_EN;
 	}
 }
 /* INFECTION MODIFICATION END *****************************************/
@@ -1571,6 +1572,7 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 	char aAddrStr[NETADDR_MAXSTRSIZE];
 	CServer* pThis = static_cast<CServer *>(pUser);
 
+/* INFECTION MODIFICATION START ***************************************/
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		if(pThis->m_aClients[i].m_State != CClient::STATE_EMPTY)
@@ -1578,16 +1580,24 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 			net_addr_str(pThis->m_NetServer.ClientAddr(i), aAddrStr, sizeof(aAddrStr), true);
 			if(pThis->m_aClients[i].m_State == CClient::STATE_INGAME)
 			{
-				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? "(Admin)" :
-										pThis->m_aClients[i].m_Authed == CServer::AUTHED_MOD ? "(Mod)" : "";
-				str_format(aBuf, sizeof(aBuf), "id=%d addr=%s name='%s' score=%d %s", i, aAddrStr,
-					pThis->m_aClients[i].m_aName, pThis->m_aClients[i].m_Score, pAuthStr);
+				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? "Admin" :
+										pThis->m_aClients[i].m_Authed == CServer::AUTHED_MOD ? "Mod" : "";
+				str_format(aBuf, sizeof(aBuf), "#%02i (%s) %s, [%s], cs:%i | ar:%i | language:%i",
+					i,
+					aAddrStr,
+					pThis->m_aClients[i].m_aName,
+					pAuthStr,
+					pThis->m_aClients[i].m_CustomSkin,
+					pThis->m_aClients[i].m_AlwaysRandom,
+					pThis->m_aClients[i].m_Language
+				);
 			}
 			else
 				str_format(aBuf, sizeof(aBuf), "id=%d addr=%s connecting", i, aAddrStr);
 			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", aBuf);
 		}
 	}
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 void CServer::ConShutdown(IConsole::IResult *pResult, void *pUser)

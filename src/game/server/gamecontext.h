@@ -268,7 +268,7 @@ public:
 	virtual void SendMODT_Language(int To, int TextId);
 	
 private:
-	virtual void GetTextTranslation(int TextId, int Language);
+	virtual const char* GetTextTranslation(int TextId, int Language);
 
 /* INFECTION MODIFICATION END *****************************************/
 };

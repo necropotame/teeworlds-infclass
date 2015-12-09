@@ -32,7 +32,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_WinAsHuman = 0;
 	m_class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
-	m_Language = LANGUAGE_EN;
+	m_Language = Server()->GetClientLanguage(ClientID);
 	for(int i=0; i<NB_PLAYERCLASS; i++)
 	{
 		m_knownClass[i] = false;
@@ -58,6 +58,7 @@ void CPlayer::Tick()
 	Server()->SetClientScore(m_ClientID, m_Score);
 	Server()->SetClientNbRound(m_ClientID, m_NbRound);
 	Server()->SetClientNbInfection(m_ClientID, m_NbInfection);
+	Server()->SetClientLanguage(m_ClientID, m_Language);
 
 	// do latency stuff
 	{
