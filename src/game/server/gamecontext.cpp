@@ -151,27 +151,27 @@ const char* CGameContext::ms_TextFr[] = {
 	"Choisissez votre classe en cliquant sur l'arme correspondante",
 	"Choix aléatoire",
 	
-	"Engineer",
-	"Soldier",
-	"Scientist",
-	"Medic",
+	"Ingénieur",
+	"Soldat",
+	"Scientifique",
+	"Médecin",
 	"Ninja",
 	"Smoker",
 	"Boomer",
 	"Hunter",
-	"Undead",
-	"Witch",
+	"Mort-vivant",
+	"Sorcière",
 	
-	"Vous êtes un humain: Engineer",
-	"Vous êtes un humain: Soldier",
-	"Vous êtes un humain: Scientist",
-	"Vous êtes un humain: Medic",
+	"Vous êtes un humain: Ingénieur",
+	"Vous êtes un humain: Soldat",
+	"Vous êtes un humain: Scientifique",
+	"Vous êtes un humain: Médecin",
 	"Vous êtes un humain: Ninja",
 	"Vous êtes un humain: Smoker",
 	"Vous êtes un humain: Boomer",
 	"Vous êtes un humain: Hunter",
-	"Vous êtes un humain: Undead",
-	"Vous êtes un humain: Witch",
+	"Vous êtes un humain: Mort-vivant",
+	"Vous êtes un humain: Sorcière",
 	
 	"Tapez \"/help engineer\" pour plus d'information sur votre classe",
 	"Tapez \"/help soldier\" pour plus d'information sur votre classe",
@@ -201,18 +201,18 @@ const char* CGameContext::ms_TextFr[] = {
 		"10 secondes plus tard, deux joueurs deviennent infectés.\n\n"
 		"Le but des humains est de survivre jusqu'à ce que l'armée nettoie la zone.\n\n"
 		"Le but des infectés est d'infecter tous les humains.",
-	"Engineer :\n\n"
-		"L'Engineer peut créer avec son marteau des barrières pour bloquer les infectés.\n"
+	"Ingénieur :\n\n"
+		"L'Ingénieur peut créer avec son marteau des barrières pour bloquer les infectés.\n"
 		"Lorsque qu'un infecté touche la barrière, il meurt.\n\n"
 		"La durée de vie d'une barrière est de 30 secondes, et il ne peut y avoir qu'une barrière par joueur au même moment.",
-	"Soldier :\n\n"
-		"Le Soldier peut créer avec son marteau des bombes flottantes.\n"
+	"Soldat :\n\n"
+		"Le Soldat peut créer avec son marteau des bombes flottantes.\n"
 		"Chaque bombe peut exploser trois fois.\n"
 		"Utiliser le marteau pour placer une bombe et la faire exploser plusieurs fois.\n\n"
 		"Il ne peut y avoir qu'une barrière par joueur au même moment.",
-	"Scientist :\n\n",
-	"Medic :\n\n"
-		"Le Medic peut protéger les humains à l'aide de son marteau en leur donnant une armure.\n\n"
+	"Scientifique :\n\n",
+	"Médecin :\n\n"
+		"Le Médecin peut protéger les humains à l'aide de son marteau en leur donnant une armure.\n\n"
 		"Il dispose aussi d'un puissant fusil à pompe qui peut repousser les infectés.",
 	"Ninja :\n\n"
 		"Le Ninja peut lancer des grenades flash qui immobilisent les infectés pendant trois secondes.\n\n"
@@ -228,15 +228,15 @@ const char* CGameContext::ms_TextFr[] = {
 		"Le Hunter peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
 		"Il est capable de sauter deux fois dans l'air\n\n"
 		"Il peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.",
-	"Undead :\n\n"
-		"Le Undead peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
+	"Mort-vivant :\n\n"
+		"Le Mort-vivant peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
 		"À la place de mourir, il est gelé pendant 10 secondes.\n"
 		"Si un infecté le soigne, l'effet de gèle est enlevé.\n\n"
 		"Il peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.",
-	"Witch :\n\n"
-		"La Witch peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
+	"Sorcière :\n\n"
+		"La Sorcière peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
 		"Quand un infecté meurt, il a une chance de ré-apparaître à coté d'elle.\n"
-		"Si la Witch meurt, elle disparaît et est remplacée par une autre classe d'infecté.\n\n"
+		"Si la Sorcière meurt, elle disparaît et est remplacée par une autre classe d'infecté.\n\n"
 		"Elle peut aussi infliger 1 point de dégât par seconde quand elle agrippe un humain."
 };
 
@@ -349,6 +349,20 @@ const char* CGameContext::ms_TextDe[] = {
 		"Außerdem kann sie Überlebenden 1 Schadenspunkt pro Sekunde zufügen, in denen sie sie hookt."
 };
 /* INFECTION MODIFICATION END *****************************************/
+
+const char* CGameContext::GetTextTranslation(int TextId, int Lang)
+{
+	switch(Lang)
+	{
+		case LANGUAGE_FR:
+			return CGameContext::ms_TextFr;
+		case LANGUAGE_DE:
+			return CGameContext::ms_TextDe;
+		case LANGUAGE_EN:
+		default:
+			return CGameContext::ms_TextEn;
+	}
+}
 
 void CGameContext::Construct(int Resetting)
 {
@@ -593,19 +607,7 @@ void CGameContext::SendChatTarget_Language(int To, int TextId)
 	{
 		if(m_apPlayers[i])
 		{
-			switch(m_apPlayers[i]->GetLanguage())
-			{
-				case LANGUAGE_DE:
-					Msg.m_pMessage = ms_TextDe[TextId];
-					break;
-				case LANGUAGE_FR:
-					Msg.m_pMessage = ms_TextFr[TextId];
-					break;
-				default:
-					Msg.m_pMessage = ms_TextEn[TextId];
-					
-			}
-			
+			Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage());
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
@@ -627,19 +629,7 @@ void CGameContext::SendChatTarget_Language_s(int To, int TextId, const char* Tex
 	{
 		if(m_apPlayers[i])
 		{
-			switch(m_apPlayers[i]->GetLanguage())
-			{
-				case LANGUAGE_DE:
-					str_format(aBuf, sizeof(aBuf), ms_TextDe[TextId], Text);	
-					break;
-				case LANGUAGE_FR:
-					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Text);	
-					break;
-				default:
-					str_format(aBuf, sizeof(aBuf), ms_TextEn[TextId], Text);	
-					
-			}
-			
+			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Text);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
@@ -661,19 +651,7 @@ void CGameContext::SendChatTarget_Language_i(int To, int TextId, int Value)
 	{
 		if(m_apPlayers[i])
 		{
-			switch(m_apPlayers[i]->GetLanguage())
-			{
-				case LANGUAGE_DE:
-					str_format(aBuf, sizeof(aBuf), ms_TextDe[TextId], Value);	
-					break;
-				case LANGUAGE_FR:
-					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Value);	
-					break;
-				default:
-					str_format(aBuf, sizeof(aBuf), ms_TextEn[TextId], Value);	
-					
-			}
-			
+			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Value);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
@@ -695,19 +673,7 @@ void CGameContext::SendChatTarget_Language_ii(int To, int TextId, int Value, int
 	{
 		if(m_apPlayers[i])
 		{
-			switch(m_apPlayers[i]->GetLanguage())
-			{
-				case LANGUAGE_DE:
-					str_format(aBuf, sizeof(aBuf), ms_TextDe[TextId], Value, Value2);	
-					break;
-				case LANGUAGE_FR:
-					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Value, Value2);	
-					break;
-				default:
-					str_format(aBuf, sizeof(aBuf), ms_TextEn[TextId], Value, Value2);	
-					
-			}
-			
+			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Value, Value2);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
@@ -719,19 +685,7 @@ void CGameContext::SendMODT_Language(int To, int TextId)
 	{
 		CNetMsg_Sv_Motd Msg;
 		
-		switch(m_apPlayers[To]->GetLanguage())
-		{
-			case LANGUAGE_DE:
-				Msg.m_pMessage = ms_TextDe[TextId];
-				break;
-			case LANGUAGE_FR:
-				Msg.m_pMessage = ms_TextFr[TextId];
-				break;
-			default:
-				Msg.m_pMessage = ms_TextEn[TextId];
-				
-		}
-		
+		Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage());
 		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, To);
 	}
 }
@@ -747,20 +701,7 @@ void CGameContext::SendBroadcast_Language(int To, int TextId)
 	{
 		if(m_apPlayers[i])
 		{
-			
-			switch(m_apPlayers[i]->GetLanguage())
-			{
-				case LANGUAGE_DE:
-					Msg.m_pMessage = ms_TextDe[TextId];
-					break;
-				case LANGUAGE_FR:
-					Msg.m_pMessage = ms_TextFr[TextId];
-					break;
-				default:
-					Msg.m_pMessage = ms_TextEn[TextId];
-					
-			}
-			
+			Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage());
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
@@ -779,19 +720,7 @@ void CGameContext::SendBroadcast_Language_i(int To, int TextId, int Value)
 	{
 		if(m_apPlayers[i])
 		{
-			
-			switch(m_apPlayers[i]->GetLanguage())
-			{
-				case LANGUAGE_DE:
-					str_format(aBuf, sizeof(aBuf), ms_TextDe[TextId], Value);
-					break;
-				case LANGUAGE_FR:
-					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Value);
-					break;
-				default:
-					str_format(aBuf, sizeof(aBuf), ms_TextEn[TextId], Value);					
-			}
-			
+			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Value);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}

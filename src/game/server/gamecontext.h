@@ -266,6 +266,9 @@ public:
 	virtual void SendChatTarget_Language_i(int To, int TextId, int Value);
 	virtual void SendChatTarget_Language_ii(int To, int TextId, int Value, int Value2);
 	virtual void SendMODT_Language(int To, int TextId);
+	
+private:
+	virtual void GetTextTranslation(int TextId, int Language);
 
 /* INFECTION MODIFICATION END *****************************************/
 };
