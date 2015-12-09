@@ -304,7 +304,7 @@ void CGameControllerMOD::Tick()
 				
 				if(m_HumanCounter)
 				{
-					if(m_HumanCounter > 1)
+					if(m_HumanCounter <= 1)
 					{
 						GameServer()->SendChatTarget_Language(-1, TEXTID_WIN_HUMAN);
 					}

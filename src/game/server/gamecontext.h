@@ -255,6 +255,7 @@ private:
 	
 	static const char* ms_TextEn[];
 	static const char* ms_TextFr[];
+	static const char* ms_TextDe[];
 	
 public:
 	virtual void SendBroadcast_Language(int To, int TextId);

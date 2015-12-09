@@ -44,6 +44,7 @@ enum
 enum
 {
 	LANGUAGE_FR,
+	LANGUAGE_DE,
 	LANGUAGE_EN
 };
 
