@@ -271,7 +271,12 @@ void CServer::CClient::Reset(bool ResetScore)
 	m_LastAckedSnapshot = -1;
 	m_LastInputTick = -1;
 	m_SnapRate = CClient::SNAPRATE_INIT;
-	if(ResetScore) m_Score = 0;
+	
+	if(ResetScore)
+	{
+		m_Score = 0;
+		m_NbRound = 0;
+	}
 }
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -766,6 +771,7 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 	pThis->m_aClients[ClientID].m_CustomSkin = 0;
 	pThis->m_aClients[ClientID].m_AlwaysRandom = 0;
 	pThis->m_aClients[ClientID].m_DefaultScoreMode = PLAYERSCOREMODE_NORMAL;
+	pThis->m_aClients[ClientID].m_Language = LANGUAGE_EN;
 /* INFECTION MODIFICATION END *****************************************/
 	
 	pThis->m_aClients[ClientID].Reset();
@@ -1952,6 +1958,16 @@ void CServer::SetClientDefaultScoreMode(int ClientID, int Value)
 {
 	m_aClients[ClientID].m_DefaultScoreMode = Value;
 }
+
+int CServer::GetClientLanguage(int ClientID)
+{
+	return m_aClients[ClientID].m_Language;
+}
+
+void CServer::SetClientLanguage(int ClientID, int Value)
+{
+	m_aClients[ClientID].m_Language = Value;
+}
 	
 int CServer::GetFireDelay(int WID)
 {
@@ -1991,6 +2007,18 @@ int CServer::GetClassAvailability(int CID)
 void CServer::SetClassAvailability(int CID, int n)
 {
 	m_InfClassAvailability[CID] = n;
+}
+
+int CServer::GetClientNbRound(int ClientID)
+{
+	return m_aClients[ClientID].m_NbRound;
+}
+
+void CServer::SetClientNbRound(int ClientID, int Score)
+{
+	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State < CClient::STATE_READY)
+		return;
+	m_aClients[ClientID].m_NbRound = Score;
 }
 
 int CServer::GetClientScore(int ClientID)

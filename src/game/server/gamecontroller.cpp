@@ -228,6 +228,8 @@ void IGameController::StartRound()
 			GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);			
 			GameServer()->m_apPlayers[i]->m_ScoreRound = 0;
 			GameServer()->m_apPlayers[i]->m_HumanTime = 0;
+			
+			GameServer()->m_apPlayers[i]->IncreaseNbRound();
 		}
 	}	
 /* INFECTION MODIFICATION END *****************************************/

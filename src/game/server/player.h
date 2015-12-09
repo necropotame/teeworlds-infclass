@@ -114,8 +114,10 @@ private:
 /* INFECTION MODIFICATION START ***************************************/
 private:
 	int m_class;
+	int m_NbRound;
 	int m_ScoreMode;
 	int m_DefaultScoreMode;
+	int m_Language;
 	
 public:
 	int m_ScoreRound;
@@ -125,6 +127,8 @@ public:
 	int m_InfectionTick;
 	
 	void IncreaseScore(int Points);
+	void IncreaseNbRound();
+	int GetScoreMode();
 	void SetScoreMode(int Mode);
 	
 	int GetClass();
@@ -133,6 +137,9 @@ public:
 	bool IsInfected() const;
 	void StartInfection(bool force = false);
 	bool IsKownClass(int c);
+	
+	int GetLanguage();
+	void SetLanguage(int Language);
 	
 	int m_WinAsHuman;
 /* INFECTION MODIFICATION END *****************************************/

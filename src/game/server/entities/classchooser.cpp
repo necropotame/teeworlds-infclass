@@ -170,26 +170,26 @@ void CClassChooser::Snap(int SnappingClient)
 				switch(ClassUnderCursor)
 				{
 					case PLAYERCLASS_SOLDIER:
-						GameServer()->SendBroadcast("Soldier", m_PlayerID);
+						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_SOLDIER);
 						break;
 					case PLAYERCLASS_MEDIC:
-						GameServer()->SendBroadcast("Medic", m_PlayerID);
+						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_MEDIC);
 						break;
 					case PLAYERCLASS_SCIENTIST:
-						GameServer()->SendBroadcast("Scientist", m_PlayerID);
+						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_SCIENTIST);
 						break;
 					case PLAYERCLASS_ENGINEER:
-						GameServer()->SendBroadcast("Engineer", m_PlayerID);
+						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_ENGINEER);
 						break;
 					case PLAYERCLASS_NINJA:
-						GameServer()->SendBroadcast("Ninja", m_PlayerID);
+						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_NINJA);
 						break;
 				}
 			}
 		}
 		else
 		{
-			GameServer()->SendBroadcast("Random selection", m_PlayerID);
+			GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_RANDOM_CHOICE);
 			
 			Selection = rand()%NbChoosableClass;
 		}
@@ -211,6 +211,6 @@ void CClassChooser::Snap(int SnappingClient)
 	}
 	else
 	{
-		GameServer()->SendBroadcast("Choose your class by clicking on the weapon, or wait random selection", m_PlayerID);
+		GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_CLASSCHOOSER_HELP);
 	}
 }

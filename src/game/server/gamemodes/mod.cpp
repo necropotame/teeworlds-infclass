@@ -331,7 +331,7 @@ void CGameControllerMOD::Tick()
 				else
 				{
 					char aBuf[512];
-					str_format(aBuf, sizeof(aBuf), "Infected won this round in %i minutes", g_Config.m_SvTimelimit);
+					str_format(aBuf, sizeof(aBuf), "Infected won this round in %i:%s%i minutes", g_Config.m_SvTimelimit, "0", 0);
 					GameServer()->SendChat(-1, -2, aBuf);
 				}
 				
@@ -366,7 +366,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 					if(pBadPlayer)
 					{
 						char aBuf[512];
-						str_format(aBuf, sizeof(aBuf), "%s have kill %s using portals, -5 points", Server()->ClientName(pVictimPlayer->GetCID()));
+						str_format(aBuf, sizeof(aBuf), "You kill %s using portals, -5 points", Server()->ClientName(pVictimPlayer->GetCID()));
 						GameServer()->SendChatTarget(pBadPlayer->GetCID(), aBuf);
 						
 						pBadPlayer->IncreaseScore(-5);
@@ -680,7 +680,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		random -= m_ClassProbability[PLAYERCLASS_UNDEAD]/TotalProbInfectedClass;
 		if(random < 0.0f)
 		{
-			GameServer()->SendBroadcast("The undead is coming !", -1);
+			GameServer()->SendBroadcast_Language(-1, TEXTID_UNDEAD_SPAWN);
 			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 			return PLAYERCLASS_UNDEAD;
 		}
@@ -691,7 +691,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		random -= m_ClassProbability[PLAYERCLASS_WITCH]/TotalProbInfectedClass;
 		if(random < 0.0f)
 		{
-			GameServer()->SendBroadcast("The witch is coming !", -1);
+			GameServer()->SendBroadcast_Language(-1, TEXTID_WITCH_SPAWN);
 			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 			return PLAYERCLASS_WITCH;
 		}

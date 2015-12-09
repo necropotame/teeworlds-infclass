@@ -25,11 +25,13 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	
 /* INFECTION MODIFICATION START ***************************************/
 	m_Score = Server()->GetClientScore(ClientID);
+	m_NbRound = Server()->GetClientNbRound(ClientID);
 	m_ScoreRound = 0;
 	m_ScoreMode = PLAYERSCOREMODE_NORMAL;
 	m_WinAsHuman = 0;
 	m_class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
+	m_Language = LANGUAGE_EN;
 	for(int i=0; i<NB_PLAYERCLASS; i++)
 	{
 		m_knownClass[i] = false;
@@ -53,6 +55,7 @@ void CPlayer::Tick()
 		return;
 
 	Server()->SetClientScore(m_ClientID, m_Score);
+	Server()->SetClientNbRound(m_ClientID, m_NbRound);
 
 	// do latency stuff
 	{
@@ -142,21 +145,31 @@ void CPlayer::Snap(int SnappingClient)
 
 	StrToInts(&pClientInfo->m_Name0, 4, Server()->ClientName(m_ClientID));
 	
+	int SnapScoreMode = PLAYERSCOREMODE_NORMAL;
+	if(GameServer()->m_apPlayers[SnappingClient])
+	{
+		SnapScoreMode = GameServer()->m_apPlayers[SnappingClient]->GetScoreMode();
+	}
+	
 /* INFECTION MODIFICATION STRAT ***************************************/
+	int PlayerInfoScore = 0;
+	
 	if(GetTeam() == TEAM_SPECTATORS)
 	{
 		StrToInts(&pClientInfo->m_Clan0, 3, Server()->ClientClan(m_ClientID));
 	}
 	else
 	{
-		if(m_ScoreMode == PLAYERSCOREMODE_ROUNDSCORE)
+		if(SnapScoreMode == PLAYERSCOREMODE_ROUNDSCORE)
 		{
 			char aBuf[512];
 			str_format(aBuf, sizeof(aBuf), "%s%i pt", (m_ScoreRound > 0 ? "+" : ""), m_ScoreRound);
 			
 			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+			
+			PlayerInfoScore = m_ScoreRound;
 		}
-		else if(m_ScoreMode == PLAYERSCOREMODE_TIME)
+		else if(SnapScoreMode == PLAYERSCOREMODE_TIME)
 		{
 			float RoundDuration = static_cast<float>(m_HumanTime/((float)Server()->TickSpeed()))/60.0f;
 			int Minutes = static_cast<int>(RoundDuration);
@@ -165,6 +178,28 @@ void CPlayer::Snap(int SnappingClient)
 			char aBuf[512];
 			str_format(aBuf, sizeof(aBuf), "%i:%s%i min", Minutes,((Seconds < 10) ? "0" : ""), Seconds);
 			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+			
+			PlayerInfoScore = m_HumanTime/Server()->TickSpeed();
+		}
+		//~ else if(SnapScoreMode == PLAYERSCOREMODE_NBROUND)
+		//~ {
+			//~ char aBuf[512];
+			//~ str_format(aBuf, sizeof(aBuf), "%i round%s", m_NbRound, (m_NbRound >1 ? "s" : ""));
+			//~ 
+			//~ StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+			//~ 
+			//~ PlayerInfoScore = m_NbRound;
+		//~ }
+		else if(SnapScoreMode == PLAYERSCOREMODE_SCOREPERROUND)
+		{
+			float ScorePerRound = static_cast<float>(m_Score)/static_cast<float>(m_NbRound);
+			
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "%.2f pt/rnd", ScorePerRound);
+			
+			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
+			
+			PlayerInfoScore = static_cast<int>(ScorePerRound*10);
 		}
 		else
 		{
@@ -213,6 +248,8 @@ void CPlayer::Snap(int SnappingClient)
 				default:
 					StrToInts(&pClientInfo->m_Clan0, 3, "");
 			}
+			
+			PlayerInfoScore = m_Score;
 		}
 	}
 	
@@ -243,18 +280,7 @@ void CPlayer::Snap(int SnappingClient)
 	pPlayerInfo->m_Local = 0;
 	pPlayerInfo->m_ClientID = m_ClientID;
 /* INFECTION MODIFICATION START ***************************************/
-	switch(m_ScoreMode)
-	{
-		case PLAYERSCOREMODE_NORMAL:
-			pPlayerInfo->m_Score = m_Score;
-			break;
-		case PLAYERSCOREMODE_ROUNDSCORE:
-			pPlayerInfo->m_Score = m_ScoreRound;
-			break;
-		case PLAYERSCOREMODE_TIME:
-			pPlayerInfo->m_Score = m_HumanTime/Server()->TickSpeed();
-			break;
-	}
+	pPlayerInfo->m_Score = PlayerInfoScore;
 /* INFECTION MODIFICATION END *****************************************/
 	pPlayerInfo->m_Team = m_Team;
 
@@ -527,8 +553,28 @@ void CPlayer::IncreaseScore(int Points)
 	m_ScoreRound += Points;
 }
 
+void CPlayer::IncreaseNbRound()
+{
+	m_NbRound++;
+}
+
+int CPlayer::GetScoreMode()
+{
+	return m_ScoreMode;
+}
+
 void CPlayer::SetScoreMode(int Mode)
 {
 	m_ScoreMode = Mode;
+}
+
+int CPlayer::GetLanguage()
+{
+	return m_Language;
+}
+
+void CPlayer::SetLanguage(int Language)
+{
+	m_Language = Language;
 }
 /* INFECTION MODIFICATION END *****************************************/

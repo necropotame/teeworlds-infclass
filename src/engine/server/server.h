@@ -130,9 +130,12 @@ public:
 /* INFECTION MODIFICATION START ***************************************/
 		void Reset(bool ResetScore=true);
 		
+		int m_NbRound;
+		
 		int m_CustomSkin;
 		int m_AlwaysRandom;
 		int m_DefaultScoreMode;
+		int m_Language;
 /* INFECTION MODIFICATION END *****************************************/
 	};
 
@@ -264,6 +267,9 @@ public:
 	virtual int GetClientDefaultScoreMode(int ClientID);
 	virtual void SetClientDefaultScoreMode(int ClientID, int Value);
 	
+	virtual int GetClientLanguage(int ClientID);
+	virtual void SetClientLanguage(int ClientID, int Value);
+	
 	virtual int GetFireDelay(int WID);
 	virtual void SetFireDelay(int WID, int Time);
 	
@@ -275,6 +281,9 @@ public:
 	
 	virtual int GetClassAvailability(int CID);
 	virtual void SetClassAvailability(int CID, int n);
+	
+	virtual int GetClientNbRound(int ClientID);
+	virtual void SetClientNbRound(int ClientID, int Score);
 	
 	virtual int GetClientScore(int ClientID);
 	

@@ -9,6 +9,7 @@
 #include <game/version.h>
 #include <game/collision.h>
 #include <game/gamecore.h>
+#include <iostream>
 #include "gamemodes/dm.h"
 #include "gamemodes/tdm.h"
 #include "gamemodes/ctf.h"
@@ -19,6 +20,226 @@ enum
 	RESET,
 	NO_RESET
 };
+
+/* INFECTION MODIFICATION START ***************************************/
+const char* CGameContext::ms_TextEn[] = {
+	"You are frozen for %i seconds",
+	"You have infected %s, +3 points",
+	"You have killed a witch, +5 points",
+	"You have survived, +5 points",
+	"You have infected %s using portals, -5 points",
+	"You have killed %s using portals, -5 points",
+	"%s has been infected",
+	"The witch is coming !",
+	"The witch is dead",
+	"The undead is coming !",
+	"The undead is finally dead",
+	
+	"Infected won the round in %i:%s%i minutes",
+	"One human won the round",
+	"%i humans won the round",
+	
+	"Choose your class by clicking on the weapon, or wait for random selection",
+	"Random choice",
+	
+	"Engineer",
+	"Soldier",
+	"Scientist",
+	"Medic",
+	"Ninja",
+	"Smoker",
+	"Boomer",
+	"Hunter",
+	"Undead",
+	"Witch",
+	
+	"You are a human: Engineer",
+	"You are a human: Soldier",
+	"You are a human: Scientist",
+	"You are a human: Medic",
+	"You are a human: Ninja",
+	"You are an infected: Smoker",
+	"You are an infected: Boomer",
+	"You are an infected: Hunter",
+	"You are an infected: Undead",
+	"You are an infected: Witch",
+	
+	"Type \"/help engineer\" for more information about your class",
+	"Type \"/help soldier\" for more information about your class",
+	"Type \"/help scientist\" for more information about your class",
+	"Type \"/help medic\" for more information about your class",
+	"Type \"/help ninja\" for more information about your class",
+	"Type \"/help smoker\" for more information about your class",
+	"Type \"/help boomer\" for more information about your class",
+	"Type \"/help hunter\" for more information about your class",
+	"Type \"/help undead\" for more information about your class",
+	"Type \"/help witch\" for more information about your class",
+	
+	"List of commands\n\n"
+		"/info: Information about this mod\n\n"
+		"/help: Rules of the game\n\n"
+		"/help <class>: Information about a particular class\n\n"
+		"/language <lang>: Change the language of the mod\n\n"
+		"/customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans\n\n"
+		"/alwaysrandom <0|1>: Choose automatically random class when the round start\n\n"
+		"Press <F3> or <F4> while holding <TAB> to switch the score system",
+	"InfectionClass, by necropotame (version 0.5)\n"
+		"Based on Infection mod by Gravity\n"
+		"Thanks to guenstig werben, Defeater, Orangus and BlinderHeld",
+	"Rules of the game:\n\n"
+		"InfectionClass is a team game between humans and infected.\n\n"
+		"All players start as human.\n"
+		"10 seconds later, two players become infected.\n\n"
+		"The goal for humans is to survive until the army clean the map.\n\n"
+		"The goal for infected is to infect all humans.",
+	"Engineer:\n\n"
+		"The Engineer can build walls with his hammer to block infected.\n"
+		"When an infected touch the wall, he dies.\n\n"
+		"The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.",
+	"Soldier:\n\n"
+		"The Soldier can pose floating bombs with his hammer.\n"
+		"Each bomb can explode three times.\n"
+		"Use the hammer to place the bomb and explode it multiple times.\n\n"
+		"Bombs are limited to one per player at the same time.",
+	"Scientist:\n\n",
+	"Medic:\n\n"
+		"The Medic can protect humans with his hammer by giving them armor.\n\n"
+		"He has also a powerful shotgun that can pullback infected.\n",
+	"Ninja:\n\n"
+		"The Ninja can throw flash grenades that can freeze infected during three seconds.\n\n"
+		"His hammer is replaced by a katana, allowing him to jump two times before touching the ground.\n",
+	"Smoker :\n\n"
+		"The Smoker can infect humans and heal infected with his hammer.\n\n"
+		"He can also inflict 4 damage points per seconds by hooking humans.",
+	"Boomer :\n\n"
+		"The Boomer explodes when he attack.\n"
+		"All humans affected by the explosion become infected.\n\n"
+		"He can also inflict 1 damage point per seconds by hooking humans.",
+	"Hunter :\n\n"
+		"The Hunter can infect humans and heal infected with his hammer.\n\n"
+		"He can jump two times in air\n\n"
+		"He can also inflict 1 damage point per seconds by hooking humans.",
+	"Undead :\n\n"
+		"The Undead can infect humans and heal infected with his hammer.\n\n"
+		"Instead of dying, he freezes during 10 seconds.\n"
+		"If an infected heals him, the freeze effect disappear.\n\n"
+		"He can also inflict 1 damage point per seconds by hooking humans.",
+	"Witch :\n\n"
+		"The Witch can infect humans and heal infected with his hammer.\n\n"
+		"When an infected dies, he may re-spawn near her.\n"
+		"If the Witch dies, she disappear and is replaced by an another class of infected.\n\n"
+		"She can also inflict 1 damage point per seconds by hooking humans."
+};
+
+const char* CGameContext::ms_TextFr[] = {
+	"Vous êtes gelées pour %i secondes",
+	"Vous avez infecté %s, +3 points",
+	"Vous avez tué une sorcière, +5 points",
+	"Vous avez survécu, +5 points",
+	"Vous avez infecté %s à l'aide d'un portail, -5 points",
+	"Vous avez tué %s à l'aide d'un portail, -5 points",
+	"%s a été infecté(e)",
+	"La Witch arrive !",
+	"La Witch est morte",
+	"Le Undead arrive !",
+	"Le Undead est finalement mort",
+	
+	"Les infectés ont gagné la manche en %i:%s%i minutes",
+	"Un humain a gagné la manche",
+	"%i humains ont gagné la manche",
+	
+	"Choisissez votre classe en cliquant sur l'arme correspondante, ou attendez le choix aléatoire",
+	"Choix aléatoire",
+	
+	"Engineer",
+	"Soldier",
+	"Scientist",
+	"Medic",
+	"Ninja",
+	"Smoker",
+	"Boomer",
+	"Hunter",
+	"Undead",
+	"Witch",
+	
+	"Vous êtes un humain: Engineer",
+	"Vous êtes un humain: Soldier",
+	"Vous êtes un humain: Scientist",
+	"Vous êtes un humain: Medic",
+	"Vous êtes un humain: Ninja",
+	"Vous êtes un humain: Smoker",
+	"Vous êtes un humain: Boomer",
+	"Vous êtes un humain: Hunter",
+	"Vous êtes un humain: Undead",
+	"Vous êtes un humain: Witch",
+	
+	"Tapez \"/help engineer\" pour plus d'information sur votre classe",
+	"Tapez \"/help soldier\" pour plus d'information sur votre classe",
+	"Tapez \"/help scientist\" pour plus d'information sur votre classe",
+	"Tapez \"/help medic\" pour plus d'information sur votre classe",
+	"Tapez \"/help ninja\" pour plus d'information sur votre classe",
+	"Tapez \"/help smoker\" pour plus d'information sur votre classe",
+	"Tapez \"/help boomer\" pour plus d'information sur votre classe",
+	"Tapez \"/help hunter\" pour plus d'information sur votre classe",
+	"Tapez \"/help undead\" pour plus d'information sur votre classe",
+	"Tapez \"/help witch\" pour plus d'information sur votre classe",
+	
+	"Liste des commandes\n\n"
+		"/info : Informations à propos de ce mod\n\n"
+		"/help : Règles du jeu\n\n"
+		"/help <class> : Informations par rapport à une classe particulière\n\n"
+		"/language <lang> : Change la langue du mod\n\n"
+		"/customskin <none|me|all> : Montre le skin du joueur plutôt que celui basé sur la classe pour, respectivement personne, soi-même ou tout les humains\n\n"
+		"/alwaysrandom <0|1> : Choisir automatiquement le choix aléatoire en début de manche\n\n"
+		"Appuyer sur <F3> or <F4> en maintenant <TAB> permet de changer the système de score",
+	"InfectionClass, par necropotame (version 0.5)\n"
+		"Basé sur le mod Infection, par Gravity\n"
+		"Remerciements à guenstig werben, Defeater, Orangus et BlinderHeld",
+	"Règles du jeu :\n\n"
+		"InfectionClass est un jeu d'équipe entre humains et infectés.\n\n"
+		"Tous les joueurs commencent comme humains.\n"
+		"10 secondes plus tard, deux joueurs deviennent infectés.\n\n"
+		"Le but des humains est de survivre jusqu'à ce que l'armée nettoie la zone.\n\n"
+		"Le but des infectés est d'infecter tous les humains.",
+	"Engineer :\n\n"
+		"L'Engineer peut créer avec son marteau des barrières pour bloquer les infectés.\n"
+		"Lorsque qu'un infecté touche la barrière, il meurt.\n\n"
+		"La durée de vie d'une barrière est de 30 secondes, et il ne peut y avoir qu'une barrière par joueur au même moment.",
+	"Soldier :\n\n"
+		"Le Soldier peut créer avec son marteau des bombes flottantes.\n"
+		"Chaque bombe peut exploser trois fois.\n"
+		"Utiliser le marteau pour placer une bombe et la faire exploser plusieurs fois.\n\n"
+		"Il ne peut y avoir qu'une barrière par joueur au même moment.",
+	"Scientist :\n\n",
+	"Medic :\n\n"
+		"Le Medic peut protéger les humains à l'aide de son marteau en leur donnant une armure.\n\n"
+		"Il dispose aussi d'un puissant fusil à pompe qui peut repousser les infectés.",
+	"Ninja :\n\n"
+		"Le Ninja peut lancer des grenades flash qui immobilisent les infectés pendant trois secondes.\n\n"
+		"Son marteau est remplacé par un katana qui lui permet de sauter deux fois avant de toucher terre.",
+	"Smoker :\n\n"
+		"Le Smoker peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
+		"Il peut aussi infliger 4 points de dégât par seconde quand il agrippe un humain.",
+	"Boomer :\n\n"
+		"Le Boomer explose quand il attaque.\n"
+		"Tous les humains touchés par l'explosion sont infectés\n\n"
+		"Il peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.",
+	"Hunter :\n\n"
+		"Le Hunter peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
+		"Il est capable de sauter deux fois dans l'air\n\n"
+		"Il peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.",
+	"Undead :\n\n"
+		"Le Undead peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
+		"À la place de mourir, il est gelé pendant 10 secondes.\n"
+		"Si un infecté le soigne, l'effet de gèle est enlevé.\n\n"
+		"Il peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.",
+	"Witch :\n\n"
+		"La Witch peut infecter les humains et soigner les infectés à l'aide de son marteau.\n\n"
+		"Quand un infecté meurt, il a une chance de ré-apparaître à coté d'elle.\n"
+		"Si la Witch meurt, elle disparaît et est remplacée par une autre classe d'infecté.\n\n"
+		"Elle peut aussi infliger 1 point de dégât par seconde quand elle agrippe un humain."
+};
+/* INFECTION MODIFICATION END *****************************************/
 
 void CGameContext::Construct(int Resetting)
 {
@@ -249,6 +470,111 @@ void CGameContext::SendChatTarget(int To, const char *pText)
 	Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, To);
 }
 
+/* INFECTION MODIFICATION START ***************************************/
+void CGameContext::SendChatTarget_Language(int To, int TextId)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	CNetMsg_Sv_Chat Msg;
+	Msg.m_Team = 0;
+	Msg.m_ClientID = -1;
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			switch(m_apPlayers[i]->GetLanguage())
+			{
+				case LANGUAGE_FR:
+					Msg.m_pMessage = ms_TextFr[TextId];
+					break;
+				default:
+					Msg.m_pMessage = ms_TextEn[TextId];
+					
+			}
+			
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+	}
+}
+
+void CGameContext::SendMODT_Language(int To, int TextId)
+{
+	if(m_apPlayers[To])
+	{
+		CNetMsg_Sv_Motd Msg;
+		
+		switch(m_apPlayers[To]->GetLanguage())
+		{
+			case LANGUAGE_FR:
+				Msg.m_pMessage = ms_TextFr[TextId];
+				break;
+			default:
+				Msg.m_pMessage = ms_TextEn[TextId];
+				
+		}
+		
+		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, To);
+	}
+}
+
+void CGameContext::SendBroadcast_Language(int To, int TextId)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	CNetMsg_Sv_Broadcast Msg;
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			
+			switch(m_apPlayers[i]->GetLanguage())
+			{
+				case LANGUAGE_FR:
+					Msg.m_pMessage = ms_TextFr[TextId];
+					break;
+				default:
+					Msg.m_pMessage = ms_TextEn[TextId];
+					
+			}
+			
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+	}
+}
+
+void CGameContext::SendBroadcast_Language_i(int To, int TextId, int Value)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	CNetMsg_Sv_Broadcast Msg;
+	char aBuf[512];
+	Msg.m_pMessage = aBuf;
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			
+			switch(m_apPlayers[i]->GetLanguage())
+			{
+				case LANGUAGE_FR:
+					str_format(aBuf, sizeof(aBuf), ms_TextFr[TextId], Value);
+					break;
+				default:
+					str_format(aBuf, sizeof(aBuf), ms_TextEn[TextId], Value);					
+			}
+			
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+	}
+}
+
+/* INFECTION MODIFICATION END *****************************************/
 
 void CGameContext::SendChat(int ChatterClientID, int Team, const char *pText)
 {
@@ -373,6 +699,7 @@ void CGameContext::SendVoteSet(int ClientID)
 
 void CGameContext::SendVoteStatus(int ClientID, int Total, int Yes, int No)
 {
+	std::cout << "SendVoteStatus" << std::endl;
 	CNetMsg_Sv_VoteStatus Msg = {0};
 	Msg.m_Total = Total;
 	Msg.m_Yes = Yes;
@@ -380,7 +707,6 @@ void CGameContext::SendVoteStatus(int ClientID, int Total, int Yes, int No)
 	Msg.m_Pass = Total - (Yes+No);
 
 	Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
-
 }
 
 void CGameContext::AbortVoteKickOnDisconnect(int ClientID)
@@ -537,7 +863,6 @@ void CGameContext::OnTick()
 		}
 	}
 
-
 #ifdef CONF_DEBUG
 	if(g_Config.m_DbgDummies)
 	{
@@ -596,6 +921,13 @@ void CGameContext::OnClientConnected(int ClientID)
 			return;
 	}
 #endif
+
+/* INFECTION MODIFICATION START ***************************************/
+	if(!m_pController->IsGameOver())
+	{
+		m_apPlayers[ClientID]->IncreaseNbRound();
+	}
+/* INFECTION MODIFICATION END *****************************************/	
 
 	// send active vote
 	if(m_VoteCloseTime)
@@ -701,197 +1033,84 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					(str_comp_nocase(pMsg->m_pMessage,"/info") == 0)
 				)
 				{
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "InfectionClass, by necropotame (version 0.4)";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "Based on the mod Infection by Gravity";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "Thanks to guenstig werben, Defeater and Orangus";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
+					SendMODT_Language(ClientID, TEXTID_CMD_INFO);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\cmdlist") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/cmdlist") == 0)
 				)
 				{
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "List of commands";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/info : Information about this mod";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/help : Rules of the game";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/help witch : Informations about the witch";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/help undead : Informations about the undead";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/help class : Informations about how to choose your class";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/class <engineer|soldier|medic|scientist|ninja> : Choose your class (only when the round start)";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/customskin <none|me|all> : Show player skin instead of class-based skin for, respectively nobody, me as human or all human";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/alwaysrandom <0|1> : Choose automatically random class when the round start.";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "/scoremode <default|roundscore|time> : Sorting criteria for scoreboard.";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
+					SendMODT_Language(ClientID, TEXTID_CMD_CMDLIST);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help") == 0)
 				)
 				{
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "Humans start by choosing their class";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "Humans can build structures using the hammer";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "When a human takes damage from a zombie, he become infected";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP);
 				}
 				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\help witch") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/help witch") == 0)
+					(str_comp_nocase(pMsg->m_pMessage,"\\help engineer") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help engineer") == 0)
 				)
 				{
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "The witch acts as a moving infected spawner";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "Dead infected has automatically a chance to spawn nearby her";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "When dead, the witch disappears";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_ENGINEER);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help soldier") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help soldier") == 0)
+				)
+				{
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_SOLDIER);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help ninja") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help ninja") == 0)
+				)
+				{
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_NINJA);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help medic") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help medic") == 0)
+				)
+				{
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_MEDIC);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help smoker") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help smoker") == 0)
+				)
+				{
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_SMOKER);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help boomer") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help boomer") == 0)
+				)
+				{
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_BOOMER);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help hunter") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help hunter") == 0)
+				)
+				{
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_HUNTER);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help undead") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help undead") == 0)
 				)
 				{
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "The undead freezes 10 seconds instead of dying";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "When dead by suicide, the undead disappears";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_UNDEAD);
 				}
 				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\help class") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/help class") == 0)
+					(str_comp_nocase(pMsg->m_pMessage,"\\help witch") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help witch") == 0)
 				)
 				{
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "As human, you can choose your class by clicking on the floating weapons around you, but only at the beginning of the round";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
-					{
-						CNetMsg_Sv_Chat Msg;
-						Msg.m_Team = 0;
-						Msg.m_ClientID = -1;
-						Msg.m_pMessage = "As infected, a random class is attributed to you and you can't change it";
-						Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NORECORD, ClientID);
-					}
+					SendMODT_Language(ClientID, TEXTID_CMD_HELP_WITCH);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\customskin all") == 0) ||
@@ -982,55 +1201,77 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					}
 				}
 				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\class engineer") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/class engineer") == 0)
+					(str_comp_nocase(pMsg->m_pMessage,"\\language en") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/language en") == 0) 
 				)
 				{
-					if(m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					Server()->SetClientLanguage(ClientID, LANGUAGE_EN);
+					if(m_apPlayers[ClientID])
 					{
-						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ENGINEER);
+						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_EN);
 					}
 				}
 				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\class soldier") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/class soldier") == 0)
+					(str_comp_nocase(pMsg->m_pMessage,"\\language fr") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/language fr") == 0) 
 				)
 				{
-					if(m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					Server()->SetClientLanguage(ClientID, LANGUAGE_FR);
+					if(m_apPlayers[ClientID])
 					{
-						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SOLDIER);
+						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_FR);
 					}
 				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\class medic") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/class medic") == 0)
-				)
-				{
-					if(m_pController->IsChoosableClass(PLAYERCLASS_MEDIC) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
-					{
-						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_MEDIC);
-					}
-				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\class scientist") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/class scientist") == 0)
-				)
-				{
-					if(m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
-					{
-						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SCIENTIST);
-					}
-				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\class ninja") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/class ninja") == 0)
-				)
-				{
-					if(m_pController->IsChoosableClass(PLAYERCLASS_NINJA) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
-					{
-						m_apPlayers[ClientID]->SetClass(PLAYERCLASS_NINJA);
-					}
-				}
+				//~ else if(
+					//~ (str_comp_nocase(pMsg->m_pMessage,"\\class engineer") == 0) ||
+					//~ (str_comp_nocase(pMsg->m_pMessage,"/class engineer") == 0)
+				//~ )
+				//~ {
+					//~ if(m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					//~ {
+						//~ m_apPlayers[ClientID]->SetClass(PLAYERCLASS_ENGINEER);
+					//~ }
+				//~ }
+				//~ else if(
+					//~ (str_comp_nocase(pMsg->m_pMessage,"\\class soldier") == 0) ||
+					//~ (str_comp_nocase(pMsg->m_pMessage,"/class soldier") == 0)
+				//~ )
+				//~ {
+					//~ if(m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					//~ {
+						//~ m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SOLDIER);
+					//~ }
+				//~ }
+				//~ else if(
+					//~ (str_comp_nocase(pMsg->m_pMessage,"\\class medic") == 0) ||
+					//~ (str_comp_nocase(pMsg->m_pMessage,"/class medic") == 0)
+				//~ )
+				//~ {
+					//~ if(m_pController->IsChoosableClass(PLAYERCLASS_MEDIC) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					//~ {
+						//~ m_apPlayers[ClientID]->SetClass(PLAYERCLASS_MEDIC);
+					//~ }
+				//~ }
+				//~ else if(
+					//~ (str_comp_nocase(pMsg->m_pMessage,"\\class scientist") == 0) ||
+					//~ (str_comp_nocase(pMsg->m_pMessage,"/class scientist") == 0)
+				//~ )
+				//~ {
+					//~ if(m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					//~ {
+						//~ m_apPlayers[ClientID]->SetClass(PLAYERCLASS_SCIENTIST);
+					//~ }
+				//~ }
+				//~ else if(
+					//~ (str_comp_nocase(pMsg->m_pMessage,"\\class ninja") == 0) ||
+					//~ (str_comp_nocase(pMsg->m_pMessage,"/class ninja") == 0)
+				//~ )
+				//~ {
+					//~ if(m_pController->IsChoosableClass(PLAYERCLASS_NINJA) && m_apPlayers[ClientID] && (m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_NONE))
+					//~ {
+						//~ m_apPlayers[ClientID]->SetClass(PLAYERCLASS_NINJA);
+					//~ }
+				//~ }
 				else
 				{
 					CNetMsg_Sv_Chat Msg;
@@ -1195,10 +1436,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 		}
 		else if(MsgID == NETMSGTYPE_CL_VOTE)
 		{
-			if(!m_VoteCloseTime)
-				return;
-
-			if(pPlayer->m_Vote == 0)
+			if(m_VoteCloseTime && pPlayer->m_Vote == 0)
 			{
 				CNetMsg_Cl_Vote *pMsg = (CNetMsg_Cl_Vote *)pRawMsg;
 				if(!pMsg->m_Vote)
@@ -1207,6 +1445,22 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				pPlayer->m_Vote = pMsg->m_Vote;
 				pPlayer->m_VotePos = ++m_VotePos;
 				m_VoteUpdate = true;
+			}
+			else if(m_apPlayers[ClientID] && m_apPlayers[ClientID]->m_PlayerFlags&PLAYERFLAG_SCOREBOARD)
+			{
+				CNetMsg_Cl_Vote *pMsg = (CNetMsg_Cl_Vote *)pRawMsg;
+				if(!pMsg->m_Vote)
+					return;
+				
+				int ScoreMode = pPlayer->GetScoreMode();
+				if(pMsg->m_Vote < 0) ScoreMode++;
+				else ScoreMode--;
+				
+				if(ScoreMode < 0) ScoreMode = NB_PLAYERSCOREMODE-1;
+				if(ScoreMode >= NB_PLAYERSCOREMODE) ScoreMode = 0;
+				
+				Server()->SetClientDefaultScoreMode(ClientID, ScoreMode);
+				m_apPlayers[ClientID]->SetScoreMode(ScoreMode);
 			}
 		}
 		else if (MsgID == NETMSGTYPE_CL_SETTEAM && !m_World.m_Paused)
@@ -1357,6 +1611,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			//~ pPlayer->m_TeeInfos.m_ColorBody = pMsg->m_ColorBody;
 			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
 			m_pController->OnPlayerInfoChange(pPlayer);
+			
+			switch(pMsg->m_Country)
+			{
+				case 250: //France
+					SendChatTarget(ClientID, "Tapez \"language fr\" pour passer la langue du mod en français.");
+					break;
+			}
 /* INFECTION MODIFICATION END *****************************************/
 
 			// send vote options
