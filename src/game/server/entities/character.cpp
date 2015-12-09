@@ -805,9 +805,18 @@ void CCharacter::Tick()
 	}
 
 	--m_FrozenTime;
-	if(m_IsFrozen && m_FrozenTime <= 0)
+	if(m_IsFrozen)
 	{
-		Unfreeze();
+		if(m_FrozenTime <= 0)
+		{
+			Unfreeze();
+			GameServer()->SendBroadcast("", m_pPlayer->GetCID());
+		}
+		else
+		{
+			int FreezeSec = 1+(m_FrozenTime/Server()->TickSpeed());
+			GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), TEXTID_YOU_FROZEN, FreezeSec);
+		}
 	}
 	
 	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_Ninja.m_CurrentMoveTime <= 0)
@@ -1583,8 +1592,6 @@ void CCharacter::Freeze(float Time, int Player, int Reason)
 	m_IsFrozen = true;
 	m_FrozenTime = Server()->TickSpeed()*Time;
 	m_FreezeReason = Reason;
-	
-	GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), TEXTID_YOU_FROZEN, static_cast<int>(Time));
 	
 	m_LastFreezer = Player;
 }
