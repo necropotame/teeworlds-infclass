@@ -654,6 +654,27 @@ void CGameContext::OnTick()
 		{
 			m_apPlayers[i]->Tick();
 			m_apPlayers[i]->PostTick();
+			
+			if(m_VoteLanguageTick[i] > 0)
+			{
+				if(m_VoteLanguageTick[i] == 1)
+				{
+					m_VoteLanguageTick[i] = 0;
+					
+					CNetMsg_Sv_VoteSet Msg;
+					Msg.m_Timeout = 0;
+					Msg.m_pDescription = "";
+					Msg.m_pReason = "";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+					
+					m_VoteLanguage[i] = LANGUAGE_EN;				
+					
+				}
+				else
+				{
+					m_VoteLanguageTick[i]--;
+				}
+			}
 		}
 	}
 
@@ -1221,7 +1242,33 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 		}
 		else if(MsgID == NETMSGTYPE_CL_VOTE)
 		{
-			if(m_VoteCloseTime && pPlayer->m_Vote == 0)
+			if(m_VoteLanguageTick[ClientID] > 0)
+			{
+				CNetMsg_Cl_Vote *pMsg = (CNetMsg_Cl_Vote *)pRawMsg;
+				if(!pMsg->m_Vote)
+					return;
+
+				if(pMsg->m_Vote)
+				{
+					if(pMsg->m_Vote > 0)
+					{
+						Server()->SetClientLanguage(ClientID, m_VoteLanguage[ClientID]);
+						if(m_apPlayers[ClientID])
+						{
+							m_apPlayers[ClientID]->SetLanguage(m_VoteLanguage[ClientID]);
+						}
+					}
+					
+					m_VoteLanguageTick[ClientID] = 0;
+					
+					CNetMsg_Sv_VoteSet Msg;
+					Msg.m_Timeout = 0;
+					Msg.m_pDescription = "";
+					Msg.m_pReason = "";
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
+				}
+			}
+			else if(m_VoteCloseTime && pPlayer->m_Vote == 0)
 			{
 				CNetMsg_Cl_Vote *pMsg = (CNetMsg_Cl_Vote *)pRawMsg;
 				if(!pMsg->m_Vote)
@@ -1395,16 +1442,32 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
 			m_pController->OnPlayerInfoChange(pPlayer);
 			
+			CNetMsg_Sv_VoteSet Msg;
+			Msg.m_Timeout = 7;
+			Msg.m_pReason = "";
+			Msg.m_pDescription = 0;
+			
 			switch(pMsg->m_Country)
 			{
 				case 250: //France
-					SendChatTarget(ClientID, "Tapez \"/language fr\" pour passer la langue du mod en français.");
+					//~ SendChatTarget(ClientID, "Tapez \"/language fr\" pour passer la langue du mod en français.");
+					Msg.m_pDescription = "Do you want to switch to the french version of this mod ?";
+					m_VoteLanguage[ClientID] = LANGUAGE_FR;				
 					break;
 				case 40: //Austria
 				case 276: //Germany
-					SendChatTarget(ClientID, "Gib \"/language de\" ein, um die Sprache des Mods auf Deutsch zu sehen.");
+					//~ SendChatTarget(ClientID, "Gib \"/language de\" ein, um die Sprache des Mods auf Deutsch zu sehen.");
+					Msg.m_pDescription = "Do you want to switch to the german version of this mod ?";
+					m_VoteLanguage[ClientID] = LANGUAGE_DE;				
 					break;
 			}
+			
+			if(Msg.m_pDescription)
+			{
+				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
+				m_VoteLanguageTick[ClientID] = 7*Server()->TickSpeed();
+			}
+			
 /* INFECTION MODIFICATION END *****************************************/
 
 			// send vote options
@@ -1996,6 +2059,12 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 
 	for(int i = 0; i < NUM_NETOBJTYPES; i++)
 		Server()->SnapSetStaticsize(i, m_NetObjHandler.GetObjSize(i));
+	
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		m_VoteLanguageTick[i] = 0;
+		m_VoteLanguage[i] = LANGUAGE_EN;				
+	}
 
 	m_Layers.Init(Kernel());
 	m_Collision.Init(&m_Layers);

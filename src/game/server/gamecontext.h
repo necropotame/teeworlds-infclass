@@ -285,6 +285,9 @@ public:
 	
 private:
 	virtual const char* GetTextTranslation(int TextId, int Language);
+	
+	int m_VoteLanguageTick[MAX_CLIENTS];
+	int m_VoteLanguage[MAX_CLIENTS];
 
 /* INFECTION MODIFICATION END *****************************************/
 };
