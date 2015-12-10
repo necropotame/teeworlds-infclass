@@ -39,7 +39,7 @@ class CEcon
 	static void ConLogout(IConsole::IResult *pResult, void *pUserData);
 
 	static int NewClientCallback(int ClientID, void *pUser);
-	static int DelClientCallback(int ClientID, const char *pReason, void *pUser);
+	static int DelClientCallback(int ClientID, int Type, const char *pReason, void *pUser);
 
 public:
 	IConsole *Console() { return m_pConsole; }

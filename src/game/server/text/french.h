@@ -1,8 +1,16 @@
 	"%s est arrivé(e) et a rejoint la partie",
-	"%s a changé son nom pour %s",
+	"%s a rejoint la partie",
+	"%s a rejoint les spectateurs",
 	"%s a quitté la partie",
+	"%s a quitté la partie (%s)",
 	"%s a été viré(e) (%s)",
 	"%s a été banni(e) (%s)",
+	"%s a changé son nom pour %s",
+	
+	"Commande inconnue",
+	"Une classe aléatoire vous sera automatiquement attribuée en début de manche",
+	"Le sélecteur de classe sera affiché en début de manche",
+	"Vous ne pouvez-pas rejoindre les spectateurs pour le moment",
 	
 	"Vous êtes gelées pour %i secondes",
 	"Vous avez infecté %s, +3 points",
@@ -66,7 +74,7 @@
 		"Appuyer sur <F3> or <F4> en maintenant <TAB> permet de changer the système de score",
 	"InfectionClass, par necropotame (version 0.5)\n"
 		"Basé sur le mod Infection, par Gravity\n"
-		"Remerciements à guenstig werben, Defeater, Orangus, BlinderHeld et Warpaint",
+		"Remerciements à %s",
 	"Règles du jeu :\n\n"
 		"InfectionClass est un jeu d'équipe entre humains et infectés.\n\n"
 		"Tous les joueurs commencent comme humains.\n"

@@ -78,8 +78,19 @@ enum
 	NET_ENUM_TERMINATOR
 };
 
+enum
+{
+	CLIENTDROPTYPE_ERROR = 0,
+	CLIENTDROPTYPE_LOGOUT,
+	CLIENTDROPTYPE_BAN,
+	CLIENTDROPTYPE_KICK,
+	CLIENTDROPTYPE_WRONG_VERSION,
+	CLIENTDROPTYPE_WRONG_PASSWORD,
+	CLIENTDROPTYPE_SHUTDOWN,
+	CLIENTDROPTYPE_STRESSING
+};
 
-typedef int (*NETFUNC_DELCLIENT)(int ClientID, const char* pReason, void *pUser);
+typedef int (*NETFUNC_DELCLIENT)(int ClientID, int Type, const char* pReason, void *pUser);
 typedef int (*NETFUNC_NEWCLIENT)(int ClientID, void *pUser);
 
 struct CNetChunk
@@ -275,7 +286,7 @@ public:
 	int Update();
 
 	//
-	int Drop(int ClientID, const char *pReason);
+	int Drop(int ClientID, int Type, const char *pReason);
 
 	// status requests
 	const NETADDR *ClientAddr(int ClientID) const { return m_aSlots[ClientID].m_Connection.PeerAddress(); }
@@ -319,7 +330,7 @@ public:
 
 	//
 	int AcceptClient(NETSOCKET Socket, const NETADDR *pAddr);
-	int Drop(int ClientID, const char *pReason);
+	int Drop(int ClientID, int Type, const char *pReason);
 
 	// status requests
 	const NETADDR *ClientAddr(int ClientID) const { return m_aSlots[ClientID].m_Connection.PeerAddress(); }

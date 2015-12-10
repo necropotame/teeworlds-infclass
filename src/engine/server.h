@@ -167,7 +167,7 @@ public:
 
 	virtual void OnClientConnected(int ClientID) = 0;
 	virtual void OnClientEnter(int ClientID) = 0;
-	virtual void OnClientDrop(int ClientID, const char *pReason) = 0;
+	virtual void OnClientDrop(int ClientID, int Type, const char *pReason) = 0;
 	virtual void OnClientDirectInput(int ClientID, void *pInput) = 0;
 	virtual void OnClientPredictedInput(int ClientID, void *pInput) = 0;
 
@@ -183,9 +183,11 @@ public:
 	virtual void SendBroadcast_Language_i(int To, int TextId, int Value) = 0;
 	virtual void SendChatTarget_Language(int To, int TextId) = 0;
 	virtual void SendChatTarget_Language_s(int To, int TextId, const char* Text) = 0;
+	virtual void SendChatTarget_Language_ss(int To, int TextId, const char* Text, const char* Text2) = 0;
 	virtual void SendChatTarget_Language_i(int To, int TextId, int Value) = 0;
 	virtual void SendChatTarget_Language_ii(int To, int TextId, int Value, int Value2) = 0;
 	virtual void SendMODT_Language(int To, int TextId) = 0;
+	virtual void SendMODT_Language_s(int To, int TextId, const char* Text) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

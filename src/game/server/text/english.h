@@ -1,8 +1,16 @@
 	"%s entered and joined the game",
-	"%s changed his/her name to %s",
-	"%s left the game",
+	"%s joined the game",
+	"%s joined the spectators",
+	"%s has left the game",
+	"%s has left the game (%s)",
 	"%s has been kicked (%s)",
 	"%s has been banned (%s)",
+	"%s changed his/her name to %s",
+	
+	"Command unknown",
+	"A random class will be automatically attributed to you when rounds start",
+	"The class selector will be displayed when rounds start",
+	"You can't join the spectators right now",
 	
 	"You are frozen for %i seconds",
 	"You have infected %s, +3 points",
@@ -66,7 +74,7 @@
 		"Press <F3> or <F4> while holding <TAB> to switch the score system",
 	"InfectionClass, by necropotame (version 0.5)\n"
 		"Based on Infection mod by Gravity\n"
-		"Thanks to guenstig werben, Defeater, Orangus, BlinderHeld and Warpaint",
+		"Thanks to %s",
 	"Rules of the game:\n\n"
 		"InfectionClass is a team game between humans and infected.\n\n"
 		"All players start as human.\n"

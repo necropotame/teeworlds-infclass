@@ -39,6 +39,20 @@
 
 enum
 {
+	TEXTID_PLAYER_ENTER,
+	TEXTID_PLAYER_JOIN_GAME,
+	TEXTID_PLAYER_JOIN_SPEC,
+	TEXTID_PLAYER_EXIT,
+	TEXTID_PLAYER_EXIT_REASON,
+	TEXTID_PLAYER_KICK,
+	TEXTID_PLAYER_BAN,
+	TEXTID_PLAYER_CHANGE_NAME,
+	
+	TEXTID_CMD_UNKNOWN,
+	TEXTID_ALWAYSRANDOM_ON,
+	TEXTID_ALWAYSRANDOM_OFF,
+	TEXTID_YOU_SPEC_REJECT,
+	
 	TEXTID_YOU_FROZEN,
 	TEXTID_YOU_INFECTED_PLAYER,
 	TEXTID_YOU_KILLED_WITCH,
@@ -238,7 +252,7 @@ public:
 
 	virtual void OnClientConnected(int ClientID);
 	virtual void OnClientEnter(int ClientID);
-	virtual void OnClientDrop(int ClientID, const char *pReason);
+	virtual void OnClientDrop(int ClientID, int Type, const char *pReason);
 	virtual void OnClientDirectInput(int ClientID, void *pInput);
 	virtual void OnClientPredictedInput(int ClientID, void *pInput);
 
@@ -263,9 +277,11 @@ public:
 	
 	virtual void SendChatTarget_Language(int To, int TextId);
 	virtual void SendChatTarget_Language_s(int To, int TextId, const char* Text);
+	virtual void SendChatTarget_Language_ss(int To, int TextId, const char* Text, const char* Text2);
 	virtual void SendChatTarget_Language_i(int To, int TextId, int Value);
 	virtual void SendChatTarget_Language_ii(int To, int TextId, int Value, int Value2);
 	virtual void SendMODT_Language(int To, int TextId);
+	virtual void SendMODT_Language_s(int To, int TextId, const char* Text);
 	
 private:
 	virtual const char* GetTextTranslation(int TextId, int Language);

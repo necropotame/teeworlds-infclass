@@ -4,6 +4,7 @@
 #include <iostream>
 #include <engine/shared/config.h>
 #include "player.h"
+#include "engine/shared/network.h"
 
 
 MACRO_ALLOC_POOL_ID_IMPL(CPlayer, MAX_CLIENTS)
@@ -322,21 +323,28 @@ void CPlayer::Snap(int SnappingClient)
 	}
 }
 
-void CPlayer::OnDisconnect(const char *pReason)
+void CPlayer::OnDisconnect(int Type, const char *pReason)
 {
 	KillCharacter();
 
 	if(Server()->ClientIngame(m_ClientID))
 	{
-		char aBuf[512];
-		if(pReason && *pReason)
-			str_format(aBuf, sizeof(aBuf), "'%s' has left the game (%s)", Server()->ClientName(m_ClientID), pReason);
+		if(Type == CLIENTDROPTYPE_BAN)
+		{
+			GameServer()->SendChatTarget_Language_ss(-1, TEXTID_PLAYER_BAN, Server()->ClientName(m_ClientID), pReason);
+		}
+		else if(Type == CLIENTDROPTYPE_KICK)
+		{
+			GameServer()->SendChatTarget_Language_ss(-1, TEXTID_PLAYER_KICK, Server()->ClientName(m_ClientID), pReason);
+		}
+		else if(pReason && *pReason)
+		{
+			GameServer()->SendChatTarget_Language_ss(-1, TEXTID_PLAYER_EXIT_REASON, Server()->ClientName(m_ClientID), pReason);
+		}
 		else
-			str_format(aBuf, sizeof(aBuf), "'%s' has left the game", Server()->ClientName(m_ClientID));
-		GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-
-		str_format(aBuf, sizeof(aBuf), "leave player='%d:%s'", m_ClientID, Server()->ClientName(m_ClientID));
-		GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "game", aBuf);
+		{
+			GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_EXIT, Server()->ClientName(m_ClientID));
+		}
 	}
 }
 
@@ -418,8 +426,14 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 	char aBuf[512];
 	if(DoChatMsg)
 	{
-		str_format(aBuf, sizeof(aBuf), "'%s' joined the %s", Server()->ClientName(m_ClientID), GameServer()->m_pController->GetTeamName(Team));
-		GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
+		if(Team == TEAM_SPECTATORS)
+		{
+			GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_JOIN_SPEC, Server()->ClientName(m_ClientID));
+		}
+		else
+		{
+			GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_JOIN_GAME, Server()->ClientName(m_ClientID));
+		}
 	}
 
 	KillCharacter();

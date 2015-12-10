@@ -49,7 +49,7 @@ int CNetServer::Close()
 	return 0;
 }
 
-int CNetServer::Drop(int ClientID, const char *pReason)
+int CNetServer::Drop(int ClientID, int Type, const char *pReason)
 {
 	// TODO: insert lots of checks here
 	/*NETADDR Addr = ClientAddr(ClientID);
@@ -60,7 +60,7 @@ int CNetServer::Drop(int ClientID, const char *pReason)
 		pReason
 		);*/
 	if(m_pfnDelClient)
-		m_pfnDelClient(ClientID, pReason, m_UserPtr);
+		m_pfnDelClient(ClientID, Type, pReason, m_UserPtr);
 
 	m_aSlots[ClientID].m_Connection.Disconnect(pReason);
 
@@ -78,7 +78,7 @@ int CNetServer::Update()
 			if(Now - m_aSlots[i].m_Connection.ConnectTime() < time_freq() && NetBan())
 				NetBan()->BanAddr(ClientAddr(i), 60, "Stressing network");
 			else
-				Drop(i, m_aSlots[i].m_Connection.ErrorString());
+				Drop(i, CLIENTDROPTYPE_STRESSING, m_aSlots[i].m_Connection.ErrorString());
 		}
 	}
 
@@ -238,7 +238,7 @@ int CNetServer::Send(CNetChunk *pChunk)
 		}
 		else
 		{
-			Drop(pChunk->m_ClientID, "Error sending data");
+			Drop(pChunk->m_ClientID, CLIENTDROPTYPE_ERROR, "Error sending data");
 		}
 	}
 	return 0;
