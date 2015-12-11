@@ -38,6 +38,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	{
 		m_knownClass[i] = false;
 	}
+	m_WasHumanThisRound = false;
 	
 /* INFECTION MODIFICATION END *****************************************/
 }

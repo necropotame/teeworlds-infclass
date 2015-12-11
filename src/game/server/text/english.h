@@ -5,9 +5,9 @@
 	"%s has left the game (%s)",
 	"%s has been kicked (%s)",
 	"%s has been banned (%s)",
-	"%s changed his/her name to %s",
+	"%s changed their name to %s",
 	
-	"Command unknown",
+	"Unknown command",
 	"A random class will be automatically attributed to you when rounds start",
 	"The class selector will be displayed when rounds start",
 	"You can't join the spectators right now",

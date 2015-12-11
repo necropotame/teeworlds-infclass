@@ -469,6 +469,10 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	{
 		pPlayer->StartInfection();
 	}
+	else
+	{
+		pPlayer->m_WasHumanThisRound = true;
+	}
 		
 	if(pPlayer->IsInfected() && m_ExplosionStarted)
 		return false;
@@ -659,7 +663,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	//Check if undeads are enabled
 	bool undeadEnabled = true;
-	if(nbInfected < 2 || thereIsAnUndead || (Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) == 0))
+	if(nbInfected < 2 || thereIsAnUndead || (Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) == 0) || !pPlayer->m_WasHumanThisRound)
 	{
 		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_UNDEAD];
 		undeadEnabled = false;
@@ -667,7 +671,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	//Check if witches are enabled
 	bool witchEnabled = true;
-	if(nbInfected < 2 || thereIsAWitch || (Server()->GetClassAvailability(PLAYERCLASS_WITCH) == 0))
+	if(nbInfected < 2 || thereIsAWitch || (Server()->GetClassAvailability(PLAYERCLASS_WITCH) == 0) || !pPlayer->m_WasHumanThisRound)
 	{
 		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_WITCH];
 		witchEnabled = false;

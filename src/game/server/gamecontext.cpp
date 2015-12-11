@@ -1442,30 +1442,59 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
 			m_pController->OnPlayerInfoChange(pPlayer);
 			
-			CNetMsg_Sv_VoteSet Msg;
-			Msg.m_Timeout = 7;
-			Msg.m_pReason = "";
-			Msg.m_pDescription = 0;
-			
-			switch(pMsg->m_Country)
+			if(Server()->GetClientNbRound(ClientID) <= 1)
 			{
-				case 250: //France
-					//~ SendChatTarget(ClientID, "Tapez \"/language fr\" pour passer la langue du mod en français.");
-					Msg.m_pDescription = "Do you want to switch to the french version of this mod ?";
-					m_VoteLanguage[ClientID] = LANGUAGE_FR;				
-					break;
-				case 40: //Austria
-				case 276: //Germany
-					//~ SendChatTarget(ClientID, "Gib \"/language de\" ein, um die Sprache des Mods auf Deutsch zu sehen.");
-					Msg.m_pDescription = "Do you want to switch to the german version of this mod ?";
-					m_VoteLanguage[ClientID] = LANGUAGE_DE;				
-					break;
-			}
-			
-			if(Msg.m_pDescription)
-			{
-				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
-				m_VoteLanguageTick[ClientID] = 7*Server()->TickSpeed();
+				CNetMsg_Sv_VoteSet Msg;
+				Msg.m_Timeout = 10;
+				Msg.m_pReason = "";
+				Msg.m_pDescription = 0;
+				
+				switch(pMsg->m_Country)
+				{
+					//~ case 12: //Algeria
+					//~ case 48: //Bahrain
+					//~ case 262: //Djibouti
+					//~ case 818: //Egypt
+					//~ case 368: //Iraq
+					//~ case 400: //Jordan
+					//~ case 414: //Kuwait
+					//~ case 422: //Lebanon
+					//~ case 434: //Libya
+					//~ case 478: //Mauritania
+					//~ case 504: //Morocco
+					//~ case 512: //Oman
+					//~ case 275: //Palestine
+					//~ case 634: //Qatar
+					//~ case 682: //Saudi Arabia
+					//~ case 706: //Somalia
+					//~ case 729: //Sudan
+					//~ case 760: //Syria
+					//~ case 788: //Tunisia
+					//~ case 784: //United Arab Emirates
+					//~ case 887: //Yemen
+						//~ Msg.m_pDescription = "Switch to arabic ?";
+						//~ m_VoteLanguage[ClientID] = LANGUAGE_AR;				
+						//~ break;
+					case 56: //Belgique (until Dutch is available)
+					case 250: //France
+					case 492: //Monaco
+						Msg.m_pDescription = "Switch de french ?";
+						m_VoteLanguage[ClientID] = LANGUAGE_FR;				
+						break;
+					case 40: //Austria
+					case 276: //Germany
+					case 438: //Liechtenstein
+					case 756: //Switzerland
+						Msg.m_pDescription = "Switch to german ?";
+						m_VoteLanguage[ClientID] = LANGUAGE_DE;				
+						break;
+				}
+				
+				if(Msg.m_pDescription)
+				{
+					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
+					m_VoteLanguageTick[ClientID] = 10*Server()->TickSpeed();
+				}
 			}
 			
 /* INFECTION MODIFICATION END *****************************************/

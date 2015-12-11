@@ -143,6 +143,7 @@ public:
 	int GetLanguage();
 	void SetLanguage(int Language);
 	
+	bool m_WasHumanThisRound;
 	int m_WinAsHuman;
 /* INFECTION MODIFICATION END *****************************************/
 };
