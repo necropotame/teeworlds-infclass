@@ -1472,20 +1472,20 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					//~ case 788: //Tunisia
 					//~ case 784: //United Arab Emirates
 					//~ case 887: //Yemen
-						//~ Msg.m_pDescription = "Switch to arabic ?";
+						//~ Msg.m_pDescription = ms_TextAr[TEXTID_SWITCH_LANGUAGE];
 						//~ m_VoteLanguage[ClientID] = LANGUAGE_AR;				
 						//~ break;
 					case 56: //Belgique (until Dutch is available)
 					case 250: //France
 					case 492: //Monaco
-						Msg.m_pDescription = "Switch to french ?";
+						Msg.m_pDescription = ms_TextFr[TEXTID_SWITCH_LANGUAGE];
 						m_VoteLanguage[ClientID] = LANGUAGE_FR;				
 						break;
 					case 40: //Austria
 					case 276: //Germany
 					case 438: //Liechtenstein
 					case 756: //Switzerland
-						Msg.m_pDescription = "Switch to german ?";
+						Msg.m_pDescription = ms_TextDe[TEXTID_SWITCH_LANGUAGE];
 						m_VoteLanguage[ClientID] = LANGUAGE_DE;				
 						break;
 				}

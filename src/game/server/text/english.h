@@ -1,3 +1,5 @@
+	"Switch language to english ?",
+
 	"%s entered and joined the game",
 	"%s joined the game",
 	"%s joined the spectators",
@@ -19,9 +21,9 @@
 	"You have infected %s using portals, -5 points",
 	"You have killed %s using portals, -5 points",
 	"%s has been infected",
-	"The witch is coming !",
+	"The witch is coming!",
 	"The witch is dead",
-	"The undead is coming !",
+	"The undead is coming!",
 	"The undead is finally dead",
 	
 	"Infected won the round in %i:%02i minutes",
@@ -97,23 +99,23 @@
 	"Ninja:\n\n"
 		"The Ninja can throw flash grenades that can freeze infected during three seconds.\n\n"
 		"His hammer is replaced by a katana, allowing him to jump two times before touching the ground.\n",
-	"Smoker :\n\n"
+	"Smoker:\n\n"
 		"The Smoker can infect humans and heal infected with his hammer.\n\n"
 		"He can also inflict 4 damage points per seconds by hooking humans.",
-	"Boomer :\n\n"
+	"Boomer:\n\n"
 		"The Boomer explodes when he attack.\n"
 		"All humans affected by the explosion become infected.\n\n"
 		"He can also inflict 1 damage point per seconds by hooking humans.",
-	"Hunter :\n\n"
+	"Hunter:\n\n"
 		"The Hunter can infect humans and heal infected with his hammer.\n\n"
-		"He can jump two times in air\n\n"
+		"He can jump two times in air.\n\n"
 		"He can also inflict 1 damage point per seconds by hooking humans.",
-	"Undead :\n\n"
+	"Undead:\n\n"
 		"The Undead can infect humans and heal infected with his hammer.\n\n"
 		"Instead of dying, he freezes during 10 seconds.\n"
 		"If an infected heals him, the freeze effect disappear.\n\n"
 		"He can also inflict 1 damage point per seconds by hooking humans.",
-	"Witch :\n\n"
+	"Witch:\n\n"
 		"The Witch can infect humans and heal infected with his hammer.\n\n"
 		"When an infected dies, he may re-spawn near her.\n"
 		"If the Witch dies, she disappear and is replaced by an another class of infected.\n\n"

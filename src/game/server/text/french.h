@@ -1,3 +1,5 @@
+	"Passer la langue en français ?",	
+
 	"%s est arrivé(e) et a rejoint la partie",
 	"%s a rejoint la partie",
 	"%s a rejoint les spectateurs",

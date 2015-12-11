@@ -1,3 +1,5 @@
+	"Serversprache auf Deutsch stellen?",	
+	
 	"%s hat den Server und das Spiel betreten",
 	"%s hat das Spiel betreten",
 	"%s wurde ein Zuschauer",
@@ -8,8 +10,8 @@
 	"%s wechselte den Namen zu %s",
 	
 	"Unbekannter Befehl",
-	"Du erhältst eine zufällig Klasse am Anfang der Runde",
-	"Am Anfang einer Runde kannst du eine Klasse wählen",
+	"Du erhältst ab jetzt eine zufällig Klasse am Anfang jeder Runde",
+	"Du kannst wieder eine Klasse am Anfang jeder Runde wählen",
 	"Du kannst gerade nicht zuschauen",
 	
 	"Du bist für %i Sekunden eingefroren",
