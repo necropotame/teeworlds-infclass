@@ -1478,7 +1478,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 56: //Belgique (until Dutch is available)
 					case 250: //France
 					case 492: //Monaco
-						Msg.m_pDescription = "Switch de french ?";
+						Msg.m_pDescription = "Switch to french ?";
 						m_VoteLanguage[ClientID] = LANGUAGE_FR;				
 						break;
 					case 40: //Austria
