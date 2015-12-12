@@ -271,6 +271,8 @@ private:
 	
 	static const char* ms_TextEn[];
 	static const char* ms_TextFr[];
+	static const char* ms_TextRu[];
+	static const char* ms_TextUk[];
 	static const char* ms_TextDe[];
 	
 public:

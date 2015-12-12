@@ -33,6 +33,14 @@ const char* CGameContext::ms_TextFr[] = {
 const char* CGameContext::ms_TextDe[] = {
 #include "text/german.h"
 };
+
+const char* CGameContext::ms_TextRu[] = {
+#include "text/russian.h"
+};
+
+const char* CGameContext::ms_TextUk[] = {
+#include "text/ukrainian.h"
+};
 /* INFECTION MODIFICATION END *****************************************/
 
 const char* CGameContext::GetTextTranslation(int TextId, int Lang)
@@ -43,6 +51,10 @@ const char* CGameContext::GetTextTranslation(int TextId, int Lang)
 			return CGameContext::ms_TextFr[TextId];
 		case LANGUAGE_DE:
 			return CGameContext::ms_TextDe[TextId];
+		case LANGUAGE_RU:
+			return CGameContext::ms_TextRu[TextId];
+		case LANGUAGE_UK:
+			return CGameContext::ms_TextUk[TextId];
 		case LANGUAGE_EN:
 		default:
 			return CGameContext::ms_TextEn[TextId];
@@ -1082,6 +1094,28 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_DE);
 					}
 				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\language ru") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/language ru") == 0) 
+				)
+				{
+					Server()->SetClientLanguage(ClientID, LANGUAGE_RU);
+					if(m_apPlayers[ClientID])
+					{
+						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_RU);
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\language uk") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/language uk") == 0) 
+				)
+				{
+					Server()->SetClientLanguage(ClientID, LANGUAGE_UK);
+					if(m_apPlayers[ClientID])
+					{
+						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_UK);
+					}
+				}
 				else
 				{
 					SendChatTarget_Language(ClientID, TEXTID_CMD_UNKNOWN);
@@ -1487,6 +1521,15 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 756: //Switzerland
 						Msg.m_pDescription = ms_TextDe[TEXTID_SWITCH_LANGUAGE];
 						m_VoteLanguage[ClientID] = LANGUAGE_DE;				
+						break;
+					case 112: //Belarus
+					case 643: //Russia
+						Msg.m_pDescription = ms_TextRu[TEXTID_SWITCH_LANGUAGE];
+						m_VoteLanguage[ClientID] = LANGUAGE_RU;				
+						break;
+					case 804: //Ukraine
+						Msg.m_pDescription = ms_TextUk[TEXTID_SWITCH_LANGUAGE];
+						m_VoteLanguage[ClientID] = LANGUAGE_UK;				
 						break;
 				}
 				
