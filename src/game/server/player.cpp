@@ -262,6 +262,10 @@ void CPlayer::Snap(int SnappingClient)
 					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Hunter*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
 					break;
+				case PLAYERCLASS_GHOST:
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Ghost*");
+					else StrToInts(&pClientInfo->m_Clan0, 3, "Ghost");
+					break;
 				case PLAYERCLASS_UNDEAD:
 					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Undead*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
@@ -522,6 +526,12 @@ void CPlayer::SetClassSkin(int newClass)
 		case PLAYERCLASS_HUNTER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "warpaint", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_GHOST:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
 			break;

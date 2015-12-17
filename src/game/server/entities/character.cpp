@@ -63,6 +63,8 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_PortalTick = 0;
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
+	m_IsInvisible = false;
+	m_InvisibleTick = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -819,6 +821,44 @@ void CCharacter::Tick()
 		}
 	}
 	
+	//Ghost
+	if(GetClass() == PLAYERCLASS_GHOST)
+	{
+		if(Server()->Tick() < m_InvisibleTick + 3*Server()->TickSpeed() || IsFrozen())
+		{
+			m_IsInvisible = false;
+		}
+		else
+		{
+			float minDist = 99999.9f;
+			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+			{
+				if(p->IsInfected()) continue;
+				
+				float dist = distance(p->m_Pos, m_Pos);
+				if(dist < minDist)
+				{
+					minDist = dist;
+				}
+			}
+			
+			if(minDist < 32.0f*15.0f)
+			{				
+				if(m_IsInvisible)
+				{
+					GameServer()->CreatePlayerSpawn(m_Pos);
+					m_IsInvisible = false;
+				}
+				
+				m_InvisibleTick = Server()->Tick();
+			}
+			else
+			{
+				m_IsInvisible = true;
+			}
+		}
+	}
+	
 	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_Ninja.m_CurrentMoveTime <= 0)
 	{
 		m_Ninja.m_ActivationTick = Server()->Tick();
@@ -959,11 +999,14 @@ void CCharacter::TickDefered()
 	int Events = m_Core.m_TriggeredEvents;
 	int Mask = CmaskAllExceptOne(m_pPlayer->GetCID());
 
-	if(Events&COREEVENT_GROUND_JUMP) GameServer()->CreateSound(m_Pos, SOUND_PLAYER_JUMP, Mask);
 
 	if(Events&COREEVENT_HOOK_ATTACH_PLAYER) GameServer()->CreateSound(m_Pos, SOUND_HOOK_ATTACH_PLAYER, CmaskAll());
-	if(Events&COREEVENT_HOOK_ATTACH_GROUND) GameServer()->CreateSound(m_Pos, SOUND_HOOK_ATTACH_GROUND, Mask);
-	if(Events&COREEVENT_HOOK_HIT_NOHOOK) GameServer()->CreateSound(m_Pos, SOUND_HOOK_NOATTACH, Mask);
+	if(GetClass() != PLAYERCLASS_GHOST || !m_IsInvisible)
+	{
+		if(Events&COREEVENT_GROUND_JUMP) GameServer()->CreateSound(m_Pos, SOUND_PLAYER_JUMP, Mask);
+		if(Events&COREEVENT_HOOK_ATTACH_GROUND) GameServer()->CreateSound(m_Pos, SOUND_HOOK_ATTACH_GROUND, Mask);
+		if(Events&COREEVENT_HOOK_HIT_NOHOOK) GameServer()->CreateSound(m_Pos, SOUND_HOOK_NOATTACH, Mask);
+	}
 
 
 	if(m_pPlayer->GetTeam() == TEAM_SPECTATORS)
@@ -1099,9 +1142,12 @@ void CCharacter::Die(int Killer, int Weapon)
 
 bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 {
-	m_Core.m_Vel += Force;
-
 /* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
+	{
+		m_Core.m_Vel += Force;
+	}
+
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
 	
 	if(From != m_pPlayer->GetCID() && pKillerPlayer)
@@ -1163,6 +1209,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 /* INFECTION MODIFICATION END *****************************************/
 
 	m_DamageTakenTick = Server()->Tick();
+	m_InvisibleTick = Server()->Tick();
 
 	// do damage Hit sound
 	if(From >= 0 && From != m_pPlayer->GetCID() && GameServer()->m_apPlayers[From])
@@ -1234,7 +1281,12 @@ void CCharacter::Snap(int SnappingClient)
 		return;
 		
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetClass() == PLAYERCLASS_WITCH)
+	if(GetClass() == PLAYERCLASS_GHOST)
+	{
+		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+		if(!pClient->IsInfected() && m_IsInvisible) return;
+	}
+	else if(GetClass() == PLAYERCLASS_WITCH)
 	{
 		CNetObj_Flag *pFlag = (CNetObj_Flag *)Server()->SnapNewItem(NETOBJTYPE_FLAG, m_FlagID, sizeof(CNetObj_Flag));
 		if(!pFlag)
@@ -1284,8 +1336,9 @@ void CCharacter::Snap(int SnappingClient)
 	CNetObj_Character *pCharacter = static_cast<CNetObj_Character *>(Server()->SnapNewItem(NETOBJTYPE_CHARACTER, m_pPlayer->GetCID(), sizeof(CNetObj_Character)));
 	if(!pCharacter)
 		return;
-	
-	int EmoteNormal = (IsInfected() ? EMOTE_ANGRY : EMOTE_NORMAL);
+	int EmoteNormal = EMOTE_NORMAL;
+	if(IsInfected()) EmoteNormal = EMOTE_ANGRY;
+	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
 	
 	// write down the m_Core
@@ -1507,6 +1560,21 @@ void CCharacter::ClassSpawnAttributes()
 				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_HUNTER_TIP);
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
+			break;
+		case PLAYERCLASS_GHOST:
+			m_Health = 10;
+			m_Armor = 0;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast("You are an infected: Ghost", m_pPlayer->GetCID());
+			//~ if(!m_pPlayer->IsKownClass(PLAYERCLASS_GHOST))
+			//~ {
+				//~ GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_HUNTER_TIP);
+				//~ m_pPlayer->m_knownClass[PLAYERCLASS_GHOST] = true;
+			//~ }
 			break;
 		case PLAYERCLASS_UNDEAD:
 			m_Health = 10;

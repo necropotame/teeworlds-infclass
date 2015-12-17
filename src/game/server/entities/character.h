@@ -155,6 +155,8 @@ private:
 	bool m_FirstShot;
 	vec2 m_FirstShotCoord;
 	int m_PoisonTick;
+	int m_InvisibleTick;
+	bool m_IsInvisible;
 	
 	int m_FlagID;
 	int m_HeartID;

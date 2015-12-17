@@ -493,6 +493,7 @@ int CServer::Init()
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
+	SetClassAvailability(PLAYERCLASS_GHOST, 1);
 	SetClassAvailability(PLAYERCLASS_BOOMER, 1);
 	SetClassAvailability(PLAYERCLASS_UNDEAD, 1);
 	SetClassAvailability(PLAYERCLASS_WITCH, 1);
@@ -1773,6 +1774,7 @@ void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserDat
 	else if(str_comp(pClassName, "ninja") == 0) ClassId = PLAYERCLASS_NINJA;
 	else if(str_comp(pClassName, "smoker") == 0) ClassId = PLAYERCLASS_SMOKER;
 	else if(str_comp(pClassName, "hunter") == 0) ClassId = PLAYERCLASS_HUNTER;
+	else if(str_comp(pClassName, "ghost") == 0) ClassId = PLAYERCLASS_GHOST;
 	else if(str_comp(pClassName, "boomer") == 0) ClassId = PLAYERCLASS_BOOMER;
 	else if(str_comp(pClassName, "undead") == 0) ClassId = PLAYERCLASS_UNDEAD;
 	else if(str_comp(pClassName, "witch") == 0) ClassId = PLAYERCLASS_WITCH;
