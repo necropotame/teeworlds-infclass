@@ -65,6 +65,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_FrozenTime = -1;
 	m_IsInvisible = false;
 	m_InvisibleTick = 0;
+	m_HealTick = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -461,6 +462,12 @@ void CCharacter::FireWeapon()
 				m_NumObjectsHit = 0;
 				GameServer()->CreateSound(m_Pos, SOUND_HAMMER_FIRE);
 
+				if(GetClass() == PLAYERCLASS_GHOST)
+				{
+					m_IsInvisible = false;
+					m_InvisibleTick = Server()->Tick();
+				}
+
 				CCharacter *apEnts[MAX_CLIENTS];
 				int Hits = 0;
 				int Num = GameServer()->m_World.FindEntities(ProjStartPos, m_ProximityRadius*0.5f, (CEntity**)apEnts,
@@ -521,7 +528,9 @@ void CCharacter::FireWeapon()
 
 				// if we Hit anything, we have to wait for the reload
 				if(Hits)
+				{
 					m_ReloadTimer = Server()->TickSpeed()/3;
+				}
 					
 /* INFECTION MODIFICATION START ***************************************/
 			}
@@ -789,21 +798,32 @@ void CCharacter::Tick()
 {
 /* INFECTION MODIFICATION START ***************************************/
 	//Check is the character is in toxic gaz
-	if(m_Alive && !IsInfected() && GameServer()->Collision()->CheckPointFlag(m_Pos, CCollision::COLFLAG_INFECTION))
+	if(m_Alive && GameServer()->Collision()->CheckPointFlag(m_Pos, CCollision::COLFLAG_INFECTION))
 	{
-		m_pPlayer->StartInfection();
-		
-		//Infection after teleportation
-		if((Server()->Tick() - m_PortalTick) < Server()->TickSpeed() && m_LastPortalOwner != m_pPlayer->GetCID())
+		if(IsInfected())
 		{
-			CPlayer* pBadPlayer = GameServer()->m_apPlayers[m_LastPortalOwner];
-			if(pBadPlayer)
+			if(Server()->Tick() >= m_HealTick + Server()->TickSpeed())
 			{
-				GameServer()->SendChatTarget_Language_s(m_LastPortalOwner, TEXTID_YOU_PORTAL_INFECTION, Server()->ClientName(m_pPlayer->GetCID()));
-			
-				pBadPlayer->IncreaseScore(-5);
+				m_HealTick = Server()->Tick();
+				if(m_Health < 10) m_Health++;
 			}
 		}
+		else
+		{
+			m_pPlayer->StartInfection();
+		}
+		
+		//Infection after teleportation
+		//~ if((Server()->Tick() - m_PortalTick) < Server()->TickSpeed() && m_LastPortalOwner != m_pPlayer->GetCID())
+		//~ {
+			//~ CPlayer* pBadPlayer = GameServer()->m_apPlayers[m_LastPortalOwner];
+			//~ if(pBadPlayer)
+			//~ {
+				//~ GameServer()->SendChatTarget_Language_s(m_LastPortalOwner, TEXTID_YOU_PORTAL_INFECTION, Server()->ClientName(m_pPlayer->GetCID()));
+			
+				//~ pBadPlayer->IncreaseScore(-5);
+			//~ }
+		//~ }
 	}
 
 	--m_FrozenTime;
