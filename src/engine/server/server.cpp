@@ -793,7 +793,7 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 	pThis->Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBuf);
 
 	// notify the mod about the drop
-	if(pThis->m_aClients[ClientID].m_State >= CClient::STATE_READY)
+	if(pThis->m_aClients[ClientID].m_State >= CClient::STATE_READY && pThis->m_aClients[ClientID].m_WaitingTime <= 0)
 		pThis->GameServer()->OnClientDrop(ClientID, Type, pReason);
 
 	pThis->m_aClients[ClientID].m_State = CClient::STATE_EMPTY;
@@ -804,6 +804,7 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 	pThis->m_aClients[ClientID].m_AuthTries = 0;
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
 	pThis->m_aClients[ClientID].m_Snapshots.PurgeAll();
+	pThis->m_aClients[ClientID].m_WaitingTime = 0;
 	return 0;
 }
 
