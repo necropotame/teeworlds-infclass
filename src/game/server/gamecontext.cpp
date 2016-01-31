@@ -869,6 +869,12 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 {
 	void *pRawMsg = m_NetObjHandler.SecureUnpackMsg(MsgID, pUnpacker);
 	CPlayer *pPlayer = m_apPlayers[ClientID];
+	
+	if(!pPlayer)
+	{
+		Server()->Kick(ClientID, "Kicked (is probably a dummy)");
+		return;
+	}
 
 	if(!pRawMsg)
 	{
