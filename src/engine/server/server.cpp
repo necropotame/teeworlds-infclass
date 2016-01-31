@@ -278,6 +278,7 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_NbRound = 0;
 		m_NbInfection = 0;
 		m_Language = LANGUAGE_EN;
+		m_WaitingTime = 0;
 	}
 }
 /* INFECTION MODIFICATION END *****************************************/
@@ -968,8 +969,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				str_format(aBuf, sizeof(aBuf), "player is ready. ClientID=%x addr=%s", ClientID, aAddrStr);
 				Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBuf);
 				m_aClients[ClientID].m_State = CClient::STATE_READY;
-				GameServer()->OnClientConnected(ClientID);				
-				SendConnectionReady(ClientID);
+				m_aClients[ClientID].m_WaitingTime = TickSpeed()*3;
 			}
 		}
 		else if(Msg == NETMSG_ENTERGAME)
@@ -983,7 +983,6 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				str_format(aBuf, sizeof(aBuf), "player has entered the game. ClientID=%x addr=%s", ClientID, aAddrStr);
 				Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
 				m_aClients[ClientID].m_State = CClient::STATE_INGAME;
-				GameServer()->OnClientEnter(ClientID);
 			}
 		}
 		else if(Msg == NETMSG_INPUT)
@@ -1476,6 +1475,26 @@ int CServer::Run()
 				m_CurrentGameTick++;
 				NewTicks++;
 
+				for(int i=0; i<MAX_CLIENTS; i++)
+				{
+					if(m_aClients[i].m_WaitingTime > 0)
+					{
+						m_aClients[i].m_WaitingTime--;
+						if(m_aClients[i].m_WaitingTime <= 0)
+						{
+							if(m_aClients[i].m_State == CClient::STATE_READY)
+							{
+								GameServer()->OnClientConnected(i);	
+								SendConnectionReady(i);
+							}
+							else if(m_aClients[i].m_State == CClient::STATE_INGAME)
+							{
+								GameServer()->OnClientEnter(i);
+							}
+						}
+					}
+				}
+				
 				// apply new input
 				for(int c = 0; c < MAX_CLIENTS; c++)
 				{

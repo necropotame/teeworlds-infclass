@@ -137,6 +137,7 @@ public:
 		int m_AlwaysRandom;
 		int m_DefaultScoreMode;
 		int m_Language;
+		int m_WaitingTime;
 /* INFECTION MODIFICATION END *****************************************/
 	};
 
