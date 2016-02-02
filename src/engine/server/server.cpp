@@ -984,6 +984,11 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				str_format(aBuf, sizeof(aBuf), "player has entered the game. ClientID=%x addr=%s", ClientID, aAddrStr);
 				Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
 				m_aClients[ClientID].m_State = CClient::STATE_INGAME;
+				
+				if(m_aClients[i].m_WaitingTime <= 0)
+				{
+					GameServer()->OnClientEnter(ClientID);
+				}
 			}
 		}
 		else if(Msg == NETMSG_INPUT)
