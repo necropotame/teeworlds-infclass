@@ -985,7 +985,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
 				m_aClients[ClientID].m_State = CClient::STATE_INGAME;
 				
-				if(m_aClients[i].m_WaitingTime <= 0)
+				if(m_aClients[ClientID].m_WaitingTime <= 0)
 				{
 					GameServer()->OnClientEnter(ClientID);
 				}
