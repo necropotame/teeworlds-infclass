@@ -167,6 +167,7 @@ void CGameControllerMOD::Tick()
 					
 					if(!pPlayer) continue;
 					if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+					if(pPlayer->IsInfected()) continue;
 					
 					if(random < InfectionProb)
 					{
