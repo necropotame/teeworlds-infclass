@@ -1664,6 +1664,8 @@ void CCharacter::SetClass(int ClassChoosed)
 	ClassSpawnAttributes();
 	DestroyChildEntities();
 	
+	m_QueuedWeapon = -1;
+	
 	GameServer()->CreatePlayerSpawn(m_Pos);
 }
 
