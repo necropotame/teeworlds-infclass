@@ -23,11 +23,16 @@ enum
 	WEAPON_WORLD = -1, // death tiles etc
 };
 
+/* INFECTION MODIFICATION START ***************************************/
 enum
 {
 	FREEZEREASON_FLASH = 0,
 	FREEZEREASON_UNDEAD = 1
 };
+
+#define GHOST_RADIUS 13
+#define GHOST_SEARCHMAP_SIZE (2*GHOST_RADIUS+1)
+/* INFECTION MODIFICATION END *****************************************/
 
 class CCharacter : public CEntity
 {
@@ -142,7 +147,7 @@ public:
 	CCharacterCore m_Core;
 	
 private:
-/* INFECTION MODIFICATION START ***************************************/
+/* INFECTION MODIFICATION END *****************************************/
 
 	// info for dead reckoning
 	int m_ReckoningTick; // tick that we are performing dead reckoning From
@@ -167,6 +172,8 @@ private:
 	bool m_IsFrozen;
 	int m_FrozenTime;
 	int m_FreezeReason;
+	
+	char m_GhostSearchMap[GHOST_SEARCHMAP_SIZE*GHOST_SEARCHMAP_SIZE];
 
 public:
 	CClassChooser* m_pClassChooser;
