@@ -344,6 +344,35 @@ int CEditor::PopupQuad(CEditor *pEditor, CUIRect View)
 		return 1;
 	}
 
+	// duplicate button
+	View.HSplitBottom(10.0f, &View, &Button);
+	View.HSplitBottom(12.0f, &View, &Button);
+	static int s_DuplicateButton = 0;
+	if(pEditor->DoButton_Editor(&s_DuplicateButton, "Dupicate", 0, &Button, 0, "Duplicates the current quad"))
+	{
+		CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
+		if(pLayer)
+		{
+			CQuad& OldQuad = pLayer->m_lQuads[pEditor->m_SelectedQuad];
+			int NewQuadId = pLayer->m_lQuads.size();
+			pLayer->m_lQuads.add(pLayer->m_lQuads[pEditor->m_SelectedQuad]);
+			
+			CQuad& NewQuad = pLayer->m_lQuads[NewQuadId];
+			
+			for(int i=0; i<4; i++)
+			{
+				NewQuad.m_aPoints[i] = OldQuad.m_aPoints[i];
+				NewQuad.m_aColors[i] = OldQuad.m_aColors[i];
+				NewQuad.m_aTexcoords[i] = OldQuad.m_aTexcoords[i];
+			}
+			NewQuad.m_aPoints[4] = OldQuad.m_aPoints[4];
+			
+			pEditor->m_Map.m_Modified = true;
+			pEditor->m_SelectedQuad = NewQuadId;
+		}
+		return 1;
+	}
+
 	// aspect ratio button
 	View.HSplitBottom(10.0f, &View, &Button);
 	View.HSplitBottom(12.0f, &View, &Button);
@@ -500,12 +529,14 @@ int CEditor::PopupPoint(CEditor *pEditor, CUIRect View)
 	{
 		PROP_POS_X=0,
 		PROP_POS_Y,
+		PROP_TEX_X,
+		PROP_TEX_Y,
 		PROP_COLOR,
 		NUM_PROPS,
 	};
 
 	int Color = 0;
-	int x = 0, y = 0;
+	int x = 0, y = 0, texX = 0, texY = 0;
 
 	for(int v = 0; v < 4; v++)
 	{
@@ -519,6 +550,8 @@ int CEditor::PopupPoint(CEditor *pEditor, CUIRect View)
 
 			x = pQuad->m_aPoints[v].x/1000;
 			y = pQuad->m_aPoints[v].y/1000;
+			texX = pQuad->m_aTexcoords[v].x;
+			texY = pQuad->m_aTexcoords[v].y;
 		}
 	}
 
@@ -526,6 +559,8 @@ int CEditor::PopupPoint(CEditor *pEditor, CUIRect View)
 	CProperty aProps[] = {
 		{"Pos X", x, PROPTYPE_INT_SCROLL, -1000000, 1000000},
 		{"Pos Y", y, PROPTYPE_INT_SCROLL, -1000000, 1000000},
+		{"Tex X", texX, PROPTYPE_INT_SCROLL, 0, 1024},
+		{"Tex Y", texY, PROPTYPE_INT_SCROLL, 0, 1024},
 		{"Color", Color, PROPTYPE_COLOR, -1, pEditor->m_Map.m_lEnvelopes.size()},
 		{0},
 	};
@@ -547,6 +582,18 @@ int CEditor::PopupPoint(CEditor *pEditor, CUIRect View)
 		for(int v = 0; v < 4; v++)
 			if(pEditor->m_SelectedPoints&(1<<v))
 				pQuad->m_aPoints[v].y = NewVal*1000;
+	}
+	if(Prop == PROP_TEX_X)
+	{
+		for(int v = 0; v < 4; v++)
+			if(pEditor->m_SelectedPoints&(1<<v))
+				pQuad->m_aTexcoords[v].x = NewVal;
+	}
+	if(Prop == PROP_TEX_Y)
+	{
+		for(int v = 0; v < 4; v++)
+			if(pEditor->m_SelectedPoints&(1<<v))
+				pQuad->m_aTexcoords[v].y = NewVal;
 	}
 	if(Prop == PROP_COLOR)
 	{
