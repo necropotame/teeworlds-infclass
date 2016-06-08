@@ -42,6 +42,9 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_SOLDIER] = 1.0f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SOLDIER];
 	
+	m_ClassProbability[PLAYERCLASS_MERCENARY] = 1.0f;
+	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_MERCENARY];
+	
 	m_ClassProbability[PLAYERCLASS_SCIENTIST] = 0.5f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SCIENTIST];
 	
@@ -632,6 +635,13 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		soldierEnabled = false;
 	}
 	
+	bool mercenaryEnabled = true;
+	if(Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) == 0)
+	{
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MERCENARY];
+		mercenaryEnabled = false;
+	}
+	
 	if(scientistEnabled)
 	{
 		random -= m_ClassProbability[PLAYERCLASS_SCIENTIST]/TotalProbHumanClass;
@@ -656,6 +666,15 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_MEDIC;
+		}
+	}
+	
+	if(mercenaryEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_MERCENARY]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_MERCENARY;
 		}
 	}
 	
@@ -789,6 +808,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 {
 	if(PlayerClass == PLAYERCLASS_ENGINEER) return (Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) > 1);
 	else if(PlayerClass == PLAYERCLASS_SOLDIER) return (Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) > 1);
+	else if(PlayerClass == PLAYERCLASS_MERCENARY) return (Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) > 1);
 	else if(PlayerClass == PLAYERCLASS_MEDIC) return (Server()->GetClassAvailability(PLAYERCLASS_MEDIC) > 1);
 	else if(PlayerClass == PLAYERCLASS_NINJA)
 	{
