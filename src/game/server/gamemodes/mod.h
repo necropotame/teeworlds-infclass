@@ -28,6 +28,8 @@ public:
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
 	virtual bool IsChoosableClass(int PlayerClass);
 	
+	void ResetFinalExplosion();
+	
 private:
 	bool IsSpawnable(vec2 Pos);
 	

@@ -105,6 +105,22 @@ bool CGameControllerMOD::OnEntity(int Index, vec2 Pos)
 	return res;
 }
 
+void CGameControllerMOD::ResetFinalExplosion()
+{
+	m_ExplosionStarted = false;
+	
+	for(int j=0; j<m_MapHeight; j++)
+	{
+		for(int i=0; i<m_MapWidth; i++)
+		{
+			if(!(m_GrowingMap[j*m_MapWidth+i] & 4))
+			{
+				m_GrowingMap[j*m_MapWidth+i] = 1;
+			}
+		}
+	}
+}
+
 void CGameControllerMOD::Tick()
 {
 	IGameController::Tick();
@@ -210,6 +226,9 @@ void CGameControllerMOD::Tick()
 			GameServer()->SendChatTarget_Language_ii(-1, TEXTID_WIN_INFECTED, Minutes, Seconds);
 			
 			m_InfectedStarted = false;
+			
+			ResetFinalExplosion();
+			
 			EndRound();
 		}
 		
@@ -293,7 +312,7 @@ void CGameControllerMOD::Tick()
 			//If no more explosions, game over, decide who win
 			if(!NewExplosion)
 			{
-				m_ExplosionStarted = false;
+				ResetFinalExplosion();
 				
 				for(int j=0; j<m_MapHeight; j++)
 				{
