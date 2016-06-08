@@ -349,6 +349,30 @@ void CGameControllerMOD::Tick()
 	}
 }
 
+void CGameControllerMOD::Snap(int SnappingClient)
+{
+	IGameController::Snap(SnappingClient);
+
+	CNetObj_GameData *pGameDataObj = (CNetObj_GameData *)Server()->SnapNewItem(NETOBJTYPE_GAMEDATA, 0, sizeof(CNetObj_GameData));
+	if(!pGameDataObj)
+		return;
+
+	//Search for witch
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+		
+		if(!pPlayer) continue;
+		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+		
+		if(pPlayer->GetClass() == PLAYERCLASS_WITCH)
+		{
+			pGameDataObj->m_FlagCarrierRed = i;
+		}
+	}
+	pGameDataObj->m_FlagCarrierBlue = FLAG_ATSTAND;
+}
+
 int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)
 {
 	// do scoreing
