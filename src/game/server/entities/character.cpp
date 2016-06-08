@@ -226,7 +226,7 @@ void CCharacter::HandleNinja()
 				if(m_NumObjectsHit < 10)
 					m_apHitObjects[m_NumObjectsHit++] = aEnts[i];
 
-				aEnts[i]->TakeDamage(vec2(0, -10.0f), g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage, m_pPlayer->GetCID(), WEAPON_NINJA);
+				aEnts[i]->TakeDamage(vec2(0, -10.0f), g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
 
@@ -493,34 +493,40 @@ void CCharacter::FireWeapon()
 						Dir = vec2(0.f, -1.f);
 					
 /* INFECTION MODIFICATION START ***************************************/
-					if(IsInfected() && pTarget->IsInfected())
+					if(IsInfected())
 					{
-						if(pTarget->IsFrozen())
+						if(pTarget->IsInfected())
 						{
-							pTarget->Unfreeze();
+							if(pTarget->IsFrozen())
+							{
+								pTarget->Unfreeze();
+							}
+							else
+							{
+								pTarget->IncreaseHealth(2);
+								pTarget->IncreaseArmor(2);
+								pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
+								pTarget->m_EmoteType = EMOTE_HAPPY;
+								pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+							}
 						}
 						else
 						{
-							pTarget->IncreaseHealth(2);
-							pTarget->IncreaseArmor(2);
-							pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
-							pTarget->m_EmoteType = EMOTE_HAPPY;
-							pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
-						}
-						
+							pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
+								m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
+						}						
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
 					{
 						pTarget->IncreaseArmor(4);
-						pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
+						//pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
 						pTarget->m_EmoteType = EMOTE_HAPPY;
 						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 					}
 					else
 					{
 						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
-							m_pPlayer->GetCID(), m_ActiveWeapon);
-	
+							m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 					}
 /* INFECTION MODIFICATION END *****************************************/
 					Hits++;
@@ -697,7 +703,7 @@ void CCharacter::HandleWeapons()
 					if(m_PoisonTick + Server()->TickSpeed()*0.5 < Server()->Tick())
 					{
 						m_PoisonTick = Server()->Tick();
-						VictimChar->TakeDamage(vec2(0.0f,0.0f), 2, m_pPlayer->GetCID(), WEAPON_NINJA);
+						VictimChar->TakeDamage(vec2(0.0f,0.0f), 2, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 					}
 				}
 				else
@@ -705,7 +711,7 @@ void CCharacter::HandleWeapons()
 					if(m_PoisonTick + Server()->TickSpeed() < Server()->Tick())
 					{
 						m_PoisonTick = Server()->Tick();
-						VictimChar->TakeDamage(vec2(0.0f,0.0f), 1, m_pPlayer->GetCID(), WEAPON_NINJA);
+						VictimChar->TakeDamage(vec2(0.0f,0.0f), 1, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 					}
 				}
 			}
@@ -1215,11 +1221,11 @@ void CCharacter::Die(int Killer, int Weapon)
 	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME)
 	{
 		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
-		GameServer()->CreateExplosion(m_Pos, m_pPlayer->GetCID(), WEAPON_HAMMER, false);
-		GameServer()->CreateExplosion(m_Pos + vec2(32, 0), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
-		GameServer()->CreateExplosion(m_Pos + vec2(-32, 0), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
-		GameServer()->CreateExplosion(m_Pos + vec2(0, 32), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
-		GameServer()->CreateExplosion(m_Pos + vec2(0, -32), m_pPlayer->GetCID(), WEAPON_HAMMER, false);
+		GameServer()->CreateExplosion(m_Pos, m_pPlayer->GetCID(), WEAPON_HAMMER, false, TAKEDAMAGEMODE_INFECTION);
+		GameServer()->CreateExplosion(m_Pos + vec2(32, 0), m_pPlayer->GetCID(), WEAPON_HAMMER, false, TAKEDAMAGEMODE_INFECTION);
+		GameServer()->CreateExplosion(m_Pos + vec2(-32, 0), m_pPlayer->GetCID(), WEAPON_HAMMER, false, TAKEDAMAGEMODE_INFECTION);
+		GameServer()->CreateExplosion(m_Pos + vec2(0, 32), m_pPlayer->GetCID(), WEAPON_HAMMER, false, TAKEDAMAGEMODE_INFECTION);
+		GameServer()->CreateExplosion(m_Pos + vec2(0, -32), m_pPlayer->GetCID(), WEAPON_HAMMER, false, TAKEDAMAGEMODE_INFECTION);
 	}
 	
 	if(GetClass() == PLAYERCLASS_WITCH)
@@ -1241,7 +1247,7 @@ void CCharacter::Die(int Killer, int Weapon)
 /* INFECTION MODIFICATION END *****************************************/
 }
 
-bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
+bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 {
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
@@ -1325,24 +1331,21 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 	}
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected())
-	{		
-		if(Weapon != WEAPON_NINJA)
-		{
-			m_pPlayer->StartInfection();
-			
-			GameServer()->SendChatTarget_Language_s(From, TEXTID_YOU_INFECTED_PLAYER, Server()->ClientName(m_pPlayer->GetCID()));
+	if(Mode == TAKEDAMAGEMODE_INFECTION && GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected())
+	{
+		m_pPlayer->StartInfection();
 		
-			GameServer()->m_apPlayers[From]->IncreaseScore(3);
-			GameServer()->m_apPlayers[From]->IncreaseNbInfection(1);
-		
-			CNetMsg_Sv_KillMsg Msg;
-			Msg.m_Killer = From;
-			Msg.m_Victim = m_pPlayer->GetCID();
-			Msg.m_Weapon = WEAPON_HAMMER;
-			Msg.m_ModeSpecial = 0;
-			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, -1);
-		}
+		GameServer()->SendChatTarget_Language_s(From, TEXTID_YOU_INFECTED_PLAYER, Server()->ClientName(m_pPlayer->GetCID()));
+	
+		GameServer()->m_apPlayers[From]->IncreaseScore(3);
+		GameServer()->m_apPlayers[From]->IncreaseNbInfection(1);
+	
+		CNetMsg_Sv_KillMsg Msg;
+		Msg.m_Killer = From;
+		Msg.m_Victim = m_pPlayer->GetCID();
+		Msg.m_Weapon = WEAPON_HAMMER;
+		Msg.m_ModeSpecial = 0;
+		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, -1);
 	}
 /* INFECTION MODIFICATION END *****************************************/
 

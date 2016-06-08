@@ -8,7 +8,7 @@
 #include "projectile.h"
 
 CProjectile::CProjectile(CGameWorld *pGameWorld, int Type, int Owner, vec2 Pos, vec2 Dir, int Span,
-		int Damage, bool Explosive, float Force, int SoundImpact, int Weapon)
+		int Damage, bool Explosive, float Force, int SoundImpact, int Weapon, int TakeDamageMode)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_PROJECTILE)
 {
 	m_Type = Type;
@@ -90,7 +90,7 @@ void CProjectile::Tick()
 		}
 		else if(m_Explosive)
 		{
-			GameServer()->CreateExplosion(CurPos, m_Owner, m_Weapon, false);
+			GameServer()->CreateExplosion(CurPos, m_Owner, m_Weapon, false, m_TakeDamageMode);
 		}
 		else if(TargetChr)
 		{
@@ -98,11 +98,11 @@ void CProjectile::Tick()
 			{
 				if(!OwnerChar->IsInfected() && !TargetChr->IsInfected())
 				{
-					TargetChr->TakeDamage(m_Direction * 0.001f, m_Damage, m_Owner, m_Weapon);
+					TargetChr->TakeDamage(m_Direction * 0.001f, m_Damage, m_Owner, m_Weapon, m_TakeDamageMode);
 				}
 				else
 				{
-					TargetChr->TakeDamage(m_Direction * max(0.001f, m_Force), m_Damage, m_Owner, m_Weapon);
+					TargetChr->TakeDamage(m_Direction * max(0.001f, m_Force), m_Damage, m_Owner, m_Weapon, m_TakeDamageMode);
 				}
 			}
 		}

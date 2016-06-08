@@ -32,6 +32,12 @@ enum
 
 #define GHOST_RADIUS 13
 #define GHOST_SEARCHMAP_SIZE (2*GHOST_RADIUS+1)
+
+enum
+{
+	TAKEDAMAGEMODE_NOINFECTION=0,
+	TAKEDAMAGEMODE_INFECTION,
+};
 /* INFECTION MODIFICATION END *****************************************/
 
 class CCharacter : public CEntity
@@ -66,7 +72,7 @@ public:
 	void FireWeapon();
 
 	void Die(int Killer, int Weapon);
-	bool TakeDamage(vec2 Force, int Dmg, int From, int Weapon);
+	bool TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode);
 
 	bool Spawn(class CPlayer *pPlayer, vec2 Pos);
 	bool Remove();

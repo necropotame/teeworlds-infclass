@@ -49,12 +49,12 @@ void CBomb::Explode()
 	
 	
 	GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
-	GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, false);
+	GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 	for(int i=0; i<6; i++)
 	{
 		float angle = static_cast<float>(i)*2.0*pi/6.0;
 		vec2 expPos = m_Pos + vec2(90.0*cos(angle), 90.0*sin(angle));
-		GameServer()->CreateExplosion(expPos, m_Owner, WEAPON_HAMMER, false);
+		GameServer()->CreateExplosion(expPos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 	}
 	for(int i=0; i<12; i++)
 	{
@@ -62,7 +62,7 @@ void CBomb::Explode()
 		vec2 expPos = vec2(180.0*cos(angle), 180.0*sin(angle));
 		if(dot(expPos, dir) <= 0)
 		{
-			GameServer()->CreateExplosion(m_Pos + expPos, m_Owner, WEAPON_HAMMER, false);
+			GameServer()->CreateExplosion(m_Pos + expPos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 		}
 	}
 	
