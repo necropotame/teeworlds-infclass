@@ -494,7 +494,7 @@ int CServer::Init()
 	
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
-	SetClassAvailability(PLAYERCLASS_MERCENARY, 2);
+	SetClassAvailability(PLAYERCLASS_MERCENARY, 2); //test
 	SetClassAvailability(PLAYERCLASS_NINJA, 2);
 	SetClassAvailability(PLAYERCLASS_MEDIC, 2);
 	SetClassAvailability(PLAYERCLASS_SCIENTIST, 0);
