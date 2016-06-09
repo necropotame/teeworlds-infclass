@@ -56,14 +56,10 @@ int CClassChooser::SelectClass()
 		if(Selection < 0 || Selection >= NbChoosableClass)
 			return 0;
 		
-		int ClassIter = 0;
-		for(int i=START_HUMANCLASS+1; i<END_HUMANCLASS; i++)
+		int ClassIter = START_HUMANCLASS+1+Selection;
+		if(GameServer()->m_pController->IsChoosableClass(ClassIter))
 		{
-			if(GameServer()->m_pController->IsChoosableClass(i))
-			{
-				if(ClassIter == Selection) return i;
-				else ClassIter++;
-			}
+			return ClassIter;
 		}
 	}
 	else
@@ -139,18 +135,9 @@ void CClassChooser::Snap(int SnappingClient)
 		{
 			if(Selection >= 0 && Selection < NbChoosableClass)
 			{
-				int ClassIter = 0;
-				for(int i=START_HUMANCLASS+1; i<END_HUMANCLASS; i++)
+				if(GameServer()->m_pController->IsChoosableClass(START_HUMANCLASS+1+Selection))
 				{
-					if(GameServer()->m_pController->IsChoosableClass(i))
-					{
-						if(ClassIter == Selection)
-						{
-							ClassUnderCursor = i;
-							break;
-						}
-						else ClassIter++;
-					}
+					ClassUnderCursor = START_HUMANCLASS+1+Selection;
 				}
 					
 				switch(ClassUnderCursor)
@@ -173,17 +160,17 @@ void CClassChooser::Snap(int SnappingClient)
 					case PLAYERCLASS_NINJA:
 						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_NINJA);
 						break;
+					default:
+						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_CLASSCHOOSER_HELP);
 				}
 			}
 		}
 		else
 		{
 			GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_RANDOM_CHOICE);
-			
-			Selection = rand()%NbChoosableClass;
 		}
 		
-		if(Selection >= 0 && Selection < NbChoosableClass)
+		if(ClassUnderCursor >= 0)
 		{
 			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));
 			if(!pObj)
