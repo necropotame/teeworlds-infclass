@@ -323,14 +323,14 @@ void CCharacter::FireWeapon()
 	if(CountInput(m_LatestPrevInput.m_Fire, m_LatestInput.m_Fire).m_Presses)
 		WillFire = true;
 
-	if(FullAuto && (m_LatestInput.m_Fire&1) && m_aWeapons[m_ActiveWeapon].m_Ammo)
+	if(FullAuto && (m_LatestInput.m_Fire&1) && (m_aWeapons[m_ActiveWeapon].m_Ammo || (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GRENADE)))
 		WillFire = true;
 
 	if(!WillFire)
 		return;
 
 	// check for ammo
-	if(!m_aWeapons[m_ActiveWeapon].m_Ammo)
+	if(!m_aWeapons[m_ActiveWeapon].m_Ammo && (GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_MERCENARY_GRENADE))
 	{
 		// 125ms is a magical limit of how fast a human can click
 		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
@@ -432,44 +432,6 @@ void CCharacter::FireWeapon()
 							m_pPortal[1]->Link(m_pPortal[0]);
 						}
 					}
-				}
-			}
-			else if(GetClass() == PLAYERCLASS_MERCENARY)
-			{				
-				//Find bomb
-				bool BombFound = false;
-				for(CMercenaryBomb *bomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARYBOMB); bomb; bomb = (CMercenaryBomb *)bomb->TypeNext())
-				{
-					if(bomb->m_Owner != m_pPlayer->GetCID()) continue;
-					bomb->Explode();
-					BombFound = true;
-				}
-				
-				if(!BombFound)
-				{
-					int ShotSpread = 2;
-					
-					CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-					Msg.AddInt(ShotSpread*2+1);
-					
-					for(int i = -ShotSpread; i <= ShotSpread; ++i)
-					{
-						float a = GetAngle(Direction) + ((float)rand()/(float)RAND_MAX)/5.0f;
-						
-						CMercenaryBomb *pProj = new CMercenaryBomb(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
-
-						// pack the Projectile and send it to the client Directly
-						CNetObj_Projectile p;
-						pProj->FillInfo(&p);
-
-						for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-							Msg.AddInt(((int *)&p)[i]);
-						Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
-					}
-
-					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
-					
-					m_ReloadTimer = Server()->TickSpeed()/4;
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_NINJA)
@@ -630,7 +592,7 @@ void CCharacter::FireWeapon()
 				
 				m_Core.m_Vel = NewVel;
 
-				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+				GameServer()->CreateSound(m_Pos, SOUND_HOOK_LOOP);
 			}
 			else
 			{
@@ -695,31 +657,76 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_GRENADE:
 		{
-			CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GRENADE,
-				m_pPlayer->GetCID(),
-				ProjStartPos,
-				Direction,
-				(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeLifetime),
-				1, true, 0, SOUND_GRENADE_EXPLODE, WEAPON_GRENADE);
+			if(GetClass() == PLAYERCLASS_MERCENARY)
+			{				
+				//Find bomb
+				bool BombFound = false;
+				for(CMercenaryBomb *bomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARYBOMB); bomb; bomb = (CMercenaryBomb *)bomb->TypeNext())
+				{
+					if(bomb->m_Owner != m_pPlayer->GetCID()) continue;
+					bomb->Explode();
+					BombFound = true;
+				}
+				
+				if(!BombFound && m_aWeapons[m_ActiveWeapon].m_Ammo)
+				{
+					int ShotSpread = 2;
+					
+					CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
+					Msg.AddInt(ShotSpread*2+1);
+					
+					for(int i = -ShotSpread; i <= ShotSpread; ++i)
+					{
+						float a = GetAngle(Direction) + ((float)rand()/(float)RAND_MAX)/5.0f;
+						
+						CMercenaryBomb *pProj = new CMercenaryBomb(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
 
-/* INFECTION MODIFICATION START ***************************************/
-			if(GetClass() == PLAYERCLASS_NINJA)
-			{
-				pProj->FlashGrenade();
+						// pack the Projectile and send it to the client Directly
+						CNetObj_Projectile p;
+						pProj->FillInfo(&p);
+
+						for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+							Msg.AddInt(((int *)&p)[i]);
+						Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
+					}
+
+					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+					
+					m_ReloadTimer = Server()->TickSpeed()/4;
+				}
+				else
+				{
+					m_aWeapons[m_ActiveWeapon].m_Ammo++;
+				}
 			}
-/* INFECTION MODIFICATION END *****************************************/
+			else
+			{
+				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GRENADE,
+					m_pPlayer->GetCID(),
+					ProjStartPos,
+					Direction,
+					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeLifetime),
+					1, true, 0, SOUND_GRENADE_EXPLODE, WEAPON_GRENADE);
 
-			// pack the Projectile and send it to the client Directly
-			CNetObj_Projectile p;
-			pProj->FillInfo(&p);
+	/* INFECTION MODIFICATION START ***************************************/
+				if(GetClass() == PLAYERCLASS_NINJA)
+				{
+					pProj->FlashGrenade();
+				}
+	/* INFECTION MODIFICATION END *****************************************/
 
-			CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-			Msg.AddInt(1);
-			for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-				Msg.AddInt(((int *)&p)[i]);
-			Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
+				// pack the Projectile and send it to the client Directly
+				CNetObj_Projectile p;
+				pProj->FillInfo(&p);
 
-			GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
+				Msg.AddInt(1);
+				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+					Msg.AddInt(((int *)&p)[i]);
+				Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
+
+				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+			}
 		} break;
 
 		case WEAPON_RIFLE:
@@ -1682,8 +1689,8 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
-			m_aWeapons[WEAPON_HAMMER].m_Got = true;
-			GiveWeapon(WEAPON_HAMMER, -1);
+			m_aWeapons[WEAPON_HAMMER].m_Got = false;
+			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(INFWEAPON_MERCENARY_GRENADE));
 			GiveWeapon(WEAPON_GUN, Server()->GetMaxAmmo(INFWEAPON_MERCENARY_GUN));
 			m_ActiveWeapon = WEAPON_GUN;
 			
@@ -1945,8 +1952,6 @@ int CCharacter::GetInfWeaponID(int WID)
 	{
 		switch(GetClass())
 		{
-			case PLAYERCLASS_MERCENARY:
-				return INFWEAPON_MERCENARY_HAMMER;
 			case PLAYERCLASS_NINJA:
 				return INFWEAPON_NINJA_HAMMER;
 			default:
@@ -1980,6 +1985,8 @@ int CCharacter::GetInfWeaponID(int WID)
 	{
 		switch(GetClass())
 		{
+			case PLAYERCLASS_MERCENARY:
+				return INFWEAPON_MERCENARY_GRENADE;
 			case PLAYERCLASS_SOLDIER:
 				return INFWEAPON_SOLDIER_GRENADE;
 			case PLAYERCLASS_NINJA:
