@@ -301,7 +301,7 @@ void CCharacter::FireWeapon()
 	if(IsFrozen())
 		return;
 /* INFECTION MODIFICATION END *****************************************/
-		
+	
 	if(m_ReloadTimer != 0)
 		return;
 
@@ -435,7 +435,7 @@ void CCharacter::FireWeapon()
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_MERCENARY)
-			{
+			{				
 				//Find bomb
 				bool BombFound = false;
 				for(CMercenaryBomb *bomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARYBOMB); bomb; bomb = (CMercenaryBomb *)bomb->TypeNext())
@@ -468,6 +468,8 @@ void CCharacter::FireWeapon()
 					}
 
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+					
+					m_ReloadTimer = Server()->TickSpeed()/4;
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_NINJA)
@@ -604,7 +606,7 @@ void CCharacter::FireWeapon()
 
 				Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
 				
-				float MaxSpeed = GameServer()->Tuning()->m_GroundControlSpeed;
+				float MaxSpeed = GameServer()->Tuning()->m_GroundControlSpeed*1.7f;
 				
 				vec2 Recoil = Direction*(-MaxSpeed/5.0f);
 				float Speed = length(m_Core.m_Vel);
@@ -619,7 +621,7 @@ void CCharacter::FireWeapon()
 				vec2 NewVel = OrthoVelDir * OrthoVelDirFactor;
 				if(VelDirFactor < 0.0f)
 				{
-					NewVel += VelDir * VelDirFactor;
+					NewVel += VelDir * (VelDirFactor + Speed);
 				}
 				else if(Speed < MaxSpeed)
 				{
@@ -733,7 +735,9 @@ void CCharacter::FireWeapon()
 		m_aWeapons[m_ActiveWeapon].m_Ammo--;
 
 	if(!m_ReloadTimer)
+	{
 		m_ReloadTimer = Server()->GetFireDelay(GetInfWeaponID(m_ActiveWeapon)) * Server()->TickSpeed() / 1000;
+	}
 }
 
 void CCharacter::HandleWeapons()
