@@ -82,6 +82,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	}
 	
 	m_NinjaLimit = 4;
+	m_MercenaryLimit = 4;
 	m_ScientistLimit = 4;
 }
 
@@ -595,6 +596,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	
 	//Get information about existing infected
 	int nbNinja = 0;
+	int nbMercenary = 0;
 	int nbScientist = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
@@ -604,6 +606,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
 		
 		if(pPlayer->GetClass() == PLAYERCLASS_NINJA) nbNinja++;
+		if(pPlayer->GetClass() == PLAYERCLASS_MERCENARY) nbMercenary++;
 		if(pPlayer->GetClass() == PLAYERCLASS_SCIENTIST) nbScientist++;
 	}
 	
@@ -636,7 +639,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	}
 	
 	bool mercenaryEnabled = true;
-	if(Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) == 0)
+	if(nbMercenary > m_MercenaryLimit || Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) == 0)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MERCENARY];
 		mercenaryEnabled = false;
@@ -808,7 +811,29 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 {
 	if(PlayerClass == PLAYERCLASS_ENGINEER) return (Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) > 1);
 	else if(PlayerClass == PLAYERCLASS_SOLDIER) return (Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) > 1);
-	else if(PlayerClass == PLAYERCLASS_MERCENARY) return (Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) > 1);
+	else if(PlayerClass == PLAYERCLASS_MERCENARY)
+	{
+		if(Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) <= 1)
+		{
+			return false;
+		}
+		else
+		{
+			//Get information about existing humans
+			int nbMercenary = 0;
+			for(int i = 0; i < MAX_CLIENTS; i++)
+			{
+				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+				
+				if(!pPlayer) continue;
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+				
+				if(pPlayer->GetClass() == PLAYERCLASS_MERCENARY) nbMercenary++;
+			}
+			
+			return (nbMercenary < m_MercenaryLimit);
+		}		
+	}
 	else if(PlayerClass == PLAYERCLASS_MEDIC) return (Server()->GetClassAvailability(PLAYERCLASS_MEDIC) > 1);
 	else if(PlayerClass == PLAYERCLASS_NINJA)
 	{

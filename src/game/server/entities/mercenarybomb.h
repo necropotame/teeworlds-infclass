@@ -22,6 +22,7 @@ public:
 
 private:
 	vec2 m_ActualPos;
+	vec2 m_ActualDir;
 	vec2 m_Direction;
 	int m_StartTick;
 };

@@ -48,17 +48,7 @@ int CClassChooser::SelectClass()
 
 	if(length(m_CurPos) > 50.0)
 	{
-		int NbChoosableClass = 0;
-		for(int i=START_HUMANCLASS+1; i<END_HUMANCLASS; i++)
-		{
-			if(GameServer()->m_pController->IsChoosableClass(i))
-			{
-				NbChoosableClass++;
-			}
-		}
-
-		if(NbChoosableClass <= 0)
-			return 0;
+		int NbChoosableClass = END_HUMANCLASS-START_HUMANCLASS-1;
 
 		float angle = atan2(-m_CurPos.y, -m_CurPos.x);
 		int Selection = static_cast<int>(NbChoosableClass*(angle/pi));
@@ -93,17 +83,7 @@ void CClassChooser::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient) || SnappingClient != m_PlayerID)
 		return;
 	
-	int NbChoosableClass = 0;
-	for(int i=START_HUMANCLASS+1; i<END_HUMANCLASS; i++)
-	{
-		if(GameServer()->m_pController->IsChoosableClass(i))
-		{
-			NbChoosableClass++;
-		}
-	}	
-	
-	if(NbChoosableClass <= 0)
-		return;
+	int NbChoosableClass = END_HUMANCLASS-START_HUMANCLASS-1;
 	
 	float stepAngle = pi/static_cast<float>(NbChoosableClass);
 	
@@ -111,7 +91,10 @@ void CClassChooser::Snap(int SnappingClient)
 	for(int i=START_HUMANCLASS+1; i<END_HUMANCLASS; i++)
 	{
 		if(!GameServer()->m_pController->IsChoosableClass(i))
+		{
+			ClassIterator++;
 			continue;
+		}
 		
 		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_IDClass[i - START_HUMANCLASS - 1], sizeof(CNetObj_Pickup)));
 		if(!pP)
@@ -127,11 +110,13 @@ void CClassChooser::Snap(int SnappingClient)
 				pP->m_Subtype = WEAPON_GRENADE;
 				break;
 			case PLAYERCLASS_MEDIC:
-				pP->m_Subtype = WEAPON_HAMMER;
+				pP->m_Subtype = WEAPON_SHOTGUN;
 				break;
 			case PLAYERCLASS_MERCENARY:
+				pP->m_Subtype = WEAPON_GUN;
+				break;
 			case PLAYERCLASS_SCIENTIST:
-				pP->m_Subtype = WEAPON_SHOTGUN;
+				pP->m_Subtype = WEAPON_HAMMER;
 				break;
 			case PLAYERCLASS_ENGINEER:
 				pP->m_Subtype = WEAPON_RIFLE;

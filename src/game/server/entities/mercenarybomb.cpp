@@ -12,6 +12,7 @@ CMercenaryBomb::CMercenaryBomb(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2
 {
 	m_Pos = Pos;
 	m_ActualPos = Pos;
+	m_ActualDir = Dir;
 	m_Direction = Dir;
 	m_Owner = Owner;
 	m_StartTick = Server()->Tick();
@@ -45,6 +46,7 @@ void CMercenaryBomb::Tick()
 	vec2 CurPos = GetPos(Ct);
 	
 	m_ActualPos = CurPos;
+	m_ActualDir = normalize(CurPos - PrevPos);
 
 	if(GameLayerClipped(CurPos))
 	{
@@ -90,7 +92,10 @@ void CMercenaryBomb::Tick()
 		m_Direction.x *= (100 - 50) / 100.0;
 		m_Direction.y *= (100 - 50) / 100.0;
 		m_StartTick = Server()->Tick();
+		
+		m_ActualDir = normalize(m_Direction);
 	}
+	
 }
 
 void CMercenaryBomb::FillInfo(CNetObj_Projectile *pProj)
@@ -114,10 +119,9 @@ void CMercenaryBomb::Snap(int SnappingClient)
 	if(pProj)
 		FillInfo(pProj);
 }
-
+	
 void CMercenaryBomb::Explode()
 {
-	GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
-	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, false, TAKEDAMAGEMODE_NOINFECTION);
+	new CGrowingExplosion<4>(GameWorld(), m_ActualPos, m_ActualDir, m_Owner, GROWINGEXPLOSIONEFFECT_POISON_INFECTED);
 	GameServer()->m_World.DestroyEntity(this);
 }

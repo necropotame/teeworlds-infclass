@@ -48,6 +48,7 @@ private:
 	bool m_InfectedStarted;
 	
 	int m_NinjaLimit;
+	int m_MercenaryLimit;
 	int m_ScientistLimit;
 };
 #endif

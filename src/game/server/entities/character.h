@@ -165,7 +165,7 @@ private:
 	int m_AirJumpCounter;
 	bool m_FirstShot;
 	vec2 m_FirstShotCoord;
-	int m_PoisonTick;
+	int m_HookDmgTick;
 	int m_InvisibleTick;
 	bool m_IsInvisible;
 	int m_HealTick;
@@ -186,6 +186,9 @@ public:
 	CBarrier* m_pBarrier;
 	CBomb* m_pBomb;
 	CPortal* m_pPortal[2];
+	int m_PoisonTick;
+	int m_Poison;
+	int m_PoisonFrom;
 	int m_PortalTick;
 	int m_LastPortalOwner;
 	int m_LastFreezer;
@@ -202,6 +205,7 @@ public:
 	void Freeze(float Time, int Player, int Reason);
 	bool IsFrozen() const;
 	void Unfreeze();
+	void Poison(int Count, int From);
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);
 /* INFECTION MODIFICATION END *****************************************/

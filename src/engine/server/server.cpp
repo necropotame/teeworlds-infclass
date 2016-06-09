@@ -458,7 +458,7 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_NINJA_HAMMER, GetFireDelay(INFWEAPON_NINJA));
 	SetFireDelay(INFWEAPON_NINJA_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_MERCENARY_HAMMER, GetFireDelay(INFWEAPON_GRENADE));
-	SetFireDelay(INFWEAPON_MERCENARY_SHOTGUN, 50);
+	SetFireDelay(INFWEAPON_MERCENARY_GUN, 50);
 	
 	SetAmmoRegenTime(INFWEAPON_NONE, 0);
 	SetAmmoRegenTime(INFWEAPON_HAMMER, 0);
@@ -474,7 +474,7 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_NINJA_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_NINJA_GRENADE, 15000);
 	SetAmmoRegenTime(INFWEAPON_MERCENARY_HAMMER, 0);
-	SetAmmoRegenTime(INFWEAPON_MERCENARY_SHOTGUN, 250);
+	SetAmmoRegenTime(INFWEAPON_MERCENARY_GUN, 250);
 	
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
@@ -490,11 +490,11 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_NINJA_HAMMER, -1);
 	SetMaxAmmo(INFWEAPON_NINJA_GRENADE, 5);
 	SetMaxAmmo(INFWEAPON_MERCENARY_HAMMER, -1);
-	SetMaxAmmo(INFWEAPON_MERCENARY_SHOTGUN, 30);
+	SetMaxAmmo(INFWEAPON_MERCENARY_GUN, 30);
 	
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
-	SetClassAvailability(PLAYERCLASS_MERCENARY, 0);
+	SetClassAvailability(PLAYERCLASS_MERCENARY, 2);
 	SetClassAvailability(PLAYERCLASS_NINJA, 2);
 	SetClassAvailability(PLAYERCLASS_MEDIC, 2);
 	SetClassAvailability(PLAYERCLASS_SCIENTIST, 0);
@@ -1801,7 +1801,7 @@ void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserDat
 	
 	if(str_comp(pClassName, "engineer") == 0) ClassId = PLAYERCLASS_ENGINEER;
 	else if(str_comp(pClassName, "soldier") == 0) ClassId = PLAYERCLASS_SOLDIER;
-	else if(str_comp(pClassName, "mercenary") == 0) ClassId = PLAYERCLASS_SOLDIER;
+	else if(str_comp(pClassName, "mercenary") == 0) ClassId = PLAYERCLASS_MERCENARY;
 	else if(str_comp(pClassName, "scientist") == 0) ClassId = PLAYERCLASS_SCIENTIST;
 	else if(str_comp(pClassName, "medic") == 0) ClassId = PLAYERCLASS_MEDIC;
 	else if(str_comp(pClassName, "ninja") == 0) ClassId = PLAYERCLASS_NINJA;
