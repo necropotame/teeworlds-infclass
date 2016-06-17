@@ -1516,7 +1516,7 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Team = TEAM_RED;
 	}
 	
-	if(m_Armor == 0 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
+	if(m_Armor == < 10 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
 	{
 		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
 		
@@ -1528,7 +1528,10 @@ void CCharacter::Snap(int SnappingClient)
 
 			pP->m_X = (int)m_Pos.x;
 			pP->m_Y = (int)m_Pos.y - 60.0;
-			pP->m_Type = POWERUP_HEALTH;
+			if(m_Health < 10 && m_Armor == 0)
+				pP->m_Type = POWERUP_HEART;
+			else
+				pP->m_Type = POWERUP_ARMOR;
 			pP->m_Subtype = 0;
 		}
 	}
