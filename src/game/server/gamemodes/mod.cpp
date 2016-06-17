@@ -125,6 +125,13 @@ void CGameControllerMOD::ResetFinalExplosion()
 	}
 }
 
+void CGameControllerMOD::EndRound()
+{
+	IGameController::EndROund();
+	
+	ResetFinalExplosion();
+}
+
 void CGameControllerMOD::Tick()
 {
 	IGameController::Tick();
@@ -230,8 +237,6 @@ void CGameControllerMOD::Tick()
 			GameServer()->SendChatTarget_Language_ii(-1, TEXTID_WIN_INFECTED, Minutes, Seconds);
 			
 			m_InfectedStarted = false;
-			
-			ResetFinalExplosion();
 			
 			EndRound();
 		}

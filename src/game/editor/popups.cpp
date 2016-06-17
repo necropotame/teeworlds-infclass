@@ -373,6 +373,42 @@ int CEditor::PopupQuad(CEditor *pEditor, CUIRect View)
 		return 1;
 	}
 
+	// move up button
+	View.HSplitBottom(12.0f, &View, &Button);
+	static int s_MoveUpButton = 0;
+	if(pEditor->DoButton_Editor(&s_MoveUpButton, "Move up", 0, &Button, 0, "Move up current quad"))
+	{
+		CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
+		if(pLayer && pEditor->m_SelectedQuad < pLayer->m_lQuads.size()-1)
+		{
+			CQuad TmpQuad = pLayer->m_lQuads[pEditor->m_SelectedQuad+1];
+			pLayer->m_lQuads[pEditor->m_SelectedQuad+1] = pLayer->m_lQuads[pEditor->m_SelectedQuad];
+			pLayer->m_lQuads[pEditor->m_SelectedQuad] = TmpQuad;
+			
+			pEditor->m_Map.m_Modified = true;
+			pEditor->m_SelectedQuad++;
+		}
+		return 1;
+	}
+
+	// move down button
+	View.HSplitBottom(12.0f, &View, &Button);
+	static int s_MoveDownButton = 0;
+	if(pEditor->DoButton_Editor(&s_MoveDownButton, "Move down", 0, &Button, 0, "Move down current quad"))
+	{
+		CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
+		if(pLayer && pEditor->m_SelectedQuad > 0)
+		{
+			CQuad TmpQuad = pLayer->m_lQuads[pEditor->m_SelectedQuad-1];
+			pLayer->m_lQuads[pEditor->m_SelectedQuad-1] = pLayer->m_lQuads[pEditor->m_SelectedQuad];
+			pLayer->m_lQuads[pEditor->m_SelectedQuad] = TmpQuad;
+			
+			pEditor->m_Map.m_Modified = true;
+			pEditor->m_SelectedQuad--;
+		}
+		return 1;
+	}
+
 	// aspect ratio button
 	View.HSplitBottom(10.0f, &View, &Button);
 	View.HSplitBottom(12.0f, &View, &Button);

@@ -22,6 +22,7 @@ public:
 	virtual void OnCharacterSpawn(class CCharacter *pChr);
 	virtual void OnPlayerInfoChange(class CPlayer *pP);
 	virtual void DoWincheck();
+	virtual void EndRound();
 	virtual bool PreSpawn(CPlayer* pPlayer, vec2 *pPos);
 	virtual bool PickupAllowed(int Index);
 	virtual int ChooseHumanClass(CPlayer* pPlayer);
