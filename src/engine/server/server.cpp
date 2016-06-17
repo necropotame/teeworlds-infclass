@@ -279,6 +279,7 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_NbInfection = 0;
 		m_Language = LANGUAGE_EN;
 		m_WaitingTime = 0;
+		m_WasInfected = 0;
 	}
 }
 /* INFECTION MODIFICATION END *****************************************/
@@ -1975,6 +1976,33 @@ int main(int argc, const char **argv) // ignore_convention
 }
 
 /* INFECTION MODIFICATION START ***************************************/
+int CServer::IsClientInfectedBefore(int ClientID)
+{
+	return m_aClients[ClientID].m_WasInfected;
+}
+
+void CServer::InfecteClient(int ClientID)
+{
+	m_aClients[ClientID].m_WasInfected = 1;
+	bool NonInfectedFound = false;
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{
+		if(m_aClients[i].m_State == CServer::CClient::STATE_INGAME && m_aClients[i].m_WasInfected == 0)
+		{
+			NonInfectedFound = true;
+			break;
+		}
+	}
+	
+	if(!NonInfectedFound)
+	{
+		for(int i=0; i<MAX_CLIENTS; i++)
+		{
+			m_aClients[i].m_WasInfected = 0;
+		}
+	}
+}
+
 int CServer::GetClientCustomSkin(int ClientID)
 {
 	return m_aClients[ClientID].m_CustomSkin;

@@ -118,6 +118,9 @@ public:
 	virtual bool DemoRecorder_IsRecording() = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
+	virtual int IsClientInfectedBefore(int ClientID) = 0;
+	virtual void InfecteClient(int ClientID) = 0;
+	
 	virtual int GetClientScore(int ClientID) = 0;
 	
 	virtual int GetClientNbRound(int ClientID) = 0;

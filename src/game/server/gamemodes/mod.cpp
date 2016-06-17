@@ -127,7 +127,7 @@ void CGameControllerMOD::ResetFinalExplosion()
 
 void CGameControllerMOD::EndRound()
 {
-	IGameController::EndROund();
+	IGameController::EndRound();
 	
 	ResetFinalExplosion();
 }
@@ -178,7 +178,7 @@ void CGameControllerMOD::Tick()
 			
 			//If needed, infect players
 			int nbInfectedNeeded = 2;
-			if(m_InfectedCounter + m_HumanCounter < 3)
+			if(m_InfectedCounter + m_HumanCounter < 4)
 			{
 				nbInfectedNeeded = 1;
 			}
@@ -188,6 +188,28 @@ void CGameControllerMOD::Tick()
 				float InfectionProb = 1.0/static_cast<float>(m_HumanCounter);
 				float random = frandom();
 				
+				//Fair infection
+				for(int i = 0; i < MAX_CLIENTS; i ++)
+				{
+					CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+					
+					if(!pPlayer) continue;
+					if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+					if(pPlayer->IsInfected()) continue;
+					
+					if(!Server()->IsClientInfectedBefore(i))
+					{
+						Server()->InfecteClient(i);
+						GameServer()->m_apPlayers[i]->StartInfection();
+						m_InfectedCounter++;
+						m_HumanCounter--;
+						
+						GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_INFECTED, Server()->ClientName(i));
+						break;
+					}
+				}
+				
+				//Unfair infection
 				for(int i = 0; i < MAX_CLIENTS; i ++)
 				{
 					CPlayer *pPlayer = GameServer()->m_apPlayers[i];
@@ -198,6 +220,7 @@ void CGameControllerMOD::Tick()
 					
 					if(random < InfectionProb)
 					{
+						Server()->InfecteClient(i);
 						GameServer()->m_apPlayers[i]->StartInfection();
 						m_InfectedCounter++;
 						m_HumanCounter--;

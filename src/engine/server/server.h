@@ -138,6 +138,7 @@ public:
 		int m_DefaultScoreMode;
 		int m_Language;
 		int m_WaitingTime;
+		int m_WasInfected;
 /* INFECTION MODIFICATION END *****************************************/
 	};
 
@@ -259,6 +260,9 @@ public:
 	int m_InfFireDelay[NB_INFWEAPON];
 	int m_InfMaxAmmo[NB_INFWEAPON];
 	int m_InfClassAvailability[NB_PLAYERCLASS];
+	
+	virtual int IsClientInfectedBefore(int ClientID);
+	virtual void InfecteClient(int ClientID);
 	
 	virtual int GetClientCustomSkin(int ClientID);
 	virtual void SetClientCustomSkin(int ClientID, int Value);
