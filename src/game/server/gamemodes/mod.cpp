@@ -127,9 +127,9 @@ void CGameControllerMOD::ResetFinalExplosion()
 
 void CGameControllerMOD::EndRound()
 {
-	IGameController::EndRound();
-	
+	m_InfectedStarted = false;
 	ResetFinalExplosion();
+	IGameController::EndRound();
 }
 
 void CGameControllerMOD::Tick()
@@ -189,6 +189,7 @@ void CGameControllerMOD::Tick()
 				float random = frandom();
 				
 				//Fair infection
+				bool FairInfectionFound = false;
 				for(int i = 0; i < MAX_CLIENTS; i ++)
 				{
 					CPlayer *pPlayer = GameServer()->m_apPlayers[i];
@@ -205,33 +206,37 @@ void CGameControllerMOD::Tick()
 						m_HumanCounter--;
 						
 						GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_INFECTED, Server()->ClientName(i));
+						FairInfectionFound = true;
 						break;
 					}
 				}
 				
 				//Unfair infection
-				for(int i = 0; i < MAX_CLIENTS; i ++)
+				if(!FairInfectionFound)
 				{
-					CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-					
-					if(!pPlayer) continue;
-					if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-					if(pPlayer->IsInfected()) continue;
-					
-					if(random < InfectionProb)
+					for(int i = 0; i < MAX_CLIENTS; i ++)
 					{
-						Server()->InfecteClient(i);
-						GameServer()->m_apPlayers[i]->StartInfection();
-						m_InfectedCounter++;
-						m_HumanCounter--;
+						CPlayer *pPlayer = GameServer()->m_apPlayers[i];
 						
-						GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_INFECTED, Server()->ClientName(i));
+						if(!pPlayer) continue;
+						if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+						if(pPlayer->IsInfected()) continue;
 						
-						break;
-					}
-					else
-					{
-						random -= InfectionProb;
+						if(random < InfectionProb)
+						{
+							Server()->InfecteClient(i);
+							GameServer()->m_apPlayers[i]->StartInfection();
+							m_InfectedCounter++;
+							m_HumanCounter--;
+							
+							GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_INFECTED, Server()->ClientName(i));
+							
+							break;
+						}
+						else
+						{
+							random -= InfectionProb;
+						}
 					}
 				}
 			}
@@ -259,13 +264,11 @@ void CGameControllerMOD::Tick()
 			
 			GameServer()->SendChatTarget_Language_ii(-1, TEXTID_WIN_INFECTED, Minutes, Seconds);
 			
-			m_InfectedStarted = false;
-			
 			EndRound();
 		}
 		
 		//Start the final explosion if the time is over
-		if(!m_ExplosionStarted && g_Config.m_SvTimelimit > 0 && (Server()->Tick()-m_RoundStartTick) >= g_Config.m_SvTimelimit*Server()->TickSpeed()*60)
+		if(m_InfectedStarted && !m_ExplosionStarted && g_Config.m_SvTimelimit > 0 && (Server()->Tick()-m_RoundStartTick) >= g_Config.m_SvTimelimit*Server()->TickSpeed()*60)
 		{
 			for(CCharacter *p = (CCharacter*) GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 			{
@@ -344,19 +347,6 @@ void CGameControllerMOD::Tick()
 			//If no more explosions, game over, decide who win
 			if(!NewExplosion)
 			{
-				ResetFinalExplosion();
-				
-				for(int j=0; j<m_MapHeight; j++)
-				{
-					for(int i=0; i<m_MapWidth; i++)
-					{
-						if(!(m_GrowingMap[j*m_MapWidth+i] & 4))
-						{
-							m_GrowingMap[j*m_MapWidth+i] = 1;
-						}
-					}
-				}
-				
 				if(m_HumanCounter)
 				{
 					if(m_HumanCounter <= 1)
@@ -389,7 +379,6 @@ void CGameControllerMOD::Tick()
 					GameServer()->SendChatTarget_Language_ii(-1, TEXTID_WIN_INFECTED, g_Config.m_SvTimelimit, 0);
 				}
 				
-				m_InfectedStarted = false;
 				EndRound();
 			}
 		}

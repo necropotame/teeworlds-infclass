@@ -470,7 +470,7 @@ void CGameContext::SendChat(int ChatterClientID, int Team, const char *pText)
 		str_format(aBuf, sizeof(aBuf), "*** %s", pText);
 	Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, Team!=CHAT_ALL?"teamchat":"chat", aBuf);
 
-	if(Team == CHAT_ALL)
+	if(Team == CGameContext::CHAT_ALL)
 	{
 		CNetMsg_Sv_Chat Msg;
 		Msg.m_Team = 0;
@@ -481,7 +481,7 @@ void CGameContext::SendChat(int ChatterClientID, int Team, const char *pText)
 	else
 	{
 		CNetMsg_Sv_Chat Msg;
-		Msg.m_Team = 0;
+		Msg.m_Team = 1;
 		Msg.m_ClientID = ChatterClientID;
 		Msg.m_pMessage = pText;
 
@@ -494,8 +494,8 @@ void CGameContext::SendChat(int ChatterClientID, int Team, const char *pText)
 /* INFECTION MODIFICATION START ***************************************/
 			if(m_apPlayers[i])
 			{
-				int PlayerTeam = (m_apPlayers[i]->IsInfected() ? TEAM_RED : TEAM_BLUE );
-				if(m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) PlayerTeam = TEAM_SPECTATORS;
+				int PlayerTeam = (m_apPlayers[i]->IsInfected() ? CGameContext::CHAT_RED : CGameContext::CHAT_BLUE );
+				if(m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS) PlayerTeam = CGameContext::CHAT_SPEC;
 				
 				if(PlayerTeam == Team)
 				{
@@ -899,8 +899,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			int Team = CGameContext::CHAT_ALL;
 			if(pMsg->m_Team)
 			{
-				if(pPlayer->GetTeam() == TEAM_SPECTATORS) Team = TEAM_SPECTATORS;
-				else Team = (pPlayer->IsInfected() ? TEAM_RED : TEAM_BLUE);
+				if(pPlayer->GetTeam() == TEAM_SPECTATORS) Team = CGameContext::CHAT_SPEC;
+				else Team = (pPlayer->IsInfected() ? CGameContext::CHAT_RED : CGameContext::CHAT_BLUE);
 			}
 /* INFECTION MODIFICATION END *****************************************/
 			
