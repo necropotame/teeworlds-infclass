@@ -48,8 +48,9 @@ private:
 	int m_InfectedCounter;
 	bool m_InfectedStarted;
 	
-	int m_NinjaLimit;
-	int m_MercenaryLimit;
-	int m_ScientistLimit;
+	int m_EngineerLimit;
+	int m_SoldierLimit;
+	int m_MedicLimit;
+	int m_SupportLimit;
 };
 #endif

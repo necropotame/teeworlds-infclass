@@ -81,9 +81,10 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 		}
 	}
 	
-	m_NinjaLimit = 4;
-	m_MercenaryLimit = 4;
-	m_ScientistLimit = 4;
+	m_SupportLimit = 5;
+	m_MedicLimit = 6;
+	m_SoldierLimit = 8;
+	m_EngineerLimit = 8;
 }
 
 CGameControllerMOD::~CGameControllerMOD()
@@ -612,9 +613,10 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	float TotalProbHumanClass = m_TotalProbHumanClass;
 	
 	//Get information about existing infected
-	int nbNinja = 0;
-	int nbMercenary = 0;
-	int nbScientist = 0;
+	int nbSupport = 0;
+	int nbMedic = 0;
+	int nbSoldier = 0;
+	int nbEngineer = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
@@ -622,44 +624,65 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		if(!pPlayer) continue;
 		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
 		
-		if(pPlayer->GetClass() == PLAYERCLASS_NINJA) nbNinja++;
-		if(pPlayer->GetClass() == PLAYERCLASS_MERCENARY) nbMercenary++;
-		if(pPlayer->GetClass() == PLAYERCLASS_SCIENTIST) nbScientist++;
+		switch(pPlayer->GetClass())
+		{
+			case PLAYERCLASS_NINJA:
+			case PLAYERCLASS_MERCENARY:
+			case PLAYERCLASS_SCIENTIST:
+				nbSupport++;
+				break;
+			case PLAYERCLASS_MEDIC:
+				nbMedic++;
+				break;
+			case PLAYERCLASS_SOLDIER:
+				nbSoldier++;
+				break;
+			case PLAYERCLASS_ENGINEER:
+				nbEngineer++;
+				break;
+		}
 	}
 	
 	bool scientistEnabled = true;
-	if(nbScientist > m_ScientistLimit || Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) == 0)
+	if(nbSupport >= m_SupportLimit || Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) == 0)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SCIENTIST];
 		scientistEnabled = false;
 	}
 	
 	bool ninjaEnabled = true;
-	if(nbNinja > m_NinjaLimit || Server()->GetClassAvailability(PLAYERCLASS_NINJA) == 0)
+	if(nbSupport >= m_SupportLimit || Server()->GetClassAvailability(PLAYERCLASS_NINJA) == 0)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_NINJA];
 		ninjaEnabled = false;
 	}
 	
+	bool mercenaryEnabled = true;
+	if(nbSupport >= m_SupportLimit || Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) == 0)
+	{
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MERCENARY];
+		mercenaryEnabled = false;
+	}
+	
 	bool medicEnabled = true;
-	if(Server()->GetClassAvailability(PLAYERCLASS_MEDIC) == 0)
+	if(nbMedic >= m_MedicLimit || Server()->GetClassAvailability(PLAYERCLASS_MEDIC) == 0)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MEDIC];
 		medicEnabled = false;
 	}
 	
 	bool soldierEnabled = true;
-	if(Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) == 0)
+	if(nbSoldier >= m_SoldierLimit || Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) == 0)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SOLDIER];
 		soldierEnabled = false;
 	}
 	
-	bool mercenaryEnabled = true;
-	if(nbMercenary > m_MercenaryLimit || Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) == 0)
+	bool soldierEnabled = true;
+	if(nbEngineer >= m_EngineerLimit || Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) == 0)
 	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MERCENARY];
-		mercenaryEnabled = false;
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SOLDIER];
+		soldierEnabled = false;
 	}
 	
 	if(scientistEnabled)
@@ -826,77 +849,40 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 
 bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 {
-	if(PlayerClass == PLAYERCLASS_ENGINEER) return (Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) > 1);
-	else if(PlayerClass == PLAYERCLASS_SOLDIER) return (Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) > 1);
-	else if(PlayerClass == PLAYERCLASS_MERCENARY)
+	int nbClass = 0;
+	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
-		if(Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) <= 1)
+		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+		
+		if(!pPlayer) continue;
+		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+		
+		switch(PlayerClass)
 		{
-			return false;
-		}
-		else
-		{
-			//Get information about existing humans
-			int nbMercenary = 0;
-			for(int i = 0; i < MAX_CLIENTS; i++)
-			{
-				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-				
-				if(!pPlayer) continue;
-				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-				
-				if(pPlayer->GetClass() == PLAYERCLASS_MERCENARY) nbMercenary++;
-			}
-			
-			return (nbMercenary < m_MercenaryLimit);
-		}		
-	}
-	else if(PlayerClass == PLAYERCLASS_MEDIC) return (Server()->GetClassAvailability(PLAYERCLASS_MEDIC) > 1);
-	else if(PlayerClass == PLAYERCLASS_NINJA)
-	{
-		if(Server()->GetClassAvailability(PLAYERCLASS_NINJA) <= 1)
-		{
-			return false;
-		}
-		else
-		{
-			//Get information about existing humans
-			int nbNinja = 0;
-			for(int i = 0; i < MAX_CLIENTS; i++)
-			{
-				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-				
-				if(!pPlayer) continue;
-				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-				
-				if(pPlayer->GetClass() == PLAYERCLASS_NINJA) nbNinja++;
-			}
-			
-			return (nbNinja < m_NinjaLimit);
+			case PLAYERCLASS_ENGINEER:
+				if(pPlayer->GetClass() == PLAYERCLASS_ENGINEER) nbClass++;
+				break;
+			case PLAYERCLASS_SOLDIER:
+				if(pPlayer->GetClass() == PLAYERCLASS_SOLDIER) nbClass++;
+				break;
+			case PLAYERCLASS_MEDIC:
+				if(pPlayer->GetClass() == PLAYERCLASS_MEDIC) nbClass++;
+				break;
+			case PLAYERCLASS_NINJA:
+			case PLAYERCLASS_MERCENARY:
+			case PLAYERCLASS_SCIENTIST:
+				if(pPlayer->GetClass() == PLAYERCLASS_NINJA) nbClass++;
+				if(pPlayer->GetClass() == PLAYERCLASS_MERCENARY) nbClass++;
+				if(pPlayer->GetClass() == PLAYERCLASS_SCIENTIST) nbClass++;
+				break;
 		}
 	}
-	else if(PlayerClass == PLAYERCLASS_SCIENTIST)
-	{
-		if(Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) <= 1)
-		{
-			return false;
-		}
-		else
-		{
-			//Get information about existing humans
-			int nbScientist = 0;
-			for(int i = 0; i < MAX_CLIENTS; i++)
-			{
-				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-				
-				if(!pPlayer) continue;
-				if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-				
-				if(pPlayer->GetClass() == PLAYERCLASS_SCIENTIST) nbScientist++;
-			}
-			
-			return (nbScientist < m_ScientistLimit);
-		}
-	}
+	
+	if(PlayerClass == PLAYERCLASS_ENGINEER) return (nbClass < m_EngineerLimit && Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) > 1);
+	else if(PlayerClass == PLAYERCLASS_SOLDIER) return (nbClass < m_SoldierLimit && Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) > 1);
+	else if(PlayerClass == PLAYERCLASS_MEDIC) return (nbClass < m_MedicLimit && Server()->GetClassAvailability(PLAYERCLASS_MEDIC) > 1);
+	else if(PlayerClass == PLAYERCLASS_NINJA) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_NINJA) > 1);
+	else if(PlayerClass == PLAYERCLASS_MERCENARY) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) > 1);
+	else if(PlayerClass == PLAYERCLASS_SCIENTIST) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) > 1);
 	else return false;
 }
