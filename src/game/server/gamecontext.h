@@ -230,7 +230,7 @@ public:
 	void SendChat(int ClientID, int Team, const char *pText);
 	void SendEmoticon(int ClientID, int Emoticon);
 	void SendWeaponPickup(int ClientID, int Weapon);
-	void SendBroadcast(const char *pText, int ClientID);
+	void SendBroadcast(const char *pText, int ClientID, bool LowPriority = false);
 
 
 	//
@@ -292,6 +292,8 @@ private:
 	
 	int m_VoteLanguageTick[MAX_CLIENTS];
 	int m_VoteLanguage[MAX_CLIENTS];
+	
+	int m_BroadCastHighPriorityTick[MAX_CLIENTS];
 
 /* INFECTION MODIFICATION END *****************************************/
 };

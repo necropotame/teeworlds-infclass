@@ -116,6 +116,9 @@ void CGameContext::Clear()
 	m_pVoteOptionLast = pVoteOptionLast;
 	m_NumVoteOptions = NumVoteOptions;
 	m_Tuning = Tuning;
+	
+	for(int i=0; i<MAX_CLIENTS; i++)
+		m_BroadCastHighPriorityTick[i] = 0;
 }
 
 
@@ -437,7 +440,13 @@ void CGameContext::SendBroadcast_Language(int To, int TextId)
 			Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage());
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
+		
+		if(m_BroadCastHighPriorityTick[i])
+		{
+			m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+		}
 	}
+	
 }
 
 void CGameContext::SendBroadcast_Language_i(int To, int TextId, int Value)
@@ -455,6 +464,11 @@ void CGameContext::SendBroadcast_Language_i(int To, int TextId, int Value)
 		{
 			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Value);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+		
+		if(m_BroadCastHighPriorityTick[i])
+		{
+			m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
 		}
 	}
 }
@@ -523,11 +537,29 @@ void CGameContext::SendWeaponPickup(int ClientID, int Weapon)
 }
 
 
-void CGameContext::SendBroadcast(const char *pText, int ClientID)
+void CGameContext::SendBroadcast(const char *pText, int To, bool LowPriority)
 {
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
 	CNetMsg_Sv_Broadcast Msg;
-	Msg.m_pMessage = pText;
-	Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			if(!LowPriority || (LowPriority && m_BroadCastHighPriorityTick[i] <= 0))
+			{
+				Msg.m_pMessage = pText;
+				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+			}
+			
+			if(!LowPriority)
+			{
+				m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+			}
+		}
+	}
 }
 
 //
@@ -650,6 +682,12 @@ void CGameContext::SwapTeams()
 
 void CGameContext::OnTick()
 {
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{
+		if(m_BroadCastHighPriorityTick[i] > 0)
+			m_BroadCastHighPriorityTick[i]--;
+	}
+	
 	// check tuning
 	CheckPureTuning();
 

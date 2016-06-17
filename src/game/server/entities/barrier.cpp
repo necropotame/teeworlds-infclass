@@ -115,12 +115,6 @@ void CBarrier::Snap(int SnappingClient)
 			return;
 		
 		vec2 Pos = m_Pos2;
-		
-		if(SnappingClient == m_Owner)
-		{
-			float lifeSpanPercent = static_cast<float>(m_LifeSpan)/static_cast<float>(Server()->TickSpeed()*g_BarrierLifeSpan);
-			Pos = m_Pos + (m_Pos2 - m_Pos)*lifeSpanPercent;
-		}
 
 		pObj->m_X = (int)Pos.x;
 		pObj->m_Y = (int)Pos.y;

@@ -502,6 +502,7 @@ void CCharacter::FireWeapon()
 							if(pTarget->IsFrozen())
 							{
 								pTarget->Unfreeze();
+								GameServer()->SendBroadcast("", pTarget->GetPlayer()->GetCID());
 							}
 							else
 							{
@@ -1163,6 +1164,33 @@ void CCharacter::Tick()
 			}
 		}
 	}
+	
+	if(GetClass() == PLAYERCLASS_SOLDIER)
+	{
+		if(m_pBomb)
+		{
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "Bombs left: %d", m_pBomb->GetNbBombs());
+			GameServer()->SendBroadcast(aBuf, GetPlayer()->GetCID(), true);
+		}
+		else
+		{
+			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+		}
+	}
+	else if(GetClass() == PLAYERCLASS_ENGINEER)
+	{
+		if(m_pBarrier)
+		{
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "Laser wall: %d sec", m_pBarrier->GetTick()/Server()->TickSpeed());
+			GameServer()->SendBroadcast(aBuf, GetPlayer()->GetCID(), true);
+		}
+		else
+		{
+			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+		}
+	}
 /* INFECTION MODIFICATION END *****************************************/
 
 	// Previnput
@@ -1516,7 +1544,7 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Team = TEAM_RED;
 	}
 	
-	if(m_Armor == < 10 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
+	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
 	{
 		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
 		
@@ -1529,7 +1557,7 @@ void CCharacter::Snap(int SnappingClient)
 			pP->m_X = (int)m_Pos.x;
 			pP->m_Y = (int)m_Pos.y - 60.0;
 			if(m_Health < 10 && m_Armor == 0)
-				pP->m_Type = POWERUP_HEART;
+				pP->m_Type = POWERUP_HEALTH;
 			else
 				pP->m_Type = POWERUP_ARMOR;
 			pP->m_Subtype = 0;

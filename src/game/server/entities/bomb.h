@@ -18,6 +18,7 @@ public:
 	void Explode();
 	bool AddBomb();
 	void TickPaused();
+	int GetNbBombs() { return m_nbBomb; }
 
 private:
 	int m_StartTick;

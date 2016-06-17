@@ -678,11 +678,11 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		soldierEnabled = false;
 	}
 	
-	bool soldierEnabled = true;
-	if(nbEngineer >= m_EngineerLimit || Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) == 0)
+	bool engineerEnabled = true;
+	if(nbEngineer >= m_EngineerLimit || Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) == 0)
 	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SOLDIER];
-		soldierEnabled = false;
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_ENGINEER];
+		engineerEnabled = false;
 	}
 	
 	if(scientistEnabled)
@@ -727,6 +727,15 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_SOLDIER;
+		}
+	}
+	
+	if(scientistEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_ENGINEER]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_ENGINEER;
 		}
 	}
 	
