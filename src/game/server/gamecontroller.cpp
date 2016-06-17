@@ -464,14 +464,30 @@ void IGameController::Tick()
 		}
 		else
 		{
-			int ScoreMode = PLAYERSCOREMODE_NORMAL;
+			int ScoreMode = PLAYERSCOREMODE_ROUNDSCORE;
 			if((Server()->Tick() - m_GameOverTick) > Server()->TickSpeed() * 8)
 			{
-				ScoreMode = PLAYERSCOREMODE_TIME;
+				if((Server()->Tick() - m_GameOverTick) == Server()->TickSpeed() * 8 + 1)
+				{
+					//Random stats
+					int Rnd = rand()%3;
+					switch(Rnd)
+					{
+						case 0:
+							ScoreMode = PLAYERSCOREMODE_SCOREPERROUND;
+							break;
+						case 1:
+							ScoreMode = PLAYERSCOREMODE_INFECTION;
+							break;
+						case 2:
+							ScoreMode = PLAYERSCOREMODE_INFECTIONPERROUND;
+							break;
+					}
+				}
 			}
 			else if((Server()->Tick() - m_GameOverTick) > Server()->TickSpeed() * 4)
 			{
-				ScoreMode = PLAYERSCOREMODE_ROUNDSCORE;
+				ScoreMode = PLAYERSCOREMODE_TIME;
 			}
 			
 			for(int i = 0; i < MAX_CLIENTS; i++)
