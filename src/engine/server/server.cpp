@@ -453,6 +453,7 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_RIFLE, 800);
 	SetFireDelay(INFWEAPON_NINJA, 800);
 	SetFireDelay(INFWEAPON_ENGINEER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
+	SetFireDelay(INFWEAPON_SNIPER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_SOLDIER_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_SCIENTIST_SHOTGUN, 250);
 	SetFireDelay(INFWEAPON_MEDIC_SHOTGUN, 250);
@@ -469,6 +470,7 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_RIFLE, 0);
 	SetAmmoRegenTime(INFWEAPON_NINJA, 0);
 	SetAmmoRegenTime(INFWEAPON_ENGINEER_RIFLE, 6000);
+	SetAmmoRegenTime(INFWEAPON_SNIPER_RIFLE, 4000);
 	SetAmmoRegenTime(INFWEAPON_SOLDIER_GRENADE, 7000);
 	SetAmmoRegenTime(INFWEAPON_SCIENTIST_SHOTGUN, 750);
 	SetAmmoRegenTime(INFWEAPON_MEDIC_SHOTGUN, 750);
@@ -485,6 +487,7 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_NINJA, 10);
 	SetMaxAmmo(INFWEAPON_ENGINEER_RIFLE, 10);
+	SetMaxAmmo(INFWEAPON_SNIPER_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_SOLDIER_GRENADE, 10);
 	SetMaxAmmo(INFWEAPON_SCIENTIST_SHOTGUN, 10);
 	SetMaxAmmo(INFWEAPON_MEDIC_SHOTGUN, 10);
@@ -495,7 +498,8 @@ int CServer::Init()
 	
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
-	SetClassAvailability(PLAYERCLASS_MERCENARY, 2); //test
+	SetClassAvailability(PLAYERCLASS_MERCENARY, 2);
+	SetClassAvailability(PLAYERCLASS_SNIPER, 0);
 	SetClassAvailability(PLAYERCLASS_NINJA, 2);
 	SetClassAvailability(PLAYERCLASS_MEDIC, 2);
 	SetClassAvailability(PLAYERCLASS_SCIENTIST, 0);
@@ -1803,6 +1807,7 @@ void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserDat
 	if(str_comp(pClassName, "engineer") == 0) ClassId = PLAYERCLASS_ENGINEER;
 	else if(str_comp(pClassName, "soldier") == 0) ClassId = PLAYERCLASS_SOLDIER;
 	else if(str_comp(pClassName, "mercenary") == 0) ClassId = PLAYERCLASS_MERCENARY;
+	else if(str_comp(pClassName, "sniper") == 0) ClassId = PLAYERCLASS_SNIPER;
 	else if(str_comp(pClassName, "scientist") == 0) ClassId = PLAYERCLASS_SCIENTIST;
 	else if(str_comp(pClassName, "medic") == 0) ClassId = PLAYERCLASS_MEDIC;
 	else if(str_comp(pClassName, "ninja") == 0) ClassId = PLAYERCLASS_NINJA;

@@ -66,6 +66,9 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_FrozenTime = -1;
 	m_IsInvisible = false;
 	m_InvisibleTick = 0;
+	m_PositionLockTick = -1;
+	m_PositionLocked = false;
+	m_PoisonTick = 0;
 	m_HealTick = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -107,6 +110,8 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_LastPortalOwner = m_pPlayer->GetCID();
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
+	m_PositionLockTick = -1;
+	m_PositionLocked = false;
 	m_Poison = 0;
 
 	ClassSpawnAttributes();
@@ -291,6 +296,20 @@ void CCharacter::HandleWeaponSwitch()
 	DoWeaponSwitch();
 }
 
+void CCharacter::SendTuneParam()
+{
+	CMsgPacker Msg(NETMSGTYPE_SV_TUNEPARAMS);
+	int *pParams = (int *)GameServer()->Tuning();
+	for(unsigned i = 0; i < sizeof(CTuningParams)/sizeof(int); i++)
+	{
+		if((int*)&GameServer()->Tuning()->m_Gravity == &pParams[i] && m_PositionLocked)
+			Msg.AddInt(0);
+		else
+			Msg.AddInt(pParams[i]);
+	}
+	Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
+}
+
 void CCharacter::FireWeapon()
 {
 /* INFECTION MODIFICATION START ***************************************/
@@ -399,6 +418,17 @@ void CCharacter::FireWeapon()
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 				}
 					
+			}
+			else if(GetClass() == PLAYERCLASS_SNIPER)
+			{
+				if(!m_PositionLocked)
+				{
+					m_PositionLockTick = Server()->TickSpeed()*10;
+					m_PositionLocked = true;
+					
+					//send new tune param
+					SendTuneParam();
+				}
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
@@ -732,8 +762,13 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_RIFLE:
 		{
-			new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID());
+			CLaser* pLaser = new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID());
 			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+			
+			if(GetClass() == PLAYERCLASS_SNIPER)
+			{
+				pLaser->m_SniperRifle = true;
+			}
 		} break;
 	}
 
@@ -931,6 +966,18 @@ void CCharacter::Tick()
 		//~ }
 	}
 
+	if(m_PositionLockTick > 0)
+	{
+		--m_PositionLockTick;
+	
+		if(m_PositionLockTick <= 0)
+		{
+			m_PositionLocked = false;
+			//Send new tune param
+			SendTuneParam();
+		}
+	}
+	
 	--m_FrozenTime;
 	if(m_IsFrozen)
 	{
@@ -1094,12 +1141,33 @@ void CCharacter::Tick()
 		m_Input.m_Direction = 0;
 		m_Input.m_Hook = 0;
 	}
-/* INFECTION MODIFICATION END *****************************************/
 
 	m_Core.m_Input = m_Input;
-	m_Core.Tick(true);
 	
-/* INFECTION MODIFICATION START ***************************************/
+	
+	if(GetClass() == PLAYERCLASS_SNIPER)
+	{
+		if(m_PositionLocked)
+		{
+			m_Input.m_Jump = 0;
+			m_Input.m_Direction = 0;
+			m_Input.m_Hook = 0;
+			
+			vec2 Pos = m_Core.m_Pos;
+			m_Core.Tick(true);
+			
+			m_Core.m_Vel = vec2(0.0f, 0.0f);
+			m_Core.m_Pos = Pos;
+		}
+		else
+		{
+			m_Core.Tick(true);
+		}
+	}
+	else
+	{
+		m_Core.Tick(true);
+	}
 	
 	if(!IsInfected() && m_Core.m_HookedPlayer >= 0)
 	{
@@ -1127,7 +1195,7 @@ void CCharacter::Tick()
 /* INFECTION MODIFICATION START ***************************************/
 	HandleWeapons();
 
-	if(GetClass() == PLAYERCLASS_HUNTER)
+	if(GetClass() == PLAYERCLASS_HUNTER || GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(IsGrounded()) m_AirJumpCounter = 0;
 		if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < 1)
@@ -1184,6 +1252,19 @@ void CCharacter::Tick()
 		{
 			char aBuf[512];
 			str_format(aBuf, sizeof(aBuf), "Laser wall: %d sec", m_pBarrier->GetTick()/Server()->TickSpeed());
+			GameServer()->SendBroadcast(aBuf, GetPlayer()->GetCID(), true);
+		}
+		else
+		{
+			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+		}
+	}
+	else if(GetClass() == PLAYERCLASS_SNIPER)
+	{
+		if(m_PositionLocked)
+		{
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "Position lock: %d sec", m_PositionLockTick/Server()->TickSpeed());
 			GameServer()->SendBroadcast(aBuf, GetPlayer()->GetCID(), true);
 		}
 		else
@@ -1732,6 +1813,23 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_MERCENARY] = true;
 			}
 			break;
+		case PLAYERCLASS_SNIPER:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, 10);
+			GiveWeapon(WEAPON_RIFLE, 10);
+			m_ActiveWeapon = WEAPON_RIFLE;
+			
+			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_ENGINEER);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SNIPER))
+			{
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_ENGINEER_TIP);
+				m_pPlayer->m_knownClass[PLAYERCLASS_SNIPER] = true;
+			}
+			break;
 		case PLAYERCLASS_SCIENTIST:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
@@ -1915,6 +2013,15 @@ void CCharacter::DestroyChildEntities()
 		bomb->Explode();
 	}
 	m_FirstShot = true;
+	
+	if(m_PositionLocked)
+	{
+		m_PositionLocked = false;
+		m_PositionLockTick = -1;
+		
+		//send new tune param
+		SendTuneParam();
+	}
 }
 
 void CCharacter::SetClass(int ClassChoosed)
@@ -2032,6 +2139,8 @@ int CCharacter::GetInfWeaponID(int WID)
 		{
 			case PLAYERCLASS_ENGINEER:
 				return INFWEAPON_ENGINEER_RIFLE;
+			case PLAYERCLASS_SNIPER:
+				return INFWEAPON_SNIPER_RIFLE;
 			default:
 				return INFWEAPON_RIFLE;
 		}

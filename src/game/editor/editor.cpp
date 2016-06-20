@@ -1166,7 +1166,7 @@ void CEditor::DoQuad(CQuad *q, int Index)
 			if(!UI()->MouseButton(1))
 			{
 				static int s_QuadPopupID = 0;
-				UiInvokePopupMenu(&s_QuadPopupID, 0, UI()->MouseX(), UI()->MouseY(), 120, 180, PopupQuad);
+				UiInvokePopupMenu(&s_QuadPopupID, 0, UI()->MouseX(), UI()->MouseY(), 120, 240, PopupQuad);
 				m_LockMouse = false;
 				s_Operation = OP_NONE;
 				UI()->SetActiveItem(0);

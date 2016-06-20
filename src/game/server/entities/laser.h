@@ -15,6 +15,8 @@ public:
 	virtual void TickPaused();
 	virtual void Snap(int SnappingClient);
 
+	bool m_SniperRifle;
+	
 protected:
 	bool HitCharacter(vec2 From, vec2 To);
 	void DoBounce();

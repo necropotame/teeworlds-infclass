@@ -45,6 +45,9 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_MERCENARY] = 1.0f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_MERCENARY];
 	
+	m_ClassProbability[PLAYERCLASS_SNIPER] = 1.0f;
+	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SNIPER];
+	
 	m_ClassProbability[PLAYERCLASS_SCIENTIST] = 0.5f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_SCIENTIST];
 	
@@ -628,6 +631,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		{
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
+			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_SCIENTIST:
 				nbSupport++;
 				break;
@@ -655,6 +659,13 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_NINJA];
 		ninjaEnabled = false;
+	}
+	
+	bool sniperEnabled = true;
+	if(nbSupport >= m_SupportLimit || Server()->GetClassAvailability(PLAYERCLASS_SNIPER) == 0)
+	{
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SNIPER];
+		sniperEnabled = false;
 	}
 	
 	bool mercenaryEnabled = true;
@@ -709,6 +720,15 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_MEDIC;
+		}
+	}
+	
+	if(sniperEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_SNIPER]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_SNIPER;
 		}
 	}
 	
@@ -879,9 +899,11 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 				break;
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
+			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_SCIENTIST:
 				if(pPlayer->GetClass() == PLAYERCLASS_NINJA) nbClass++;
 				if(pPlayer->GetClass() == PLAYERCLASS_MERCENARY) nbClass++;
+				if(pPlayer->GetClass() == PLAYERCLASS_SNIPER) nbClass++;
 				if(pPlayer->GetClass() == PLAYERCLASS_SCIENTIST) nbClass++;
 				break;
 		}
@@ -892,6 +914,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 	else if(PlayerClass == PLAYERCLASS_MEDIC) return (nbClass < m_MedicLimit && Server()->GetClassAvailability(PLAYERCLASS_MEDIC) > 1);
 	else if(PlayerClass == PLAYERCLASS_NINJA) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_NINJA) > 1);
 	else if(PlayerClass == PLAYERCLASS_MERCENARY) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) > 1);
+	else if(PlayerClass == PLAYERCLASS_SNIPER) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_SNIPER) > 1);
 	else if(PlayerClass == PLAYERCLASS_SCIENTIST) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) > 1);
 	else return false;
 }

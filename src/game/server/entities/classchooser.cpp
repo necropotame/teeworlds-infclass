@@ -51,7 +51,7 @@ int CClassChooser::SelectClass()
 		int NbChoosableClass = END_HUMANCLASS-START_HUMANCLASS-1;
 
 		float angle = atan2(-m_CurPos.y, -m_CurPos.x);
-		int Selection = static_cast<int>(NbChoosableClass*(angle/pi));
+		int Selection = static_cast<int>((NbChoosableClass-1)*(angle/pi));
 		
 		if(Selection < 0 || Selection >= NbChoosableClass)
 			return 0;
@@ -81,7 +81,7 @@ void CClassChooser::Snap(int SnappingClient)
 	
 	int NbChoosableClass = END_HUMANCLASS-START_HUMANCLASS-1;
 	
-	float stepAngle = pi/static_cast<float>(NbChoosableClass);
+	float stepAngle = pi/static_cast<float>(NbChoosableClass-1);
 	
 	int ClassIterator = 0;
 	for(int i=START_HUMANCLASS+1; i<END_HUMANCLASS; i++)
@@ -111,6 +111,7 @@ void CClassChooser::Snap(int SnappingClient)
 			case PLAYERCLASS_MERCENARY:
 				pP->m_Subtype = WEAPON_GUN;
 				break;
+			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_SCIENTIST:
 				pP->m_Subtype = WEAPON_HAMMER;
 				break;
@@ -129,7 +130,7 @@ void CClassChooser::Snap(int SnappingClient)
 	if(length(m_CurPos) <= 200.0)
 	{
 		float angle = atan2(-m_CurPos.y, -m_CurPos.x);
-		int Selection = static_cast<int>(NbChoosableClass*(angle/pi));
+		int Selection = static_cast<int>((NbChoosableClass-1)*(angle/pi));
 			
 		if(length(m_CurPos) > 50.0)
 		{
@@ -147,6 +148,9 @@ void CClassChooser::Snap(int SnappingClient)
 						break;
 					case PLAYERCLASS_MERCENARY:
 						GameServer()->SendBroadcast("Mercenary", m_PlayerID);
+						break;
+					case PLAYERCLASS_SNIPER:
+						GameServer()->SendBroadcast("Sniper", m_PlayerID);
 						break;
 					case PLAYERCLASS_MEDIC:
 						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_MEDIC);

@@ -186,6 +186,8 @@ public:
 	CBarrier* m_pBarrier;
 	CBomb* m_pBomb;
 	CPortal* m_pPortal[2];
+	int m_PositionLockTick;
+	bool m_PositionLocked;
 	int m_PoisonTick;
 	int m_Poison;
 	int m_PoisonFrom;
@@ -208,6 +210,7 @@ public:
 	void Poison(int Count, int From);
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);
+	void SendTuneParam();
 /* INFECTION MODIFICATION END *****************************************/
 };
 

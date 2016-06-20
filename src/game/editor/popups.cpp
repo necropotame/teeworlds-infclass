@@ -343,9 +343,9 @@ int CEditor::PopupQuad(CEditor *pEditor, CUIRect View)
 		}
 		return 1;
 	}
-
+	
 	// duplicate button
-	View.HSplitBottom(10.0f, &View, &Button);
+	View.HSplitBottom(6.0f, &View, &Button);
 	View.HSplitBottom(12.0f, &View, &Button);
 	static int s_DuplicateButton = 0;
 	if(pEditor->DoButton_Editor(&s_DuplicateButton, "Dupicate", 0, &Button, 0, "Duplicates the current quad"))
@@ -372,45 +372,154 @@ int CEditor::PopupQuad(CEditor *pEditor, CUIRect View)
 		}
 		return 1;
 	}
-
-	// move up button
+	
+	// bezier curve
+	View.HSplitBottom(6.0f, &View, &Button);
 	View.HSplitBottom(12.0f, &View, &Button);
-	static int s_MoveUpButton = 0;
-	if(pEditor->DoButton_Editor(&s_MoveUpButton, "Move up", 0, &Button, 0, "Move up current quad"))
+	static int s_CurveButton = 0;
+	if(pEditor->DoButton_Editor(&s_CurveButton, "Curve", 0, &Button, 0, "Transorm quad into curve"))
 	{
 		CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
-		if(pLayer && pEditor->m_SelectedQuad < pLayer->m_lQuads.size()-1)
+		if(pLayer)
 		{
-			CQuad TmpQuad = pLayer->m_lQuads[pEditor->m_SelectedQuad+1];
-			pLayer->m_lQuads[pEditor->m_SelectedQuad+1] = pLayer->m_lQuads[pEditor->m_SelectedQuad];
-			pLayer->m_lQuads[pEditor->m_SelectedQuad] = TmpQuad;
+			CQuad& OldQuad = pLayer->m_lQuads[pEditor->m_SelectedQuad];
+			
+			vec2 pt0 = vec2(fx2f(OldQuad.m_aPoints[2].x), fx2f(OldQuad.m_aPoints[2].y));
+			vec2 pt1 = vec2(fx2f(OldQuad.m_aPoints[0].x), fx2f(OldQuad.m_aPoints[0].y));
+			vec2 pt2 = vec2(fx2f(OldQuad.m_aPoints[1].x), fx2f(OldQuad.m_aPoints[1].y));
+			vec2 pt3 = vec2(fx2f(OldQuad.m_aPoints[3].x), fx2f(OldQuad.m_aPoints[3].y));
+			
+			vec2 lastPt = pt0;
+			vec2 lastDir = normalize(pt1-pt0);
+			vec2 lastOrthoDir = vec2(-lastDir.y, lastDir.x);
+			
+			float thickness = 3.0f;
+			for(int i=1; i<=64; i++)
+			{
+				float alpha = static_cast<float>(i)/64.0f; 
+				vec2 ptTmp0 = pt0 + (pt1 - pt0)*alpha;
+				vec2 ptTmp1 = pt1 + (pt2 - pt1)*alpha;
+				vec2 ptTmp2 = pt2 + (pt3 - pt2)*alpha;
+				vec2 ptTmp3 = ptTmp0 + (ptTmp1 - ptTmp0)*alpha;
+				vec2 ptTmp4 = ptTmp1 + (ptTmp2 - ptTmp1)*alpha;
+				vec2 pt = ptTmp3 + (ptTmp4 - ptTmp3)*alpha;
+				vec2 dir = normalize(pt - lastPt);
+				vec2 orthoDir = vec2(-dir.y, dir.x);
+				
+				vec2 newPt0 = lastPt + lastOrthoDir*(thickness/2.0f);
+				vec2 newPt1 = lastPt - lastOrthoDir*(thickness/2.0f);
+				vec2 newPt2 = pt + orthoDir*(thickness/2.0f);
+				vec2 newPt3 = pt - orthoDir*(thickness/2.0f);
+				
+				int NewQuadId = pLayer->m_lQuads.size();
+				pLayer->m_lQuads.add(pLayer->m_lQuads[pEditor->m_SelectedQuad]);
+				CQuad& NewQuad = pLayer->m_lQuads[NewQuadId];
+				
+				NewQuad.m_aPoints[0].x = f2fx(newPt0.x);
+				NewQuad.m_aPoints[0].y = f2fx(newPt0.y);
+				NewQuad.m_aPoints[1].x = f2fx(newPt1.x);
+				NewQuad.m_aPoints[1].y = f2fx(newPt1.y);
+				NewQuad.m_aPoints[2].x = f2fx(newPt2.x);
+				NewQuad.m_aPoints[2].y = f2fx(newPt2.y);
+				NewQuad.m_aPoints[3].x = f2fx(newPt3.x);
+				NewQuad.m_aPoints[3].y = f2fx(newPt3.y);
+				NewQuad.m_aPoints[4].x = f2fx((newPt0.x + newPt1.x + newPt2.x + newPt3.x)/4.0f);
+				NewQuad.m_aPoints[4].y = f2fx((newPt0.y + newPt1.y + newPt2.y + newPt3.y)/4.0f);				
+				
+				lastPt = pt;
+				lastOrthoDir = orthoDir;
+			}
 			
 			pEditor->m_Map.m_Modified = true;
-			pEditor->m_SelectedQuad++;
 		}
 		return 1;
 	}
 
 	// move down button
-	View.HSplitBottom(12.0f, &View, &Button);
-	static int s_MoveDownButton = 0;
-	if(pEditor->DoButton_Editor(&s_MoveDownButton, "Move down", 0, &Button, 0, "Move down current quad"))
+	CUIRect SubButton;
+	CUIRect SubButton2;
+	View.HSplitBottom(6.0f, &View, &Button);
+	View.HSplitBottom(12.0f, &View, &SubButton);
+	
 	{
-		CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
-		if(pLayer && pEditor->m_SelectedQuad > 0)
+		SubButton.VSplitLeft(24.0f, &SubButton2, &SubButton);
+		static int s_MoveDownButton = 0;
+		if(pEditor->DoButton_Editor(&s_MoveDownButton, "<<", 0, &SubButton2, 0, "Move back current quad"))
 		{
-			CQuad TmpQuad = pLayer->m_lQuads[pEditor->m_SelectedQuad-1];
-			pLayer->m_lQuads[pEditor->m_SelectedQuad-1] = pLayer->m_lQuads[pEditor->m_SelectedQuad];
-			pLayer->m_lQuads[pEditor->m_SelectedQuad] = TmpQuad;
-			
-			pEditor->m_Map.m_Modified = true;
-			pEditor->m_SelectedQuad--;
+			CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
+			if(pLayer && pEditor->m_SelectedQuad != 0)
+			{
+				CQuad TmpQuad = pLayer->m_lQuads[0];
+				pLayer->m_lQuads[0] = pLayer->m_lQuads[pEditor->m_SelectedQuad];
+				pLayer->m_lQuads[pEditor->m_SelectedQuad] = TmpQuad;
+				
+				pEditor->m_Map.m_Modified = true;
+				pEditor->m_SelectedQuad--;
+			}
+			//~ return 1;
 		}
-		return 1;
+	}
+	{
+		SubButton.VSplitLeft(4.0f, &SubButton2, &SubButton);
+		SubButton.VSplitLeft(24.0f, &SubButton2, &SubButton);
+		static int s_MoveDownButton = 0;
+		if(pEditor->DoButton_Editor(&s_MoveDownButton, "<", 0, &SubButton2, 0, "Move back current quad"))
+		{
+			CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
+			if(pLayer && pEditor->m_SelectedQuad > 0)
+			{
+				CQuad TmpQuad = pLayer->m_lQuads[pEditor->m_SelectedQuad-1];
+				pLayer->m_lQuads[pEditor->m_SelectedQuad-1] = pLayer->m_lQuads[pEditor->m_SelectedQuad];
+				pLayer->m_lQuads[pEditor->m_SelectedQuad] = TmpQuad;
+				
+				pEditor->m_Map.m_Modified = true;
+				pEditor->m_SelectedQuad--;
+			}
+			//~ return 1;
+		}
+	}
+	{
+		SubButton.VSplitLeft(4.0f, &SubButton2, &SubButton);
+		SubButton.VSplitLeft(24.0f, &SubButton2, &SubButton);
+		static int s_MoveUpButton = 0;
+		if(pEditor->DoButton_Editor(&s_MoveUpButton, ">", 0, &SubButton2, 0, "Move front current quad"))
+		{
+			CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
+			if(pLayer && pEditor->m_SelectedQuad < pLayer->m_lQuads.size()-1)
+			{
+				CQuad TmpQuad = pLayer->m_lQuads[pEditor->m_SelectedQuad+1];
+				pLayer->m_lQuads[pEditor->m_SelectedQuad+1] = pLayer->m_lQuads[pEditor->m_SelectedQuad];
+				pLayer->m_lQuads[pEditor->m_SelectedQuad] = TmpQuad;
+				
+				pEditor->m_Map.m_Modified = true;
+				pEditor->m_SelectedQuad++;
+			}
+			//~ return 1;
+		}
+	}
+
+	{
+		SubButton.VSplitLeft(4.0f, &SubButton2, &SubButton);
+		SubButton.VSplitLeft(24.0f, &SubButton2, &SubButton);
+		static int s_MoveUpButton = 0;
+		if(pEditor->DoButton_Editor(&s_MoveUpButton, ">>", 0, &SubButton2, 0, "Move front current quad"))
+		{
+			CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
+			if(pLayer && pEditor->m_SelectedQuad != pLayer->m_lQuads.size()-1)
+			{
+				CQuad TmpQuad = pLayer->m_lQuads[pLayer->m_lQuads.size()-1];
+				pLayer->m_lQuads[pLayer->m_lQuads.size()-1] = pLayer->m_lQuads[pEditor->m_SelectedQuad];
+				pLayer->m_lQuads[pEditor->m_SelectedQuad] = TmpQuad;
+				
+				pEditor->m_Map.m_Modified = true;
+				pEditor->m_SelectedQuad++;
+			}
+			//~ return 1;
+		}
 	}
 
 	// aspect ratio button
-	View.HSplitBottom(10.0f, &View, &Button);
+	View.HSplitBottom(6.0f, &View, &Button);
 	View.HSplitBottom(12.0f, &View, &Button);
 	CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
 	if(pLayer && pLayer->m_Image >= 0 && pLayer->m_Image < pEditor->m_Map.m_lImages.size())

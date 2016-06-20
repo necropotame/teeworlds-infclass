@@ -15,6 +15,8 @@ CLaser::CLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, float StartEner
 	m_EvalTick = 0;
 	GameWorld()->InsertEntity(this);
 	DoBounce();
+	
+	m_SniperRifle = false;
 }
 
 
@@ -29,7 +31,14 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	m_From = From;
 	m_Pos = At;
 	m_Energy = -1;
-	pHit->TakeDamage(vec2(0.f, 0.f), GameServer()->Tuning()->m_LaserDamage, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+	
+	int Damage = GameServer()->Tuning()->m_LaserDamage;
+	if(m_SniperRifle)
+	{
+		Damage = 18;
+	}
+	
+	pHit->TakeDamage(vec2(0.f, 0.f), Damage, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
 	return true;
 }
 
