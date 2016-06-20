@@ -66,7 +66,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_FrozenTime = -1;
 	m_IsInvisible = false;
 	m_InvisibleTick = 0;
-	m_PositionLockTick = -1;
+	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
 	m_PoisonTick = 0;
 	m_HealTick = 0;
@@ -110,7 +110,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_LastPortalOwner = m_pPlayer->GetCID();
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
-	m_PositionLockTick = -1;
+	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
 	m_Poison = 0;
 
@@ -421,11 +421,13 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SNIPER)
 			{
-				if(!m_PositionLocked)
+				if(m_PositionLockTick < -Server()->TickSpeed())
 				{
-					m_PositionLockTick = Server()->TickSpeed()*10;
+					m_PositionLockTick = Server()->TickSpeed()*15;
 					m_PositionLocked = true;
 					
+					m_ReloadTimer = Server()->TickSpeed();
+				
 					//send new tune param
 					SendTuneParam();
 				}
@@ -762,12 +764,15 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_RIFLE:
 		{
-			CLaser* pLaser = new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID());
-			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
-			
 			if(GetClass() == PLAYERCLASS_SNIPER)
 			{
-				pLaser->m_SniperRifle = true;
+				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), 18);
+				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+			}
+			else
+			{
+				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), GameServer()->Tuning()->m_LaserDamage);
+				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 			}
 		} break;
 	}
@@ -965,17 +970,20 @@ void CCharacter::Tick()
 			//~ }
 		//~ }
 	}
-
+	
 	if(m_PositionLockTick > 0)
 	{
 		--m_PositionLockTick;
-	
 		if(m_PositionLockTick <= 0)
 		{
 			m_PositionLocked = false;
 			//Send new tune param
 			SendTuneParam();
 		}
+	}
+	else
+	{
+		--m_PositionLockTick;
 	}
 	
 	--m_FrozenTime;
@@ -2017,7 +2025,7 @@ void CCharacter::DestroyChildEntities()
 	if(m_PositionLocked)
 	{
 		m_PositionLocked = false;
-		m_PositionLockTick = -1;
+		m_PositionLockTick = -Server()->TickSpeed()*10;
 		
 		//send new tune param
 		SendTuneParam();

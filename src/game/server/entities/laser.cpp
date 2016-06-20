@@ -4,9 +4,10 @@
 #include <game/server/gamecontext.h>
 #include "laser.h"
 
-CLaser::CLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, float StartEnergy, int Owner)
+CLaser::CLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, float StartEnergy, int Owner, int Dmg)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_LASER)
 {
+	m_Dmg = Dmg;
 	m_Pos = Pos;
 	m_Owner = Owner;
 	m_Energy = StartEnergy;
@@ -15,8 +16,6 @@ CLaser::CLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, float StartEner
 	m_EvalTick = 0;
 	GameWorld()->InsertEntity(this);
 	DoBounce();
-	
-	m_SniperRifle = false;
 }
 
 
@@ -32,13 +31,7 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	m_Pos = At;
 	m_Energy = -1;
 	
-	int Damage = GameServer()->Tuning()->m_LaserDamage;
-	if(m_SniperRifle)
-	{
-		Damage = 18;
-	}
-	
-	pHit->TakeDamage(vec2(0.f, 0.f), Damage, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+	pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
 	return true;
 }
 
