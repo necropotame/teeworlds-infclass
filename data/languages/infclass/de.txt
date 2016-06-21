@@ -1,0 +1,272 @@
+
+##### translated strings #####
+
+Switch language to english ?
+== Serversprache auf Deutsch stellen?
+
+%s entered and joined the game
+== %s hat den Server und das Spiel betreten
+
+%s joined the game
+== %s hat das Spiel betreten
+
+%s joined the spectators
+== %s wurde ein Zuschauer
+
+%s has left the game
+== %s hat den Server verlassen
+
+%s has left the game (%s)
+== %s hat den Server verlassen (%s)
+
+%s has been kicked (%s)
+== %s wurde vom Server geworfen (%s)
+
+%s has been banned (%s)
+== %s würde vom Server gebannt (%s)
+
+%s changed their name to %s
+== %s wechselte den Namen zu %s
+
+Unknown command
+== Unbekannter Befehl
+
+A random class will be automatically attributed to you when rounds start
+== Du erhältst ab jetzt eine zufällig Klasse am Anfang jeder Runde
+
+The class selector will be displayed when rounds start
+== Du kannst wieder eine Klasse am Anfang jeder Runde wählen
+
+You can't join the spectators right now
+== Du kannst gerade nicht zuschauen
+
+You have infected %s, +3 points
+== Du hast %s infiziert, +3 Punkte
+
+You have killed a witch, +5 points
+== Du hast eine Hexe getötet, +5 Punkte
+
+You have survived, +5 points
+== Du hast überlebt, +5 Punkte
+
+%s has been infected
+== %s wurde infiziert
+
+The witch is coming!
+== Die Hexe ist da !
+
+The witch is dead
+== Die Hexe ist tot
+
+The undead is coming!
+== Der Untote ist da !
+
+The undead is finally dead
+== Der Untote ist nun endgültig tot
+
+Infected won the round in %i:%02i minutes
+== Die Infizierten haben die Runde in %i:%02i Minuten gewonnen
+
+One human won the round
+== Ein Überlebender hat die Runde gewonnen
+
+%i humans won the round
+== %i Überlebende haben die Runde gewonnen
+
+Choose your class by clicking on the weapon
+== Wähle deine Klasse indem du auf die entsprechende Waffe klickst
+
+Random choice
+== Zufällige Auswahl
+
+Engineer
+== Engineer
+
+Soldier
+== Soldier
+
+Scientist
+== Scientist
+
+Medic
+== Medic
+
+Ninja
+== Ninja
+
+Smoker
+== Smoker
+
+Boomer
+== Boomer
+
+Hunter
+== Hunter
+
+Undead
+== Untoter
+
+Witch
+== Hexe
+
+You are a human: %s
+== Du bist folgender Überlebender: %s
+
+You are an infected: %s
+== Du bist folgender Infizierter: %s
+
+Type "/help %s" for more information about your class
+== Gib "/help %s" ein für zusätzliche Informationen zu deiner Klasse
+
+List of commands
+== Liste der Befehle
+
+/info: Information about this mod
+== /info: Informationen zu diesem Mod
+
+/help: Rules of the game
+== /help: Regeln zu diesem Spiel
+
+/help <class>: Information about a particular class
+== /help <Klasse>: Informationen zu einer bestimmten Klasse
+
+/language <lang>: Change the language of the mod
+== /language <lang>: Ändert die Sprache des Mods
+
+/customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans
+== /customskin <none|me|all>: Macht den eigenen Skin für niemanden, nur für mich oder alle Überlebenden sichtbar
+
+/alwaysrandom <0|1>: Choose automatically random class when the round start
+== /alwaysrandom <0|1>: Wählt automatisch eine zufällige Klasse wenn die Runde beginnt
+
+Press <F3> or <F4> while holding <TAB> to switch the score system
+== Drücke <F3> oder <F4> während du <TAB> gedrückt hast, um eine andere Anzeige im Score zu erhalten
+
+InfectionClass, by necropotame (version %s)
+== InfectionClass, von necropotame (version %s)
+
+Based on Infection mod by Gravity
+== Basiert auf den Infection mod von Gravity
+
+Thanks to %s
+== Dank an %s
+
+Rules of the game:
+== Regeln zum Spiel:
+
+InfectionClass is a team game between humans and infected.
+== InfectionClass ist ein Teamspiel. Überlebende gegen Infizierte
+
+All players start as human.
+== Alle Spieler starten als Überlebende.
+
+10 seconds later, two players become infected.
+== Nach 10 Sekunden werden zwei Überlebende zu Infizierten.
+
+The goal for humans is to survive until the army clean the map.
+== Das Ziel der Überlebenden ist es zu überleben bis die Armee eingreift.
+
+The goal for infected is to infect all humans.
+== Das Ziel der Infizierten ist es, alle Überlebenden zu verseuchen.
+
+Engineer:
+== Engineer:
+
+The Engineer can build walls with his hammer to block infected.
+== Der Ingenieur kann Walls erzeugen, die die Infizierten abblocken.
+
+When an infected touch the wall, he dies.
+== Wenn ein Infizierter an die Wall kommt, stirbt er.
+
+The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
+== Die Lebensdauer einer Wall beträgt 30 Sekunden. Außerdem kann nur eine Wall pro Ingenieur aktiv sein.
+
+Soldier:
+== Soldier:
+
+The Soldier can pose floating bombs with his hammer.
+== Der Soldat kann schwebende Bomben setzen.
+
+Each bomb can explode three times.
+== Jede Bombe kann er drei mal explodieren lassen.
+
+Use the hammer to place the bomb and explode it multiple times.
+== Benutze den Hammer um die Bomben zu setzen und explodieren zu lassen.
+
+Bombs are limited to one per player at the same time.
+== Es kann nur eine Bombe pro Soldat gesetzt sein.
+
+Medic:
+== Medic:
+
+The Medic can protect humans with his hammer by giving them armor.
+== Der Medic kann Überlebende durch schlagen mit dem Hammer Schilde geben.
+
+He has also a powerful shotgun that can pullback infected.
+== Er hat eine starke Schrotflinte, mit der er Infizierte weit zurückschießen kann.
+
+Ninja:
+== Ninja:
+
+The Ninja can throw flash grenades that can freeze infected during three seconds.
+== Der Ninja kann Granaten werfen, die Infizierte für 3 Sekunden einfrieren.
+
+His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
+== Sein Hammer ist durch eine Katana ersetzt, die ihm erlaubt zwei Mal mir ihr durch die Luft zu schlagen, bevor der Spieler wieder den Boden berühren muss.
+
+Smoker:
+== Smoker:
+
+The Smoker can infect humans and heal infected with his hammer.
+== Der Smoker kann mit seinem Hammer entweder Infizierte heilen oder Überlebende verseuchen.
+
+He can also inflict 4 damage points per seconds by hooking humans.
+== Außerdem kann er Überlebenden 4 Schadenspunkte pro Sekunde zufügen, in denen er sie hookt.
+
+Boomer:
+== Boomer:
+
+The Boomer explodes when he attack.
+== Der Boomer explodiert, wenn er angreift.
+
+All humans affected by the explosion become infected.
+== Alle Überlebenden, die von der Explosion etwas abbekommen, werden verseucht.
+
+He can also inflict 1 damage point per seconds by hooking humans.
+== Außerdem kann er Überlebenden 1 Schadenspunkt pro Sekunde zufügen, in denen er sie hookt.
+
+Hunter:
+== Hunter:
+
+The Hunter can infect humans and heal infected with his hammer.
+== Der Hunter kann mit seinem Hammer entweder Infizierte heilen oder Überlebende verseuchen.
+
+He can jump two times in air.
+== Er kann zwei mal in der Luft springen.
+
+Undead:
+== Untoter:
+
+The Undead can infect humans and heal infected with his hammer.
+== Der Untote kann mit seinem Hammer entweder Infizierte heilen oder Überlebende verseuchen.
+
+Instead of dying, he freezes during 10 seconds.
+== Er wird für 10 Sekunden eingefroren, anstatt zu sterben.
+
+If an infected heals him, the freeze effect disappear.
+== Wenn er von einem Infizierten geheilt wird, so wird der Einfriereffekt sofort wieder aufgehoben.
+
+Witch:
+== Hexe:
+
+The Witch can infect humans and heal infected with his hammer.
+== Die Hexe kann mit ihrem Hammer entweder Infizierte heilen oder Überlebende verseuchen.
+
+When an infected dies, he may re-spawn near her.
+== Wenn ein Infizierter stirbt, kann er neben ihr wiederbelebt werden.
+
+If the Witch dies, she disappear and is replaced by an another class of infected.
+== Wenn die Hexe stirbt, verschwindet sie und wird durch eine andere Klasse der Infizierten ersetzt.
+
+She can also inflict 1 damage point per seconds by hooking humans.
+== Außerdem kann sie Überlebenden 1 Schadenspunkt pro Sekunde zufügen, in denen sie sie hookt.

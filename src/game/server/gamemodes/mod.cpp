@@ -28,6 +28,9 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_GHOST] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_GHOST];
 	
+	m_ClassProbability[PLAYERCLASS_SPIDER] = 0.25f * m_ClassProbability[PLAYERCLASS_SPIDER];
+	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_SPIDER];
+	
 	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25 * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_WITCH];
 	
@@ -799,6 +802,14 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		ghostEnabled = false;
 	}
 	
+	//Check if spider are enabled
+	bool spiderEnabled = true;
+	if(Server()->GetClassAvailability(PLAYERCLASS_SPIDER) == 0)
+	{
+		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_SPIDER];
+		spiderEnabled = false;
+	}
+	
 	//Check if boomers are enabled
 	bool boomerEnabled = true;
 	if(Server()->GetClassAvailability(PLAYERCLASS_BOOMER) == 0)
@@ -861,6 +872,15 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_GHOST;
+		}
+	}
+	
+	if(spiderEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_SPIDER]/TotalProbInfectedClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_SPIDER;
 		}
 	}
 	

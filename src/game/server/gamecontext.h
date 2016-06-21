@@ -39,91 +39,6 @@
 
 */
 
-enum
-{
-	TEXTID_SWITCH_LANGUAGE,
-	
-	TEXTID_PLAYER_ENTER,
-	TEXTID_PLAYER_JOIN_GAME,
-	TEXTID_PLAYER_JOIN_SPEC,
-	TEXTID_PLAYER_EXIT,
-	TEXTID_PLAYER_EXIT_REASON,
-	TEXTID_PLAYER_KICK,
-	TEXTID_PLAYER_BAN,
-	TEXTID_PLAYER_CHANGE_NAME,
-	
-	TEXTID_CMD_UNKNOWN,
-	TEXTID_ALWAYSRANDOM_ON,
-	TEXTID_ALWAYSRANDOM_OFF,
-	TEXTID_YOU_SPEC_REJECT,
-	
-	TEXTID_YOU_FROZEN,
-	TEXTID_YOU_INFECTED_PLAYER,
-	TEXTID_YOU_KILLED_WITCH,
-	TEXTID_YOU_SURVIVED,
-	TEXTID_YOU_PORTAL_INFECTION,
-	TEXTID_YOU_PORTAL_KILL,
-	TEXTID_PLAYER_INFECTED,
-	TEXTID_WITCH_SPAWN,
-	TEXTID_WITCH_DEAD,
-	TEXTID_UNDEAD_SPAWN,
-	TEXTID_UNDEAD_DEAD,
-	
-	TEXTID_WIN_INFECTED,
-	TEXTID_WIN_HUMAN,
-	TEXTID_WIN_HUMANS,
-	
-	TEXTID_CLASSCHOOSER_HELP,
-	TEXTID_RANDOM_CHOICE,
-	
-	TEXTID_ENGINEER,
-	TEXTID_SOLDIER,
-	TEXTID_SCIENTIST,
-	TEXTID_MEDIC,
-	TEXTID_NINJA,
-	TEXTID_SMOKER,
-	TEXTID_BOOMER,
-	TEXTID_HUNTER,
-	TEXTID_UNDEAD,
-	TEXTID_WITCH,
-	
-	TEXTID_YOU_ENGINEER,
-	TEXTID_YOU_SOLDIER,
-	TEXTID_YOU_SCIENTIST,
-	TEXTID_YOU_MEDIC,
-	TEXTID_YOU_NINJA,
-	TEXTID_YOU_SMOKER,
-	TEXTID_YOU_BOOMER,
-	TEXTID_YOU_HUNTER,
-	TEXTID_YOU_UNDEAD,
-	TEXTID_YOU_WITCH,
-	
-	TEXTID_ENGINEER_TIP,
-	TEXTID_SOLDIER_TIP,
-	TEXTID_SCIENTIST_TIP,
-	TEXTID_MEDIC_TIP,
-	TEXTID_NINJA_TIP,
-	TEXTID_SMOKER_TIP,
-	TEXTID_BOOMER_TIP,
-	TEXTID_HUNTER_TIP,
-	TEXTID_UNDEAD_TIP,
-	TEXTID_WITCH_TIP,
-	
-	TEXTID_CMD_CMDLIST,
-	TEXTID_CMD_INFO,
-	TEXTID_CMD_HELP,
-	TEXTID_CMD_HELP_ENGINEER,
-	TEXTID_CMD_HELP_SOLDIER,
-	TEXTID_CMD_HELP_SCIENTIST,
-	TEXTID_CMD_HELP_MEDIC,
-	TEXTID_CMD_HELP_NINJA,
-	TEXTID_CMD_HELP_SMOKER,
-	TEXTID_CMD_HELP_BOOMER,
-	TEXTID_CMD_HELP_HUNTER,
-	TEXTID_CMD_HELP_UNDEAD,
-	TEXTID_CMD_HELP_WITCH
-};
-
 class CGameContext : public IGameServer
 {
 	IServer *m_pServer;
@@ -275,6 +190,9 @@ private:
 	
 	static bool s_ServerLocalizationInitialized;
 	static CLocalizationDatabase s_ServerLocalizationFr;
+	static CLocalizationDatabase s_ServerLocalizationDe;
+	static CLocalizationDatabase s_ServerLocalizationUk;
+	static CLocalizationDatabase s_ServerLocalizationRu;
 	
 	static const char* ms_TextEn[];
 	static const char* ms_TextFr[];
@@ -287,7 +205,7 @@ private:
 public:
 	virtual const char* ServerLocalize(const char* pText, int Language);
 	
-	virtual void SendBroadcast_Language(int To, const char* pText);
+	virtual void SendBroadcast_Language(int To, const char* pText, bool LowPriority = false);
 	virtual void SendBroadcast_Language_s(int To, const char* pText, const char* pParam);
 	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, bool LowPriority = false);
 	virtual void SendBroadcast_ClassIntro(int To, int Class);

@@ -1,0 +1,275 @@
+
+##### translated strings #####
+
+Switch language to english ?
+== Switch language to russian ?
+
+%s entered and joined the game
+== %s вошёл и присоединился к игре
+
+%s joined the game
+== %s присоединился к игре
+
+%s joined the spectators
+== %s присоединился к наблюдателям
+
+%s has left the game
+== %s вышел из игры
+
+%s has left the game (%s)
+== %s покинул игру(%s)
+
+%s has been kicked (%s)
+== %s изгнан/кикнут из игры (%s)
+
+%s has been banned (%s)
+== %s заблокирован/забанен (%s)
+
+%s changed their name to %s
+== %s сменил своё имя на %s
+
+Unknown command
+== Неизвестная команда
+
+A random class will be automatically attributed to you when rounds start
+== Как только начнётся раунд, тебе будет назначен случайный класс
+
+The class selector will be displayed when rounds start
+== Выбор класса появится с началом раунда
+
+You can't join the spectators right now
+== Ты не можешь присоединиться к наблюдателям в данный момент
+
+You are frozen: %d sec
+== Ты заморожён: %d секунд
+
+You have infected %s, +3 points
+== Ты заразил %s, +3 очка
+
+You have killed a witch, +5 points
+== Ты убил ведьму/witch, +5 очков
+
+You have survived, +5 points
+== Ты выжил, +5 очков
+
+%s has been infected
+== %s заражён
+
+The witch is coming!
+== Приближается ведьма!
+
+The witch is dead
+== Ведьма мертва
+
+The undead is coming!
+== Бессмертный приближается!
+
+The undead is finally dead
+== Бессмертный уничтожен
+
+Infected won the round in %i:%02i minutes
+== Зараженные выиграли раунд за %i:%02i минут
+
+One human won the round
+== Один человек победил
+
+%i humans won the round
+== %i людей победило
+
+Choose your class by clicking on the weapon
+== Выбери класс, нажав на оружие
+
+Random choice
+== Случайный выбор
+
+Engineer
+== Engineer/Инженер
+
+Soldier
+== Soldier/Солдат
+
+Scientist
+== Scientist/Учёный
+
+Medic
+== Medic/Врач
+
+Ninja
+== Ninja/Ниндзя
+
+Smoker
+== Smoker
+
+Boomer
+== Boomer
+
+Hunter
+== Hunter
+
+Undead
+== Undead
+
+Witch
+== Witch
+
+You are a human: %s
+== Ты человек в роли: %s
+
+You are an infected: %s
+== Ты заражённый в роли: %s
+
+Type "/help %s" for more information about your class
+== Напиши \"/help %s\", чтобы больше узнать о своём классе
+
+List of commands
+== Список команд
+
+/info: Information about this mod
+== /info: Информация о моде
+
+/help: Rules of the game
+== /help: Правила игры
+
+/help <class>: Information about a particular class
+== /help <class>: Информация о конкретном классе
+
+/language <lang>: Change the language of the mod
+== /language <lang>: Сменить язык мода
+
+/customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans
+== /customskin <none|me|all>: Показывать скины никого, тебя или всех
+
+/alwaysrandom <0|1>: Choose automatically random class when the round start
+== /alwaysrandom <0|1>: Всегда выбирать случайный класс, когда начинается раунд
+
+Press <F3> or <F4> while holding <TAB> to switch the score system
+== Нажми <F3> или <F4> пока зажимаешь <TAB>, чтобы сменить систему очков
+
+InfectionClass, by necropotame (version %s)
+== InfectionClass, от necropotame (version %s)
+
+Based on Infection mod by Gravity
+== Основан на Infection режиме от Gravity
+
+Thanks to %s
+== Благодарю %s
+
+Rules of the game:
+== Правила игры:
+
+InfectionClass is a team game between humans and infected.
+== InfectionClass командная игра, где сталкиваются Заражённые и Выжившие.
+
+All players start as human.
+== Все игроки начинают за людей.
+
+10 seconds later, two players become infected.
+== 10 секунд спустя, два человека становятся заражёнными.
+
+The goal for humans is to survive until the army clean the map.
+== Цель людей - выжить определённое время.
+
+The goal for infected is to infect all humans.
+== Цель заражённых инфицировать людей.
+
+Engineer:
+== Инженер:
+
+The Engineer can build walls with his hammer to block infected.
+== Инженер может строить стены, чтобы затормаживать заражённых.
+
+When an infected touch the wall, he dies.
+== Когда заражённый прикасается в стене, он, инфицированный умирает.
+
+The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
+== Стена существует 30 секунд. Один человек может поставить только одну стену за раз.
+
+Soldier:
+== Солдат:
+
+The Soldier can pose floating bombs with his hammer.
+== Солдат может ставить летающие бомбы с помощью молота.
+
+Each bomb can explode three times.
+== Каждая бомба может взорваться 3 раза.
+
+Use the hammer to place the bomb and explode it multiple times.
+== Используй молот, чтобы поставить бомбу и взорвать её.
+
+Bombs are limited to one per player at the same time.
+== Ты можешь ставить только одну бомбу за раз.
+
+Medic:
+== Врач:
+
+The Medic can protect humans with his hammer by giving them armor.
+== Врач может защищать людей, используя свой молот, чтобы дать им броню.
+
+He has also a powerful shotgun that can pullback infected.
+== Также он обладает мощным дробовиком, способным отталкивать заражённых.
+
+Ninja:
+== Ниндзя:
+
+The Ninja can throw flash grenades that can freeze infected during three seconds.
+== Ниндзя может кидать замораживающие гранаты, которые останавливают заражённых на 3 секунды.
+
+His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
+== Его молот заменён катаной, позволяющей ему делать рывок 2 раза, пока он не коснётся земли.
+
+Smoker:
+== Курильщик:
+
+The Smoker can infect humans and heal infected with his hammer.
+== Курильщик может заражать людей и лечить заражённых с помощью своего молота.
+
+He can also inflict 4 damage points per seconds by hooking humans.
+== Также он наносит 4 урона в секунду человеку, к которому прицеплен цепочкой(хуком).
+
+Boomer:
+== Взрывун:
+
+The Boomer explodes when he attack.
+== Взрывун производит взрыв вместо атаки.
+
+All humans affected by the explosion become infected.
+== Все люди, задетые взрывом, заражаются.
+
+He can also inflict 1 damage point per seconds by hooking humans.
+== Ещё он наносит 1 урон в секунду человеку, к которому прицеплен цепочкой(хуком).
+
+Hunter:
+== Охотник:
+
+The Hunter can infect humans and heal infected with his hammer.
+== Охотник может заражать людей и лечить заражённых с помощью своего молота.
+
+He can jump two times in air.
+== Он обладает тройным прыжком
+
+Undead:
+== Бессмертный:
+
+The Undead can infect humans and heal infected with his hammer.
+== Бессмертный может заражать людей и лечить заражённых с помощью своего молота.
+
+Instead of dying, he freezes during 10 seconds.
+== Вместо смерти он впадает в спячку на 10 секунд.
+
+If an infected heals him, the freeze effect disappear.
+== Если заражённый его излечит, то Бессмертный пробуждается ото сна.
+
+Witch:
+== Ведьма:
+
+The Witch can infect humans and heal infected with his hammer.
+== Ведьма может заражать людей и лечить заражённых с помощью своего молота.
+
+When an infected dies, he may re-spawn near her.
+== После смерти заражённый с определённым шансом воскреснуть рядом с Ведьмой.
+
+If the Witch dies, she disappear and is replaced by an another class of infected.
+== Когда она помирает, то игрок получает другой класс.
+
+She can also inflict 1 damage point per seconds by hooking humans.
+== А также она наносит 1 урона в секунду человеку, к которому прицеплен цепочкой(хуком).

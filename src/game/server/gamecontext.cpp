@@ -23,37 +23,21 @@ enum
 };
 
 /* INFECTION MODIFICATION START ***************************************/
-const char* CGameContext::ms_TextEn[] = {
-#include "text/english.h"
-};
-
-const char* CGameContext::ms_TextFr[] = {
-#include "text/french.h"
-};
-
-const char* CGameContext::ms_TextDe[] = {
-#include "text/german.h"
-};
-
-const char* CGameContext::ms_TextRu[] = {
-#include "text/russian.h"
-};
-
-const char* CGameContext::ms_TextUk[] = {
-#include "text/ukrainian.h"
-};
 
 bool CGameContext::s_ServerLocalizationInitialized = false;
 CLocalizationDatabase CGameContext::s_ServerLocalizationFr;
+CLocalizationDatabase CGameContext::s_ServerLocalizationDe;
+CLocalizationDatabase CGameContext::s_ServerLocalizationUk;
+CLocalizationDatabase CGameContext::s_ServerLocalizationRu;
 
 void CGameContext::InitializeServerLocatization()
 {
 	if(!s_ServerLocalizationInitialized)
 	{
 		s_ServerLocalizationFr.Load("languages/infclass/fr.txt", Storage(), Console());
-		//~ s_ServerLocalizationDe.Load("languages/infclass/de.txt", Storage(), Console());
-		//~ s_ServerLocalizationUk.Load("languages/infclass/uk.txt", Storage(), Console());
-		//~ s_ServerLocalizationRu.Load("languages/infclass/ru.txt", Storage(), Console());
+		s_ServerLocalizationDe.Load("languages/infclass/de.txt", Storage(), Console());
+		s_ServerLocalizationUk.Load("languages/infclass/uk.txt", Storage(), Console());
+		s_ServerLocalizationRu.Load("languages/infclass/ru.txt", Storage(), Console());
 		
 		s_ServerLocalizationInitialized = true;
 	}
@@ -69,15 +53,16 @@ const char* CGameContext::ServerLocalize(const char *pStr, int Language)
 	{
 		case LANGUAGE_FR:
 			pNewStr = s_ServerLocalizationFr.FindString(str_quickhash(pStr));
-		//~ case LANGUAGE_DE:
-			//~ return CGameContext::ms_TextDe[TextId];
-		//~ case LANGUAGE_RU:
-			//~ return CGameContext::ms_TextRu[TextId];
-		//~ case LANGUAGE_UK:
-			//~ return CGameContext::ms_TextUk[TextId];
-		//~ case LANGUAGE_EN:
-		//~ default:
-			//~ return CGameContext::ms_TextEn[TextId];
+			break;
+		case LANGUAGE_DE:
+			pNewStr = s_ServerLocalizationDe.FindString(str_quickhash(pStr));
+			break;
+		case LANGUAGE_UK:
+			pNewStr = s_ServerLocalizationUk.FindString(str_quickhash(pStr));
+			break;
+		case LANGUAGE_RU:
+			pNewStr = s_ServerLocalizationRu.FindString(str_quickhash(pStr));
+			break;
 	}
 	
 	if(pNewStr == 0)
@@ -462,7 +447,7 @@ void CGameContext::SendMODT_Language_s(int To, const char* pText, const char* pP
 	}
 }
 
-void CGameContext::SendBroadcast_Language(int To, const char* pText)
+void CGameContext::SendBroadcast_Language(int To, const char* pText, bool LowPriority)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -473,13 +458,16 @@ void CGameContext::SendBroadcast_Language(int To, const char* pText)
 	{
 		if(m_apPlayers[i])
 		{
-			Msg.m_pMessage = ServerLocalize(pText, m_apPlayers[i]->GetLanguage());
-			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
-		}
-		
-		if(m_BroadCastHighPriorityTick[i])
-		{
-			m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+			if(!LowPriority || (LowPriority && m_BroadCastHighPriorityTick[i] <= 0))
+			{
+				Msg.m_pMessage = ServerLocalize(pText, m_apPlayers[i]->GetLanguage());
+				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+			}
+			
+			if(!LowPriority)
+			{
+				m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+			}
 		}
 	}
 }
@@ -573,6 +561,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 			break;
 		case PLAYERCLASS_GHOST:
 			pClassName = ServerLocalize("Ghost", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_SPIDER:
+			pClassName = ServerLocalize("Spider", m_apPlayers[ClientID]->GetLanguage());
 			break;
 		case PLAYERCLASS_WITCH:
 			pClassName = ServerLocalize("Witch", m_apPlayers[ClientID]->GetLanguage());
@@ -1821,23 +1812,23 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 56: //Belgique (until Dutch is available)
 					case 250: //France
 					case 492: //Monaco
-						Msg.m_pDescription = ms_TextFr[TEXTID_SWITCH_LANGUAGE];
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_FR);
 						m_VoteLanguage[ClientID] = LANGUAGE_FR;				
 						break;
 					case 40: //Austria
 					case 276: //Germany
 					case 438: //Liechtenstein
 					case 756: //Switzerland
-						Msg.m_pDescription = ms_TextDe[TEXTID_SWITCH_LANGUAGE];
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_DE);
 						m_VoteLanguage[ClientID] = LANGUAGE_DE;				
 						break;
 					case 112: //Belarus
 					case 643: //Russia
-						Msg.m_pDescription = ms_TextRu[TEXTID_SWITCH_LANGUAGE];
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_RU);
 						m_VoteLanguage[ClientID] = LANGUAGE_RU;				
 						break;
 					case 804: //Ukraine
-						Msg.m_pDescription = ms_TextUk[TEXTID_SWITCH_LANGUAGE];
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_UK);
 						m_VoteLanguage[ClientID] = LANGUAGE_UK;				
 						break;
 				}
@@ -2360,6 +2351,7 @@ void CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "smoker") == 0) pPlayer->SetClass(PLAYERCLASS_SMOKER);
 	else if(str_comp(pClassName, "hunter") == 0) pPlayer->SetClass(PLAYERCLASS_HUNTER);
 	else if(str_comp(pClassName, "ghost") == 0) pPlayer->SetClass(PLAYERCLASS_GHOST);
+	else if(str_comp(pClassName, "spider") == 0) pPlayer->SetClass(PLAYERCLASS_SPIDER);
 	else if(str_comp(pClassName, "boomer") == 0) pPlayer->SetClass(PLAYERCLASS_BOOMER);
 	else if(str_comp(pClassName, "undead") == 0) pPlayer->SetClass(PLAYERCLASS_UNDEAD);
 	else if(str_comp(pClassName, "witch") == 0) pPlayer->SetClass(PLAYERCLASS_WITCH);

@@ -499,7 +499,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
 	SetClassAvailability(PLAYERCLASS_MERCENARY, 2);
-	SetClassAvailability(PLAYERCLASS_SNIPER, 0);
+	SetClassAvailability(PLAYERCLASS_SNIPER, 2);
 	SetClassAvailability(PLAYERCLASS_NINJA, 2);
 	SetClassAvailability(PLAYERCLASS_MEDIC, 2);
 	SetClassAvailability(PLAYERCLASS_SCIENTIST, 0);
@@ -507,6 +507,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
 	SetClassAvailability(PLAYERCLASS_GHOST, 1);
+	SetClassAvailability(PLAYERCLASS_SPIDER, 1);
 	SetClassAvailability(PLAYERCLASS_BOOMER, 1);
 	SetClassAvailability(PLAYERCLASS_UNDEAD, 1);
 	SetClassAvailability(PLAYERCLASS_WITCH, 1);
@@ -913,7 +914,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 			if(m_aClients[ClientID].m_State == CClient::STATE_AUTH)
 			{
 				const char *pVersion = Unpacker.GetString(CUnpacker::SANITIZE_CC);
-				if(str_comp(pVersion, GameServer()->NetVersion()) != 0)
+				if(str_comp(pVersion, "0.6 626fce9a778df4d4") != 0 && str_comp(pVersion, GameServer()->NetVersion()) != 0)
 				{
 					// wrong version
 					char aReason[256];
@@ -1618,16 +1619,37 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 			net_addr_str(pThis->m_NetServer.ClientAddr(i), aAddrStr, sizeof(aAddrStr), true);
 			if(pThis->m_aClients[i].m_State == CClient::STATE_INGAME)
 			{
+				char aLangBuf[8];
+				
+				switch(pThis->m_aClients[i].m_Language)
+				{
+					case LANGUAGE_EN:
+						str_copy(aLangBuf, "en", sizeof(aLangBuf));
+						break;
+					case LANGUAGE_FR:
+						str_copy(aLangBuf, "fr", sizeof(aLangBuf));
+						break;
+					case LANGUAGE_DE:
+						str_copy(aLangBuf, "de", sizeof(aLangBuf));
+						break;
+					case LANGUAGE_UK:
+						str_copy(aLangBuf, "uk", sizeof(aLangBuf));
+						break;
+					case LANGUAGE_RU:
+						str_copy(aLangBuf, "ru", sizeof(aLangBuf));
+						break;
+				}
+				
 				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? "Admin" :
 										pThis->m_aClients[i].m_Authed == CServer::AUTHED_MOD ? "Mod" : "";
-				str_format(aBuf, sizeof(aBuf), "#%02i (%s) %s, [%s], cs:%i | ar:%i | language:%i",
+				str_format(aBuf, sizeof(aBuf), "#%02i (%s) %s, [%s], cs:%i | ar:%i | language:%s",
 					i,
 					aAddrStr,
 					pThis->m_aClients[i].m_aName,
 					pAuthStr,
 					pThis->m_aClients[i].m_CustomSkin,
 					pThis->m_aClients[i].m_AlwaysRandom,
-					pThis->m_aClients[i].m_Language
+					aLangBuf
 				);
 			}
 			else
@@ -1814,6 +1836,7 @@ void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserDat
 	else if(str_comp(pClassName, "smoker") == 0) ClassId = PLAYERCLASS_SMOKER;
 	else if(str_comp(pClassName, "hunter") == 0) ClassId = PLAYERCLASS_HUNTER;
 	else if(str_comp(pClassName, "ghost") == 0) ClassId = PLAYERCLASS_GHOST;
+	else if(str_comp(pClassName, "spider") == 0) ClassId = PLAYERCLASS_SPIDER;
 	else if(str_comp(pClassName, "boomer") == 0) ClassId = PLAYERCLASS_BOOMER;
 	else if(str_comp(pClassName, "undead") == 0) ClassId = PLAYERCLASS_UNDEAD;
 	else if(str_comp(pClassName, "witch") == 0) ClassId = PLAYERCLASS_WITCH;

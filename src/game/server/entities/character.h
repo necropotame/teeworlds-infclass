@@ -194,6 +194,7 @@ public:
 	int m_PortalTick;
 	int m_LastPortalOwner;
 	int m_LastFreezer;
+	int m_HookMode;
 
 public:
 	void DestroyChildEntities();

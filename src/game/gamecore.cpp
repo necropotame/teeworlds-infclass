@@ -74,8 +74,14 @@ void CCharacterCore::Reset()
 	m_TriggeredEvents = 0;
 }
 
-void CCharacterCore::Tick(bool UseInput)
+void CCharacterCore::Tick(bool UseInput, int HookMode)
 {
+	int HookDragAccel = m_pWorld->m_Tuning.m_HookDragAccel;
+	if(HookMode == 1) HookDragAccel = 1.0f;
+	
+	int HookDragSpeed = m_pWorld->m_Tuning.m_HookDragSpeed;
+	if(HookMode == 1) HookDragSpeed = 0.0f;
+	
 	float PhysSize = 28.0f;
 	m_TriggeredEvents = 0;
 
@@ -271,7 +277,7 @@ void CCharacterCore::Tick(bool UseInput)
 		// don't do this hook rutine when we are hook to a player
 		if(m_HookedPlayer == -1 && distance(m_HookPos, m_Pos) > 46.0f)
 		{
-			vec2 HookVel = normalize(m_HookPos-m_Pos)*m_pWorld->m_Tuning.m_HookDragAccel;
+			vec2 HookVel = normalize(m_HookPos-m_Pos)*HookDragAccel;
 			// the hook as more power to drag you up then down.
 			// this makes it easier to get on top of an platform
 			if(HookVel.y > 0)
@@ -287,15 +293,23 @@ void CCharacterCore::Tick(bool UseInput)
 			vec2 NewVel = m_Vel+HookVel;
 
 			// check if we are under the legal limit for the hook
-			if(length(NewVel) < m_pWorld->m_Tuning.m_HookDragSpeed || length(NewVel) < length(m_Vel))
+			if(length(NewVel) < HookDragSpeed || length(NewVel) < length(m_Vel))
 				m_Vel = NewVel; // no problem. apply
 
 		}
 
-		// release hook (max hook time is 1.25
+		// release hook (max hook time is 1.25)
 		m_HookTick++;
 		if(m_HookedPlayer != -1 && (m_HookTick > SERVER_TICK_SPEED+SERVER_TICK_SPEED/5 || !m_pWorld->m_apCharacters[m_HookedPlayer]))
 		{
+			m_HookedPlayer = -1;
+			m_HookState = HOOK_RETRACTED;
+			m_HookPos = m_Pos;
+		}
+		
+		if(HookMode == 1 && distance(m_HookPos, m_Pos) > 500.0f)
+		{
+			// release hook
 			m_HookedPlayer = -1;
 			m_HookState = HOOK_RETRACTED;
 			m_HookPos = m_Pos;
@@ -336,8 +350,8 @@ void CCharacterCore::Tick(bool UseInput)
 			{
 				if(Distance > PhysSize*1.50f) // TODO: fix tweakable variable
 				{
-					float Accel = m_pWorld->m_Tuning.m_HookDragAccel * (Distance/m_pWorld->m_Tuning.m_HookLength);
-					float DragSpeed = m_pWorld->m_Tuning.m_HookDragSpeed;
+					float Accel = HookDragAccel * (Distance/m_pWorld->m_Tuning.m_HookLength);
+					float DragSpeed = HookDragSpeed;
 
 					// add force to the hooked player
 					pCharCore->m_Vel.x = SaturatedAdd(-DragSpeed, DragSpeed, pCharCore->m_Vel.x, Accel*Dir.x*1.5f);

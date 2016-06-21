@@ -1,5 +1,8 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
+
+#include <base/math.h>
+#include <base/vmath.h>
 #include <new>
 #include <engine/shared/config.h>
 #include <game/server/gamecontext.h>
@@ -113,6 +116,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
 	m_Poison = 0;
+	m_HookMode = 0;
 
 	ClassSpawnAttributes();
 	DestroyChildEntities();
@@ -257,43 +261,83 @@ void CCharacter::DoWeaponSwitch()
 
 void CCharacter::HandleWeaponSwitch()
 {
-	int WantedWeapon = m_ActiveWeapon;
-	if(m_QueuedWeapon != -1)
-		WantedWeapon = m_QueuedWeapon;
-
 	// select Weapon
 	int Next = CountInput(m_LatestPrevInput.m_NextWeapon, m_LatestInput.m_NextWeapon).m_Presses;
 	int Prev = CountInput(m_LatestPrevInput.m_PrevWeapon, m_LatestInput.m_PrevWeapon).m_Presses;
 
-	if(Next < 128) // make sure we only try sane stuff
+	if(GetClass() == PLAYERCLASS_SPIDER)
 	{
-		while(Next) // Next Weapon selection
+		int WantedHookMode = m_HookMode;
+		
+		if(Next < 128) // make sure we only try sane stuff
 		{
-			WantedWeapon = (WantedWeapon+1)%NUM_WEAPONS;
-			if(m_aWeapons[WantedWeapon].m_Got)
+			while(Next) // Next Weapon selection
+			{
+				WantedHookMode = (WantedHookMode+1)%2;
 				Next--;
+			}
 		}
-	}
 
-	if(Prev < 128) // make sure we only try sane stuff
-	{
-		while(Prev) // Prev Weapon selection
+		if(Prev < 128) // make sure we only try sane stuff
 		{
-			WantedWeapon = (WantedWeapon-1)<0?NUM_WEAPONS-1:WantedWeapon-1;
-			if(m_aWeapons[WantedWeapon].m_Got)
+			while(Prev) // Prev Weapon selection
+			{
+				WantedHookMode = (WantedHookMode+2-1)%2;
 				Prev--;
+			}
+		}
+
+		// Direct Weapon selection
+		if(m_LatestInput.m_WantedWeapon)
+			WantedHookMode = m_Input.m_WantedWeapon-1;
+
+		if(WantedHookMode >= 0 && WantedHookMode < 2)
+		{
+			if(m_HookMode != WantedHookMode)
+			{
+				m_HookMode = WantedHookMode;
+				SendTuneParam();
+			}
+			else
+				m_HookMode = WantedHookMode;
 		}
 	}
+	else
+	{
+		int WantedWeapon = m_ActiveWeapon;
+		if(m_QueuedWeapon != -1)
+			WantedWeapon = m_QueuedWeapon;
+		
+		if(Next < 128) // make sure we only try sane stuff
+		{
+			while(Next) // Next Weapon selection
+			{
+				WantedWeapon = (WantedWeapon+1)%NUM_WEAPONS;
+				if(m_aWeapons[WantedWeapon].m_Got)
+					Next--;
+			}
+		}
 
-	// Direct Weapon selection
-	if(m_LatestInput.m_WantedWeapon)
-		WantedWeapon = m_Input.m_WantedWeapon-1;
+		if(Prev < 128) // make sure we only try sane stuff
+		{
+			while(Prev) // Prev Weapon selection
+			{
+				WantedWeapon = (WantedWeapon-1)<0?NUM_WEAPONS-1:WantedWeapon-1;
+				if(m_aWeapons[WantedWeapon].m_Got)
+					Prev--;
+			}
+		}
 
-	// check for insane values
-	if(WantedWeapon >= 0 && WantedWeapon < NUM_WEAPONS && WantedWeapon != m_ActiveWeapon && m_aWeapons[WantedWeapon].m_Got)
-		m_QueuedWeapon = WantedWeapon;
+		// Direct Weapon selection
+		if(m_LatestInput.m_WantedWeapon)
+			WantedWeapon = m_Input.m_WantedWeapon-1;
 
-	DoWeaponSwitch();
+		// check for insane values
+		if(WantedWeapon >= 0 && WantedWeapon < NUM_WEAPONS && WantedWeapon != m_ActiveWeapon && m_aWeapons[WantedWeapon].m_Got)
+			m_QueuedWeapon = WantedWeapon;
+
+		DoWeaponSwitch();
+	}
 }
 
 void CCharacter::SendTuneParam()
@@ -334,6 +378,20 @@ void CCharacter::SendTuneParam()
 		{
 			if(m_IsFrozen)
 				Msg.AddInt(0);
+			else
+				Msg.AddInt(pParams[i]);
+		}
+		else if((int*)&GameServer()->Tuning()->m_HookDragSpeed == &pParams[i])
+		{
+			if(m_HookMode == 1)
+				Msg.AddInt(0);
+			else
+				Msg.AddInt(pParams[i]);
+		}
+		else if((int*)&GameServer()->Tuning()->m_HookDragAccel == &pParams[i])
+		{
+			if(m_HookMode == 1)
+				Msg.AddInt(100);
 			else
 				Msg.AddInt(pParams[i]);
 		}
@@ -1168,6 +1226,29 @@ void CCharacter::Tick()
 		}
 	}
 	
+	if(GetClass() == PLAYERCLASS_SPIDER)
+	{
+		if(m_HookMode == 1 && m_Core.m_HookState == HOOK_GRABBED && distance(m_Core.m_Pos, m_Core.m_HookPos) > 48.0f)
+		{
+			// Find other players
+			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+			{
+				if(!p->IsInfected()) continue;
+
+				vec2 IntersectPos = closest_point_on_line(m_Core.m_Pos, m_Core.m_HookPos, p->m_Pos);
+				float Len = distance(p->m_Pos, IntersectPos);
+				if(Len < p->m_ProximityRadius)
+				{				
+					m_Core.m_HookState = HOOK_GRABBED;
+					m_Core.m_HookPos = p->m_Pos;
+					m_Core.m_HookedPlayer = p->m_pPlayer->GetCID();
+					
+					break;
+				}
+			}
+		}
+	}
+	
 	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_Ninja.m_CurrentMoveTime <= 0)
 	{
 		m_Ninja.m_ActivationTick = Server()->Tick();
@@ -1193,19 +1274,19 @@ void CCharacter::Tick()
 			m_Input.m_Hook = 0;
 			
 			vec2 Pos = m_Core.m_Pos;
-			m_Core.Tick(true);
+			m_Core.Tick(true, m_HookMode);
 			
 			m_Core.m_Vel = vec2(0.0f, 0.0f);
 			m_Core.m_Pos = Pos;
 		}
 		else
 		{
-			m_Core.Tick(true);
+			m_Core.Tick(true, m_HookMode);
 		}
 	}
 	else
 	{
-		m_Core.Tick(true);
+		m_Core.Tick(true, m_HookMode);
 	}
 	
 	if(!IsInfected() && m_Core.m_HookedPlayer >= 0)
@@ -1290,6 +1371,13 @@ void CCharacter::Tick()
 	{
 		if(m_PositionLocked)
 			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Position lock: %d sec", m_PositionLockTick/Server()->TickSpeed(), true);
+		else
+			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+	}
+	else if(GetClass() == PLAYERCLASS_SPIDER)
+	{
+		if(m_HookMode > 0)
+			GameServer()->SendBroadcast_Language(GetPlayer()->GetCID(), "Web mode enabled", true);
 		else
 			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
 	}
@@ -1797,7 +1885,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_ENGINEER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_ENGINEER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help engineer\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "engineer");
 				m_pPlayer->m_knownClass[PLAYERCLASS_ENGINEER] = true;
 			}
 			break;
@@ -1814,7 +1902,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SOLDIER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SOLDIER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help soldier\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "soldier");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SOLDIER] = true;
 			}
 			break;
@@ -1830,7 +1918,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MERCENARY);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MERCENARY))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help mercenary\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "mercenary");
 				m_pPlayer->m_knownClass[PLAYERCLASS_MERCENARY] = true;
 			}
 			break;
@@ -1847,7 +1935,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SNIPER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SNIPER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help sniper\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "sniper");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SNIPER] = true;
 			}
 			break;
@@ -1864,7 +1952,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SCIENTIST);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SCIENTIST))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help scientist\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "scientist");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SCIENTIST] = true;
 			}
 			break;
@@ -1881,7 +1969,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MEDIC);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help medic\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "medic");
 				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
 			}
 			break;
@@ -1897,7 +1985,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_NINJA);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_NINJA))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help ninja\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "ninja");
 				m_pPlayer->m_knownClass[PLAYERCLASS_NINJA] = true;
 			}
 			break;
@@ -1919,7 +2007,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SMOKER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SMOKER))
 			{   
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help smoker\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "smoker");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SMOKER] = true;
 			}
 			break;
@@ -1934,7 +2022,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_BOOMER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BOOMER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help boomer\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "boomer");
 				m_pPlayer->m_knownClass[PLAYERCLASS_BOOMER] = true;
 			}
 			break;
@@ -1949,7 +2037,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_HUNTER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_HUNTER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help hunter\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "hunter");
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -1964,8 +2052,23 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_GHOST);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_GHOST))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help ghost\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "ghost");
 				m_pPlayer->m_knownClass[PLAYERCLASS_GHOST] = true;
+			}
+			break;
+		case PLAYERCLASS_SPIDER:
+			m_Health = 10;
+			m_Armor = 0;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SPIDER);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SPIDER))
+			{
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "spider");
+				m_pPlayer->m_knownClass[PLAYERCLASS_SPIDER] = true;
 			}
 			break;
 		case PLAYERCLASS_UNDEAD:
@@ -1979,7 +2082,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_UNDEAD);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_UNDEAD))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help undead\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "undead");
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -1994,7 +2097,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_WITCH);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_WITCH))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help witch\" for more information about your class");
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "witch");
 				m_pPlayer->m_knownClass[PLAYERCLASS_WITCH] = true;
 			}
 			break;
