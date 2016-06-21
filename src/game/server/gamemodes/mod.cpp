@@ -875,14 +875,14 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		}
 	}
 	
-	if(spiderEnabled)
-	{
-		random -= m_ClassProbability[PLAYERCLASS_SPIDER]/TotalProbInfectedClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_SPIDER;
-		}
-	}
+	//~ if(spiderEnabled)
+	//~ {
+		//~ random -= m_ClassProbability[PLAYERCLASS_SPIDER]/TotalProbInfectedClass;
+		//~ if(random < 0.0f)
+		//~ {
+			//~ return PLAYERCLASS_SPIDER;
+		//~ }
+	//~ }
 	
 	if(hunterEnabled)
 	{
