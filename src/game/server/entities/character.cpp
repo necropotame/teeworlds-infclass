@@ -997,7 +997,7 @@ void CCharacter::Tick()
 		else
 		{
 			int FreezeSec = 1+(m_FrozenTime/Server()->TickSpeed());
-			GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), TEXTID_YOU_FROZEN, FreezeSec);
+			GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), "You are frozen for %i seconds", FreezeSec);
 		}
 	}
 	
@@ -1463,13 +1463,13 @@ void CCharacter::Die(int Killer, int Weapon)
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
 		m_pPlayer->StartInfection(true);
-		GameServer()->SendBroadcast_Language(-1, TEXTID_WITCH_DEAD);
+		GameServer()->SendBroadcast_Language(-1, "The witch is dead");
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else if(GetClass() == PLAYERCLASS_UNDEAD)
 	{
 		m_pPlayer->StartInfection(true);
-		GameServer()->SendBroadcast_Language(-1, TEXTID_UNDEAD_DEAD);
+		GameServer()->SendBroadcast_Language(-1, "The undead is finally dead");
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else
@@ -1567,7 +1567,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	{
 		m_pPlayer->StartInfection();
 		
-		GameServer()->SendChatTarget_Language_s(From, TEXTID_YOU_INFECTED_PLAYER, Server()->ClientName(m_pPlayer->GetCID()));
+		GameServer()->SendChatTarget_Language_s(From, "You have infected %s, +3 points", Server()->ClientName(m_pPlayer->GetCID()));
 	
 		GameServer()->m_apPlayers[From]->IncreaseScore(3);
 		GameServer()->m_apPlayers[From]->IncreaseNbInfection(1);
@@ -1781,10 +1781,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_RIFLE, 10);
 			m_ActiveWeapon = WEAPON_RIFLE;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_ENGINEER);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_ENGINEER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_ENGINEER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_ENGINEER_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help engineer\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_ENGINEER] = true;
 			}
 			break;
@@ -1798,10 +1798,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_GRENADE, 10);
 			m_ActiveWeapon = WEAPON_GRENADE;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_SOLDIER);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SOLDIER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SOLDIER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_SOLDIER_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help soldier\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SOLDIER] = true;
 			}
 			break;
@@ -1814,10 +1814,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_GUN, Server()->GetMaxAmmo(INFWEAPON_MERCENARY_GUN));
 			m_ActiveWeapon = WEAPON_GUN;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_SOLDIER);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MERCENARY);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MERCENARY))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_SOLDIER_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help mercenary\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_MERCENARY] = true;
 			}
 			break;
@@ -1831,10 +1831,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_RIFLE, 10);
 			m_ActiveWeapon = WEAPON_RIFLE;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_ENGINEER);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SNIPER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SNIPER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_ENGINEER_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help sniper\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SNIPER] = true;
 			}
 			break;
@@ -1848,10 +1848,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_SHOTGUN, 10);
 			m_ActiveWeapon = WEAPON_SHOTGUN;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_SCIENTIST);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SCIENTIST);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SCIENTIST))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_SCIENTIST_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help scientist\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SCIENTIST] = true;
 			}
 			break;
@@ -1865,10 +1865,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_SHOTGUN, 10);
 			m_ActiveWeapon = WEAPON_SHOTGUN;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_MEDIC);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MEDIC);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_MEDIC_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help medic\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
 			}
 			break;
@@ -1881,10 +1881,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_GRENADE, 5);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_NINJA);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_NINJA);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_NINJA))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_NINJA_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help ninja\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_NINJA] = true;
 			}
 			break;
@@ -1903,10 +1903,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_SMOKER);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SMOKER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SMOKER))
 			{   
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_SMOKER_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help smoker\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_SMOKER] = true;
 			}
 			break;
@@ -1918,10 +1918,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_BOOMER);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_BOOMER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BOOMER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_BOOMER_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help boomer\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_BOOMER] = true;
 			}
 			break;
@@ -1933,10 +1933,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_HUNTER);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_HUNTER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_HUNTER))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_HUNTER_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help hunter\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -1948,12 +1948,12 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast("You are an infected: Ghost", m_pPlayer->GetCID());
-			//~ if(!m_pPlayer->IsKownClass(PLAYERCLASS_GHOST))
-			//~ {
-				//~ GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_HUNTER_TIP);
-				//~ m_pPlayer->m_knownClass[PLAYERCLASS_GHOST] = true;
-			//~ }
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_GHOST);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_GHOST))
+			{
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help ghost\" for more information about your class");
+				m_pPlayer->m_knownClass[PLAYERCLASS_GHOST] = true;
+			}
 			break;
 		case PLAYERCLASS_UNDEAD:
 			m_Health = 10;
@@ -1963,10 +1963,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_UNDEAD);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_UNDEAD);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_UNDEAD))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_UNDEAD_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help undead\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -1978,10 +1978,10 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), TEXTID_YOU_WITCH);
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_WITCH);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_WITCH))
 			{
-				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), TEXTID_WITCH_TIP);
+				GameServer()->SendChatTarget_Language(m_pPlayer->GetCID(), "Type \"/help witch\" for more information about your class");
 				m_pPlayer->m_knownClass[PLAYERCLASS_WITCH] = true;
 			}
 			break;

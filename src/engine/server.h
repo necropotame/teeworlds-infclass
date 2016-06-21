@@ -189,15 +189,15 @@ public:
 	virtual const char *NetVersion() = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
-	virtual void SendBroadcast_Language(int To, int TextId) = 0;
-	virtual void SendBroadcast_Language_i(int To, int TextId, int Value) = 0;
-	virtual void SendChatTarget_Language(int To, int TextId) = 0;
-	virtual void SendChatTarget_Language_s(int To, int TextId, const char* Text) = 0;
-	virtual void SendChatTarget_Language_ss(int To, int TextId, const char* Text, const char* Text2) = 0;
-	virtual void SendChatTarget_Language_i(int To, int TextId, int Value) = 0;
-	virtual void SendChatTarget_Language_ii(int To, int TextId, int Value, int Value2) = 0;
-	virtual void SendMODT_Language(int To, int TextId) = 0;
-	virtual void SendMODT_Language_s(int To, int TextId, const char* Text) = 0;
+	virtual void SendBroadcast_Language(int To, const char* pText) = 0;
+	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param) = 0;
+	virtual void SendChatTarget_Language(int To, const char* pText) = 0;
+	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam) = 0;
+	virtual void SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2) = 0;
+	virtual void SendChatTarget_Language_i(int To, const char* pText, int Param) = 0;
+	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2) = 0;
+	virtual void SendMODT_Language(int To, const char* pText) = 0;
+	virtual void SendMODT_Language_s(int To, const char* pText, const char* pParam) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

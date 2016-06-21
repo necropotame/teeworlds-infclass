@@ -144,34 +144,34 @@ void CClassChooser::Snap(int SnappingClient)
 				switch(ClassUnderCursor)
 				{
 					case PLAYERCLASS_SOLDIER:
-						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_SOLDIER);
+						GameServer()->SendBroadcast_Language(m_PlayerID, "Soldier");
 						break;
 					case PLAYERCLASS_MERCENARY:
-						GameServer()->SendBroadcast("Mercenary", m_PlayerID);
+						GameServer()->SendBroadcast_Language(m_PlayerID, "Mercenary");
 						break;
 					case PLAYERCLASS_SNIPER:
-						GameServer()->SendBroadcast("Sniper", m_PlayerID);
+						GameServer()->SendBroadcast_Language(m_PlayerID, "Sniper");
 						break;
 					case PLAYERCLASS_MEDIC:
-						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_MEDIC);
+						GameServer()->SendBroadcast_Language(m_PlayerID, "Medic");
 						break;
 					case PLAYERCLASS_SCIENTIST:
-						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_SCIENTIST);
+						GameServer()->SendBroadcast_Language(m_PlayerID, "Scientist");
 						break;
 					case PLAYERCLASS_ENGINEER:
-						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_ENGINEER);
+						GameServer()->SendBroadcast_Language(m_PlayerID, "Engineer");
 						break;
 					case PLAYERCLASS_NINJA:
-						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_NINJA);
+						GameServer()->SendBroadcast_Language(m_PlayerID, "Ninja");
 						break;
 					default:
-						GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_CLASSCHOOSER_HELP);
+						GameServer()->SendBroadcast_Language(m_PlayerID, "Choose your class by clicking on the weapon");
 				}
 			}
 		}
 		else
 		{
-			GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_RANDOM_CHOICE);
+			GameServer()->SendBroadcast_Language(m_PlayerID, "Random choice");
 		}
 		
 		if(ClassUnderCursor >= 0)
@@ -191,6 +191,6 @@ void CClassChooser::Snap(int SnappingClient)
 	}
 	else
 	{
-		GameServer()->SendBroadcast_Language(m_PlayerID, TEXTID_CLASSCHOOSER_HELP);
+		GameServer()->SendBroadcast_Language(m_PlayerID, "Choose your class by clicking on the weapon");
 	}
 }

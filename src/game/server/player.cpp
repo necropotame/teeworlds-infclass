@@ -344,19 +344,19 @@ void CPlayer::OnDisconnect(int Type, const char *pReason)
 	{
 		if(Type == CLIENTDROPTYPE_BAN)
 		{
-			GameServer()->SendChatTarget_Language_ss(-1, TEXTID_PLAYER_BAN, Server()->ClientName(m_ClientID), pReason);
+			GameServer()->SendChatTarget_Language_ss(-1, "%s has been banned (%s)", Server()->ClientName(m_ClientID), pReason);
 		}
 		else if(Type == CLIENTDROPTYPE_KICK)
 		{
-			GameServer()->SendChatTarget_Language_ss(-1, TEXTID_PLAYER_KICK, Server()->ClientName(m_ClientID), pReason);
+			GameServer()->SendChatTarget_Language_ss(-1, "%s has been kicked (%s)", Server()->ClientName(m_ClientID), pReason);
 		}
 		else if(pReason && *pReason)
 		{
-			GameServer()->SendChatTarget_Language_ss(-1, TEXTID_PLAYER_EXIT_REASON, Server()->ClientName(m_ClientID), pReason);
+			GameServer()->SendChatTarget_Language_ss(-1, "%s has left the game (%s)", Server()->ClientName(m_ClientID), pReason);
 		}
 		else
 		{
-			GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_EXIT, Server()->ClientName(m_ClientID));
+			GameServer()->SendChatTarget_Language_s(-1, "%s has left the game", Server()->ClientName(m_ClientID));
 		}
 	}
 }
@@ -441,11 +441,11 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 	{
 		if(Team == TEAM_SPECTATORS)
 		{
-			GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_JOIN_SPEC, Server()->ClientName(m_ClientID));
+			GameServer()->SendChatTarget_Language_s(-1, "%s joined the spectators", Server()->ClientName(m_ClientID));
 		}
 		else
 		{
-			GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_JOIN_GAME, Server()->ClientName(m_ClientID));
+			GameServer()->SendChatTarget_Language_s(-1, "%s joined the game", Server()->ClientName(m_ClientID));
 		}
 	}
 

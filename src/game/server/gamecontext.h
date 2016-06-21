@@ -4,11 +4,13 @@
 #define GAME_SERVER_GAMECONTEXT_H
 
 #include <engine/server.h>
+#include <engine/storage.h>
 #include <engine/console.h>
 #include <engine/shared/memheap.h>
 
 #include <game/layers.h>
 #include <game/voting.h>
+#include <game/localization.h>
 
 #include "eventhandler.h"
 #include "gamecontroller.h"
@@ -125,6 +127,7 @@ enum
 class CGameContext : public IGameServer
 {
 	IServer *m_pServer;
+	IStorage *m_pStorage;
 	class IConsole *m_pConsole;
 	CLayers m_Layers;
 	CCollision m_Collision;
@@ -157,6 +160,7 @@ class CGameContext : public IGameServer
 	bool m_Resetting;
 public:
 	IServer *Server() const { return m_pServer; }
+	IStorage *Storage() const { return m_pStorage; }
 	class IConsole *Console() { return m_pConsole; }
 	CCollision *Collision() { return &m_Collision; }
 	CTuningParams *Tuning() { return &m_Tuning; }
@@ -269,27 +273,36 @@ public:
 private:
 	static void ConSetClass(IConsole::IResult *pResult, void *pUserData);
 	
+	static bool s_ServerLocalizationInitialized;
+	static CLocalizationDatabase s_ServerLocalizationFr;
+	
 	static const char* ms_TextEn[];
 	static const char* ms_TextFr[];
 	static const char* ms_TextRu[];
 	static const char* ms_TextUk[];
 	static const char* ms_TextDe[];
 	
-public:
-	virtual void SendBroadcast_Language(int To, int TextId);
-	virtual void SendBroadcast_Language_i(int To, int TextId, int Value);
+	void InitializeServerLocatization();
 	
-	virtual void SendChatTarget_Language(int To, int TextId);
-	virtual void SendChatTarget_Language_s(int To, int TextId, const char* Text);
-	virtual void SendChatTarget_Language_ss(int To, int TextId, const char* Text, const char* Text2);
-	virtual void SendChatTarget_Language_i(int To, int TextId, int Value);
-	virtual void SendChatTarget_Language_ii(int To, int TextId, int Value, int Value2);
-	virtual void SendMODT_Language(int To, int TextId);
-	virtual void SendMODT_Language_s(int To, int TextId, const char* Text);
+public:
+	virtual const char* ServerLocalize(const char* pText, int Language);
+	
+	virtual void SendBroadcast_Language(int To, const char* pText);
+	virtual void SendBroadcast_Language_s(int To, const char* pText, const char* pParam);
+	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param);
+	virtual void SendBroadcast_ClassIntro(int To, int Class);
+	
+	virtual void SendChatTarget_Language(int To, const char* pText);
+	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam);
+	virtual void SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2);
+	virtual void SendChatTarget_Language_i(int To, const char* pText, int Param);
+	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2);
+	
+	virtual void SendMODT(int To, const char* pParam);
+	virtual void SendMODT_Language(int To, const char* pParam);
+	virtual void SendMODT_Language_s(int To, const char* pText, const char* pParam);
 	
 private:
-	virtual const char* GetTextTranslation(int TextId, int Language);
-	
 	int m_VoteLanguageTick[MAX_CLIENTS];
 	int m_VoteLanguage[MAX_CLIENTS];
 	

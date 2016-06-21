@@ -209,7 +209,7 @@ void CGameControllerMOD::Tick()
 						m_InfectedCounter++;
 						m_HumanCounter--;
 						
-						GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_INFECTED, Server()->ClientName(i));
+						GameServer()->SendChatTarget_Language_s(-1, "%s has been infected", Server()->ClientName(i));
 						FairInfectionFound = true;
 						break;
 					}
@@ -233,7 +233,7 @@ void CGameControllerMOD::Tick()
 							m_InfectedCounter++;
 							m_HumanCounter--;
 							
-							GameServer()->SendChatTarget_Language_s(-1, TEXTID_PLAYER_INFECTED, Server()->ClientName(i));
+							GameServer()->SendChatTarget_Language_s(-1, "%s has been infected", Server()->ClientName(i));
 							
 							break;
 						}
@@ -266,7 +266,7 @@ void CGameControllerMOD::Tick()
 			int Minutes = static_cast<int>(RoundDuration);
 			int Seconds = static_cast<int>((RoundDuration - Minutes)*60.0f);
 			
-			GameServer()->SendChatTarget_Language_ii(-1, TEXTID_WIN_INFECTED, Minutes, Seconds);
+			GameServer()->SendChatTarget_Language_ii(-1, "Infected won the round in %i:%02i minutes", Minutes, Seconds);
 			
 			EndRound();
 		}
@@ -355,11 +355,11 @@ void CGameControllerMOD::Tick()
 				{
 					if(m_HumanCounter <= 1)
 					{
-						GameServer()->SendChatTarget_Language(-1, TEXTID_WIN_HUMAN);
+						GameServer()->SendChatTarget_Language(-1, "One human won the round");
 					}
 					else
 					{
-						GameServer()->SendChatTarget_Language_i(-1, TEXTID_WIN_HUMANS, m_HumanCounter);
+						GameServer()->SendChatTarget_Language_i(-1, "%i humans won the round", m_HumanCounter);
 					}
 					
 					for(int i = 0; i < MAX_CLIENTS; i ++)
@@ -374,13 +374,13 @@ void CGameControllerMOD::Tick()
 							pPlayer->IncreaseScore(5);
 							pPlayer->m_WinAsHuman++;
 							
-							GameServer()->SendChatTarget_Language(i, TEXTID_YOU_SURVIVED);
+							GameServer()->SendChatTarget_Language(i, "You have survived, +5 points");
 						}
 					}
 				}
 				else
 				{
-					GameServer()->SendChatTarget_Language_ii(-1, TEXTID_WIN_INFECTED, g_Config.m_SvTimelimit, 0);
+					GameServer()->SendChatTarget_Language_ii(-1, "Infected won the round in %i:%02i minutes", g_Config.m_SvTimelimit, 0);
 				}
 				
 				EndRound();
@@ -436,7 +436,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 					CPlayer* pBadPlayer = GameServer()->m_apPlayers[pVictim->m_LastPortalOwner];
 					if(pBadPlayer)
 					{
-						GameServer()->SendChatTarget_Language_s(pBadPlayer->GetCID(), TEXTID_YOU_PORTAL_KILL, Server()->ClientName(pVictimPlayer->GetCID()));
+						//~ GameServer()->SendChatTarget_Language_s(pBadPlayer->GetCID(), TEXTID_YOU_PORTAL_KILL, Server()->ClientName(pVictimPlayer->GetCID()));
 						pBadPlayer->IncreaseScore(-5);
 					}
 				}
@@ -456,7 +456,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		{
 			if(!pVictim->IsInfected() && Weapon == WEAPON_NINJA)
 			{
-				GameServer()->SendChatTarget_Language_s(pKiller->GetCID(), TEXTID_YOU_INFECTED_PLAYER, Server()->ClientName(pVictimPlayer->GetCID()));
+				GameServer()->SendChatTarget_Language_s(pKiller->GetCID(), "You have infected %s, +3 points", Server()->ClientName(pVictimPlayer->GetCID()));
 				
 				pKiller->IncreaseScore(3);
 				pKiller->IncreaseNbInfection(1);
@@ -467,7 +467,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 	{
 		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
 		{
-			GameServer()->SendChatTarget_Language(pKiller->GetCID(), TEXTID_YOU_KILLED_WITCH);
+			GameServer()->SendChatTarget_Language(pKiller->GetCID(), "You have killed a witch, +5 points");
 			pKiller->IncreaseScore(5);
 		}
 		else pKiller->IncreaseScore(1);
@@ -829,7 +829,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		random -= m_ClassProbability[PLAYERCLASS_UNDEAD]/TotalProbInfectedClass;
 		if(random < 0.0f)
 		{
-			GameServer()->SendBroadcast_Language(-1, TEXTID_UNDEAD_SPAWN);
+			GameServer()->SendBroadcast_Language(-1, "The undead is coming!");
 			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 			return PLAYERCLASS_UNDEAD;
 		}
@@ -840,7 +840,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		random -= m_ClassProbability[PLAYERCLASS_WITCH]/TotalProbInfectedClass;
 		if(random < 0.0f)
 		{
-			GameServer()->SendBroadcast_Language(-1, TEXTID_WITCH_SPAWN);
+			GameServer()->SendBroadcast_Language(-1, "The witch is coming!");
 			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 			return PLAYERCLASS_WITCH;
 		}

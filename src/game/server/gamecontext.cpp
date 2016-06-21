@@ -5,6 +5,7 @@
 #include <engine/shared/config.h>
 #include <engine/map.h>
 #include <engine/console.h>
+#include <engine/storage.h>
 #include "gamecontext.h"
 #include <game/version.h>
 #include <game/collision.h>
@@ -41,24 +42,50 @@ const char* CGameContext::ms_TextRu[] = {
 const char* CGameContext::ms_TextUk[] = {
 #include "text/ukrainian.h"
 };
+
+bool CGameContext::s_ServerLocalizationInitialized = false;
+CLocalizationDatabase CGameContext::s_ServerLocalizationFr;
+
+void CGameContext::InitializeServerLocatization()
+{
+	if(!s_ServerLocalizationInitialized)
+	{
+		s_ServerLocalizationFr.Load("languages/infclass/fr.txt", Storage(), Console());
+		//~ s_ServerLocalizationDe.Load("languages/infclass/de.txt", Storage(), Console());
+		//~ s_ServerLocalizationUk.Load("languages/infclass/uk.txt", Storage(), Console());
+		//~ s_ServerLocalizationRu.Load("languages/infclass/ru.txt", Storage(), Console());
+		
+		s_ServerLocalizationInitialized = true;
+	}
+}
+
 /* INFECTION MODIFICATION END *****************************************/
 
-const char* CGameContext::GetTextTranslation(int TextId, int Lang)
+const char* CGameContext::ServerLocalize(const char *pStr, int Language)
 {
-	switch(Lang)
+	dbg_msg("game", "ServerLocalize(%s, %d)", pStr, Language);
+	
+	const char* pNewStr = 0;
+	
+	switch(Language)
 	{
 		case LANGUAGE_FR:
-			return CGameContext::ms_TextFr[TextId];
-		case LANGUAGE_DE:
-			return CGameContext::ms_TextDe[TextId];
-		case LANGUAGE_RU:
-			return CGameContext::ms_TextRu[TextId];
-		case LANGUAGE_UK:
-			return CGameContext::ms_TextUk[TextId];
-		case LANGUAGE_EN:
-		default:
-			return CGameContext::ms_TextEn[TextId];
+			pNewStr = s_ServerLocalizationFr.FindString(str_quickhash(pStr));
+		//~ case LANGUAGE_DE:
+			//~ return CGameContext::ms_TextDe[TextId];
+		//~ case LANGUAGE_RU:
+			//~ return CGameContext::ms_TextRu[TextId];
+		//~ case LANGUAGE_UK:
+			//~ return CGameContext::ms_TextUk[TextId];
+		//~ case LANGUAGE_EN:
+		//~ default:
+			//~ return CGameContext::ms_TextEn[TextId];
 	}
+	
+	if(pNewStr == 0)
+		pNewStr = pStr;
+	
+	return pNewStr;
 }
 
 void CGameContext::Construct(int Resetting)
@@ -294,7 +321,7 @@ void CGameContext::SendChatTarget(int To, const char *pText)
 }
 
 /* INFECTION MODIFICATION START ***************************************/
-void CGameContext::SendChatTarget_Language(int To, int TextId)
+void CGameContext::SendChatTarget_Language(int To, const char* pText)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -307,35 +334,13 @@ void CGameContext::SendChatTarget_Language(int To, int TextId)
 	{
 		if(m_apPlayers[i])
 		{
-			Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage());
+			Msg.m_pMessage = ServerLocalize(pText, m_apPlayers[i]->GetLanguage());
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
 }
 
-void CGameContext::SendChatTarget_Language_s(int To, int TextId, const char* Text)
-{
-	int Start = (To < 0 ? 0 : To);
-	int End = (To < 0 ? MAX_CLIENTS : To+1);
-	
-	CNetMsg_Sv_Chat Msg;
-	Msg.m_Team = 0;
-	Msg.m_ClientID = -1;
-	
-	char aBuf[512];
-	Msg.m_pMessage = aBuf;
-	
-	for(int i = Start; i < End; i++)
-	{
-		if(m_apPlayers[i])
-		{
-			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Text);
-			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
-		}
-	}
-}
-
-void CGameContext::SendChatTarget_Language_ss(int To, int TextId, const char* Text, const char* Text2)
+void CGameContext::SendChatTarget_Language_s(int To, const char* pText, const char* pParam)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -351,13 +356,13 @@ void CGameContext::SendChatTarget_Language_ss(int To, int TextId, const char* Te
 	{
 		if(m_apPlayers[i])
 		{
-			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Text, Text2);
+			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), pParam);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
 }
 
-void CGameContext::SendChatTarget_Language_i(int To, int TextId, int Value)
+void CGameContext::SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -373,13 +378,13 @@ void CGameContext::SendChatTarget_Language_i(int To, int TextId, int Value)
 	{
 		if(m_apPlayers[i])
 		{
-			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Value);
+			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), pParam1, pParam2);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
 }
 
-void CGameContext::SendChatTarget_Language_ii(int To, int TextId, int Value, int Value2)
+void CGameContext::SendChatTarget_Language_i(int To, const char* pText, int Param)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -395,24 +400,57 @@ void CGameContext::SendChatTarget_Language_ii(int To, int TextId, int Value, int
 	{
 		if(m_apPlayers[i])
 		{
-			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Value, Value2);
+			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), Param);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 	}
 }
 
-void CGameContext::SendMODT_Language(int To, int TextId)
+void CGameContext::SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	CNetMsg_Sv_Chat Msg;
+	Msg.m_Team = 0;
+	Msg.m_ClientID = -1;
+	
+	char aBuf[512];
+	Msg.m_pMessage = aBuf;
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), Param1, Param2);
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+	}
+}
+
+void CGameContext::SendMODT(int To, const char* pText)
 {
 	if(m_apPlayers[To])
 	{
 		CNetMsg_Sv_Motd Msg;
 		
-		Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[To]->GetLanguage());
+		Msg.m_pMessage = pText;
 		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, To);
 	}
 }
 
-void CGameContext::SendMODT_Language_s(int To, int TextId, const char* Text)
+void CGameContext::SendMODT_Language(int To, const char* pText)
+{
+	if(m_apPlayers[To])
+	{
+		CNetMsg_Sv_Motd Msg;
+		
+		Msg.m_pMessage = ServerLocalize(pText, m_apPlayers[To]->GetLanguage());
+		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, To);
+	}
+}
+
+void CGameContext::SendMODT_Language_s(int To, const char* pText, const char* pParam)
 {
 	if(m_apPlayers[To])
 	{
@@ -421,12 +459,12 @@ void CGameContext::SendMODT_Language_s(int To, int TextId, const char* Text)
 		char aBuf[512];
 		Msg.m_pMessage = aBuf;
 		
-		str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[To]->GetLanguage()), Text);
+		str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[To]->GetLanguage()), pParam);
 		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, To);
 	}
 }
 
-void CGameContext::SendBroadcast_Language(int To, int TextId)
+void CGameContext::SendBroadcast_Language(int To, const char* pText)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -437,7 +475,7 @@ void CGameContext::SendBroadcast_Language(int To, int TextId)
 	{
 		if(m_apPlayers[i])
 		{
-			Msg.m_pMessage = GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage());
+			Msg.m_pMessage = ServerLocalize(pText, m_apPlayers[i]->GetLanguage());
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 		
@@ -446,10 +484,9 @@ void CGameContext::SendBroadcast_Language(int To, int TextId)
 			m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
 		}
 	}
-	
 }
 
-void CGameContext::SendBroadcast_Language_i(int To, int TextId, int Value)
+void CGameContext::SendBroadcast_Language_s(int To, const char* pText, const char* pParam)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -462,7 +499,7 @@ void CGameContext::SendBroadcast_Language_i(int To, int TextId, int Value)
 	{
 		if(m_apPlayers[i])
 		{
-			str_format(aBuf, sizeof(aBuf), GetTextTranslation(TextId, m_apPlayers[i]->GetLanguage()), Value);
+			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), pParam);
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 		}
 		
@@ -471,6 +508,86 @@ void CGameContext::SendBroadcast_Language_i(int To, int TextId, int Value)
 			m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
 		}
 	}
+}
+
+void CGameContext::SendBroadcast_Language_i(int To, const char* pText, int Param)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	CNetMsg_Sv_Broadcast Msg;
+	char aBuf[512];
+	Msg.m_pMessage = aBuf;
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), Param);
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+		}
+		
+		if(m_BroadCastHighPriorityTick[i])
+		{
+			m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+		}
+	}
+}
+
+void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
+{
+	const char* pClassName = 0;
+	
+	switch(Class)
+	{
+		case PLAYERCLASS_ENGINEER:
+			pClassName = ServerLocalize("Engineer", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_SOLDIER:
+			pClassName = ServerLocalize("Soldier", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_MEDIC:
+			pClassName = ServerLocalize("Medic", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_NINJA:
+			pClassName = ServerLocalize("Ninja", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_MERCENARY:
+			pClassName = ServerLocalize("Mercenary", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_SNIPER:
+			pClassName = ServerLocalize("Sniper", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_SCIENTIST:
+			pClassName = ServerLocalize("Scientist", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_SMOKER:
+			pClassName = ServerLocalize("Smoker", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_HUNTER:
+			pClassName = ServerLocalize("Hunter", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_BOOMER:
+			pClassName = ServerLocalize("Boomer", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_GHOST:
+			pClassName = ServerLocalize("Ghost", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_WITCH:
+			pClassName = ServerLocalize("Witch", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		case PLAYERCLASS_UNDEAD:
+			pClassName = ServerLocalize("Undead", m_apPlayers[ClientID]->GetLanguage());
+			break;
+		default:
+			pClassName = ServerLocalize("?????", m_apPlayers[ClientID]->GetLanguage());
+			break;
+	}
+	
+	if(Class < END_HUMANCLASS)
+		SendBroadcast_Language_s(ClientID, "You are a human: %s", pClassName);
+	else
+		SendBroadcast_Language_s(ClientID, "You are a infected: %s", pClassName);
 }
 
 /* INFECTION MODIFICATION END *****************************************/
@@ -839,7 +956,7 @@ void CGameContext::OnClientEnter(int ClientID)
 	m_apPlayers[ClientID]->Respawn();
 	
 /* INFECTION MODIFICATION START ***************************************/
-	SendChatTarget_Language_s(-1, TEXTID_PLAYER_ENTER, Server()->ClientName(ClientID));
+	SendChatTarget_Language_s(-1, "%s entered and joined the game", Server()->ClientName(ClientID));
 /* INFECTION MODIFICATION END *****************************************/
 
 	char aBuf[512];
@@ -985,84 +1102,216 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					(str_comp_nocase(pMsg->m_pMessage,"/info") == 0)
 				)
 				{
-					SendMODT_Language_s(ClientID, TEXTID_CMD_INFO, "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint");
+					char aBuf[512];
+					char aBuf2[512];
+					const char* pLine1 = ServerLocalize("InfectionClass, by necropotame (version %s)", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("Based on Infection mod by Gravity", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("Thanks to %s", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
+					str_format(aBuf2, sizeof(aBuf2), aBuf, "2.0", "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, socialdarwinist, FakeDeath, tee_to_F_U_UP!, ...");
+					
+					SendMODT(ClientID, aBuf2);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\cmdlist") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/cmdlist") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_CMDLIST);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("List of commands", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("/info: Information about this mod", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("/help: Rules of the game", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("/help <class>: Information about a particular class", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine5 = ServerLocalize("/language <lang>: Change the language of the mod", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine6 = ServerLocalize("/customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine7 = ServerLocalize("/alwaysrandom <0|1>: Choose automatically random class when the round start", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine8 = ServerLocalize("Press <F3> or <F4> while holding <TAB> to switch the score system", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5, pLine6, pLine7, pLine8);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Rules of the game:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("InfectionClass is a team game between humans and infected.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("All players start as human.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("10 seconds later, two players become infected.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine5 = ServerLocalize("The goal for humans is to survive until the army clean the map.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine6 = ServerLocalize("The goal for infected is to infect all humans.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5, pLine6);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help engineer") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help engineer") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_ENGINEER);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Engineer:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Engineer can build walls with his hammer to block infected.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("When an infected touch the wall, he dies.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help soldier") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help soldier") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_SOLDIER);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Soldier:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Soldier can pose floating bombs with his hammer.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("Each bomb can explode three times.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("Use the hammer to place the bomb and explode it multiple times.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine5 = ServerLocalize("Bombs are limited to one per player at the same time.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help ninja") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help ninja") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_NINJA);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Ninja:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Ninja can throw flash grenades that can freeze infected during three seconds.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("His hammer is replaced by a katana, allowing him to jump two times before touching the ground.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help medic") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help medic") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_MEDIC);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Medic:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Medic can protect humans with his hammer by giving them armor.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("He has also a powerful shotgun that can pullback infected.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
+					
+					SendMODT(ClientID, aBuf);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help sniper") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help sniper") == 0)
+				)
+				{
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Sniper:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Sniper can lock his position in air for 15 seconds with his hammer.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("He can jump two times in air.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine4 = ServerLocalize("He has also a powerful rifle that deals 18 damage points.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
+					
+					SendMODT(ClientID, aBuf);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help mercenary") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help mercenary") == 0)
+				)
+				{
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Mercenary:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Mercenary fly in air using his machine gun.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine3 = ServerLocalize("He can also throw poison grenades that deals 8 damage points.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help smoker") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help smoker") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_SMOKER);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Smoker:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Smoker can infect humans and heal infected with his hammer.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine3 = ServerLocalize("He can also inflict 4 damage points per seconds by hooking humans.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help boomer") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help boomer") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_BOOMER);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Boomer:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Boomer explodes when he attack.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine3 = ServerLocalize("All humans affected by the explosion become infected.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("He can also inflict 1 damage point per seconds by hooking humans.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help hunter") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help hunter") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_HUNTER);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Hunter:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Hunter can infect humans and heal infected with his hammer.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine3 = ServerLocalize("He can jump two times in air.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("He can also inflict 1 damage point per seconds by hooking humans.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help undead") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help undead") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_UNDEAD);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Undead:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Undead can infect humans and heal infected with his hammer.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine3 = ServerLocalize("Instead of dying, he freezes during 10 seconds.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("If an infected heals him, the freeze effect disappear.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine5 = ServerLocalize("He can also inflict 1 damage point per seconds by hooking humans.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help witch") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help witch") == 0)
 				)
 				{
-					SendMODT_Language(ClientID, TEXTID_CMD_HELP_WITCH);
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Witch:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Witch can infect humans and heal infected with his hammer.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine3 = ServerLocalize("When an infected dies, he may re-spawn near her.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("If the Witch dies, she disappear and is replaced by an another class of infected.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine5 = ServerLocalize("She can also inflict 1 damage point per seconds by hooking humans.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
+					
+					SendMODT(ClientID, aBuf);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\customskin all") == 0) ||
@@ -1093,7 +1342,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				)
 				{
 					Server()->SetClientAlwaysRandom(ClientID, 0);
-					SendChatTarget_Language(ClientID, TEXTID_ALWAYSRANDOM_OFF);
+					SendChatTarget_Language(ClientID, "The class selector will be displayed when rounds start");
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\alwaysrandom 1") == 0) ||
@@ -1103,7 +1352,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				)
 				{
 					Server()->SetClientAlwaysRandom(ClientID, 1);
-					SendChatTarget_Language(ClientID, TEXTID_ALWAYSRANDOM_ON);
+					SendChatTarget_Language(ClientID, "A random class will be automatically attributed to you when rounds start");
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\language en") == 0) ||
@@ -1162,7 +1411,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				}
 				else
 				{
-					SendChatTarget_Language(ClientID, TEXTID_CMD_UNKNOWN);
+					SendChatTarget_Language(ClientID, "Unknown command");
 				}
 			}
 			else
@@ -1409,7 +1658,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 
 				if(InfectedCount <= 2)
 				{
-					 SendBroadcast_Language(ClientID, TEXTID_YOU_SPEC_REJECT);
+					 SendBroadcast_Language(ClientID, "You can't join the spectators right now");
 					 return;
 				}
 			}
@@ -1465,7 +1714,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			Server()->SetClientName(ClientID, pMsg->m_pName);
 			if(str_comp(aOldName, Server()->ClientName(ClientID)) != 0)
 			{
-				SendChatTarget_Language_ss(-1, TEXTID_PLAYER_CHANGE_NAME, aOldName, Server()->ClientName(ClientID));
+				SendChatTarget_Language_ss(-1, "%s changed their name to %s", aOldName, Server()->ClientName(ClientID));
 			}
 			Server()->SetClientClan(ClientID, pMsg->m_pClan);
 			Server()->SetClientCountry(ClientID, pMsg->m_Country);
@@ -2136,7 +2385,10 @@ void CGameContext::ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *p
 void CGameContext::OnConsoleInit()
 {
 	m_pServer = Kernel()->RequestInterface<IServer>();
+	m_pStorage = Kernel()->RequestInterface<IStorage>();
 	m_pConsole = Kernel()->RequestInterface<IConsole>();
+
+	InitializeServerLocatization();
 
 	Console()->Register("tune", "si", CFGFLAG_SERVER, ConTuneParam, this, "Tune variable to value");
 	Console()->Register("tune_reset", "", CFGFLAG_SERVER, ConTuneReset, this, "Reset tuning");
