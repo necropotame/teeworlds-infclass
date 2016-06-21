@@ -116,7 +116,6 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
 	m_Poison = 0;
-	m_HookMode = 0;
 
 	ClassSpawnAttributes();
 	DestroyChildEntities();
@@ -1242,6 +1241,8 @@ void CCharacter::Tick()
 					m_Core.m_HookState = HOOK_GRABBED;
 					m_Core.m_HookPos = p->m_Pos;
 					m_Core.m_HookedPlayer = p->m_pPlayer->GetCID();
+					m_Core.m_HookTick = 0;
+					m_HookMode = 0;
 					
 					break;
 				}
@@ -1283,6 +1284,10 @@ void CCharacter::Tick()
 		{
 			m_Core.Tick(true, m_HookMode);
 		}
+	}
+	else if(GetClass() == PLAYERCLASS_SPIDER)
+	{
+		m_Core.Tick(true, m_HookMode, 2*SERVER_TICK_SPEED);
 	}
 	else
 	{
@@ -2144,6 +2149,11 @@ void CCharacter::DestroyChildEntities()
 		m_PositionLockTick = -Server()->TickSpeed()*10;
 		
 		//send new tune param
+		SendTuneParam();
+	}
+	else if(m_HookMode != 0)
+	{
+		m_HookMode = 0;
 		SendTuneParam();
 	}
 }
