@@ -1822,6 +1822,13 @@ void CCharacter::Snap(int SnappingClient)
 	{
 		pCharacter->m_Weapon = m_ActiveWeapon;
 	}
+	
+	if(GetClass() == PLAYERCLASS_SPIDER)
+	{
+		pCharacter->m_HookTick -= SERVER_TICK_SPEED-SERVER_TICK_SPEED/5;
+		if(pCharacter->m_HookTick < 0)
+			pCharacter->m_HookTick = 0;
+	}
 /* INFECTION MODIFICATION END *****************************************/
 	pCharacter->m_AttackTick = m_AttackTick;
 
