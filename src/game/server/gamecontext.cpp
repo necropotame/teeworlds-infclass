@@ -63,8 +63,6 @@ void CGameContext::InitializeServerLocatization()
 
 const char* CGameContext::ServerLocalize(const char *pStr, int Language)
 {
-	dbg_msg("game", "ServerLocalize(%s, %d)", pStr, Language);
-	
 	const char* pNewStr = 0;
 	
 	switch(Language)
@@ -510,7 +508,7 @@ void CGameContext::SendBroadcast_Language_s(int To, const char* pText, const cha
 	}
 }
 
-void CGameContext::SendBroadcast_Language_i(int To, const char* pText, int Param)
+void CGameContext::SendBroadcast_Language_i(int To, const char* pText, int Param, bool LowPriority)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -523,13 +521,16 @@ void CGameContext::SendBroadcast_Language_i(int To, const char* pText, int Param
 	{
 		if(m_apPlayers[i])
 		{
-			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), Param);
-			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
-		}
-		
-		if(m_BroadCastHighPriorityTick[i])
-		{
-			m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+			if(!LowPriority || (LowPriority && m_BroadCastHighPriorityTick[i] <= 0))
+			{
+				str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), Param);
+				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+			}
+			
+			if(!LowPriority)
+			{
+				m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+			}
 		}
 	}
 }
@@ -1275,6 +1276,21 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					const char* pLine1 = ServerLocalize("Hunter:", m_apPlayers[ClientID]->GetLanguage()); 
 					const char* pLine2 = ServerLocalize("The Hunter can infect humans and heal infected with his hammer.", m_apPlayers[ClientID]->GetLanguage());
 					const char* pLine3 = ServerLocalize("He can jump two times in air.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("He can also inflict 1 damage point per seconds by hooking humans.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
+					
+					SendMODT(ClientID, aBuf);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help ghost") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help ghost") == 0)
+				)
+				{
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Ghost:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Ghost can infect humans and heal infected with his hammer.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine3 = ServerLocalize("He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.", m_apPlayers[ClientID]->GetLanguage());
 					const char* pLine4 = ServerLocalize("He can also inflict 1 damage point per seconds by hooking humans.", m_apPlayers[ClientID]->GetLanguage());
 					
 					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);

@@ -190,7 +190,7 @@ public:
 	
 /* INFECTION MODIFICATION START ***************************************/
 	virtual void SendBroadcast_Language(int To, const char* pText) = 0;
-	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param) = 0;
+	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, bool LowPriority = false) = 0;
 	virtual void SendChatTarget_Language(int To, const char* pText) = 0;
 	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam) = 0;
 	virtual void SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2) = 0;

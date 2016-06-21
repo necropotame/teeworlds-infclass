@@ -289,7 +289,7 @@ public:
 	
 	virtual void SendBroadcast_Language(int To, const char* pText);
 	virtual void SendBroadcast_Language_s(int To, const char* pText, const char* pParam);
-	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param);
+	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, bool LowPriority = false);
 	virtual void SendBroadcast_ClassIntro(int To, int Class);
 	
 	virtual void SendChatTarget_Language(int To, const char* pText);

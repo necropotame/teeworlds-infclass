@@ -302,8 +302,41 @@ void CCharacter::SendTuneParam()
 	int *pParams = (int *)GameServer()->Tuning();
 	for(unsigned i = 0; i < sizeof(CTuningParams)/sizeof(int); i++)
 	{
-		if((int*)&GameServer()->Tuning()->m_Gravity == &pParams[i] && m_PositionLocked)
-			Msg.AddInt(0);
+		if((int*)&GameServer()->Tuning()->m_Gravity == &pParams[i])
+		{
+			if(m_PositionLocked)
+				Msg.AddInt(0);
+			else
+				Msg.AddInt(pParams[i]);
+		}
+		else if((int*)&GameServer()->Tuning()->m_GroundControlSpeed == &pParams[i])
+		{
+			if(m_IsFrozen)
+				Msg.AddInt(0);
+			else
+				Msg.AddInt(pParams[i]);
+		}
+		else if((int*)&GameServer()->Tuning()->m_GroundControlAccel == &pParams[i])
+		{
+			if(m_IsFrozen)
+				Msg.AddInt(0);
+			else
+				Msg.AddInt(pParams[i]);
+		}
+		else if((int*)&GameServer()->Tuning()->m_AirControlSpeed == &pParams[i])
+		{
+			if(m_IsFrozen)
+				Msg.AddInt(0);
+			else
+				Msg.AddInt(pParams[i]);
+		}
+		else if((int*)&GameServer()->Tuning()->m_AirControlAccel == &pParams[i])
+		{
+			if(m_IsFrozen)
+				Msg.AddInt(0);
+			else
+				Msg.AddInt(pParams[i]);
+		}
 		else
 			Msg.AddInt(pParams[i]);
 	}
@@ -425,8 +458,6 @@ void CCharacter::FireWeapon()
 				{
 					m_PositionLockTick = Server()->TickSpeed()*15;
 					m_PositionLocked = true;
-					
-					m_ReloadTimer = Server()->TickSpeed();
 				
 					//send new tune param
 					SendTuneParam();
@@ -992,12 +1023,12 @@ void CCharacter::Tick()
 		if(m_FrozenTime <= 0)
 		{
 			Unfreeze();
-			GameServer()->SendBroadcast("", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("", m_pPlayer->GetCID(), true);
 		}
 		else
 		{
 			int FreezeSec = 1+(m_FrozenTime/Server()->TickSpeed());
-			GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), "You are frozen for %i seconds", FreezeSec);
+			GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), "You are frozen: %d sec", FreezeSec, true);
 		}
 	}
 	
@@ -1244,41 +1275,23 @@ void CCharacter::Tick()
 	if(GetClass() == PLAYERCLASS_SOLDIER)
 	{
 		if(m_pBomb)
-		{
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "Bombs left: %d", m_pBomb->GetNbBombs());
-			GameServer()->SendBroadcast(aBuf, GetPlayer()->GetCID(), true);
-		}
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Bombs left: %d", m_pBomb->GetNbBombs(), true);
 		else
-		{
 			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
-		}
 	}
 	else if(GetClass() == PLAYERCLASS_ENGINEER)
 	{
 		if(m_pBarrier)
-		{
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "Laser wall: %d sec", m_pBarrier->GetTick()/Server()->TickSpeed());
-			GameServer()->SendBroadcast(aBuf, GetPlayer()->GetCID(), true);
-		}
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Laser wall: %d sec", m_pBarrier->GetTick()/Server()->TickSpeed(), true);
 		else
-		{
 			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
-		}
 	}
 	else if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
-		{
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "Position lock: %d sec", m_PositionLockTick/Server()->TickSpeed());
-			GameServer()->SendBroadcast(aBuf, GetPlayer()->GetCID(), true);
-		}
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Position lock: %d sec", m_PositionLockTick/Server()->TickSpeed(), true);
 		else
-		{
 			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
-		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -2057,6 +2070,8 @@ void CCharacter::Freeze(float Time, int Player, int Reason)
 	m_FreezeReason = Reason;
 	
 	m_LastFreezer = Player;
+	
+	SendTuneParam();
 }
 
 void CCharacter::Unfreeze()
@@ -2070,6 +2085,8 @@ void CCharacter::Unfreeze()
 	}
 	
 	GameServer()->CreatePlayerSpawn(m_Pos);
+	
+	SendTuneParam();
 }
 
 void CCharacter::Poison(int Count, int From)
