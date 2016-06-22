@@ -861,9 +861,9 @@ void CCharacter::FireWeapon()
 			if(GetClass() == PLAYERCLASS_SNIPER)
 			{
 				if(m_PositionLocked)
-					Damage = 18;
+					Damage = 19 + rand()%2;
 				else
-					Damage = 9;
+					Damage = 9 + rand()%2;
 			}
 			
 			new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);

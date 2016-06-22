@@ -1209,7 +1209,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					const char* pLine1 = ServerLocalize("Sniper:", m_apPlayers[ClientID]->GetLanguage()); 
 					const char* pLine2 = ServerLocalize("The Sniper can lock his position in air for 15 seconds with his hammer.", m_apPlayers[ClientID]->GetLanguage()); 
 					const char* pLine3 = ServerLocalize("He can jump two times in air.", m_apPlayers[ClientID]->GetLanguage()); 
-					const char* pLine4 = ServerLocalize("He has also a powerful rifle that deals 18 damage points in locked position, and 9 otherwise.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.", m_apPlayers[ClientID]->GetLanguage());
 					
 					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 					

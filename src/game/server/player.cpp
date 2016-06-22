@@ -602,13 +602,13 @@ void CPlayer::SetClass(int newClass)
 {	
 	if(m_class == newClass)
 		return;
+		
+	m_class = newClass;
 	
 	if(m_class < END_HUMANCLASS)
 		HookProtection(true);
 	else
 		HookProtection(false);
-		
-	m_class = newClass;
 	
 	SetClassSkin(newClass);
 	
