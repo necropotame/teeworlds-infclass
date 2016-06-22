@@ -1209,7 +1209,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					const char* pLine1 = ServerLocalize("Sniper:", m_apPlayers[ClientID]->GetLanguage()); 
 					const char* pLine2 = ServerLocalize("The Sniper can lock his position in air for 15 seconds with his hammer.", m_apPlayers[ClientID]->GetLanguage()); 
 					const char* pLine3 = ServerLocalize("He can jump two times in air.", m_apPlayers[ClientID]->GetLanguage()); 
-					const char* pLine4 = ServerLocalize("He has also a powerful rifle that deals 18 damage points.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("He has also a powerful rifle that deals 18 damage points in locked position, and 9 otherwise.", m_apPlayers[ClientID]->GetLanguage());
 					
 					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 					
@@ -1285,6 +1285,22 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					const char* pLine4 = ServerLocalize("He can also inflict 1 damage point per seconds by hooking humans.", m_apPlayers[ClientID]->GetLanguage());
 					
 					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
+					
+					SendMODT(ClientID, aBuf);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help spider") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help spider") == 0)
+				)
+				{
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Spider:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Spider can infect humans and heal infected with his hammer.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("When selecting any gun, his hook enter in web mode.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine4 = ServerLocalize("Any human that touch a hook in web mode is automatically grabbed.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine5 = ServerLocalize("The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
 					
 					SendMODT(ClientID, aBuf);
 				}

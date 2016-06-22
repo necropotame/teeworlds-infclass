@@ -28,13 +28,13 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_GHOST] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_GHOST];
 	
-	m_ClassProbability[PLAYERCLASS_SPIDER] = 0.25f * m_ClassProbability[PLAYERCLASS_SPIDER];
+	m_ClassProbability[PLAYERCLASS_SPIDER] = 0.15f * m_ClassProbability[PLAYERCLASS_SPIDER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_SPIDER];
 	
-	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25 * m_ClassProbability[PLAYERCLASS_SMOKER];
+	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_WITCH];
 	
-	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.15 * m_ClassProbability[PLAYERCLASS_SMOKER];
+	m_ClassProbability[PLAYERCLASS_UNDEAD] = 0.15f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_UNDEAD];
 	
 	m_TotalProbHumanClass = 0.0;
@@ -875,14 +875,14 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		}
 	}
 	
-	//~ if(spiderEnabled)
-	//~ {
-		//~ random -= m_ClassProbability[PLAYERCLASS_SPIDER]/TotalProbInfectedClass;
-		//~ if(random < 0.0f)
-		//~ {
-			//~ return PLAYERCLASS_SPIDER;
-		//~ }
-	//~ }
+	if(spiderEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_SPIDER]/TotalProbInfectedClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_SPIDER;
+		}
+	}
 	
 	if(hunterEnabled)
 	{

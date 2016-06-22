@@ -519,6 +519,10 @@ void CCharacter::FireWeapon()
 					//send new tune param
 					SendTuneParam();
 				}
+				else if(m_PositionLockTick > Server()->TickSpeed())
+				{
+					m_PositionLockTick = Server()->TickSpeed();
+				}
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
@@ -852,16 +856,18 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_RIFLE:
 		{
+			int Damage = GameServer()->Tuning()->m_LaserDamage;
+			
 			if(GetClass() == PLAYERCLASS_SNIPER)
 			{
-				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), 18);
-				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				if(m_PositionLocked)
+					Damage = 18;
+				else
+					Damage = 9;
 			}
-			else
-			{
-				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), GameServer()->Tuning()->m_LaserDamage);
-				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
-			}
+			
+			new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
+			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 		} break;
 	}
 
@@ -1243,6 +1249,8 @@ void CCharacter::Tick()
 					m_Core.m_HookedPlayer = p->m_pPlayer->GetCID();
 					m_Core.m_HookTick = 0;
 					m_HookMode = 0;
+					
+					SendTuneParam();
 					
 					break;
 				}
