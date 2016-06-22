@@ -136,6 +136,24 @@ void CPlayer::PostTick()
 		m_ViewPos = GameServer()->m_apPlayers[m_SpectatorID]->m_ViewPos;
 }
 
+void CPlayer::HookProtection(bool Value, bool Automatic)
+{
+	if(m_HookProtection != Value)
+	{
+		m_HookProtection = Value;
+		
+		if(!m_HookProtectionAutomatic || !Automatic)
+		{
+			if(m_HookProtection)
+				GameServer()->SendChatTarget_Language(GetCID(), "Hook protection enabled");
+			else
+				GameServer()->SendChatTarget_Language(GetCID(), "Hook protection disabled");
+		}
+	}
+	
+	m_HookProtectionAutomatic = Automatic;
+}
+
 void CPlayer::Snap(int SnappingClient)
 {
 #ifdef CONF_DEBUG
@@ -585,6 +603,11 @@ void CPlayer::SetClass(int newClass)
 	if(m_class == newClass)
 		return;
 	
+	if(m_class < END_HUMANCLASS)
+		HookProtection(true);
+	else
+		HookProtection(false);
+		
 	m_class = newClass;
 	
 	SetClassSkin(newClass);

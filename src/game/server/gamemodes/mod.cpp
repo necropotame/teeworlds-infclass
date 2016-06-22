@@ -525,11 +525,16 @@ bool CGameControllerMOD::IsSpawnable(vec2 Pos)
 	{
 		Result = Index;
 		for(int c = 0; c < Num; ++c)
-			if(GameServer()->Collision()->CheckPoint(Pos+Positions[Index]) ||
-				distance(aEnts[c]->m_Pos, Pos+Positions[Index]) <= aEnts[c]->m_ProximityRadius)
+		{
+			if(
+				GameServer()->Collision()->CheckPoint(Pos+Positions[Index]) ||
+				GameServer()->Collision()->CheckPointFlag(Pos+Positions[Index], CCollision::COLFLAG_NOSPAWN) ||
+				distance(aEnts[c]->m_Pos, Pos+Positions[Index]) <= aEnts[c]->m_ProximityRadius
+			)
 			{
 				return false;
 			}
+		}
 	}
 	return true;
 }
@@ -937,4 +942,9 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 	else if(PlayerClass == PLAYERCLASS_SNIPER) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_SNIPER) > 1);
 	else if(PlayerClass == PLAYERCLASS_SCIENTIST) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) > 1);
 	else return false;
+}
+
+bool CGameControllerMOD::CanVote()
+{
+	return !m_InfectedStarted;
 }

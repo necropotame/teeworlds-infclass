@@ -43,7 +43,7 @@ protected:
 	void EvaluateSpawnType(CSpawnEval *pEval, int Type);
 	bool EvaluateSpawn(class CPlayer *pP, vec2 *pPos);
 
-	void CycleMap();
+	void CycleMap(bool Forced = false);
 	void ResetGame();
 
 	char m_aMapWish[128];
@@ -64,6 +64,8 @@ protected:
 
 public:
 	const char *m_pGameType;
+	
+	void SkipMap();
 
 	bool IsTeamplay() const;
 	bool IsGameOver() const { return m_GameOverTick != -1; }
@@ -91,6 +93,8 @@ public:
 	virtual void Tick();
 
 	virtual void Snap(int SnappingClient);
+	
+	virtual bool CanVote();
 
 	/*
 		Function: on_entity

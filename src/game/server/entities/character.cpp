@@ -1302,13 +1302,17 @@ void CCharacter::Tick()
 		m_Core.Tick(true, m_HookMode);
 	}
 	
-	if(!IsInfected() && m_Core.m_HookedPlayer >= 0)
+	//Hook protection
+	if(m_Core.m_HookedPlayer >= 0)
 	{
-		if(GameServer()->m_apPlayers[m_Core.m_HookedPlayer] && !GameServer()->m_apPlayers[m_Core.m_HookedPlayer]->IsInfected())
+		if(GameServer()->m_apPlayers[m_Core.m_HookedPlayer])
 		{
-			m_Core.m_HookedPlayer = -1;
-			m_Core.m_HookState = HOOK_RETRACTED;
-			m_Core.m_HookPos = m_Pos;
+			if(IsInfected() == GameServer()->m_apPlayers[m_Core.m_HookedPlayer]->IsInfected() && GameServer()->m_apPlayers[m_Core.m_HookedPlayer]->HookProtectionEnabled())
+			{
+				m_Core.m_HookedPlayer = -1;
+				m_Core.m_HookState = HOOK_RETRACTED;
+				m_Core.m_HookPos = m_Pos;
+			}
 		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
@@ -1365,7 +1369,7 @@ void CCharacter::Tick()
 			}
 		}
 	}
-	
+		
 	if(GetClass() == PLAYERCLASS_SOLDIER)
 	{
 		if(m_pBomb)

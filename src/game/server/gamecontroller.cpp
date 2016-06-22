@@ -253,7 +253,7 @@ void IGameController::ChangeMap(const char *pToMap)
 	EndRound();
 }
 
-void IGameController::CycleMap()
+void IGameController::CycleMap(bool Forced)
 {
 	if(m_aMapWish[0] != 0)
 	{
@@ -268,7 +268,7 @@ void IGameController::CycleMap()
 	if(!str_length(g_Config.m_SvMaprotation))
 		return;
 
-	if(m_RoundCount < g_Config.m_SvRoundsPerMap-1)
+	if(!Forced && m_RoundCount < g_Config.m_SvRoundsPerMap-1)
 	{
 		if(g_Config.m_SvRoundSwap)
 			GameServer()->SwapTeams();
@@ -327,6 +327,17 @@ void IGameController::CycleMap()
 	str_format(aBufMsg, sizeof(aBufMsg), "rotating map to %s", &aBuf[i]);
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 	str_copy(g_Config.m_SvMap, &aBuf[i], sizeof(g_Config.m_SvMap));
+}
+
+void IGameController::SkipMap()
+{
+	CycleMap(true);
+	EndRound();
+}
+	
+bool IGameController::CanVote()
+{
+	return true;
 }
 
 void IGameController::PostReset()

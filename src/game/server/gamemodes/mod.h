@@ -28,6 +28,7 @@ public:
 	virtual int ChooseHumanClass(CPlayer* pPlayer);
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
 	virtual bool IsChoosableClass(int PlayerClass);
+	virtual bool CanVote();
 	
 	void ResetFinalExplosion();
 	

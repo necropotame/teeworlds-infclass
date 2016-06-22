@@ -35,6 +35,11 @@ public:
 	void KillCharacter(int Weapon = WEAPON_GAME);
 	CCharacter *GetCharacter();
 
+/* INFECTION MODIFICATION START ***************************************/
+	void HookProtection(bool Value, bool Automatic = true);
+	bool HookProtectionEnabled() { return m_HookProtection; }
+/* INFECTION MODIFICATION END *****************************************/
+
 	//---------------------------------------------------------
 	// this is used for snapping so we know how we can clip the view for the player
 	vec2 m_ViewPos;
@@ -145,6 +150,8 @@ public:
 	
 	bool m_WasHumanThisRound;
 	int m_WinAsHuman;
+	bool m_HookProtection;
+	bool m_HookProtectionAutomatic;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

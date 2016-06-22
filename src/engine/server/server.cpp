@@ -1858,6 +1858,7 @@ void CServer::ConClassChooser(IConsole::IResult *pResult, void *pUserData)
 	
 	pServer->m_InfClassChooser = (NewValue > 0 ? 1 : 0);
 }
+
 /* INFECTION MODIFICATION END *****************************************/
 
 void CServer::RegisterCommands()
