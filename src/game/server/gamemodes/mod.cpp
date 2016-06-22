@@ -28,7 +28,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_GHOST] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_GHOST];
 	
-	m_ClassProbability[PLAYERCLASS_SPIDER] = 0.25f * m_ClassProbability[PLAYERCLASS_SPIDER];
+	m_ClassProbability[PLAYERCLASS_SPIDER] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_SPIDER];
 	
 	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
@@ -776,8 +776,8 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	float TotalProbInfectedClass = m_TotalProbInfectedClass;
 	
 	//Get information about existing infected
-	bool thereIsAWitch = false;
 	int nbInfected = 0;
+	bool thereIsAWitch = false;
 	bool thereIsAnUndead = false;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
@@ -839,10 +839,13 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		witchEnabled = false;
 	}
 	
+	random *= TotalProbInfectedClass;
+	dbg_msg("infclass", "random = %f", random);
+	
 	//Find the random class
 	if(undeadEnabled)
 	{
-		random -= m_ClassProbability[PLAYERCLASS_UNDEAD]/TotalProbInfectedClass;
+		random -= m_ClassProbability[PLAYERCLASS_UNDEAD];
 		if(random < 0.0f)
 		{
 			GameServer()->SendBroadcast_Language(-1, "The undead is coming!");
@@ -853,7 +856,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	if(witchEnabled)
 	{
-		random -= m_ClassProbability[PLAYERCLASS_WITCH]/TotalProbInfectedClass;
+		random -= m_ClassProbability[PLAYERCLASS_WITCH];
 		if(random < 0.0f)
 		{
 			GameServer()->SendBroadcast_Language(-1, "The witch is coming!");
@@ -864,7 +867,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	if(boomerEnabled)
 	{
-		random -= m_ClassProbability[PLAYERCLASS_BOOMER]/TotalProbInfectedClass;
+		random -= m_ClassProbability[PLAYERCLASS_BOOMER];
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_BOOMER;
@@ -873,7 +876,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	if(ghostEnabled)
 	{
-		random -= m_ClassProbability[PLAYERCLASS_GHOST]/TotalProbInfectedClass;
+		random -= m_ClassProbability[PLAYERCLASS_GHOST];
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_GHOST;
@@ -882,7 +885,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	if(spiderEnabled)
 	{
-		random -= m_ClassProbability[PLAYERCLASS_SPIDER]/TotalProbInfectedClass;
+		random -= m_ClassProbability[PLAYERCLASS_SPIDER];
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_SPIDER;
@@ -891,7 +894,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	if(hunterEnabled)
 	{
-		random -= m_ClassProbability[PLAYERCLASS_HUNTER]/TotalProbInfectedClass;
+		random -= m_ClassProbability[PLAYERCLASS_HUNTER];
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_HUNTER;

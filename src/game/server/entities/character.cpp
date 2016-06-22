@@ -2129,7 +2129,7 @@ void CCharacter::ClassSpawnAttributes()
 }
 
 void CCharacter::DestroyChildEntities()
-{
+{		
 	if(m_pBarrier)
 	{
 		GameServer()->m_World.DestroyEntity(m_pBarrier);
@@ -2162,19 +2162,7 @@ void CCharacter::DestroyChildEntities()
 	}
 	m_FirstShot = true;
 	
-	if(m_PositionLocked)
-	{
-		m_PositionLocked = false;
-		m_PositionLockTick = -Server()->TickSpeed()*10;
-		
-		//send new tune param
-		SendTuneParam();
-	}
-	else if(m_HookMode != 0)
-	{
-		m_HookMode = 0;
-		SendTuneParam();
-	}
+	SendTuneParam();
 }
 
 void CCharacter::SetClass(int ClassChoosed)
