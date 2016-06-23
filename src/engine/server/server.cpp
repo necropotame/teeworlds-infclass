@@ -353,11 +353,11 @@ void CServer::SetClientName(int ClientID, const char *pName)
 	str_copy(aCleanName, pName, sizeof(aCleanName));
 
 	// clear name
-	for(char *p = aCleanName; *p; ++p)
-	{
-		if(*p < 32)
-			*p = ' ';
-	}
+	//~ for(char *p = aCleanName; *p; ++p)
+	//~ {
+		//~ if(*p < 32)
+			//~ *p = ' ';
+	//~ }
 
 	if(TrySetClientName(ClientID, aCleanName))
 	{

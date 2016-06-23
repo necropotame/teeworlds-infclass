@@ -511,17 +511,20 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SNIPER)
 			{
-				if(m_PositionLockTick < -Server()->TickSpeed())
+				if(m_Pos.y > -600.0)
 				{
-					m_PositionLockTick = Server()->TickSpeed()*15;
-					m_PositionLocked = true;
-				
-					//send new tune param
-					SendTuneParam();
-				}
-				else if(m_PositionLockTick > Server()->TickSpeed())
-				{
-					m_PositionLockTick = Server()->TickSpeed();
+					if(m_PositionLockTick < -2*Server()->TickSpeed())
+					{
+						m_PositionLockTick = Server()->TickSpeed()*15;
+						m_PositionLocked = true;
+					
+						//send new tune param
+						SendTuneParam();
+					}
+					else if(m_PositionLockTick > Server()->TickSpeed())
+					{
+						m_PositionLockTick = Server()->TickSpeed();
+					}
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
@@ -904,8 +907,17 @@ void CCharacter::HandleWeapons()
 /* INFECTION MODIFICATION START ***************************************/
 	for(int i=WEAPON_GUN; i<=WEAPON_RIFLE; i++)
 	{
-		int AmmoRegenTime = Server()->GetAmmoRegenTime(GetInfWeaponID(i));
+		int InfWID = GetInfWeaponID(i);
+		int AmmoRegenTime = Server()->GetAmmoRegenTime(InfWID);
 		int MaxAmmo = Server()->GetMaxAmmo(GetInfWeaponID(i));
+		
+		if(InfWID == INFWEAPON_MERCENARY_GUN)
+		{
+			if(!IsGrounded() && (m_Core.m_HookState != HOOK_GRABBED || m_Core.m_HookedPlayer != -1))
+			{
+				AmmoRegenTime = 0;
+			}
+		}
 		
 		if(AmmoRegenTime)
 		{
