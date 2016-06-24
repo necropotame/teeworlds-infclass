@@ -194,12 +194,7 @@ private:
 	static CLocalizationDatabase s_ServerLocalizationDe;
 	static CLocalizationDatabase s_ServerLocalizationUk;
 	static CLocalizationDatabase s_ServerLocalizationRu;
-	
-	static const char* ms_TextEn[];
-	static const char* ms_TextFr[];
-	static const char* ms_TextRu[];
-	static const char* ms_TextUk[];
-	static const char* ms_TextDe[];
+	static CLocalizationDatabase s_ServerLocalizationIt;
 	
 	void InitializeServerLocatization();
 	

@@ -29,6 +29,7 @@ CLocalizationDatabase CGameContext::s_ServerLocalizationFr;
 CLocalizationDatabase CGameContext::s_ServerLocalizationDe;
 CLocalizationDatabase CGameContext::s_ServerLocalizationUk;
 CLocalizationDatabase CGameContext::s_ServerLocalizationRu;
+CLocalizationDatabase CGameContext::s_ServerLocalizationIt;
 
 void CGameContext::InitializeServerLocatization()
 {
@@ -38,6 +39,7 @@ void CGameContext::InitializeServerLocatization()
 		s_ServerLocalizationDe.Load("languages/infclass/de.txt", Storage(), Console());
 		s_ServerLocalizationUk.Load("languages/infclass/uk.txt", Storage(), Console());
 		s_ServerLocalizationRu.Load("languages/infclass/ru.txt", Storage(), Console());
+		s_ServerLocalizationIt.Load("languages/infclass/it.txt", Storage(), Console());
 		
 		s_ServerLocalizationInitialized = true;
 	}
@@ -62,6 +64,9 @@ const char* CGameContext::ServerLocalize(const char *pStr, int Language)
 			break;
 		case LANGUAGE_RU:
 			pNewStr = s_ServerLocalizationRu.FindString(str_quickhash(pStr));
+			break;
+		case LANGUAGE_IT:
+			pNewStr = s_ServerLocalizationIt.FindString(str_quickhash(pStr));
 			break;
 	}
 	
@@ -1432,6 +1437,17 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_UK);
 					}
 				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\language it") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/language it") == 0) 
+				)
+				{
+					Server()->SetClientLanguage(ClientID, LANGUAGE_IT);
+					if(m_apPlayers[ClientID])
+					{
+						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_IT);
+					}
+				}
 				else
 				{
 					SendChatTarget_Language(ClientID, "Unknown command");
@@ -1856,6 +1872,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 804: //Ukraine
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_UK);
 						m_VoteLanguage[ClientID] = LANGUAGE_UK;				
+						break;
+					case 380: //Italy
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_IT);
+						m_VoteLanguage[ClientID] = LANGUAGE_IT;				
 						break;
 				}
 				

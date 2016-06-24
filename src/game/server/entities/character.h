@@ -178,6 +178,7 @@ private:
 	bool m_IsFrozen;
 	int m_FrozenTime;
 	int m_FreezeReason;
+	int m_InAirTick;
 	
 	char m_GhostSearchMap[GHOST_SEARCHMAP_SIZE*GHOST_SEARCHMAP_SIZE];
 

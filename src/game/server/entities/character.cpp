@@ -73,6 +73,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_PositionLocked = false;
 	m_PoisonTick = 0;
 	m_HealTick = 0;
+	m_InAirTick = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -913,7 +914,7 @@ void CCharacter::HandleWeapons()
 		
 		if(InfWID == INFWEAPON_MERCENARY_GUN)
 		{
-			if(!IsGrounded() && (m_Core.m_HookState != HOOK_GRABBED || m_Core.m_HookedPlayer != -1))
+			if(m_InAirTick > Server()->TickSpeed()*4)
 			{
 				AmmoRegenTime = 0;
 			}
@@ -1122,6 +1123,15 @@ void CCharacter::Tick()
 		{
 			m_PoisonTick--;
 		}
+	}
+	
+	if(!IsGrounded() && (m_Core.m_HookState != HOOK_GRABBED || m_Core.m_HookedPlayer != -1))
+	{
+		m_InAirTick++;
+	}
+	else
+	{
+		m_InAirTick = 0;
 	}
 	
 	//Ghost
