@@ -1641,6 +1641,12 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 					case LANGUAGE_IT:
 						str_copy(aLangBuf, "it", sizeof(aLangBuf));
 						break;
+					case LANGUAGE_ES:
+						str_copy(aLangBuf, "es", sizeof(aLangBuf));
+						break;
+					case LANGUAGE_AR:
+						str_copy(aLangBuf, "ar", sizeof(aLangBuf));
+						break;
 				}
 				
 				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? "Admin" :

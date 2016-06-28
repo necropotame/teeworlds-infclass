@@ -840,7 +840,6 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	}
 	
 	random *= TotalProbInfectedClass;
-	dbg_msg("infclass", "random = %f", random);
 	
 	//Find the random class
 	if(undeadEnabled)

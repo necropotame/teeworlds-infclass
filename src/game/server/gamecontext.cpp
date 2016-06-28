@@ -25,21 +25,19 @@ enum
 /* INFECTION MODIFICATION START ***************************************/
 
 bool CGameContext::s_ServerLocalizationInitialized = false;
-CLocalizationDatabase CGameContext::s_ServerLocalizationFr;
-CLocalizationDatabase CGameContext::s_ServerLocalizationDe;
-CLocalizationDatabase CGameContext::s_ServerLocalizationUk;
-CLocalizationDatabase CGameContext::s_ServerLocalizationRu;
-CLocalizationDatabase CGameContext::s_ServerLocalizationIt;
+CLocalizationDatabase CGameContext::s_ServerLocalization[NUM_TRANSLATED_LANGUAGES];
 
 void CGameContext::InitializeServerLocatization()
 {
 	if(!s_ServerLocalizationInitialized)
 	{
-		s_ServerLocalizationFr.Load("languages/infclass/fr.txt", Storage(), Console());
-		s_ServerLocalizationDe.Load("languages/infclass/de.txt", Storage(), Console());
-		s_ServerLocalizationUk.Load("languages/infclass/uk.txt", Storage(), Console());
-		s_ServerLocalizationRu.Load("languages/infclass/ru.txt", Storage(), Console());
-		s_ServerLocalizationIt.Load("languages/infclass/it.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_FR].Load("languages/infclass/fr.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_DE].Load("languages/infclass/de.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_UK].Load("languages/infclass/uk.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_RU].Load("languages/infclass/ru.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_IT].Load("languages/infclass/it.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_ES].Load("languages/infclass/es.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_AR].Load("languages/infclass/ar.txt", Storage(), Console());
 		
 		s_ServerLocalizationInitialized = true;
 	}
@@ -51,24 +49,8 @@ const char* CGameContext::ServerLocalize(const char *pStr, int Language)
 {
 	const char* pNewStr = 0;
 	
-	switch(Language)
-	{
-		case LANGUAGE_FR:
-			pNewStr = s_ServerLocalizationFr.FindString(str_quickhash(pStr));
-			break;
-		case LANGUAGE_DE:
-			pNewStr = s_ServerLocalizationDe.FindString(str_quickhash(pStr));
-			break;
-		case LANGUAGE_UK:
-			pNewStr = s_ServerLocalizationUk.FindString(str_quickhash(pStr));
-			break;
-		case LANGUAGE_RU:
-			pNewStr = s_ServerLocalizationRu.FindString(str_quickhash(pStr));
-			break;
-		case LANGUAGE_IT:
-			pNewStr = s_ServerLocalizationIt.FindString(str_quickhash(pStr));
-			break;
-	}
+	if(Language >= 0 && Language < NUM_TRANSLATED_LANGUAGES)
+		pNewStr = s_ServerLocalization[Language].FindString(str_quickhash(pStr));
 	
 	if(pNewStr == 0)
 		pNewStr = pStr;
@@ -1022,7 +1004,9 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 	void *pRawMsg = m_NetObjHandler.SecureUnpackMsg(MsgID, pUnpacker);
 	CPlayer *pPlayer = m_apPlayers[ClientID];
 	
-	if(!pPlayer)
+	//HACK: DDNet Client did something wrong that we can detect
+	//Round and Score conditions are here only to prevent false-positif
+	if(!pPlayer && Server()->GetClientScore(ClientID) == 0 && Server()->GetClientNbRound(ClientID) == 0)
 	{
 		Server()->Kick(ClientID, "Kicked (is probably a dummy)");
 		return;
@@ -1383,69 +1367,39 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					SendChatTarget_Language(ClientID, "A random class will be automatically attributed to you when rounds start");
 				}
 				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\language en") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/language en") == 0) 
+					(str_comp_nocase_num(pMsg->m_pMessage,"\\language ", 10) == 0) ||
+					(str_comp_nocase_num(pMsg->m_pMessage,"/language ", 10) == 0)
 				)
 				{
-					Server()->SetClientLanguage(ClientID, LANGUAGE_EN);
-					if(m_apPlayers[ClientID])
+					int Language = -1;
+					
+					if(str_comp_nocase(pMsg->m_pMessage+10, "fr") == 0)
+						Language = LANGUAGE_FR;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "de") == 0)
+						Language = LANGUAGE_DE;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "uk") == 0)
+						Language = LANGUAGE_UK;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "ru") == 0)
+						Language = LANGUAGE_RU;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "it") == 0)
+						Language = LANGUAGE_IT;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "es") == 0)
+						Language = LANGUAGE_ES;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "ar") == 0)
+						Language = LANGUAGE_AR;
+					
+					if(Language >= 0)
 					{
-						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_EN);
+						Server()->SetClientLanguage(ClientID, LANGUAGE_ES);
+						if(m_apPlayers[ClientID])
+						{
+							m_apPlayers[ClientID]->SetLanguage(LANGUAGE_ES);
+						}
 					}
-				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\language fr") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/language fr") == 0) 
-				)
-				{
-					Server()->SetClientLanguage(ClientID, LANGUAGE_FR);
-					if(m_apPlayers[ClientID])
+					else
 					{
-						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_FR);
-					}
-				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\language de") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/language de") == 0) 
-				)
-				{
-					Server()->SetClientLanguage(ClientID, LANGUAGE_DE);
-					if(m_apPlayers[ClientID])
-					{
-						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_DE);
-					}
-				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\language ru") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/language ru") == 0) 
-				)
-				{
-					Server()->SetClientLanguage(ClientID, LANGUAGE_RU);
-					if(m_apPlayers[ClientID])
-					{
-						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_RU);
-					}
-				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\language uk") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/language uk") == 0) 
-				)
-				{
-					Server()->SetClientLanguage(ClientID, LANGUAGE_UK);
-					if(m_apPlayers[ClientID])
-					{
-						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_UK);
-					}
-				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\language it") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/language it") == 0) 
-				)
-				{
-					Server()->SetClientLanguage(ClientID, LANGUAGE_IT);
-					if(m_apPlayers[ClientID])
-					{
-						m_apPlayers[ClientID]->SetLanguage(LANGUAGE_IT);
+						SendChatTarget_Language(ClientID, "Unknown language");
+						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es|ar>");
 					}
 				}
 				else
@@ -1827,30 +1781,6 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				
 				switch(pMsg->m_Country)
 				{
-					//~ case 12: //Algeria
-					//~ case 48: //Bahrain
-					//~ case 262: //Djibouti
-					//~ case 818: //Egypt
-					//~ case 368: //Iraq
-					//~ case 400: //Jordan
-					//~ case 414: //Kuwait
-					//~ case 422: //Lebanon
-					//~ case 434: //Libya
-					//~ case 478: //Mauritania
-					//~ case 504: //Morocco
-					//~ case 512: //Oman
-					//~ case 275: //Palestine
-					//~ case 634: //Qatar
-					//~ case 682: //Saudi Arabia
-					//~ case 706: //Somalia
-					//~ case 729: //Sudan
-					//~ case 760: //Syria
-					//~ case 788: //Tunisia
-					//~ case 784: //United Arab Emirates
-					//~ case 887: //Yemen
-						//~ Msg.m_pDescription = ms_TextAr[TEXTID_SWITCH_LANGUAGE];
-						//~ m_VoteLanguage[ClientID] = LANGUAGE_AR;				
-						//~ break;
 					case 56: //Belgique (until Dutch is available)
 					case 250: //France
 					case 492: //Monaco
@@ -1876,6 +1806,30 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 380: //Italy
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_IT);
 						m_VoteLanguage[ClientID] = LANGUAGE_IT;				
+						break;
+					case 32: //Argentina
+					case 68: //Bolivia
+					case 152: //Chile
+					case 170: //Colombia
+					case 188: //Costa Rica
+					case 192: //Cuba
+					case 214: //Dominican Republic
+					case 218: //Ecuador
+					case 222: //El Salvador
+					case 226: //Equatorial Guinea
+					case 320: //Guatemala
+					case 340: //Honduras
+					case 484: //Mexico
+					case 558: //Nicaragua
+					case 591: //Panama
+					case 600: //Paraguay
+					case 604: //Peru
+					case 630: //Puerto Rico
+					case 724: //Spain
+					case 858: //Uruguay
+					case 862: //Venezuela
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_ES);
+						m_VoteLanguage[ClientID] = LANGUAGE_ES;				
 						break;
 				}
 				

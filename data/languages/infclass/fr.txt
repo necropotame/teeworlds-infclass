@@ -276,3 +276,67 @@ If the Witch dies, she disappear and is replaced by an another class of infected
 
 She can also inflict 1 damage point per seconds by hooking humans.
 == Elle peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.
+
+Hook protection enabled
+== Protection contre le grapin activée
+
+Hook protection disabled
+== Protection contre le grapin désactivé
+
+Unknown language
+== Langue inconnue
+
+Bombs left: %d
+== Bombes restantes : %d
+
+Laser wall: %d sec
+== Barrière laser : %d sec
+
+Position lock: %d sec
+== Verrou de position : %d
+
+Web mode enabled
+== Mode toile activé
+
+Mercenary
+== Mercenaire
+
+Mercenary:
+== Mercenaire :
+
+The Mercenary fly in air using his machine gun.
+== Le Mercenaire peut voler dans l'air à l'aide de sa mitrailleuse.
+
+He can also throw poison grenades that deals 8 damage points.
+== Il peut aussi lancer des grenades empoisonnées qui infligent 8 ponits de dégat.
+
+Sniper
+== Sniper
+
+Sniper:
+== Sniper :
+
+The Sniper can lock his position in air for 15 seconds with his hammer.
+== Le Sniper peut verrouiller sa position dans l'air pendant 15 secondes avec son marteau.
+
+He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+== Il dispose aussi d'un puissant fusil qui inflige 19-20 points de dégat en position verrouillée, et 9-10 en situation normale
+
+Spider
+== Araignée
+
+Spider:
+== Araignée :
+
+The Spider can infect humans and heal infected with his hammer.
+== L'Araignée peut infecté un humain et soigner les infectés à l'aide de son marteau.
+
+When selecting any gun, his hook enter in web mode.
+== Quand elle selectionne une arme, son grappin entre en mode toile.
+
+Any human that touch a hook in web mode is automatically grabbed.
+== Lorsqu'un humain touche un grappin en mode toile, il est automatiquement attrapé par l'Araignée.
+
+The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+== Le grappin de l'araignée (dans les deux modes) inflige un point de dégat par seconde et peut tirer un humain pendant 2 secondes.
+

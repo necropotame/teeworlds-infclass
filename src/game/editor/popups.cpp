@@ -710,6 +710,32 @@ int CEditor::PopupPoint(CEditor *pEditor, CUIRect View)
 		{0},
 	};
 
+	CUIRect Button;
+	
+	// apply color button
+	View.HSplitBottom(6.0f, &View, &Button);
+	View.HSplitBottom(12.0f, &View, &Button);
+	static int s_ApplyColorButton = 0;
+	if(pEditor->DoButton_Editor(&s_ApplyColorButton, "Apply color", 0, &Button, 0, "Apply the color of this point to all point of the quad"))
+	{
+		CLayerQuads *pLayer = (CLayerQuads *)pEditor->GetSelectedLayerType(0, LAYERTYPE_QUADS);
+		if(pLayer)
+		{
+			CColor Color;
+			for(int v = 0; v < 4; v++)
+			if(pEditor->m_SelectedPoints&(1<<v))
+				Color = pQuad->m_aColors[v];
+			
+			for(int v=0; v<4; v++)
+			{
+				pQuad->m_aColors[v] = Color;
+			}
+			
+			pEditor->m_Map.m_Modified = true;
+		}
+		return 1;
+	}
+	
 	static int s_aIds[NUM_PROPS] = {0};
 	int NewVal = 0;
 	int Prop = pEditor->DoProperties(&View, aProps, s_aIds, &NewVal);

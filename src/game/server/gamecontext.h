@@ -190,11 +190,7 @@ private:
 	static void ConSetClass(IConsole::IResult *pResult, void *pUserData);
 	
 	static bool s_ServerLocalizationInitialized;
-	static CLocalizationDatabase s_ServerLocalizationFr;
-	static CLocalizationDatabase s_ServerLocalizationDe;
-	static CLocalizationDatabase s_ServerLocalizationUk;
-	static CLocalizationDatabase s_ServerLocalizationRu;
-	static CLocalizationDatabase s_ServerLocalizationIt;
+	static CLocalizationDatabase s_ServerLocalization[NUM_TRANSLATED_LANGUAGES];
 	
 	void InitializeServerLocatization();
 	
