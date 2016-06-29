@@ -131,11 +131,6 @@ public:
 	void CreateDeath(vec2 Pos, int Who);
 	void CreateSound(vec2 Pos, int Sound, int Mask=-1);
 	void CreateSoundGlobal(int Sound, int Target=-1);
-	
-/* INFECTION MODIFICATION START ***************************************/
-	void CreateDeadlyPortalWarning(vec2 Pos, int Owner);
-/* INFECTION MODIFICATION END *****************************************/
-
 
 	enum
 	{
@@ -212,11 +207,22 @@ public:
 	virtual void SendMODT_Language(int To, const char* pParam);
 	virtual void SendMODT_Language_s(int To, const char* pText, const char* pParam);
 	
+	void CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan);
+	
 private:
 	int m_VoteLanguageTick[MAX_CLIENTS];
 	int m_VoteLanguage[MAX_CLIENTS];
 	
 	int m_BroadCastHighPriorityTick[MAX_CLIENTS];
+	
+	struct LaserDotState
+	{
+		vec2 m_Pos0;
+		vec2 m_Pos1;
+		int m_LifeSpan;
+		int m_SnapID;
+	};
+	array<LaserDotState> m_LaserDots;
 
 /* INFECTION MODIFICATION END *****************************************/
 };

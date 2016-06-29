@@ -455,7 +455,7 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_ENGINEER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_SNIPER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_SOLDIER_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
-	SetFireDelay(INFWEAPON_SCIENTIST_SHOTGUN, 250);
+	SetFireDelay(INFWEAPON_SCIENTIST_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_MEDIC_SHOTGUN, 250);
 	SetFireDelay(INFWEAPON_NINJA_HAMMER, GetFireDelay(INFWEAPON_NINJA));
 	SetFireDelay(INFWEAPON_NINJA_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
@@ -472,7 +472,7 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_ENGINEER_RIFLE, 6000);
 	SetAmmoRegenTime(INFWEAPON_SNIPER_RIFLE, 4000);
 	SetAmmoRegenTime(INFWEAPON_SOLDIER_GRENADE, 7000);
-	SetAmmoRegenTime(INFWEAPON_SCIENTIST_SHOTGUN, 750);
+	SetAmmoRegenTime(INFWEAPON_SCIENTIST_GRENADE, 10000);
 	SetAmmoRegenTime(INFWEAPON_MEDIC_SHOTGUN, 750);
 	SetAmmoRegenTime(INFWEAPON_NINJA_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_NINJA_GRENADE, 15000);
@@ -489,7 +489,7 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_ENGINEER_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_SNIPER_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_SOLDIER_GRENADE, 10);
-	SetMaxAmmo(INFWEAPON_SCIENTIST_SHOTGUN, 10);
+	SetMaxAmmo(INFWEAPON_SCIENTIST_GRENADE, 3);
 	SetMaxAmmo(INFWEAPON_MEDIC_SHOTGUN, 10);
 	SetMaxAmmo(INFWEAPON_NINJA_HAMMER, -1);
 	SetMaxAmmo(INFWEAPON_NINJA_GRENADE, 5);
@@ -1641,12 +1641,12 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 					case LANGUAGE_IT:
 						str_copy(aLangBuf, "it", sizeof(aLangBuf));
 						break;
-					case LANGUAGE_ES:
-						str_copy(aLangBuf, "es", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_AR:
-						str_copy(aLangBuf, "ar", sizeof(aLangBuf));
-						break;
+					//~ case LANGUAGE_ES:
+						//~ str_copy(aLangBuf, "es", sizeof(aLangBuf));
+						//~ break;
+					//~ case LANGUAGE_AR:
+						//~ str_copy(aLangBuf, "ar", sizeof(aLangBuf));
+						//~ break;
 				}
 				
 				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? "Admin" :
@@ -1800,31 +1800,6 @@ void CServer::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void 
 }
 
 /* INFECTION MODIFICATION START ***************************************/
-void CServer::ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData)
-{
-	CServer *pServer = (CServer*) pUserData;
-	
-	const char *pWeaponName = pResult->GetString(0);
-	int NewValue = pResult->GetInteger(1);
-	int WeapondId = 0;
-	
-	if(NewValue < 0) NewValue = 0;
-	
-	if(str_comp(pWeaponName, "gun") == 0) WeapondId = INFWEAPON_GUN;
-	else if(str_comp(pWeaponName, "guns") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
-	else if(str_comp(pWeaponName, "soldier_grenade") == 0) WeapondId = INFWEAPON_SOLDIER_GRENADE;
-	else if(str_comp(pWeaponName, "scientist_shotgun") == 0) WeapondId = INFWEAPON_SCIENTIST_SHOTGUN;
-	else if(str_comp(pWeaponName, "medic_shotgun") == 0) WeapondId = INFWEAPON_MEDIC_SHOTGUN;
-	else if(str_comp(pWeaponName, "ninja_grenade") == 0) WeapondId = INFWEAPON_NINJA_GRENADE;
-	else if(str_comp(pWeaponName, "engineer_rifle") == 0) WeapondId = INFWEAPON_ENGINEER_RIFLE;
-	else
-	{
-		pServer->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "inf_set_ammo_regen", "No such weapon");
-	}
-	
-	pServer->SetAmmoRegenTime(WeapondId, NewValue);
-}
-
 void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData)
 {
 	CServer *pServer = (CServer*) pUserData;
@@ -1896,7 +1871,6 @@ void CServer::RegisterCommands()
 	Console()->Chain("console_output_level", ConchainConsoleOutputLevelUpdate, this);
 
 /* INFECTION MODIFICATION START ***************************************/
-	Console()->Register("inf_set_ammo_regen", "si", CFGFLAG_SERVER, ConSetAmmoRegen, this, "Set the ammo regeneration time per weapon");
 	Console()->Register("inf_set_class_availability", "si", CFGFLAG_SERVER, ConSetClassAvailability, this, "Enable/Disable a class");
 	Console()->Register("inf_classchooser", "i", CFGFLAG_SERVER, ConClassChooser, this, "Enable/Disable class chooser");
 /* INFECTION MODIFICATION END *****************************************/

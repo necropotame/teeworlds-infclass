@@ -59,17 +59,7 @@ void CBarrier::Tick()
 			vec2 IntersectPos = closest_point_on_line(m_Pos, m_Pos2, p->m_Pos);
 			float Len = distance(p->m_Pos, IntersectPos);
 			if(Len < p->m_ProximityRadius+g_BarrierRadius)
-			{
-				//Check for portal traps
-				if(p->GetClass() != PLAYERCLASS_UNDEAD && (Server()->Tick() - p->m_PortalTick) < Server()->TickSpeed()/2)
-				{
-					CPlayer* pPortalPlayer = GameServer()->m_apPlayers[p->m_LastPortalOwner];
-					if(pPortalPlayer)
-					{
-						pPortalPlayer->IncreaseScore(1);
-					}
-				}
-				
+			{				
 				//Check for hook traps. The case when the player is frozen is in the function Die()
 				if(!p->IsFrozen())
 				{

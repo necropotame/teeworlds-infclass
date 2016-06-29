@@ -12,6 +12,7 @@
 #include "character.h"
 #include "laser.h"
 #include "projectile.h"
+#include "mine.h"
 #include "mercenarybomb.h"
 
 //input count
@@ -58,13 +59,10 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_pClassChooser = 0;
 	m_pBarrier = 0;
 	m_pBomb = 0;
-	m_pPortal[0] = 0;
-	m_pPortal[1] = 0;
 	m_FlagID = Server()->SnapNewID();
 	m_HeartID = Server()->SnapNewID();
 	m_BarrierHintID = Server()->SnapNewID();
 	m_AntiFireTick = 0;
-	m_PortalTick = 0;
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
 	m_IsInvisible = false;
@@ -110,8 +108,6 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 
 /* INFECTION MODIFICATION START ***************************************/
 	m_AntiFireTick = Server()->Tick();
-	m_PortalTick = 0;
-	m_LastPortalOwner = m_pPlayer->GetCID();
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
@@ -508,7 +504,6 @@ void CCharacter::FireWeapon()
 					
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 				}
-					
 			}
 			else if(GetClass() == PLAYERCLASS_SNIPER)
 			{
@@ -530,36 +525,49 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
-				vec2 PortalPos = m_Pos;
-							
-				//Check anti portal tile
-				vec2 portalTile = vec2(16.0f, 16.0f) + vec2(
-					static_cast<float>(static_cast<int>(round(PortalPos.x))/32)*32.0,
-					static_cast<float>(static_cast<int>(round(PortalPos.y))/32)*32.0);
+				bool FreeSpace = true;
+				int NbMine = 0;
 				
-				//Check is the tile is occuped, and if the direction is valide
-				if(!GameServer()->Collision()->CheckPointFlag(portalTile, CCollision::COLFLAG_NOPORTAL) && PortalPos.y > -600.0)
+				int OlderMineTick = Server()->Tick()+1;
+				CMine* pOlderMine = 0;
+				CMine* pIntersectMine = 0;
+				
+				CMine* p = (CMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MINE);
+				while(p)
 				{
-					if(m_pPortal[0] && m_pPortal[1])
-					{
-						GameServer()->m_World.DestroyEntity(m_pPortal[0]);
-						GameServer()->m_World.DestroyEntity(m_pPortal[1]);
-						m_pPortal[0] = 0;
-						m_pPortal[1] = 0;
-					}
+					float d = distance(p->m_Pos, ProjStartPos);
 					
-					if(!m_pPortal[0])
+					if(p->GetOwner() == m_pPlayer->GetCID())
 					{
-						m_pPortal[0] = new CPortal(GameWorld(), PortalPos, m_pPlayer->GetCID(), 0);
-					}
-					else
-					{
-						if(distance(m_Pos, m_pPortal[0]->m_Pos) > 64.0)
+						if(OlderMineTick > p->m_StartTick)
 						{
-							m_pPortal[1] = new CPortal(GameWorld(), PortalPos, m_pPlayer->GetCID(), 1);
-							m_pPortal[1]->Link(m_pPortal[0]);
+							OlderMineTick = p->m_StartTick;
+							pOlderMine = p;
+						}
+						NbMine++;
+						
+						if(d < 2.0f*g_Config.m_InfMineRadius)
+						{
+							if(pIntersectMine)
+								FreeSpace = false;
+							else
+								pIntersectMine = p;
 						}
 					}
+					else if(d < 2.0f*g_Config.m_InfMineRadius)
+						FreeSpace = false;
+					
+					p = (CMine *)p->TypeNext();
+				}
+				
+				if(FreeSpace)
+				{
+					if(pIntersectMine) //Move the mine
+						GameServer()->m_World.DestroyEntity(pIntersectMine);
+					else if(NbMine >= g_Config.m_InfMineLimit && pOlderMine)
+						GameServer()->m_World.DestroyEntity(pOlderMine);
+					
+					new CMine(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_NINJA)
@@ -842,6 +850,10 @@ void CCharacter::FireWeapon()
 				{
 					pProj->FlashGrenade();
 				}
+				else if(GetClass() == PLAYERCLASS_SCIENTIST)
+				{
+					pProj->Portal();
+				}
 	/* INFECTION MODIFICATION END *****************************************/
 
 				// pack the Projectile and send it to the client Directly
@@ -1064,18 +1076,6 @@ void CCharacter::Tick()
 		{
 			m_pPlayer->StartInfection();
 		}
-		
-		//Infection after teleportation
-		//~ if((Server()->Tick() - m_PortalTick) < Server()->TickSpeed() && m_LastPortalOwner != m_pPlayer->GetCID())
-		//~ {
-			//~ CPlayer* pBadPlayer = GameServer()->m_apPlayers[m_LastPortalOwner];
-			//~ if(pBadPlayer)
-			//~ {
-				//~ GameServer()->SendChatTarget_Language_s(m_LastPortalOwner, TEXTID_YOU_PORTAL_INFECTION, Server()->ClientName(m_pPlayer->GetCID()));
-			
-				//~ pBadPlayer->IncreaseScore(-5);
-			//~ }
-		//~ }
 	}
 	
 	if(m_PositionLockTick > 0)
@@ -1294,8 +1294,7 @@ void CCharacter::Tick()
 	}
 
 	m_Core.m_Input = m_Input;
-	
-	
+		
 	if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
@@ -1396,6 +1395,21 @@ void CCharacter::Tick()
 	{
 		if(m_pBomb)
 			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Bombs left: %d", m_pBomb->GetNbBombs(), true);
+		else
+			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+	}
+	else if(GetClass() == PLAYERCLASS_SCIENTIST)
+	{
+		int NbMines = 0;
+		CMine* p = (CMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MINE);
+		while(p)
+		{
+			if(p->GetOwner() == m_pPlayer->GetCID())
+				NbMines++;
+			p = (CMine *)p->TypeNext();
+		}
+		if(NbMines > 0)
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Active mines: %d", NbMines, true);
 		else
 			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
 	}
@@ -1528,7 +1542,6 @@ void CCharacter::TickPaused()
 		
 /* INFECTION MODIFICATION START ***************************************/
 	++m_HookDmgTick;
-	++m_PortalTick;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -1992,8 +2005,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_SHOTGUN, 10);
-			m_ActiveWeapon = WEAPON_SHOTGUN;
+			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(INFWEAPON_SCIENTIST_GRENADE));
+			m_ActiveWeapon = WEAPON_GRENADE;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SCIENTIST);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SCIENTIST))
@@ -2162,16 +2175,6 @@ void CCharacter::DestroyChildEntities()
 		GameServer()->m_World.DestroyEntity(m_pBomb);
 		m_pBomb = 0;
 	}
-	if(m_pPortal[0])
-	{
-		GameServer()->m_World.DestroyEntity(m_pPortal[0]);
-		m_pPortal[0] = 0;
-	}
-	if(m_pPortal[1])
-	{
-		GameServer()->m_World.DestroyEntity(m_pPortal[1]);
-		m_pPortal[1] = 0;
-	}
 	if(m_pClassChooser)
 	{
 		GameServer()->m_World.DestroyEntity(m_pClassChooser);
@@ -2182,6 +2185,16 @@ void CCharacter::DestroyChildEntities()
 		if(bomb->m_Owner != m_pPlayer->GetCID()) continue;
 		bomb->Explode();
 	}
+	{
+		CMine* p = (CMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MINE);
+		while(p)
+		{
+			if(p->GetOwner() == m_pPlayer->GetCID())
+				GameServer()->m_World.DestroyEntity(p);
+			
+			p = (CMine *)p->TypeNext();
+		}
+	}		
 	m_FirstShot = true;
 	
 	SendTuneParam();
@@ -2246,11 +2259,6 @@ bool CCharacter::IsFrozen() const
 	return m_IsFrozen;
 }
 
-bool CCharacter::IsTeleportable()
-{
-	return (Server()->Tick() - m_PortalTick >= Server()->TickSpeed()/2.0f);
-}
-
 int CCharacter::GetInfWeaponID(int WID)
 {
 	if(WID == WEAPON_HAMMER)
@@ -2278,8 +2286,6 @@ int CCharacter::GetInfWeaponID(int WID)
 	{
 		switch(GetClass())
 		{
-			case PLAYERCLASS_SCIENTIST:
-				return INFWEAPON_SCIENTIST_SHOTGUN;
 			case PLAYERCLASS_MEDIC:
 				return INFWEAPON_MEDIC_SHOTGUN;
 			default:
@@ -2296,6 +2302,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_SOLDIER_GRENADE;
 			case PLAYERCLASS_NINJA:
 				return INFWEAPON_NINJA_GRENADE;
+			case PLAYERCLASS_SCIENTIST:
+				return INFWEAPON_SCIENTIST_GRENADE;
 			default:
 				return INFWEAPON_GRENADE;
 		}

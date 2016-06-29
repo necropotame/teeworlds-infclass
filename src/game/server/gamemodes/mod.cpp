@@ -430,25 +430,6 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 	{
 		if(!pVictim->IsInfected())
 		{
-			CPlayer* pVictimPlayer = pVictim->GetPlayer();
-			if(pVictimPlayer)
-			{
-				//Death by portal
-				if(Weapon == WEAPON_WORLD && (Server()->Tick() - pVictim->m_PortalTick) < Server()->TickSpeed() && pVictim->m_LastPortalOwner != pVictimPlayer->GetCID())
-				{
-					CPlayer* pBadPlayer = GameServer()->m_apPlayers[pVictim->m_LastPortalOwner];
-					if(pBadPlayer)
-					{
-						//~ GameServer()->SendChatTarget_Language_s(pBadPlayer->GetCID(), TEXTID_YOU_PORTAL_KILL, Server()->ClientName(pVictimPlayer->GetCID()));
-						pBadPlayer->IncreaseScore(-5);
-					}
-				}
-			}
-			
-			pVictim->GetPlayer()->IncreaseScore(-1); // suicide
-		}
-		else if(pVictim->GetClass() != PLAYERCLASS_BOOMER)
-		{
 			pVictim->GetPlayer()->IncreaseScore(-1); // suicide
 		}
 	}
@@ -520,14 +501,14 @@ bool CGameControllerMOD::IsSpawnable(vec2 Pos)
 	CCharacter *aEnts[MAX_CLIENTS];
 	int Num = GameServer()->m_World.FindEntities(Pos, 64, (CEntity**)aEnts, MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
 	vec2 Positions[5] = { vec2(0.0f, 0.0f), vec2(-32.0f, 0.0f), vec2(0.0f, -32.0f), vec2(32.0f, 0.0f), vec2(0.0f, 32.0f) };	// start, left, up, right, down
-	int Result = -1;
-	for(int Index = 0; Index < 5 && Result == -1; ++Index)
+	for(int Index = 0; Index < 5; ++Index)
 	{
-		Result = Index;
+		if(GameServer()->Collision()->CheckPoint(Pos+Positions[Index]))
+			return false;
+		
 		for(int c = 0; c < Num; ++c)
 		{
 			if(
-				GameServer()->Collision()->CheckPoint(Pos+Positions[Index]) ||
 				GameServer()->Collision()->CheckPointFlag(Pos+Positions[Index], CCollision::COLFLAG_NOSPAWN) ||
 				distance(aEnts[c]->m_Pos, Pos+Positions[Index]) <= aEnts[c]->m_ProximityRadius
 			)

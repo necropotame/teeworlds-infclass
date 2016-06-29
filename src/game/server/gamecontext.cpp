@@ -36,8 +36,8 @@ void CGameContext::InitializeServerLocatization()
 		s_ServerLocalization[LANGUAGE_UK].Load("languages/infclass/uk.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_RU].Load("languages/infclass/ru.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_IT].Load("languages/infclass/it.txt", Storage(), Console());
-		s_ServerLocalization[LANGUAGE_ES].Load("languages/infclass/es.txt", Storage(), Console());
-		s_ServerLocalization[LANGUAGE_AR].Load("languages/infclass/ar.txt", Storage(), Console());
+		//~ s_ServerLocalization[LANGUAGE_ES].Load("languages/infclass/es.txt", Storage(), Console());
+		//~ s_ServerLocalization[LANGUAGE_AR].Load("languages/infclass/ar.txt", Storage(), Console());
 		
 		s_ServerLocalizationInitialized = true;
 	}
@@ -89,6 +89,9 @@ CGameContext::CGameContext()
 
 CGameContext::~CGameContext()
 {
+	for(int i = 0; i < m_LaserDots.size(); i++)
+		Server()->SnapFreeID(m_LaserDots[i].m_SnapID);
+	
 	for(int i = 0; i < MAX_CLIENTS; i++)
 		delete m_apPlayers[i];
 	if(!m_Resetting)
@@ -156,6 +159,16 @@ void CGameContext::CreateHammerHit(vec2 Pos)
 	}
 }
 
+void CGameContext::CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan)
+{
+	CGameContext::LaserDotState State;
+	State.m_Pos0 = Pos0;
+	State.m_Pos1 = Pos1;
+	State.m_LifeSpan = LifeSpan;
+	State.m_SnapID = Server()->SnapNewID();
+	
+	m_LaserDots.add(State);
+}
 
 void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage, int TakeDamageMode)
 {
@@ -256,30 +269,6 @@ void CGameContext::CreateSoundGlobal(int Sound, int Target)
 		Server()->SendPackMsg(&Msg, Flag, Target);
 	}
 }
-
-/* INFECTION MODIFICATION START ***************************************/
-void CGameContext::CreateDeadlyPortalWarning(vec2 Pos, int Owner)
-{
-	// create the event
-	int Mask = 0;
-	
-	for(int i = 0; i < MAX_CLIENTS; i++)
-	{
-		if(m_apPlayers[i] && !m_apPlayers[i]->IsInfected())
-		{
-			Mask |= CmaskOne(i);
-		}
-	}
-	
-	CNetEvent_Death *pEvent = (CNetEvent_Death *)m_Events.Create(NETEVENTTYPE_DEATH, sizeof(CNetEvent_Death), Mask);
-	if(pEvent)
-	{
-		pEvent->m_X = (int)Pos.x;
-		pEvent->m_Y = (int)Pos.y;
-		pEvent->m_ClientID = Owner;
-	}
-}
-/* INFECTION MODIFICATION END *****************************************/
 
 void CGameContext::SendChatTarget(int To, const char *pText)
 {
@@ -823,6 +812,22 @@ void CGameContext::OnTick()
 			}
 		}
 	}
+	
+/* INFECTION MODIFICATION START ***************************************/
+	//Clean old dots
+	int DotIter = 0;
+	while(DotIter < m_LaserDots.size())
+	{
+		m_LaserDots[DotIter].m_LifeSpan--;
+		if(m_LaserDots[DotIter].m_LifeSpan <= 0)
+		{
+			Server()->SnapFreeID(m_LaserDots[DotIter].m_SnapID);
+			m_LaserDots.remove_index(DotIter);
+		}
+		else
+			DotIter++;
+	}
+/* INFECTION MODIFICATION END *****************************************/
 
 	// update voting
 	if(m_VoteCloseTime)
@@ -1383,23 +1388,23 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Language = LANGUAGE_RU;
 					else if(str_comp_nocase(pMsg->m_pMessage+10, "it") == 0)
 						Language = LANGUAGE_IT;
-					else if(str_comp_nocase(pMsg->m_pMessage+10, "es") == 0)
-						Language = LANGUAGE_ES;
-					else if(str_comp_nocase(pMsg->m_pMessage+10, "ar") == 0)
-						Language = LANGUAGE_AR;
+					//~ else if(str_comp_nocase(pMsg->m_pMessage+10, "es") == 0)
+						//~ Language = LANGUAGE_ES;
+					//~ else if(str_comp_nocase(pMsg->m_pMessage+10, "ar") == 0)
+						//~ Language = LANGUAGE_AR;
 					
 					if(Language >= 0)
 					{
-						Server()->SetClientLanguage(ClientID, LANGUAGE_ES);
+						Server()->SetClientLanguage(ClientID, Language);
 						if(m_apPlayers[ClientID])
 						{
-							m_apPlayers[ClientID]->SetLanguage(LANGUAGE_ES);
+							m_apPlayers[ClientID]->SetLanguage(Language);
 						}
 					}
 					else
 					{
 						SendChatTarget_Language(ClientID, "Unknown language");
-						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es|ar>");
+						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it>");
 					}
 				}
 				else
@@ -1807,30 +1812,30 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_IT);
 						m_VoteLanguage[ClientID] = LANGUAGE_IT;				
 						break;
-					case 32: //Argentina
-					case 68: //Bolivia
-					case 152: //Chile
-					case 170: //Colombia
-					case 188: //Costa Rica
-					case 192: //Cuba
-					case 214: //Dominican Republic
-					case 218: //Ecuador
-					case 222: //El Salvador
-					case 226: //Equatorial Guinea
-					case 320: //Guatemala
-					case 340: //Honduras
-					case 484: //Mexico
-					case 558: //Nicaragua
-					case 591: //Panama
-					case 600: //Paraguay
-					case 604: //Peru
-					case 630: //Puerto Rico
-					case 724: //Spain
-					case 858: //Uruguay
-					case 862: //Venezuela
-						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_ES);
-						m_VoteLanguage[ClientID] = LANGUAGE_ES;				
-						break;
+					//~ case 32: //Argentina
+					//~ case 68: //Bolivia
+					//~ case 152: //Chile
+					//~ case 170: //Colombia
+					//~ case 188: //Costa Rica
+					//~ case 192: //Cuba
+					//~ case 214: //Dominican Republic
+					//~ case 218: //Ecuador
+					//~ case 222: //El Salvador
+					//~ case 226: //Equatorial Guinea
+					//~ case 320: //Guatemala
+					//~ case 340: //Honduras
+					//~ case 484: //Mexico
+					//~ case 558: //Nicaragua
+					//~ case 591: //Panama
+					//~ case 600: //Paraguay
+					//~ case 604: //Peru
+					//~ case 630: //Puerto Rico
+					//~ case 724: //Spain
+					//~ case 858: //Uruguay
+					//~ case 862: //Venezuela
+						//~ Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_ES);
+						//~ m_VoteLanguage[ClientID] = LANGUAGE_ES;				
+						//~ break;
 				}
 				
 				if(Msg.m_pDescription)
@@ -2537,6 +2542,22 @@ void CGameContext::OnSnap(int ClientID)
 	m_pController->Snap(ClientID);
 	m_Events.Snap(ClientID);
 
+/* INFECTION MODIFICATION START ***************************************/
+	//Snap laser dots
+	for(int i=0; i < m_LaserDots.size(); i++)
+	{
+		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_LaserDots[i].m_SnapID, sizeof(CNetObj_Laser)));
+		if(!pObj)
+			return;
+
+		pObj->m_X = (int)m_LaserDots[i].m_Pos1.x;
+		pObj->m_Y = (int)m_LaserDots[i].m_Pos1.y;
+		pObj->m_FromX = (int)m_LaserDots[i].m_Pos0.x;
+		pObj->m_FromY = (int)m_LaserDots[i].m_Pos0.y;
+		pObj->m_StartTick = Server()->Tick();
+	}
+/* INFECTION MODIFICATION END *****************************************/
+	
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		if(m_apPlayers[i])

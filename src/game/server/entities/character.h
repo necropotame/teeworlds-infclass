@@ -13,7 +13,6 @@
 #include <game/server/entities/classchooser.h>
 #include <game/server/entities/bomb.h>
 #include <game/server/entities/barrier.h>
-#include <game/server/entities/portal.h>
 /* INFECTION MODIFICATION END *****************************************/
 
 enum
@@ -30,7 +29,7 @@ enum
 	FREEZEREASON_UNDEAD = 1
 };
 
-#define GHOST_RADIUS 13
+#define GHOST_RADIUS 11
 #define GHOST_SEARCHMAP_SIZE (2*GHOST_RADIUS+1)
 
 enum
@@ -186,14 +185,11 @@ public:
 	CClassChooser* m_pClassChooser;
 	CBarrier* m_pBarrier;
 	CBomb* m_pBomb;
-	CPortal* m_pPortal[2];
 	int m_PositionLockTick;
 	bool m_PositionLocked;
 	int m_PoisonTick;
 	int m_Poison;
 	int m_PoisonFrom;
-	int m_PortalTick;
-	int m_LastPortalOwner;
 	int m_LastFreezer;
 	int m_HookMode;
 

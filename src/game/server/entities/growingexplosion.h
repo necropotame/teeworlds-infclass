@@ -7,6 +7,7 @@ enum
 {
 	GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED=0,
 	GROWINGEXPLOSIONEFFECT_POISON_INFECTED,
+	GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED,
 };
 	
 template<int Radius>
@@ -63,6 +64,8 @@ public:
 				{
 					m_GrowingMap[j*GROWINGMAP_LENGTH+i] = -1;
 				}
+				
+				m_GrowingMapVec[j*GROWINGMAP_LENGTH+i] = vec2(0.0f, 0.0f);
 			}
 		}
 		
@@ -81,6 +84,14 @@ public:
 				{
 					GameServer()->CreateDeath(m_SeedPos, m_Owner);
 				}
+				break;
+			case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
+				{
+					//~ GameServer()->CreateHammerHit(m_SeedPos);
+						
+					vec2 EndPoint = m_SeedPos + vec2(-16.0f + frandom()*32.0f, -16.0f + frandom()*32.0f);
+					m_GrowingMapVec[MAXGROWING*GROWINGMAP_LENGTH+MAXGROWING] = EndPoint;
+				}					
 				break;
 		}
 	}
@@ -107,12 +118,12 @@ public:
 			{
 				if(m_GrowingMap[j*GROWINGMAP_LENGTH+i] == -1)
 				{
-					if(
-						(i > 0 && m_GrowingMap[j*GROWINGMAP_LENGTH+i-1] < tick && m_GrowingMap[j*GROWINGMAP_LENGTH+i-1] >= 0) ||
-						(i < GROWINGMAP_LENGTH-1 && m_GrowingMap[j*GROWINGMAP_LENGTH+i+1] < tick && m_GrowingMap[j*GROWINGMAP_LENGTH+i+1] >= 0) ||
-						(j > 0 && m_GrowingMap[(j-1)*GROWINGMAP_LENGTH+i] < tick && m_GrowingMap[(j-1)*GROWINGMAP_LENGTH+i] >= 0) ||
-						(j < GROWINGMAP_LENGTH-1 && m_GrowingMap[(j+1)*GROWINGMAP_LENGTH+i] < tick && m_GrowingMap[(j+1)*GROWINGMAP_LENGTH+i] >= 0)
-					)
+					bool FromLeft = (i > 0 && m_GrowingMap[j*GROWINGMAP_LENGTH+i-1] < tick && m_GrowingMap[j*GROWINGMAP_LENGTH+i-1] >= 0);
+					bool FromRight = (i < GROWINGMAP_LENGTH-1 && m_GrowingMap[j*GROWINGMAP_LENGTH+i+1] < tick && m_GrowingMap[j*GROWINGMAP_LENGTH+i+1] >= 0);
+					bool FromTop = (j > 0 && m_GrowingMap[(j-1)*GROWINGMAP_LENGTH+i] < tick && m_GrowingMap[(j-1)*GROWINGMAP_LENGTH+i] >= 0);
+					bool FromBottom = (j < GROWINGMAP_LENGTH-1 && m_GrowingMap[(j+1)*GROWINGMAP_LENGTH+i] < tick && m_GrowingMap[(j+1)*GROWINGMAP_LENGTH+i] >= 0);
+					
+					if(FromLeft || FromRight || FromTop || FromBottom)
 					{
 						m_GrowingMap[j*GROWINGMAP_LENGTH+i] = tick;
 						NewTile = true;
@@ -128,6 +139,48 @@ public:
 								if(rand()%10 == 0)
 								{
 									GameServer()->CreateDeath(m_SeedPos + vec2(32.0f*(i-MAXGROWING) - 16.0f + frandom()*32.0f, 32.0f*(j-MAXGROWING) - 16.0f + frandom()*32.0f), m_Owner);
+								}
+								break;
+							case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
+								{
+									vec2 EndPoint = m_SeedPos + vec2(32.0f*(i-MAXGROWING) - 16.0f + frandom()*32.0f, 32.0f*(j-MAXGROWING) - 16.0f + frandom()*32.0f);
+									m_GrowingMapVec[j*GROWINGMAP_LENGTH+i] = EndPoint;
+									
+									int NumPossibleStartPoint = 0;
+									vec2 PossibleStartPoint[4];
+									
+									if(FromLeft)
+									{
+										PossibleStartPoint[NumPossibleStartPoint] = m_GrowingMapVec[j*GROWINGMAP_LENGTH+i-1];
+										NumPossibleStartPoint++;
+									}
+									if(FromRight)
+									{
+										PossibleStartPoint[NumPossibleStartPoint] = m_GrowingMapVec[j*GROWINGMAP_LENGTH+i+1];
+										NumPossibleStartPoint++;
+									}
+									if(FromTop)
+									{
+										PossibleStartPoint[NumPossibleStartPoint] = m_GrowingMapVec[(j-1)*GROWINGMAP_LENGTH+i];
+										NumPossibleStartPoint++;
+									}
+									if(FromBottom)
+									{
+										PossibleStartPoint[NumPossibleStartPoint] = m_GrowingMapVec[(j+1)*GROWINGMAP_LENGTH+i];
+										NumPossibleStartPoint++;
+									}
+									
+									if(NumPossibleStartPoint > 0)
+									{
+										int randNb = rand()%NumPossibleStartPoint;
+										vec2 StartPoint = PossibleStartPoint[randNb];
+										GameServer()->CreateLaserDotEvent(StartPoint, EndPoint, Server()->TickSpeed()/6);
+									}
+									
+									if(rand()%10 == 0)
+									{
+										GameServer()->CreateSound(EndPoint, SOUND_RIFLE_BOUNCE);
+									}
 								}
 								break;
 						}
@@ -179,6 +232,12 @@ public:
 							p->Poison(7, m_Owner);
 							GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_DROP);
 							break;
+						case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
+						{
+							int Damage = 5+20*((float)(MAXGROWING - min(tick - m_StartTick, (int)MAXGROWING)))/(MAXGROWING);
+							p->TakeDamage(normalize(p->m_Pos - m_SeedPos)*10.0f, Damage, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+							break;
+						}
 					}
 				}
 			}
@@ -197,6 +256,7 @@ private:
 	int m_SeedY;
 	int m_StartTick;
 	int m_GrowingMap[GROWINGMAP_SIZE];
+	vec2 m_GrowingMapVec[GROWINGMAP_SIZE];
 	int m_ExplosionEffect;
 };
 

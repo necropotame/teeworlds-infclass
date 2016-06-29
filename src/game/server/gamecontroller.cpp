@@ -832,4 +832,9 @@ bool IGameController::IsChoosableClass(int PlayerClass)
 {
 	return false;
 }
+
+bool IGameController::IsSpawnable(vec2 Position)
+{
+	return true;
+}
 /* INFECTION MODIFICATION END *****************************************/

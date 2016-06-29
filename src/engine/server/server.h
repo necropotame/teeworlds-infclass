@@ -300,7 +300,6 @@ public:
 	
 private:
 	static void ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData);
-	static void ConSetAmmoRegen(IConsole::IResult *pResult, void *pUserData);
 	static void ConClassChooser(IConsole::IResult *pResult, void *pUserData);
 /* INFECTION MODIFICATION END *****************************************/
 };

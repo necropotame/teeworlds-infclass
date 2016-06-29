@@ -16,7 +16,7 @@ public:
 	virtual void TickPaused();
 	virtual void Snap(int SnappingClient);
 	int GetTick() { return m_LifeSpan; }
-
+	
 private:
 	vec2 m_Pos2;
 	int m_Owner;

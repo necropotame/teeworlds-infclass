@@ -27,6 +27,7 @@ CProjectile::CProjectile(CGameWorld *pGameWorld, int Type, int Owner, vec2 Pos, 
 	
 /* INFECTION MODIFICATION START ***************************************/
 	m_IsFlashGrenade = false;
+	m_IsPortal = false;
 	m_StartPos = Pos;
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -88,6 +89,33 @@ void CProjectile::Tick()
 			
 			new CGrowingExplosion<8>(GameWorld(), CurPos, Dir, m_Owner, GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED);
 		}
+		else if(m_IsPortal)
+		{
+			float Iterator = Ct;
+			while(Iterator > 0.0f)
+			{
+				vec2 CheckPos = GetPos(Iterator);
+				
+				vec2 PortalPos = vec2(16.0f, 16.0f) + vec2(
+				static_cast<float>(static_cast<int>(round(CheckPos.x))/32)*32.0,
+				static_cast<float>(static_cast<int>(round(CheckPos.y))/32)*32.0);
+				
+				if(GameServer()->m_pController->IsSpawnable(PortalPos))
+				{
+					CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
+					if(OwnerChar)
+					{
+						OwnerChar->m_Core.m_Pos = PortalPos;
+						OwnerChar->m_Core.m_HookedPlayer = -1;
+						OwnerChar->m_Core.m_HookState = HOOK_RETRACTED;
+						OwnerChar->m_Core.m_HookPos = OwnerChar->m_Core.m_Pos;
+						break;
+					}
+				}
+					
+				Iterator -= 0.02f;
+			}
+		}
 		else if(m_Explosive)
 		{
 			GameServer()->CreateExplosion(CurPos, m_Owner, m_Weapon, false, m_TakeDamageMode);
@@ -109,34 +137,6 @@ void CProjectile::Tick()
 
 		GameServer()->m_World.DestroyEntity(this);
 	}
-	else if(Server()->Tick() - m_PortalTick >= Server()->TickSpeed()/2.0)
-	{
-		// Find portals
-		for(CPortal *p = (CPortal*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_PORTAL); p; p = (CPortal *)p->TypeNext())
-		{
-			if(!p->m_pLinkedPortal)
-				continue;
-				
-			vec2 IntersectPos = closest_point_on_line(PrevPos, CurPos, p->m_Pos);
-			float Len = distance(p->m_Pos, IntersectPos);
-			if(Len < 48.0f)
-			{
-				m_PortalTick = Server()->Tick();
-				m_Pos = p->m_pLinkedPortal->m_Pos + (m_Pos - p->m_Pos);
-			}
-		}
-	}
-	
-	//~ if(m_Weapon == WEAPON_GRENADE && !m_IsFlashGrenade)
-	//~ {
-		//~ for(CBomb *bomb = (CBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BOMB); bomb; bomb = (CBomb *)bomb->TypeNext())
-		//~ {
-			//~ if(bomb->m_Owner != m_Owner) continue;
-			//~ if(distance(CurPos, bomb->m_Pos) > bomb->m_DetectionRadius) continue;
-//~ 
-			//~ if(bomb->AddBomb()) GameServer()->m_World.DestroyEntity(this);
-		//~ }
-	//~ }
 	
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -144,9 +144,6 @@ void CProjectile::Tick()
 void CProjectile::TickPaused()
 {
 	++m_StartTick;
-/* INFECTION MODIFICATION START ***************************************/
-	++m_PortalTick;
-/* INFECTION MODIFICATION END *****************************************/
 }
 
 void CProjectile::FillInfo(CNetObj_Projectile *pProj)
@@ -175,5 +172,10 @@ void CProjectile::Snap(int SnappingClient)
 void CProjectile::FlashGrenade()
 {
 	m_IsFlashGrenade = true;
+}
+
+void CProjectile::Portal()
+{
+	m_IsPortal = true;
 }
 /* INFECTION MODIFICATION END *****************************************/

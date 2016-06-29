@@ -140,6 +140,7 @@ public:
 	virtual int ChooseHumanClass(CPlayer* pPlayer);
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
 	virtual bool IsChoosableClass(int PlayerClass);
+	virtual bool IsSpawnable(vec2 Position);
 /* INFECTION MODIFICATION END *****************************************/
 
 	/*
