@@ -502,7 +502,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_SNIPER, 2);
 	SetClassAvailability(PLAYERCLASS_NINJA, 2);
 	SetClassAvailability(PLAYERCLASS_MEDIC, 2);
-	SetClassAvailability(PLAYERCLASS_SCIENTIST, 0);
+	SetClassAvailability(PLAYERCLASS_SCIENTIST, 2);
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);

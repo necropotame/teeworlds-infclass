@@ -51,7 +51,7 @@ int CClassChooser::SelectClass()
 		int NbChoosableClass = END_HUMANCLASS-START_HUMANCLASS-1;
 
 		float angle = atan2(-m_CurPos.y, -m_CurPos.x);
-		int Selection = static_cast<int>((NbChoosableClass-1)*(angle/pi));
+		int Selection = static_cast<int>((NbChoosableClass)*(angle/pi));
 		
 		if(Selection < 0 || Selection >= NbChoosableClass)
 			return 0;
@@ -81,7 +81,7 @@ void CClassChooser::Snap(int SnappingClient)
 	
 	int NbChoosableClass = END_HUMANCLASS-START_HUMANCLASS-1;
 	
-	float stepAngle = pi/static_cast<float>(NbChoosableClass-1);
+	float stepAngle = pi/static_cast<float>(NbChoosableClass);
 	
 	int ClassIterator = 0;
 	for(int i=START_HUMANCLASS+1; i<END_HUMANCLASS; i++)
@@ -98,27 +98,34 @@ void CClassChooser::Snap(int SnappingClient)
 
 		pP->m_X = (int)m_Pos.x - 130.0*cos((static_cast<float>(ClassIterator)+0.5)*stepAngle);
 		pP->m_Y = (int)m_Pos.y - 130.0*sin((static_cast<float>(ClassIterator)+0.5)*stepAngle);
-		pP->m_Type = POWERUP_WEAPON;
 		
 		switch(i)
 		{
 			case PLAYERCLASS_SOLDIER:
+				pP->m_Type = POWERUP_WEAPON;
 				pP->m_Subtype = WEAPON_GRENADE;
 				break;
 			case PLAYERCLASS_MEDIC:
+				pP->m_Type = POWERUP_WEAPON;
 				pP->m_Subtype = WEAPON_SHOTGUN;
 				break;
 			case PLAYERCLASS_MERCENARY:
+				pP->m_Type = POWERUP_WEAPON;
 				pP->m_Subtype = WEAPON_GUN;
 				break;
 			case PLAYERCLASS_SNIPER:
-			case PLAYERCLASS_SCIENTIST:
+				pP->m_Type = POWERUP_WEAPON;
 				pP->m_Subtype = WEAPON_HAMMER;
 				break;
+			case PLAYERCLASS_SCIENTIST:
+				pP->m_Type = POWERUP_ARMOR;
+				break;
 			case PLAYERCLASS_ENGINEER:
+				pP->m_Type = POWERUP_WEAPON;
 				pP->m_Subtype = WEAPON_RIFLE;
 				break;
 			case PLAYERCLASS_NINJA:
+				pP->m_Type = POWERUP_WEAPON;
 				pP->m_Subtype = WEAPON_NINJA;
 				break;
 		}
@@ -130,7 +137,7 @@ void CClassChooser::Snap(int SnappingClient)
 	if(length(m_CurPos) <= 200.0)
 	{
 		float angle = atan2(-m_CurPos.y, -m_CurPos.x);
-		int Selection = static_cast<int>((NbChoosableClass-1)*(angle/pi));
+		int Selection = static_cast<int>((NbChoosableClass)*(angle/pi));
 			
 		if(length(m_CurPos) > 50.0)
 		{
