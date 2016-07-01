@@ -87,7 +87,7 @@ public:
 	
 	bool Load();
 	bool CreateLowResMap();
-	bool CreateHighResMap();
+	bool CreateMap();
 };
 
 #endif

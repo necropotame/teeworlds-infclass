@@ -1373,34 +1373,6 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					SendChatTarget_Language(ClientID, "A random class will be automatically attributed to you when rounds start");
 				}
 				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\lowresmap") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/lowresmap") == 0)
-				)
-				{
-					int OldValue = Server()->GetClientMapRes(ClientID);
-					if(OldValue != 1)
-					{
-						Server()->SetClientMapRes(ClientID, 1);
-						Server()->ReSendMap(ClientID);
-						delete m_apPlayers[ClientID];
-						m_apPlayers[ClientID] = 0;
-					}
-				}
-				else if(
-					(str_comp_nocase(pMsg->m_pMessage,"\\highresmap") == 0) ||
-					(str_comp_nocase(pMsg->m_pMessage,"/highresmap") == 0)
-				)
-				{
-					int OldValue = Server()->GetClientMapRes(ClientID);
-					if(OldValue != 0)
-					{
-						Server()->SetClientMapRes(ClientID, 0);
-						Server()->ReSendMap(ClientID);
-						delete m_apPlayers[ClientID];
-						m_apPlayers[ClientID] = 0;
-					}
-				}
-				else if(
 					(str_comp_nocase_num(pMsg->m_pMessage,"\\language ", 10) == 0) ||
 					(str_comp_nocase_num(pMsg->m_pMessage,"/language ", 10) == 0)
 				)

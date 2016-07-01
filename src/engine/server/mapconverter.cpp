@@ -907,14 +907,12 @@ bool CMapConverter::CreateLowResMap()
 	return true;
 }
 
-
-
-bool CMapConverter::CreateHighResMap()
+bool CMapConverter::CreateMap()
 {
 	char aBuf[512];
-	if(!m_DataFile.Open(Storage(), "maps/infc_x_highres.map"))
+	if(!m_DataFile.Open(Storage(), "maps/infc_x_current.map"))
 	{
-		str_format(aBuf, sizeof(aBuf), "failed to open file '%s'...", "maps/infc_x_highres.map");
+		str_format(aBuf, sizeof(aBuf), "failed to open file '%s'...", "maps/infc_x_current.map");
 		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "infclass", aBuf);
 		return false;
 	}

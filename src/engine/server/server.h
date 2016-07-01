@@ -139,7 +139,6 @@ public:
 		int m_Language;
 		int m_WaitingTime;
 		int m_WasInfected;
-		int m_LowResMap;
 /* INFECTION MODIFICATION END *****************************************/
 	};
 
@@ -167,13 +166,9 @@ public:
 
 	char m_aCurrentMap[64];
 	
-	unsigned m_CurrentLowResMapCrc;
-	unsigned char *m_pCurrentLowResMapData;
-	int m_CurrentLowResMapSize;
-	
-	unsigned m_CurrentHighResMapCrc;
-	unsigned char *m_pCurrentHighResMapData;
-	int m_CurrentHighResMapSize;
+	unsigned m_CurrentMapCrc;
+	unsigned char *m_pCurrentMapData;
+	int m_CurrentMapSize;
 
 	CDemoRecorder m_DemoRecorder;
 	CRegister m_Register;
@@ -217,6 +212,8 @@ public:
 	static int NewClientCallback(int ClientID, void *pUser);
 	static int DelClientCallback(int ClientID, int Type, const char *pReason, void *pUser);
 
+	void SendMap(int ClientID);
+	
 	void SendConnectionReady(int ClientID);
 	void SendRconLine(int ClientID, const char *pLine);
 	static void SendRconLineAuthed(const char *pLine, void *pUser);
@@ -259,13 +256,19 @@ public:
 	void SnapSetStaticsize(int ItemType, int Size);
 	
 /* INFECTION MODIFICATION START ***************************************/
+protected:
+	int m_FastDownloadLastSent[MAX_CLIENTS];
+	int m_FastDownloadLastAsk[MAX_CLIENTS];
+	int m_FastDownloadLastAskTick[MAX_CLIENTS];
+
 public:
 	int m_InfClassChooser;
 	int m_InfAmmoRegenTime[NB_INFWEAPON];
 	int m_InfFireDelay[NB_INFWEAPON];
 	int m_InfMaxAmmo[NB_INFWEAPON];
 	int m_InfClassAvailability[NB_PLAYERCLASS];
-	
+
+public:
 	virtual int IsClientInfectedBefore(int ClientID);
 	virtual void InfecteClient(int ClientID);
 	
@@ -299,15 +302,9 @@ public:
 	virtual int GetClientNbRound(int ClientID);
 	virtual void SetClientNbRound(int ClientID, int Score);
 	
-	virtual int GetClientMapRes(int ClientID);
-	virtual void SetClientMapRes(int ClientID, int Value);
-	
 	virtual int GetClientScore(int ClientID);
 	
 	virtual int IsClassChooserEnabled();
-	
-	virtual void SendMap(int ClientID);
-	virtual void ReSendMap(int ClientID);
 private:
 	static void ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData);
 	static void ConClassChooser(IConsole::IResult *pResult, void *pUserData);
