@@ -23,7 +23,6 @@ public:
 		COLFLAG_NOHOOK=4,
 /* INFECTION MODIFICATION START ***************************************/
 		COLFLAG_INFECTION=8,
-		COLFLAG_NOPORTAL=16,
 		COLFLAG_NOSPAWN=32,
 /* INFECTION MODIFICATION END *****************************************/
 	};

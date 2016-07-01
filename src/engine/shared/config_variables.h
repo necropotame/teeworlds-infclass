@@ -110,6 +110,10 @@ MACRO_CONFIG_INT(DbgHitch, dbg_hitch, 0, 0, 0, CFGFLAG_SERVER, "Hitch warnings")
 MACRO_CONFIG_STR(DbgStressServer, dbg_stress_server, 32, "localhost", CFGFLAG_CLIENT, "Server to stress")
 MACRO_CONFIG_INT(DbgResizable, dbg_resizable, 0, 0, 0, CFGFLAG_CLIENT, "Enables window resizing")
 
+MACRO_CONFIG_INT(InfConWaitingTime, inf_con_waiting_time, 1, 0, 60, CFGFLAG_SERVER, "Number of seconds to wait before enter the game")
+MACRO_CONFIG_INT(InfDefenderLimit, inf_defender_limit, 12, 0, 16, CFGFLAG_SERVER, "Maximum number of defenders in game")
+MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 6, 0, 16, CFGFLAG_SERVER, "Maximum number of medics in game")
+MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 6, 0, 16, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfMineRadius, inf_mine_radius, 46, 0, 1024, CFGFLAG_SERVER, "Radius of mines")
 MACRO_CONFIG_INT(InfMineLimit, inf_mine_limit, 3, 0, 1024, CFGFLAG_SERVER, "Maximum number of mines per player")
 

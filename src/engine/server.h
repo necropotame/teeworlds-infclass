@@ -136,6 +136,9 @@ public:
 	virtual int GetClientNbInfection(int ClientID) = 0;
 	virtual void SetClientNbInfection(int ClientID, int Score) = 0;
 	
+	virtual int GetClientMapRes(int ClientID) = 0;
+	virtual void SetClientMapRes(int ClientID, int Value) = 0;
+	
 	virtual int GetClientCustomSkin(int ClientID) = 0;
 	virtual void SetClientCustomSkin(int ClientID, int Value) = 0;
 	
@@ -159,6 +162,9 @@ public:
 	
 	virtual int GetClassAvailability(int CID) = 0;
 	virtual void SetClassAvailability(int CID, int n) = 0;
+	
+	virtual void SendMap(int ClientID) = 0;
+	virtual void ReSendMap(int ClientID) = 0;
 	
 	virtual int IsClassChooserEnabled() = 0;
 /* INFECTION MODIFICATION END *****************************************/

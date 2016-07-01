@@ -10,7 +10,6 @@
 #include <game/gamecore.h>
 
 /* INFECTION MODIFICATION START ***************************************/
-#include <game/server/entities/classchooser.h>
 #include <game/server/entities/bomb.h>
 #include <game/server/entities/barrier.h>
 /* INFECTION MODIFICATION END *****************************************/
@@ -180,9 +179,10 @@ private:
 	int m_InAirTick;
 	
 	char m_GhostSearchMap[GHOST_SEARCHMAP_SIZE*GHOST_SEARCHMAP_SIZE];
+	
+	vec2 m_SpawnPosition;
 
 public:
-	CClassChooser* m_pClassChooser;
 	CBarrier* m_pBarrier;
 	CBomb* m_pBomb;
 	int m_PositionLockTick;

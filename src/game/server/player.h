@@ -6,6 +6,7 @@
 // this include should perhaps be removed
 #include "entities/character.h"
 #include "gamecontext.h"
+#include <game/server/classes.h>
 
 // player object
 class CPlayer
@@ -152,6 +153,9 @@ public:
 	int m_WinAsHuman;
 	bool m_HookProtection;
 	bool m_HookProtectionAutomatic;
+	
+	int m_InClassChooserMenu;
+	int m_MenuClassChooserItem;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

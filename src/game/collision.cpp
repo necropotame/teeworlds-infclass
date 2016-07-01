@@ -47,10 +47,11 @@ void CCollision::Init(class CLayers *pLayers)
 			break;
 /* INFECTION MODIFICATION START ***************************************/
 		case TILE_INFECTION:
+		case ENTITY_SPAWN_RED+ENTITY_OFFSET:
 			m_pTiles[i].m_Index = COLFLAG_INFECTION;
 			break;
-		case TILE_NOPORTAL:
-			m_pTiles[i].m_Index = COLFLAG_NOPORTAL;
+		case TILE_NOSPAWN:
+			m_pTiles[i].m_Index = COLFLAG_NOSPAWN;
 			break;
 /* INFECTION MODIFICATION END *****************************************/
 		default:

@@ -1112,9 +1112,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					const char* pLine5 = ServerLocalize("/language <lang>: Change the language of the mod", m_apPlayers[ClientID]->GetLanguage());
 					const char* pLine6 = ServerLocalize("/customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans", m_apPlayers[ClientID]->GetLanguage());
 					const char* pLine7 = ServerLocalize("/alwaysrandom <0|1>: Choose automatically random class when the round start", m_apPlayers[ClientID]->GetLanguage());
-					const char* pLine8 = ServerLocalize("Press <F3> or <F4> while holding <TAB> to switch the score system", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine8 = ServerLocalize("/lowresmap and /highresmap: Switch between simplified and classical maps", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine9 = ServerLocalize("Press <F3> or <F4> while holding <TAB> to switch the score system", m_apPlayers[ClientID]->GetLanguage());
 					
-					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5, pLine6, pLine7, pLine8);
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5, pLine6, pLine7, pLine8, pLine9);
 					
 					SendMODT(ClientID, aBuf);
 				}
@@ -1370,6 +1371,34 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				{
 					Server()->SetClientAlwaysRandom(ClientID, 1);
 					SendChatTarget_Language(ClientID, "A random class will be automatically attributed to you when rounds start");
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\lowresmap") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/lowresmap") == 0)
+				)
+				{
+					int OldValue = Server()->GetClientMapRes(ClientID);
+					if(OldValue != 1)
+					{
+						Server()->SetClientMapRes(ClientID, 1);
+						Server()->ReSendMap(ClientID);
+						delete m_apPlayers[ClientID];
+						m_apPlayers[ClientID] = 0;
+					}
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\highresmap") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/highresmap") == 0)
+				)
+				{
+					int OldValue = Server()->GetClientMapRes(ClientID);
+					if(OldValue != 0)
+					{
+						Server()->SetClientMapRes(ClientID, 0);
+						Server()->ReSendMap(ClientID);
+						delete m_apPlayers[ClientID];
+						m_apPlayers[ClientID] = 0;
+					}
 				}
 				else if(
 					(str_comp_nocase_num(pMsg->m_pMessage,"\\language ", 10) == 0) ||
@@ -2490,6 +2519,8 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	num_spawn_points[1] = 0;
 	num_spawn_points[2] = 0;
 	*/
+	
+	m_MenuPosition = vec2(0.0f, 0.0f);
 
 	for(int y = 0; y < pTileMap->m_Height; y++)
 	{
@@ -2500,7 +2531,13 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 			if(Index >= ENTITY_OFFSET)
 			{
 				vec2 Pos(x*32.0f+16.0f, y*32.0f+16.0f);
-				m_pController->OnEntity(Index-ENTITY_OFFSET, Pos);
+				int ID = Index-ENTITY_OFFSET;
+				if(ID == ENTITY_MENU)
+				{
+					m_MenuPosition = Pos;
+				}
+				else
+					m_pController->OnEntity(ID, Pos);
 			}
 		}
 	}

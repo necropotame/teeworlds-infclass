@@ -4,6 +4,7 @@
 
 #include <game/server/player.h>
 #include <engine/shared/config.h>
+#include <engine/server/mapconverter.h>
 #include <game/mapitems.h>
 #include <time.h>
 #include <iostream>
@@ -86,11 +87,6 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 			}
 		}
 	}
-	
-	m_SupportLimit = 5;
-	m_MedicLimit = 6;
-	m_SoldierLimit = 8;
-	m_EngineerLimit = 8;
 }
 
 CGameControllerMOD::~CGameControllerMOD()
@@ -398,7 +394,76 @@ void CGameControllerMOD::Tick()
 
 void CGameControllerMOD::Snap(int SnappingClient)
 {
-	IGameController::Snap(SnappingClient);
+	CNetObj_GameInfo *pGameInfoObj = (CNetObj_GameInfo *)Server()->SnapNewItem(NETOBJTYPE_GAMEINFO, 0, sizeof(CNetObj_GameInfo));
+	if(!pGameInfoObj)
+		return;
+
+	pGameInfoObj->m_GameFlags = m_GameFlags;
+	pGameInfoObj->m_GameStateFlags = 0;
+	if(m_GameOverTick != -1)
+		pGameInfoObj->m_GameStateFlags |= GAMESTATEFLAG_GAMEOVER;
+	if(m_SuddenDeath)
+		pGameInfoObj->m_GameStateFlags |= GAMESTATEFLAG_SUDDENDEATH;
+	if(GameServer()->m_World.m_Paused)
+		pGameInfoObj->m_GameStateFlags |= GAMESTATEFLAG_PAUSED;
+	pGameInfoObj->m_RoundStartTick = m_RoundStartTick;
+	pGameInfoObj->m_WarmupTimer = m_Warmup;
+
+	pGameInfoObj->m_ScoreLimit = g_Config.m_SvScorelimit;
+	pGameInfoObj->m_TimeLimit = g_Config.m_SvTimelimit;
+
+	pGameInfoObj->m_RoundNum = (str_length(g_Config.m_SvMaprotation) && g_Config.m_SvRoundsPerMap) ? g_Config.m_SvRoundsPerMap : 0;
+	pGameInfoObj->m_RoundCurrent = m_RoundCount+1;
+
+	//Generate class mask
+	int ClassMask = 0;
+	{
+		int Defender = 0;
+		int Medic = 0;
+		int Support = 0;
+		
+		for(int i = 0; i < MAX_CLIENTS; i ++)
+		{
+			CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+			
+			if(!pPlayer) continue;
+			if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
+			
+			switch(pPlayer->GetClass())
+			{
+				case PLAYERCLASS_NINJA:
+				case PLAYERCLASS_MERCENARY:
+				case PLAYERCLASS_SNIPER:
+					Support++;
+					break;
+				case PLAYERCLASS_ENGINEER:
+				case PLAYERCLASS_SOLDIER:
+				case PLAYERCLASS_SCIENTIST:
+					Defender++;
+					break;
+				case PLAYERCLASS_MEDIC:
+					Medic++;
+					break;
+					
+			}
+		}
+		
+		if(Defender < g_Config.m_InfDefenderLimit)
+			ClassMask |= CMapConverter::MASK_DEFENDER;
+		if(Medic < g_Config.m_InfMedicLimit)
+			ClassMask |= CMapConverter::MASK_MEDIC;
+		if(Support < g_Config.m_InfSupportLimit)
+			ClassMask |= CMapConverter::MASK_SUPPORT;
+	}
+	
+	if(GameServer()->m_apPlayers[SnappingClient] && GameServer()->m_apPlayers[SnappingClient]->m_InClassChooserMenu)
+	{
+		int Item = GameServer()->m_apPlayers[SnappingClient]->m_MenuClassChooserItem;
+		int Timer = ((CMapConverter::TIMESHIFT_GAME + (Item+1) + ClassMask*CMapConverter::TIMESHIFT_AVAILABILITY)*60 + 30)*Server()->TickSpeed();
+		
+		pGameInfoObj->m_RoundStartTick = Server()->Tick() - Timer;
+		pGameInfoObj->m_TimeLimit = 0;
+	}
 
 	CNetObj_GameData *pGameDataObj = (CNetObj_GameData *)Server()->SnapNewItem(NETOBJTYPE_GAMEDATA, 0, sizeof(CNetObj_GameData));
 	if(!pGameDataObj)
@@ -607,8 +672,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	//Get information about existing infected
 	int nbSupport = 0;
 	int nbMedic = 0;
-	int nbSoldier = 0;
-	int nbEngineer = 0;
+	int nbDefender = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
@@ -621,85 +685,62 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
-			case PLAYERCLASS_SCIENTIST:
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
 				nbMedic++;
 				break;
-			case PLAYERCLASS_SOLDIER:
-				nbSoldier++;
-				break;
 			case PLAYERCLASS_ENGINEER:
-				nbEngineer++;
+			case PLAYERCLASS_SOLDIER:
+			case PLAYERCLASS_SCIENTIST:
+				nbDefender++;
 				break;
 		}
 	}
 	
-	bool scientistEnabled = true;
-	if(nbSupport >= m_SupportLimit || Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) == 0)
+	bool defenderEnabled = true;
+	if(nbDefender >= g_Config.m_InfDefenderLimit)
 	{
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_ENGINEER];
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SOLDIER];
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SCIENTIST];
-		scientistEnabled = false;
+		defenderEnabled = false;
 	}
 	
-	bool ninjaEnabled = true;
-	if(nbSupport >= m_SupportLimit || Server()->GetClassAvailability(PLAYERCLASS_NINJA) == 0)
+	bool supportEnabled = true;
+	if(nbSupport >= g_Config.m_InfSupportLimit)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_NINJA];
-		ninjaEnabled = false;
-	}
-	
-	bool sniperEnabled = true;
-	if(nbSupport >= m_SupportLimit || Server()->GetClassAvailability(PLAYERCLASS_SNIPER) == 0)
-	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SNIPER];
-		sniperEnabled = false;
-	}
-	
-	bool mercenaryEnabled = true;
-	if(nbSupport >= m_SupportLimit || Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) == 0)
-	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MERCENARY];
-		mercenaryEnabled = false;
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SNIPER];
+		supportEnabled = false;
 	}
 	
 	bool medicEnabled = true;
-	if(nbMedic >= m_MedicLimit || Server()->GetClassAvailability(PLAYERCLASS_MEDIC) == 0)
+	if(nbMedic >= g_Config.m_InfMedicLimit)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MEDIC];
 		medicEnabled = false;
 	}
 	
-	bool soldierEnabled = true;
-	if(nbSoldier >= m_SoldierLimit || Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) == 0)
+	if(defenderEnabled)
 	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SOLDIER];
-		soldierEnabled = false;
-	}
-	
-	bool engineerEnabled = true;
-	if(nbEngineer >= m_EngineerLimit || Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) == 0)
-	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_ENGINEER];
-		engineerEnabled = false;
-	}
-	
-	if(scientistEnabled)
-	{
+		random -= m_ClassProbability[PLAYERCLASS_ENGINEER]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_ENGINEER;
+		}
+		
+		random -= m_ClassProbability[PLAYERCLASS_SOLDIER]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_SOLDIER;
+		}
+		
 		random -= m_ClassProbability[PLAYERCLASS_SCIENTIST]/TotalProbHumanClass;
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_SCIENTIST;
-		}
-	}
-	
-	if(ninjaEnabled)
-	{
-		random -= m_ClassProbability[PLAYERCLASS_NINJA]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_NINJA;
 		}
 	}
 	
@@ -712,39 +753,24 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		}
 	}
 	
-	if(sniperEnabled)
+	if(supportEnabled)
 	{
-		random -= m_ClassProbability[PLAYERCLASS_SNIPER]/TotalProbHumanClass;
+		random -= m_ClassProbability[PLAYERCLASS_NINJA]/TotalProbHumanClass;
 		if(random < 0.0f)
 		{
-			return PLAYERCLASS_SNIPER;
+			return PLAYERCLASS_NINJA;
 		}
-	}
-	
-	if(mercenaryEnabled)
-	{
+		
 		random -= m_ClassProbability[PLAYERCLASS_MERCENARY]/TotalProbHumanClass;
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_MERCENARY;
 		}
-	}
-	
-	if(soldierEnabled)
-	{
-		random -= m_ClassProbability[PLAYERCLASS_SOLDIER]/TotalProbHumanClass;
+		
+		random -= m_ClassProbability[PLAYERCLASS_SNIPER]/TotalProbHumanClass;
 		if(random < 0.0f)
 		{
-			return PLAYERCLASS_SOLDIER;
-		}
-	}
-	
-	if(scientistEnabled)
-	{
-		random -= m_ClassProbability[PLAYERCLASS_ENGINEER]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_ENGINEER;
+			return PLAYERCLASS_SNIPER;
 		}
 	}
 	
@@ -886,7 +912,9 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 
 bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 {
-	int nbClass = 0;
+	int nbDefender = 0;
+	int nbMedic = 0;
+	int nbSupport = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
@@ -894,37 +922,39 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		if(!pPlayer) continue;
 		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
 		
-		switch(PlayerClass)
+		switch(pPlayer->GetClass())
 		{
-			case PLAYERCLASS_ENGINEER:
-				if(pPlayer->GetClass() == PLAYERCLASS_ENGINEER) nbClass++;
-				break;
-			case PLAYERCLASS_SOLDIER:
-				if(pPlayer->GetClass() == PLAYERCLASS_SOLDIER) nbClass++;
-				break;
-			case PLAYERCLASS_MEDIC:
-				if(pPlayer->GetClass() == PLAYERCLASS_MEDIC) nbClass++;
-				break;
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
+				nbSupport++;
+				break;
+			case PLAYERCLASS_MEDIC:
+				nbMedic++;
+				break;
+			case PLAYERCLASS_ENGINEER:
+			case PLAYERCLASS_SOLDIER:
 			case PLAYERCLASS_SCIENTIST:
-				if(pPlayer->GetClass() == PLAYERCLASS_NINJA) nbClass++;
-				if(pPlayer->GetClass() == PLAYERCLASS_MERCENARY) nbClass++;
-				if(pPlayer->GetClass() == PLAYERCLASS_SNIPER) nbClass++;
-				if(pPlayer->GetClass() == PLAYERCLASS_SCIENTIST) nbClass++;
+				nbDefender++;
 				break;
 		}
 	}
 	
-	if(PlayerClass == PLAYERCLASS_ENGINEER) return (nbClass < m_EngineerLimit && Server()->GetClassAvailability(PLAYERCLASS_ENGINEER) > 1);
-	else if(PlayerClass == PLAYERCLASS_SOLDIER) return (nbClass < m_SoldierLimit && Server()->GetClassAvailability(PLAYERCLASS_SOLDIER) > 1);
-	else if(PlayerClass == PLAYERCLASS_MEDIC) return (nbClass < m_MedicLimit && Server()->GetClassAvailability(PLAYERCLASS_MEDIC) > 1);
-	else if(PlayerClass == PLAYERCLASS_NINJA) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_NINJA) > 1);
-	else if(PlayerClass == PLAYERCLASS_MERCENARY) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_MERCENARY) > 1);
-	else if(PlayerClass == PLAYERCLASS_SNIPER) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_SNIPER) > 1);
-	else if(PlayerClass == PLAYERCLASS_SCIENTIST) return (nbClass < m_SupportLimit && Server()->GetClassAvailability(PLAYERCLASS_SCIENTIST) > 1);
-	else return false;
+	switch(PlayerClass)
+	{
+		case PLAYERCLASS_ENGINEER:
+		case PLAYERCLASS_SOLDIER:
+		case PLAYERCLASS_SCIENTIST:
+			return (nbDefender < g_Config.m_InfDefenderLimit);
+		case PLAYERCLASS_MEDIC:
+			return (nbMedic < g_Config.m_InfMedicLimit);
+		case PLAYERCLASS_NINJA:
+		case PLAYERCLASS_MERCENARY:
+		case PLAYERCLASS_SNIPER:
+			return (nbSupport < g_Config.m_InfSupportLimit);
+	}
+	
+	return false;
 }
 
 bool CGameControllerMOD::CanVote()

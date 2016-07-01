@@ -79,7 +79,7 @@ void CProjectile::Tick()
 /* INFECTION MODIFICATION START ***************************************/
 	if(TargetChr || Collide || m_LifeSpan < 0 || GameLayerClipped(CurPos))
 	{
-		if(m_LifeSpan >= 0 || m_Weapon == WEAPON_GRENADE)
+		if(m_LifeSpan >= 0 || (m_Weapon == WEAPON_GRENADE && !m_IsPortal))
 			GameServer()->CreateSound(CurPos, m_SoundImpact);
 
 		if(m_IsFlashGrenade)
@@ -105,10 +105,16 @@ void CProjectile::Tick()
 					CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 					if(OwnerChar)
 					{
+						vec2 OldPos = OwnerChar->m_Core.m_Pos;
+						
 						OwnerChar->m_Core.m_Pos = PortalPos;
 						OwnerChar->m_Core.m_HookedPlayer = -1;
 						OwnerChar->m_Core.m_HookState = HOOK_RETRACTED;
 						OwnerChar->m_Core.m_HookPos = OwnerChar->m_Core.m_Pos;
+						
+						GameServer()->CreateDeath(OldPos, m_Owner);
+						GameServer()->CreateDeath(PortalPos, m_Owner);
+						
 						break;
 					}
 				}

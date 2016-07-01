@@ -5,6 +5,7 @@
 #include <base/vmath.h>
 #include <new>
 #include <engine/shared/config.h>
+#include <engine/server/mapconverter.h>
 #include <game/server/gamecontext.h>
 #include <game/mapitems.h>
 #include <iostream>
@@ -56,7 +57,6 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_AirJumpCounter = 0;
 	m_FirstShot = true;
 	
-	m_pClassChooser = 0;
 	m_pBarrier = 0;
 	m_pBomb = 0;
 	m_FlagID = Server()->SnapNewID();
@@ -107,6 +107,8 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	GameServer()->m_pController->OnCharacterSpawn(this);
 
 /* INFECTION MODIFICATION START ***************************************/
+	m_SpawnPosition = Pos;
+
 	m_AntiFireTick = Server()->Tick();
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
@@ -568,6 +570,8 @@ void CCharacter::FireWeapon()
 						GameServer()->m_World.DestroyEntity(pOlderMine);
 					
 					new CMine(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
+					
+					m_ReloadTimer = Server()->TickSpeed()/2;
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_NINJA)
@@ -1062,6 +1066,12 @@ void CCharacter::Tick()
 {
 /* INFECTION MODIFICATION START ***************************************/
 	//Check is the character is in toxic gaz
+	if(m_pPlayer->m_InClassChooserMenu)
+	{
+		m_Core.m_Pos = GameServer()->GetMenuPosition();
+		m_Core.m_Vel = vec2(0.0f, 0.0f);
+	}
+	
 	if(m_Alive && GameServer()->Collision()->CheckPointFlag(m_Pos, CCollision::COLFLAG_INFECTION))
 	{
 		if(IsInfected())
@@ -1169,6 +1179,7 @@ void CCharacter::Tick()
 			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 			{
 				if(p->IsInfected()) continue;
+				if(p->GetPlayer() && p->GetPlayer()->m_InClassChooserMenu) continue;
 				
 				int cellHumanX = static_cast<int>(round(p->m_Pos.x))/32;
 				int cellHumanY = static_cast<int>(round(p->m_Pos.y))/32;
@@ -1261,6 +1272,7 @@ void CCharacter::Tick()
 			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 			{
 				if(p->IsInfected()) continue;
+				if(p->GetPlayer() && p->GetPlayer()->m_InClassChooserMenu) continue;
 
 				vec2 IntersectPos = closest_point_on_line(m_Core.m_Pos, m_Core.m_HookPos, p->m_Pos);
 				float Len = distance(p->m_Pos, IntersectPos);
@@ -1363,29 +1375,129 @@ void CCharacter::Tick()
 		}
 	}
 	
-	if(m_pClassChooser)
+	if(m_pPlayer->m_InClassChooserMenu)
 	{
 		if(GetClass() != PLAYERCLASS_NONE)
 		{
-			GameServer()->m_World.DestroyEntity(m_pClassChooser);
-			m_pClassChooser = 0;
+			m_Core.m_Pos = m_SpawnPosition;
+			m_Pos = m_SpawnPosition;
+			m_AntiFireTick = Server()->Tick();
+			m_pPlayer->m_InClassChooserMenu = 0;
 		}
 		else
 		{
-			m_pClassChooser->m_Pos = m_Pos;
-			m_pClassChooser->SetCursor(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
+			vec2 CursorPos = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
 			
-			if(m_Input.m_Fire&1)
+			bool Broadcast = false;
+
+			if(length(CursorPos) > 100.0f)
 			{
-				int ccRes = m_pClassChooser->SelectClass();
-				if(ccRes)
-				{				
-					GameServer()->m_World.DestroyEntity(m_pClassChooser);
-					m_pClassChooser = 0;
-					
-					m_pPlayer->SetClass(ccRes);
-					
+				float Angle = 2.0f*pi+atan2(CursorPos.x, -CursorPos.y);
+				float AngleStep = 2.0f*pi/8.0f;
+				m_pPlayer->m_MenuClassChooserItem = ((int)((Angle+AngleStep/2.0f)/AngleStep))%8;
+
+				switch(m_pPlayer->m_MenuClassChooserItem)
+				{
+					case CMapConverter::MENUENTRY_MEDIC:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Medic");
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUENTRY_NINJA:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_NINJA))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Ninja");
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUENTRY_MERCENARY:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MERCENARY))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Mercenary");
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUENTRY_SNIPER:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SNIPER))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Sniper");
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUENTRY_RANDOM:
+						GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Random choice");
+						Broadcast = true;
+						break;
+					case CMapConverter::MENUENTRY_ENGINEER:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Engineer");
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUENTRY_SOLDIER:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Soldier");
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUENTRY_SCIENTIST:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Scientist");
+							Broadcast = true;
+						}
+						break;
+				}
+			}
+			
+			if(!Broadcast)
+			{
+				m_pPlayer->m_MenuClassChooserItem = -1;
+				GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Choose your class by clicking on the icon");
+			}
+			
+			if(m_Input.m_Fire&1 && m_pPlayer->m_MenuClassChooserItem >= 0)
+			{
+				int NewClass = -1;
+				switch(m_pPlayer->m_MenuClassChooserItem)
+				{
+					case CMapConverter::MENUENTRY_MEDIC:
+						NewClass = PLAYERCLASS_MEDIC;
+						break;
+					case CMapConverter::MENUENTRY_NINJA:
+						NewClass = PLAYERCLASS_NINJA;
+						break;
+					case CMapConverter::MENUENTRY_MERCENARY:
+						NewClass = PLAYERCLASS_MERCENARY;
+						break;
+					case CMapConverter::MENUENTRY_SNIPER:
+						NewClass = PLAYERCLASS_SNIPER;
+						break;
+					case CMapConverter::MENUENTRY_RANDOM:
+						NewClass = GameServer()->m_pController->ChooseHumanClass(m_pPlayer);
+						break;
+					case CMapConverter::MENUENTRY_ENGINEER:
+						NewClass = PLAYERCLASS_ENGINEER;
+						break;
+					case CMapConverter::MENUENTRY_SOLDIER:
+						NewClass = PLAYERCLASS_SOLDIER;
+						break;
+					case CMapConverter::MENUENTRY_SCIENTIST:
+						NewClass = PLAYERCLASS_SCIENTIST;
+						break;
+				}
+				
+				if(NewClass >= 0 && GameServer()->m_pController->IsChoosableClass(NewClass))
+				{
+					m_Core.m_Pos = m_SpawnPosition;
+					m_Pos = m_SpawnPosition;
+					m_pPlayer->SetClass(NewClass);
 					m_AntiFireTick = Server()->Tick();
+					m_pPlayer->m_InClassChooserMenu = 0;
 				}
 			}
 		}
@@ -1768,7 +1880,10 @@ void CCharacter::Snap(int SnappingClient)
 {
 	if(NetworkClipped(SnappingClient))
 		return;
-		
+	
+	if(SnappingClient != m_pPlayer->GetCID() && m_pPlayer->m_InClassChooserMenu)
+		return;
+	
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_GHOST)
 	{
@@ -1915,10 +2030,7 @@ void CCharacter::OpenClassChooser()
 	}
 	else
 	{
-		if(!m_pClassChooser)
-		{
-			m_pClassChooser = new CClassChooser(GameWorld(), m_Pos, m_pPlayer->GetCID());
-		}
+		m_pPlayer->m_InClassChooserMenu = 1;
 	}
 }
 
@@ -2174,11 +2286,6 @@ void CCharacter::DestroyChildEntities()
 	{
 		GameServer()->m_World.DestroyEntity(m_pBomb);
 		m_pBomb = 0;
-	}
-	if(m_pClassChooser)
-	{
-		GameServer()->m_World.DestroyEntity(m_pClassChooser);
-		m_pClassChooser = 0;
 	}
 	for(CMercenaryBomb *bomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARYBOMB); bomb; bomb = (CMercenaryBomb *)bomb->TypeNext())
 	{

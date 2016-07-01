@@ -40,6 +40,9 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	}
 	m_WasHumanThisRound = false;
 	
+	m_InClassChooserMenu = 0;
+	m_MenuClassChooserItem = -1;
+	
 /* INFECTION MODIFICATION END *****************************************/
 }
 

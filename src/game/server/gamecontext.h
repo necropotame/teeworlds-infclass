@@ -209,6 +209,8 @@ public:
 	
 	void CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan);
 	
+	vec2 GetMenuPosition() { return m_MenuPosition; }
+	
 private:
 	int m_VoteLanguageTick[MAX_CLIENTS];
 	int m_VoteLanguage[MAX_CLIENTS];
@@ -223,6 +225,8 @@ private:
 		int m_SnapID;
 	};
 	array<LaserDotState> m_LaserDots;
+	
+	vec2 m_MenuPosition;
 
 /* INFECTION MODIFICATION END *****************************************/
 };

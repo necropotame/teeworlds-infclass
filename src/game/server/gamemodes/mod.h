@@ -4,7 +4,7 @@
 #define GAME_SERVER_GAMEMODES_MOD_H
 #include <game/server/gamecontroller.h>
 #include <game/server/gameworld.h>
-#include <game/server/entities/classchooser.h>
+#include <game/server/classes.h>
 
 // you can subclass GAMECONTROLLER_CTF, GAMECONTROLLER_TDM etc if you want
 // todo a modification with their base as well.
@@ -48,10 +48,5 @@ private:
 	int m_HumanCounter;
 	int m_InfectedCounter;
 	bool m_InfectedStarted;
-	
-	int m_EngineerLimit;
-	int m_SoldierLimit;
-	int m_MedicLimit;
-	int m_SupportLimit;
 };
 #endif

@@ -63,6 +63,14 @@ inline T dot(const vector2_base<T> a, const vector2_base<T> &b)
 }
 
 template<typename T>
+inline vector2_base<T> rotate(const vector2_base<T> &a, float angle)
+{
+	float s = sinf(angle);
+	float c = cosf(angle);
+	return vector2_base<T>((T)(c*a.x - s*a.y), (T)(s*a.x + c*a.y));
+}
+
+template<typename T>
 inline vector2_base<T> normalize(const vector2_base<T> &v)
 {
 	T l = (T)(1.0f/sqrtf(v.x*v.x + v.y*v.y));

@@ -3,6 +3,7 @@
 
 #include <base/math.h>
 #include <base/system.h>
+#include <base/tl/array.h>
 
 #include <engine/config.h>
 #include <engine/console.h>
@@ -24,6 +25,8 @@
 #include <engine/shared/packer.h>
 #include <engine/shared/protocol.h>
 #include <engine/shared/snapshot.h>
+#include <game/mapitems.h>
+#include <game/gamecore.h>
 
 #include <mastersrv/mastersrv.h>
 
@@ -34,6 +37,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <engine/server/mapconverter.h>
 /* INFECTION MODIFICATION END *****************************************/
 
 #if defined(CONF_FAMILY_WINDOWS)
@@ -293,8 +297,11 @@ CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 	m_CurrentGameTick = 0;
 	m_RunServer = 1;
 
-	m_pCurrentMapData = 0;
-	m_CurrentMapSize = 0;
+	m_pCurrentLowResMapData = 0;
+	m_CurrentLowResMapSize = 0;
+	
+	m_pCurrentHighResMapData = 0;
+	m_CurrentHighResMapSize = 0;
 
 	m_MapReload = 0;
 
@@ -787,6 +794,7 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 /* INFECTION MODIFICATION START ***************************************/
 	pThis->m_aClients[ClientID].m_CustomSkin = 0;
 	pThis->m_aClients[ClientID].m_AlwaysRandom = 0;
+	pThis->m_aClients[ClientID].m_LowResMap = 0;
 	pThis->m_aClients[ClientID].m_DefaultScoreMode = PLAYERSCOREMODE_NORMAL;
 	pThis->m_aClients[ClientID].m_Language = LANGUAGE_EN;
 /* INFECTION MODIFICATION END *****************************************/
@@ -823,11 +831,29 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 
 void CServer::SendMap(int ClientID)
 {
-	CMsgPacker Msg(NETMSG_MAP_CHANGE);
-	Msg.AddString(GetMapName(), 0);
-	Msg.AddInt(m_CurrentMapCrc);
-	Msg.AddInt(m_CurrentMapSize);
-	SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
+	if(m_aClients[ClientID].m_LowResMap)
+	{
+		CMsgPacker Msg(NETMSG_MAP_CHANGE);
+		Msg.AddString(GetMapName(), 0);
+		Msg.AddInt(m_CurrentLowResMapCrc);
+		Msg.AddInt(m_CurrentLowResMapSize);
+		SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
+	}
+	else
+	{
+		CMsgPacker Msg(NETMSG_MAP_CHANGE);
+		Msg.AddString(GetMapName(), 0);
+		Msg.AddInt(m_CurrentHighResMapCrc);
+		Msg.AddInt(m_CurrentHighResMapSize);
+		SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
+	}
+}
+
+void CServer::ReSendMap(int ClientID)
+{
+	SendMap(ClientID);
+	m_aClients[ClientID].Reset(false);
+	m_aClients[ClientID].m_State = CClient::STATE_CONNECTING;
 }
 
 void CServer::SendConnectionReady(int ClientID)
@@ -945,25 +971,50 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 			unsigned int Offset = Chunk * ChunkSize;
 			int Last = 0;
 
-			// drop faulty map data requests
-			if(Chunk < 0 || Offset > m_CurrentMapSize)
-				return;
-
-			if(Offset+ChunkSize >= m_CurrentMapSize)
+			if(m_aClients[ClientID].m_LowResMap)
 			{
-				ChunkSize = m_CurrentMapSize-Offset;
-				if(ChunkSize < 0)
-					ChunkSize = 0;
-				Last = 1;
-			}
+				// drop faulty map data requests
+				if(Chunk < 0 || Offset > m_CurrentLowResMapSize)
+					return;
 
-			CMsgPacker Msg(NETMSG_MAP_DATA);
-			Msg.AddInt(Last);
-			Msg.AddInt(m_CurrentMapCrc);
-			Msg.AddInt(Chunk);
-			Msg.AddInt(ChunkSize);
-			Msg.AddRaw(&m_pCurrentMapData[Offset], ChunkSize);
-			SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
+				if(Offset+ChunkSize >= m_CurrentLowResMapSize)
+				{
+					ChunkSize = m_CurrentLowResMapSize-Offset;
+					if(ChunkSize < 0)
+						ChunkSize = 0;
+					Last = 1;
+				}
+
+				CMsgPacker Msg(NETMSG_MAP_DATA);
+				Msg.AddInt(Last);
+				Msg.AddInt(m_CurrentLowResMapCrc);
+				Msg.AddInt(Chunk);
+				Msg.AddInt(ChunkSize);
+				Msg.AddRaw(&m_pCurrentLowResMapData[Offset], ChunkSize);
+				SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
+			}
+			else
+			{
+				// drop faulty map data requests
+				if(Chunk < 0 || Offset > m_CurrentHighResMapSize)
+					return;
+
+				if(Offset+ChunkSize >= m_CurrentHighResMapSize)
+				{
+					ChunkSize = m_CurrentHighResMapSize-Offset;
+					if(ChunkSize < 0)
+						ChunkSize = 0;
+					Last = 1;
+				}
+
+				CMsgPacker Msg(NETMSG_MAP_DATA);
+				Msg.AddInt(Last);
+				Msg.AddInt(m_CurrentHighResMapCrc);
+				Msg.AddInt(Chunk);
+				Msg.AddInt(ChunkSize);
+				Msg.AddRaw(&m_pCurrentHighResMapData[Offset], ChunkSize);
+				SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
+			}
 
 			if(g_Config.m_Debug)
 			{
@@ -983,7 +1034,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				str_format(aBuf, sizeof(aBuf), "player is ready. ClientID=%x addr=%s", ClientID, aAddrStr);
 				Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBuf);
 				m_aClients[ClientID].m_State = CClient::STATE_READY;
-				m_aClients[ClientID].m_WaitingTime = TickSpeed()*3;
+				m_aClients[ClientID].m_WaitingTime = TickSpeed()*g_Config.m_InfConWaitingTime;
 			}
 		}
 		else if(Msg == NETMSG_ENTERGAME)
@@ -1308,33 +1359,76 @@ int CServer::LoadMap(const char *pMapName)
 	if(!m_pMap->Load(aBuf))
 		return 0;
 
+/* INFECTION MODIFICATION START ***************************************/
+	{
+		CMapConverter MapConverter(Storage(), m_pMap, Console());
+		if(!MapConverter.Load())
+			return 0;
+			
+		if(!MapConverter.CreateLowResMap())
+			return 0;
+			
+		if(!MapConverter.CreateHighResMap())
+			return 0;
+	}
+
 	// stop recording when we change map
 	m_DemoRecorder.Stop();
-
+	
 	// reinit snapshot ids
 	m_IDPool.TimeoutIDs();
 
-	// get the crc of the map
-	m_CurrentMapCrc = m_pMap->Crc();
-	char aBufMsg[256];
-	str_format(aBufMsg, sizeof(aBufMsg), "%s crc is %08x", aBuf, m_CurrentMapCrc);
-	Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBufMsg);
-
 	str_copy(m_aCurrentMap, pMapName, sizeof(m_aCurrentMap));
 	//map_set(df);
-
-	// load complete map into memory for download
+	
+	//Get Crc
 	{
-		IOHANDLE File = Storage()->OpenFile(aBuf, IOFLAG_READ, IStorage::TYPE_ALL);
-		m_CurrentMapSize = (int)io_length(File);
-		if(m_pCurrentMapData)
-			mem_free(m_pCurrentMapData);
-		m_pCurrentMapData = (unsigned char *)mem_alloc(m_CurrentMapSize, 1);
-		io_read(File, m_pCurrentMapData, m_CurrentMapSize);
-		io_close(File);
+		CDataFileReader df;
+		df.Open(Storage(), "maps/infc_x_lowres.map", IStorage::TYPE_ALL);
+		
+		//Crc
+		m_CurrentLowResMapCrc = df.Crc();
+		char aBufMsg[256];
+		str_format(aBufMsg, sizeof(aBufMsg), "lowres crc is %08x", aBuf, m_CurrentLowResMapCrc);
+		Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBufMsg);
+		
+		df.Close();
+	}
+	{
+		CDataFileReader df;
+		df.Open(Storage(), "maps/infc_x_highres.map", IStorage::TYPE_ALL);
+		
+		//Crc
+		m_CurrentHighResMapCrc = df.Crc();
+		char aBufMsg[256];
+		str_format(aBufMsg, sizeof(aBufMsg), "highres crc is %08x", aBuf, m_CurrentHighResMapCrc);
+		Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBufMsg);
+		
+		df.Close();
 	}
 	
-/* INFECTION MODIFICATION START ***************************************/
+	//Data for download
+	{	
+		IOHANDLE File = Storage()->OpenFile("maps/infc_x_lowres.map", IOFLAG_READ, IStorage::TYPE_ALL);
+		m_CurrentLowResMapSize = (int)io_length(File);
+		if(m_pCurrentLowResMapData)
+			mem_free(m_pCurrentLowResMapData);
+		m_pCurrentLowResMapData = (unsigned char *)mem_alloc(m_CurrentLowResMapSize, 1);
+		io_read(File, m_pCurrentLowResMapData, m_CurrentLowResMapSize);
+		io_close(File);
+		Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", "maps/infc_x_lowres.map loaded in memory");
+	}
+	{	
+		IOHANDLE File = Storage()->OpenFile("maps/infc_x_highres.map", IOFLAG_READ, IStorage::TYPE_ALL);
+		m_CurrentHighResMapSize = (int)io_length(File);
+		if(m_pCurrentHighResMapData)
+			mem_free(m_pCurrentHighResMapData);
+		m_pCurrentHighResMapData = (unsigned char *)mem_alloc(m_CurrentHighResMapSize, 1);
+		io_read(File, m_pCurrentHighResMapData, m_CurrentHighResMapSize);
+		io_close(File);
+		Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", "maps/infc_x_highres.map loaded in memory");
+	}
+	
 	{
 		g_Config.m_SvTimelimit = 5;
 		
@@ -1342,38 +1436,42 @@ int CServer::LoadMap(const char *pMapName)
 		char MapInfoFilename[512];
 		str_format(MapInfoFilename, sizeof(MapInfoFilename), "maps/%s.mapinfo", pMapName);
 		IOHANDLE File = Storage()->OpenFile(MapInfoFilename, IOFLAG_READ, IStorage::TYPE_ALL);
-		
-		char MapInfoLine[512];
-		bool isEndOfFile = false;
-		while(!isEndOfFile)
+		if(File)
 		{
-			isEndOfFile = true;
-			
-			//Load one line
-			int MapInfoLineLenth = 0;
-			char c;
-			while(io_read(File, &c, 1))
+			char MapInfoLine[512];
+			bool isEndOfFile = false;
+			while(!isEndOfFile)
 			{
-				isEndOfFile = false;
+				isEndOfFile = true;
 				
-				if(c == '\n') break;
-				else
+				//Load one line
+				int MapInfoLineLenth = 0;
+				char c;
+				while(io_read(File, &c, 1))
 				{
-					MapInfoLine[MapInfoLineLenth] = c;
-					MapInfoLineLenth++;
+					isEndOfFile = false;
+					
+					if(c == '\n') break;
+					else
+					{
+						MapInfoLine[MapInfoLineLenth] = c;
+						MapInfoLineLenth++;
+					}
+				}
+				
+				MapInfoLine[MapInfoLineLenth] = 0;
+				
+				//Get the key
+				if(str_comp_nocase_num(MapInfoLine, "timelimit ", 10) == 0)
+				{
+					g_Config.m_SvTimelimit = str_toint(MapInfoLine+10);
 				}
 			}
-			
-			MapInfoLine[MapInfoLineLenth] = 0;
-			
-			//Get the key
-			if(str_comp_nocase_num(MapInfoLine, "timelimit ", 10) == 0)
-			{
-				g_Config.m_SvTimelimit = str_toint(MapInfoLine+10);
-			}
-		}
 		
-		io_close(File);
+			io_close(File);
+		}
+		else
+			g_Config.m_SvTimelimit = 5;
 	}
 /* INFECTION MODIFICATION END *****************************************/
 	
@@ -1588,8 +1686,10 @@ int CServer::Run()
 	GameServer()->OnShutdown();
 	m_pMap->Unload();
 
-	if(m_pCurrentMapData)
-		mem_free(m_pCurrentMapData);
+	if(m_pCurrentLowResMapData)
+		mem_free(m_pCurrentLowResMapData);
+	if(m_pCurrentHighResMapData)
+		mem_free(m_pCurrentHighResMapData);
 	return 0;
 }
 
@@ -1651,13 +1751,14 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 				
 				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? "Admin" :
 										pThis->m_aClients[i].m_Authed == CServer::AUTHED_MOD ? "Mod" : "";
-				str_format(aBuf, sizeof(aBuf), "#%02i (%s) %s, [%s], cs:%i | ar:%i | language:%s",
+				str_format(aBuf, sizeof(aBuf), "#%02i (%s) %s, [%s], cs:%i | ar:%i | lr:%i | language:%s",
 					i,
 					aAddrStr,
 					pThis->m_aClients[i].m_aName,
 					pAuthStr,
 					pThis->m_aClients[i].m_CustomSkin,
 					pThis->m_aClients[i].m_AlwaysRandom,
+					pThis->m_aClients[i].m_LowResMap,
 					aLangBuf
 				);
 			}
@@ -1683,7 +1784,7 @@ void CServer::DemoRecorder_HandleAutoStart()
 		char aDate[20];
 		str_timestamp(aDate, sizeof(aDate));
 		str_format(aFilename, sizeof(aFilename), "demos/%s_%s.demo", "auto/autorecord", aDate);
-		m_DemoRecorder.Start(Storage(), m_pConsole, aFilename, GameServer()->NetVersion(), m_aCurrentMap, m_CurrentMapCrc, "server");
+		m_DemoRecorder.Start(Storage(), m_pConsole, aFilename, GameServer()->NetVersion(), m_aCurrentMap, m_CurrentHighResMapCrc, "server");
 		if(g_Config.m_SvAutoDemoMax)
 		{
 			// clean up auto recorded demos
@@ -1711,7 +1812,7 @@ void CServer::ConRecord(IConsole::IResult *pResult, void *pUser)
 		str_timestamp(aDate, sizeof(aDate));
 		str_format(aFilename, sizeof(aFilename), "demos/demo_%s.demo", aDate);
 	}
-	pServer->m_DemoRecorder.Start(pServer->Storage(), pServer->Console(), aFilename, pServer->GameServer()->NetVersion(), pServer->m_aCurrentMap, pServer->m_CurrentMapCrc, "server");
+	pServer->m_DemoRecorder.Start(pServer->Storage(), pServer->Console(), aFilename, pServer->GameServer()->NetVersion(), pServer->m_aCurrentMap, pServer->m_CurrentHighResMapCrc, "server");
 }
 
 void CServer::ConStopRecord(IConsole::IResult *pResult, void *pUser)
@@ -2122,6 +2223,16 @@ void CServer::SetClientNbRound(int ClientID, int Score)
 int CServer::GetClientScore(int ClientID)
 {
 	return m_aClients[ClientID].m_Score;
+}
+	
+int CServer::GetClientMapRes(int ClientID)
+{
+	return m_aClients[ClientID].m_LowResMap;
+}
+
+void CServer::SetClientMapRes(int ClientID, int Value)
+{
+	m_aClients[ClientID].m_LowResMap = Value;
 }
 
 int CServer::IsClassChooserEnabled()

@@ -65,6 +65,9 @@ void CBarrier::Tick()
 				{
 					for(CCharacter *pHook = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pHook; pHook = (CCharacter *)pHook->TypeNext())
 					{
+						if(p->GetPlayer() && p->GetPlayer()->m_InClassChooserMenu)
+							continue;
+						
 						if(p->GetPlayer() && pHook->GetPlayer() && pHook->m_Core.m_HookedPlayer == p->GetPlayer()->GetCID() && pHook->GetPlayer()->GetCID() != m_Owner)
 						{
 							pHook->GetPlayer()->IncreaseScore(1);

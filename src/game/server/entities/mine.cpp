@@ -43,6 +43,20 @@ void CMine::Explode()
 {
 	new CGrowingExplosion<8>(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED);
 	GameServer()->m_World.DestroyEntity(this);
+	
+	//Self damage
+	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
+	if(OwnerChar)
+	{
+		float Dist = distance(m_Pos, OwnerChar->m_Pos);
+		if(Dist < OwnerChar->m_ProximityRadius+g_Config.m_InfMineRadius)
+			OwnerChar->TakeDamage(vec2(0.0f, 0.0f), 6, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+		else if(Dist < OwnerChar->m_ProximityRadius+2*g_Config.m_InfMineRadius)
+		{
+			float Alpha = (Dist - g_Config.m_InfMineRadius-OwnerChar->m_ProximityRadius)/g_Config.m_InfMineRadius;
+			OwnerChar->TakeDamage(vec2(0.0f, 0.0f), 6*Alpha, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+		}
+	}
 }
 
 void CMine::Snap(int SnappingClient)
