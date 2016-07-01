@@ -278,10 +278,10 @@ She can also inflict 1 damage point per seconds by hooking humans.
 == Elle peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.
 
 Hook protection enabled
-== Protection contre le grapin activée
+== Protection contre le grappin activée
 
 Hook protection disabled
-== Protection contre le grapin désactivé
+== Protection contre le grappin désactivé
 
 Unknown language
 == Langue inconnue

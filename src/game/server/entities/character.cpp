@@ -117,11 +117,11 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_Poison = 0;
 
 	ClassSpawnAttributes();
+	DestroyChildEntities();
 	if(GetClass() == PLAYERCLASS_NONE)
 	{
 		OpenClassChooser();
 	}
-	DestroyChildEntities();
 /* INFECTION MODIFICATION END *****************************************/
 
 	return true;

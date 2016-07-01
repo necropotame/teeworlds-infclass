@@ -41,7 +41,7 @@ int CMine::GetOwner() const
 
 void CMine::Explode()
 {
-	new CGrowingExplosion<8>(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED);
+	new CGrowingExplosion<6>(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED);
 	GameServer()->m_World.DestroyEntity(this);
 	
 	//Self damage

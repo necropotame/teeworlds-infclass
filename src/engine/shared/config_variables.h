@@ -115,6 +115,6 @@ MACRO_CONFIG_INT(InfDefenderLimit, inf_defender_limit, 12, 0, 16, CFGFLAG_SERVER
 MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 6, 0, 16, CFGFLAG_SERVER, "Maximum number of medics in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 6, 0, 16, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfMineRadius, inf_mine_radius, 46, 0, 1024, CFGFLAG_SERVER, "Radius of mines")
-MACRO_CONFIG_INT(InfMineLimit, inf_mine_limit, 3, 0, 1024, CFGFLAG_SERVER, "Maximum number of mines per player")
+MACRO_CONFIG_INT(InfMineLimit, inf_mine_limit, 2, 0, 1024, CFGFLAG_SERVER, "Maximum number of mines per player")
 
 #endif

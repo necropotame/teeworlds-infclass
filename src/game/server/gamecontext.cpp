@@ -36,7 +36,7 @@ void CGameContext::InitializeServerLocatization()
 		s_ServerLocalization[LANGUAGE_UK].Load("languages/infclass/uk.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_RU].Load("languages/infclass/ru.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_IT].Load("languages/infclass/it.txt", Storage(), Console());
-		//~ s_ServerLocalization[LANGUAGE_ES].Load("languages/infclass/es.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_ES].Load("languages/infclass/es.txt", Storage(), Console());
 		//~ s_ServerLocalization[LANGUAGE_AR].Load("languages/infclass/ar.txt", Storage(), Console());
 		
 		s_ServerLocalizationInitialized = true;
@@ -1417,8 +1417,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Language = LANGUAGE_RU;
 					else if(str_comp_nocase(pMsg->m_pMessage+10, "it") == 0)
 						Language = LANGUAGE_IT;
-					//~ else if(str_comp_nocase(pMsg->m_pMessage+10, "es") == 0)
-						//~ Language = LANGUAGE_ES;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "es") == 0)
+						Language = LANGUAGE_ES;
 					//~ else if(str_comp_nocase(pMsg->m_pMessage+10, "ar") == 0)
 						//~ Language = LANGUAGE_AR;
 					
@@ -1433,7 +1433,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					else
 					{
 						SendChatTarget_Language(ClientID, "Unknown language");
-						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it>");
+						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es>");
 					}
 				}
 				else
@@ -1841,30 +1841,30 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_IT);
 						m_VoteLanguage[ClientID] = LANGUAGE_IT;				
 						break;
-					//~ case 32: //Argentina
-					//~ case 68: //Bolivia
-					//~ case 152: //Chile
-					//~ case 170: //Colombia
-					//~ case 188: //Costa Rica
-					//~ case 192: //Cuba
-					//~ case 214: //Dominican Republic
-					//~ case 218: //Ecuador
-					//~ case 222: //El Salvador
-					//~ case 226: //Equatorial Guinea
-					//~ case 320: //Guatemala
-					//~ case 340: //Honduras
-					//~ case 484: //Mexico
-					//~ case 558: //Nicaragua
-					//~ case 591: //Panama
-					//~ case 600: //Paraguay
-					//~ case 604: //Peru
-					//~ case 630: //Puerto Rico
-					//~ case 724: //Spain
-					//~ case 858: //Uruguay
-					//~ case 862: //Venezuela
-						//~ Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_ES);
-						//~ m_VoteLanguage[ClientID] = LANGUAGE_ES;				
-						//~ break;
+					case 32: //Argentina
+					case 68: //Bolivia
+					case 152: //Chile
+					case 170: //Colombia
+					case 188: //Costa Rica
+					case 192: //Cuba
+					case 214: //Dominican Republic
+					case 218: //Ecuador
+					case 222: //El Salvador
+					case 226: //Equatorial Guinea
+					case 320: //Guatemala
+					case 340: //Honduras
+					case 484: //Mexico
+					case 558: //Nicaragua
+					case 591: //Panama
+					case 600: //Paraguay
+					case 604: //Peru
+					case 630: //Puerto Rico
+					case 724: //Spain
+					case 858: //Uruguay
+					case 862: //Venezuela
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_ES);
+						m_VoteLanguage[ClientID] = LANGUAGE_ES;				
+						break;
 				}
 				
 				if(Msg.m_pDescription)
