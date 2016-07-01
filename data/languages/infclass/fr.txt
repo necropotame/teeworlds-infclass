@@ -79,8 +79,8 @@ One human won the round
 %i humans won the round
 == %i humains ont gagné la manche
 
-Choose your class by clicking on the weapon
-== Choisissez votre classe en cliquant sur l'arme correspondante
+Choose your class
+== Choisissez votre classe
 
 Random choice
 == Choix aléatoire

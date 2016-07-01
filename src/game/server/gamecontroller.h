@@ -24,6 +24,7 @@ protected:
 	int m_aNumSpawnPoints[3];
 /* INFECTION MODIFICATION START ***************************************/
 
+public:
 	struct CSpawnEval
 	{
 		CSpawnEval()
@@ -38,10 +39,12 @@ protected:
 		int m_FriendlyTeam;
 		float m_Score;
 	};
-
-	float EvaluateSpawnPos(CSpawnEval *pEval, vec2 Pos);
+	
 	void EvaluateSpawnType(CSpawnEval *pEval, int Type);
-	bool EvaluateSpawn(class CPlayer *pP, vec2 *pPos);
+	
+
+protected:
+	float EvaluateSpawnPos(CSpawnEval *pEval, vec2 Pos);
 
 	void CycleMap(bool Forced = false);
 	void ResetGame();
@@ -72,7 +75,7 @@ public:
 
 	IGameController(class CGameContext *pGameServer);
 	virtual ~IGameController();
-
+	
 	virtual void DoWincheck();
 
 	void DoWarmup(int Seconds);

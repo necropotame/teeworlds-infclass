@@ -509,7 +509,8 @@ void CPlayer::TryRespawn()
 	m_Spawning = false;
 	m_pCharacter = new(m_ClientID) CCharacter(&GameServer()->m_World);
 	m_pCharacter->Spawn(this, SpawnPos);
-	GameServer()->CreatePlayerSpawn(SpawnPos);
+	if(GetClass() != PLAYERCLASS_NONE)
+		GameServer()->CreatePlayerSpawn(SpawnPos);
 }
 
 /* INFECTION MODIFICATION START ***************************************/

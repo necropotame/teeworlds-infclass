@@ -883,6 +883,7 @@ bool CMapConverter::CreateLowResMap()
 				switch(m_pGameLayerTiles[j*m_Width+i].m_Index)
 				{
 					case TILE_SOLID:
+					case ENTITY_OFFSET+ENTITY_MENU:
 						m_pTiles[j*m_Width+i].m_Index = 2;
 						break;
 					case TILE_NOHOOK:

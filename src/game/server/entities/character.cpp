@@ -117,11 +117,11 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_Poison = 0;
 
 	ClassSpawnAttributes();
-	DestroyChildEntities();
 	if(GetClass() == PLAYERCLASS_NONE)
 	{
 		OpenClassChooser();
 	}
+	DestroyChildEntities();
 /* INFECTION MODIFICATION END *****************************************/
 
 	return true;
@@ -353,28 +353,28 @@ void CCharacter::SendTuneParam()
 		}
 		else if((int*)&GameServer()->Tuning()->m_GroundControlSpeed == &pParams[i])
 		{
-			if(m_IsFrozen)
+			if(m_IsFrozen || m_PositionLocked)
 				Msg.AddInt(0);
 			else
 				Msg.AddInt(pParams[i]);
 		}
 		else if((int*)&GameServer()->Tuning()->m_GroundControlAccel == &pParams[i])
 		{
-			if(m_IsFrozen)
+			if(m_IsFrozen || m_PositionLocked)
 				Msg.AddInt(0);
 			else
 				Msg.AddInt(pParams[i]);
 		}
 		else if((int*)&GameServer()->Tuning()->m_AirControlSpeed == &pParams[i])
 		{
-			if(m_IsFrozen)
+			if(m_IsFrozen || m_PositionLocked)
 				Msg.AddInt(0);
 			else
 				Msg.AddInt(pParams[i]);
 		}
 		else if((int*)&GameServer()->Tuning()->m_AirControlAccel == &pParams[i])
 		{
-			if(m_IsFrozen)
+			if(m_IsFrozen || m_PositionLocked)
 				Msg.AddInt(0);
 			else
 				Msg.AddInt(pParams[i]);
@@ -1064,14 +1064,8 @@ void CCharacter::ResetInput()
 
 void CCharacter::Tick()
 {
-/* INFECTION MODIFICATION START ***************************************/
+/* INFECTION MODIFICATION START ***************************************/	
 	//Check is the character is in toxic gaz
-	if(m_pPlayer->m_InClassChooserMenu)
-	{
-		m_Core.m_Pos = GameServer()->GetMenuPosition();
-		m_Core.m_Vel = vec2(0.0f, 0.0f);
-	}
-	
 	if(m_Alive && GameServer()->Collision()->CheckPointFlag(m_Pos, CCollision::COLFLAG_INFECTION))
 	{
 		if(IsInfected())
@@ -1306,7 +1300,19 @@ void CCharacter::Tick()
 	}
 
 	m_Core.m_Input = m_Input;
+	
+	if(m_pPlayer->m_InClassChooserMenu)
+	{
+		m_Input.m_Jump = 0;
+		m_Input.m_Direction = 0;
+		m_Input.m_Hook = 0;
 		
+		m_Core.m_Pos = GameServer()->GetMenuPosition();
+		m_Core.m_Vel = vec2(0.0f, 0.0f);
+		m_Core.Tick(true, m_HookMode);
+		m_Core.m_Vel = vec2(0.0f, 0.0f);
+		m_Core.m_Pos = GameServer()->GetMenuPosition();
+	}
 	if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
@@ -1379,10 +1385,13 @@ void CCharacter::Tick()
 	{
 		if(GetClass() != PLAYERCLASS_NONE)
 		{
-			m_Core.m_Pos = m_SpawnPosition;
-			m_Pos = m_SpawnPosition;
 			m_AntiFireTick = Server()->Tick();
 			m_pPlayer->m_InClassChooserMenu = 0;
+			
+			IGameController::CSpawnEval Eval;
+			GameServer()->m_pController->EvaluateSpawnType(&Eval, 1+(IsInfected() ? TEAM_RED : TEAM_BLUE));
+			m_Core.m_Pos = Eval.m_Pos;
+			m_Pos = m_Core.m_Pos;
 		}
 		else
 		{
@@ -1457,7 +1466,7 @@ void CCharacter::Tick()
 			if(!Broadcast)
 			{
 				m_pPlayer->m_MenuClassChooserItem = -1;
-				GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Choose your class by clicking on the icon");
+				GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Choose your class");
 			}
 			
 			if(m_Input.m_Fire&1 && m_pPlayer->m_MenuClassChooserItem >= 0)
@@ -1493,11 +1502,15 @@ void CCharacter::Tick()
 				
 				if(NewClass >= 0 && GameServer()->m_pController->IsChoosableClass(NewClass))
 				{
-					m_Core.m_Pos = m_SpawnPosition;
-					m_Pos = m_SpawnPosition;
-					m_pPlayer->SetClass(NewClass);
 					m_AntiFireTick = Server()->Tick();
 					m_pPlayer->m_InClassChooserMenu = 0;
+					
+					IGameController::CSpawnEval Eval;
+					GameServer()->m_pController->EvaluateSpawnType(&Eval, 1+(IsInfected() ? TEAM_RED : TEAM_BLUE));
+					m_Core.m_Pos = Eval.m_Pos;
+					m_Pos = m_Core.m_Pos;
+					
+					m_pPlayer->SetClass(NewClass);
 				}
 			}
 		}
