@@ -211,9 +211,6 @@ public:
 			if(!p->IsInfected())
 				continue;
 				
-			if(p->GetPlayer() && p->GetPlayer()->m_InClassChooserMenu)
-				continue;
-				
 			if(p->IsFrozen())
 				continue;
 			

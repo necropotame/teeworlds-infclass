@@ -40,7 +40,6 @@ void CCollision::Init(class CLayers *pLayers)
 			m_pTiles[i].m_Index = COLFLAG_DEATH;
 			break;
 		case TILE_SOLID:
-		case ENTITY_OFFSET+ENTITY_MENU:
 			m_pTiles[i].m_Index = COLFLAG_SOLID;
 			break;
 		case TILE_NOHOOK:

@@ -107,8 +107,6 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	GameServer()->m_pController->OnCharacterSpawn(this);
 
 /* INFECTION MODIFICATION START ***************************************/
-	m_SpawnPosition = Pos;
-
 	m_AntiFireTick = Server()->Tick();
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
@@ -290,15 +288,7 @@ void CCharacter::HandleWeaponSwitch()
 			WantedHookMode = m_Input.m_WantedWeapon-1;
 
 		if(WantedHookMode >= 0 && WantedHookMode < 2)
-		{
-			if(m_HookMode != WantedHookMode)
-			{
-				m_HookMode = WantedHookMode;
-				SendTuneParam();
-			}
-			else
-				m_HookMode = WantedHookMode;
-		}
+			m_HookMode = WantedHookMode;
 	}
 	else
 	{
@@ -338,65 +328,42 @@ void CCharacter::HandleWeaponSwitch()
 	}
 }
 
-void CCharacter::SendTuneParam()
+void CCharacter::UpdateTuningParam()
 {
-	CMsgPacker Msg(NETMSGTYPE_SV_TUNEPARAMS);
-	int *pParams = (int *)GameServer()->Tuning();
-	for(unsigned i = 0; i < sizeof(CTuningParams)/sizeof(int); i++)
+	CTuningParams* pTuningParams = &m_pPlayer->m_NextTuningParams;
+	
+	bool NoActions = false;
+	bool FixedPosition = false;
+	
+	if(m_PositionLocked)
 	{
-		if((int*)&GameServer()->Tuning()->m_Gravity == &pParams[i])
-		{
-			if(m_PositionLocked)
-				Msg.AddInt(0);
-			else
-				Msg.AddInt(pParams[i]);
-		}
-		else if((int*)&GameServer()->Tuning()->m_GroundControlSpeed == &pParams[i])
-		{
-			if(m_IsFrozen || m_PositionLocked)
-				Msg.AddInt(0);
-			else
-				Msg.AddInt(pParams[i]);
-		}
-		else if((int*)&GameServer()->Tuning()->m_GroundControlAccel == &pParams[i])
-		{
-			if(m_IsFrozen || m_PositionLocked)
-				Msg.AddInt(0);
-			else
-				Msg.AddInt(pParams[i]);
-		}
-		else if((int*)&GameServer()->Tuning()->m_AirControlSpeed == &pParams[i])
-		{
-			if(m_IsFrozen || m_PositionLocked)
-				Msg.AddInt(0);
-			else
-				Msg.AddInt(pParams[i]);
-		}
-		else if((int*)&GameServer()->Tuning()->m_AirControlAccel == &pParams[i])
-		{
-			if(m_IsFrozen || m_PositionLocked)
-				Msg.AddInt(0);
-			else
-				Msg.AddInt(pParams[i]);
-		}
-		else if((int*)&GameServer()->Tuning()->m_HookDragSpeed == &pParams[i])
-		{
-			if(m_HookMode == 1)
-				Msg.AddInt(0);
-			else
-				Msg.AddInt(pParams[i]);
-		}
-		else if((int*)&GameServer()->Tuning()->m_HookDragAccel == &pParams[i])
-		{
-			if(m_HookMode == 1)
-				Msg.AddInt(100);
-			else
-				Msg.AddInt(pParams[i]);
-		}
-		else
-			Msg.AddInt(pParams[i]);
+		NoActions = true;
+		FixedPosition = true;
 	}
-	Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
+	if(m_IsFrozen)
+	{
+		NoActions = true;
+	}
+	
+	if(NoActions)
+	{
+		pTuningParams->m_GroundControlSpeed = 0.0f;
+		pTuningParams->m_GroundControlAccel = 0.0f;
+		pTuningParams->m_GroundJumpImpulse = 0.0f;
+		pTuningParams->m_AirJumpImpulse = 0.0f;
+		pTuningParams->m_AirControlSpeed = 0.0f;
+		pTuningParams->m_AirControlAccel = 0.0f;
+		pTuningParams->m_HookLength = 0.0f;
+	}
+	if(FixedPosition)
+	{
+		pTuningParams->m_Gravity = 0.0f;
+	}
+	if(m_HookMode == 1)
+	{
+		pTuningParams->m_HookDragSpeed = 0.0f;
+		pTuningParams->m_HookDragAccel = 1.0f;
+	}
 }
 
 void CCharacter::FireWeapon()
@@ -515,9 +482,6 @@ void CCharacter::FireWeapon()
 					{
 						m_PositionLockTick = Server()->TickSpeed()*15;
 						m_PositionLocked = true;
-					
-						//send new tune param
-						SendTuneParam();
 					}
 					else if(m_PositionLockTick > Server()->TickSpeed())
 					{
@@ -1086,11 +1050,7 @@ void CCharacter::Tick()
 	{
 		--m_PositionLockTick;
 		if(m_PositionLockTick <= 0)
-		{
 			m_PositionLocked = false;
-			//Send new tune param
-			SendTuneParam();
-		}
 	}
 	else
 	{
@@ -1173,7 +1133,6 @@ void CCharacter::Tick()
 			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 			{
 				if(p->IsInfected()) continue;
-				if(p->GetPlayer() && p->GetPlayer()->m_InClassChooserMenu) continue;
 				
 				int cellHumanX = static_cast<int>(round(p->m_Pos.x))/32;
 				int cellHumanY = static_cast<int>(round(p->m_Pos.y))/32;
@@ -1266,7 +1225,6 @@ void CCharacter::Tick()
 			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 			{
 				if(p->IsInfected()) continue;
-				if(p->GetPlayer() && p->GetPlayer()->m_InClassChooserMenu) continue;
 
 				vec2 IntersectPos = closest_point_on_line(m_Core.m_Pos, m_Core.m_HookPos, p->m_Pos);
 				float Len = distance(p->m_Pos, IntersectPos);
@@ -1277,8 +1235,6 @@ void CCharacter::Tick()
 					m_Core.m_HookedPlayer = p->m_pPlayer->GetCID();
 					m_Core.m_HookTick = 0;
 					m_HookMode = 0;
-					
-					SendTuneParam();
 					
 					break;
 				}
@@ -1301,18 +1257,6 @@ void CCharacter::Tick()
 
 	m_Core.m_Input = m_Input;
 	
-	if(m_pPlayer->m_InClassChooserMenu)
-	{
-		m_Input.m_Jump = 0;
-		m_Input.m_Direction = 0;
-		m_Input.m_Hook = 0;
-		
-		m_Core.m_Pos = GameServer()->GetMenuPosition();
-		m_Core.m_Vel = vec2(0.0f, 0.0f);
-		m_Core.Tick(true, m_HookMode);
-		m_Core.m_Vel = vec2(0.0f, 0.0f);
-		m_Core.m_Pos = GameServer()->GetMenuPosition();
-	}
 	if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
@@ -1387,11 +1331,6 @@ void CCharacter::Tick()
 		{
 			m_AntiFireTick = Server()->Tick();
 			m_pPlayer->m_InClassChooserMenu = 0;
-			
-			IGameController::CSpawnEval Eval;
-			GameServer()->m_pController->EvaluateSpawnType(&Eval, 1+(IsInfected() ? TEAM_RED : TEAM_BLUE));
-			m_Core.m_Pos = Eval.m_Pos;
-			m_Pos = m_Core.m_Pos;
 		}
 		else
 		{
@@ -1407,53 +1346,53 @@ void CCharacter::Tick()
 
 				switch(m_pPlayer->m_MenuClassChooserItem)
 				{
-					case CMapConverter::MENUENTRY_MEDIC:
+					case CMapConverter::MENUCLASS_MEDIC:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
 						{
 							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Medic");
 							Broadcast = true;
 						}
 						break;
-					case CMapConverter::MENUENTRY_NINJA:
+					case CMapConverter::MENUCLASS_NINJA:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_NINJA))
 						{
 							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Ninja");
 							Broadcast = true;
 						}
 						break;
-					case CMapConverter::MENUENTRY_MERCENARY:
+					case CMapConverter::MENUCLASS_MERCENARY:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MERCENARY))
 						{
 							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Mercenary");
 							Broadcast = true;
 						}
 						break;
-					case CMapConverter::MENUENTRY_SNIPER:
+					case CMapConverter::MENUCLASS_SNIPER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SNIPER))
 						{
 							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Sniper");
 							Broadcast = true;
 						}
 						break;
-					case CMapConverter::MENUENTRY_RANDOM:
+					case CMapConverter::MENUCLASS_RANDOM:
 						GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Random choice");
 						Broadcast = true;
 						break;
-					case CMapConverter::MENUENTRY_ENGINEER:
+					case CMapConverter::MENUCLASS_ENGINEER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER))
 						{
 							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Engineer");
 							Broadcast = true;
 						}
 						break;
-					case CMapConverter::MENUENTRY_SOLDIER:
+					case CMapConverter::MENUCLASS_SOLDIER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER))
 						{
 							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Soldier");
 							Broadcast = true;
 						}
 						break;
-					case CMapConverter::MENUENTRY_SCIENTIST:
+					case CMapConverter::MENUCLASS_SCIENTIST:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST))
 						{
 							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Scientist");
@@ -1474,28 +1413,28 @@ void CCharacter::Tick()
 				int NewClass = -1;
 				switch(m_pPlayer->m_MenuClassChooserItem)
 				{
-					case CMapConverter::MENUENTRY_MEDIC:
+					case CMapConverter::MENUCLASS_MEDIC:
 						NewClass = PLAYERCLASS_MEDIC;
 						break;
-					case CMapConverter::MENUENTRY_NINJA:
+					case CMapConverter::MENUCLASS_NINJA:
 						NewClass = PLAYERCLASS_NINJA;
 						break;
-					case CMapConverter::MENUENTRY_MERCENARY:
+					case CMapConverter::MENUCLASS_MERCENARY:
 						NewClass = PLAYERCLASS_MERCENARY;
 						break;
-					case CMapConverter::MENUENTRY_SNIPER:
+					case CMapConverter::MENUCLASS_SNIPER:
 						NewClass = PLAYERCLASS_SNIPER;
 						break;
-					case CMapConverter::MENUENTRY_RANDOM:
+					case CMapConverter::MENUCLASS_RANDOM:
 						NewClass = GameServer()->m_pController->ChooseHumanClass(m_pPlayer);
 						break;
-					case CMapConverter::MENUENTRY_ENGINEER:
+					case CMapConverter::MENUCLASS_ENGINEER:
 						NewClass = PLAYERCLASS_ENGINEER;
 						break;
-					case CMapConverter::MENUENTRY_SOLDIER:
+					case CMapConverter::MENUCLASS_SOLDIER:
 						NewClass = PLAYERCLASS_SOLDIER;
 						break;
-					case CMapConverter::MENUENTRY_SCIENTIST:
+					case CMapConverter::MENUCLASS_SCIENTIST:
 						NewClass = PLAYERCLASS_SCIENTIST;
 						break;
 				}
@@ -1504,12 +1443,6 @@ void CCharacter::Tick()
 				{
 					m_AntiFireTick = Server()->Tick();
 					m_pPlayer->m_InClassChooserMenu = 0;
-					
-					IGameController::CSpawnEval Eval;
-					GameServer()->m_pController->EvaluateSpawnType(&Eval, 1+(IsInfected() ? TEAM_RED : TEAM_BLUE));
-					m_Core.m_Pos = Eval.m_Pos;
-					m_Pos = m_Core.m_Pos;
-					
 					m_pPlayer->SetClass(NewClass);
 				}
 			}
@@ -1563,6 +1496,9 @@ void CCharacter::Tick()
 
 	// Previnput
 	m_PrevInput = m_Input;
+	
+	UpdateTuningParam();
+	
 	return;
 }
 
@@ -1892,9 +1828,6 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 void CCharacter::Snap(int SnappingClient)
 {
 	if(NetworkClipped(SnappingClient))
-		return;
-	
-	if(SnappingClient != m_pPlayer->GetCID() && m_pPlayer->m_InClassChooserMenu)
 		return;
 	
 /* INFECTION MODIFICATION START ***************************************/
@@ -2316,8 +2249,6 @@ void CCharacter::DestroyChildEntities()
 		}
 	}		
 	m_FirstShot = true;
-	
-	SendTuneParam();
 }
 
 void CCharacter::SetClass(int ClassChoosed)
@@ -2345,8 +2276,6 @@ void CCharacter::Freeze(float Time, int Player, int Reason)
 	m_FreezeReason = Reason;
 	
 	m_LastFreezer = Player;
-	
-	SendTuneParam();
 }
 
 void CCharacter::Unfreeze()
@@ -2360,8 +2289,6 @@ void CCharacter::Unfreeze()
 	}
 	
 	GameServer()->CreatePlayerSpawn(m_Pos);
-	
-	SendTuneParam();
 }
 
 void CCharacter::Poison(int Count, int From)

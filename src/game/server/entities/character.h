@@ -208,7 +208,7 @@ public:
 	void Poison(int Count, int From);
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);
-	void SendTuneParam();
+	void UpdateTuningParam();
 /* INFECTION MODIFICATION END *****************************************/
 };
 

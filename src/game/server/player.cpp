@@ -43,6 +43,8 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_InClassChooserMenu = 0;
 	m_MenuClassChooserItem = -1;
 	
+	m_PrevTuningParams = *pGameServer->Tuning();
+	m_NextTuningParams = m_PrevTuningParams;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -120,6 +122,8 @@ void CPlayer::Tick()
 		++m_LastActionTick;
 		++m_TeamChangeTick;
  	}
+ 	
+ 	HandleTuningParams();
 }
 
 void CPlayer::PostTick()
@@ -137,6 +141,25 @@ void CPlayer::PostTick()
 	// update view pos for spectators
 	if(m_Team == TEAM_SPECTATORS && m_SpectatorID != SPEC_FREEVIEW && GameServer()->m_apPlayers[m_SpectatorID])
 		m_ViewPos = GameServer()->m_apPlayers[m_SpectatorID]->m_ViewPos;
+}
+
+void CPlayer::HandleTuningParams()
+{
+	if(!(m_PrevTuningParams == m_NextTuningParams))
+	{
+		if(m_IsReady)
+		{
+			CMsgPacker Msg(NETMSGTYPE_SV_TUNEPARAMS);
+			int *pParams = (int *)&m_NextTuningParams;
+			for(unsigned i = 0; i < sizeof(m_NextTuningParams)/sizeof(int); i++)
+				Msg.AddInt(pParams[i]);
+			Server()->SendMsg(&Msg, MSGFLAG_VITAL, GetCID());
+		}
+		
+		m_PrevTuningParams = m_NextTuningParams;
+	}
+	
+	m_NextTuningParams = *GameServer()->Tuning();
 }
 
 void CPlayer::HookProtection(bool Value, bool Automatic)

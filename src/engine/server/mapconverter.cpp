@@ -71,9 +71,6 @@ bool CMapConverter::Load()
 	{
 		for(int i=0; i<m_Width; i++)
 		{
-			if(m_pGameLayerTiles[j*m_Width+i].m_Index == ENTITY_OFFSET+ENTITY_MENU)
-				m_MenuPosition = vec2(i*32.0f+16.0f, j*32.0f+16.0f);
-			
 			m_pTiles[j*m_Width+i].m_Flags = 0;
 			m_pTiles[j*m_Width+i].m_Reserved = 0;
 			
@@ -340,7 +337,6 @@ void CMapConverter::CopyGameLayer()
 			switch(m_pGameLayerTiles[j*m_Width+i].m_Index)
 			{
 				case TILE_SOLID:
-				case ENTITY_OFFSET+ENTITY_MENU:
 					m_pTiles[j*m_Width+i].m_Index = TILE_SOLID;
 					break;
 				case TILE_NOHOOK:
@@ -459,8 +455,8 @@ void CMapConverter::Finalize()
 	{
 		CMapItemGroup Item;
 		Item.m_Version = CMapItemGroup::CURRENT_VERSION;
-		Item.m_ParallaxX = 100;
-		Item.m_ParallaxY = 100;
+		Item.m_ParallaxX = 0;
+		Item.m_ParallaxY = 0;
 		Item.m_OffsetX = 0;
 		Item.m_OffsetY = 0;
 		Item.m_StartLayer = m_NumLayers;
@@ -515,12 +511,12 @@ void CMapConverter::Finalize()
 				HighlightValues[3] = 1000;
 			}
 			
-			for(int i=0; i<NUM_MENUENTRIES; i++) 
+			for(int i=0; i<NUM_MENUCLASS; i++) 
 			{
 				int ClassMask = 0;
-				if(i == MENUENTRY_RANDOM) ClassMask = -1;
-				else if(i == MENUENTRY_MEDIC) ClassMask = MASK_MEDIC;
-				else if(i < MENUENTRY_RANDOM) ClassMask = MASK_SUPPORT;
+				if(i == MENUCLASS_RANDOM) ClassMask = -1;
+				else if(i == MENUCLASS_MEDIC) ClassMask = MASK_MEDIC;
+				else if(i < MENUCLASS_RANDOM) ClassMask = MASK_SUPPORT;
 				else ClassMask = MASK_DEFENDER;
 				
 				//Create Animation for enable/disable simulation
@@ -541,7 +537,7 @@ void CMapConverter::Finalize()
 					}	
 					{
 						CEnvPoint Point;
-						Point.m_Time = TIMESHIFT_GAME*60*1000;
+						Point.m_Time = TIMESHIFT_MENUCLASS*60*1000;
 						Point.m_Curvetype = 0;
 						Point.m_aValues[0] = NormalValues[0];
 						Point.m_aValues[1] = NormalValues[1];
@@ -558,7 +554,7 @@ void CMapConverter::Finalize()
 						{
 							{
 								CEnvPoint Point;
-								Point.m_Time = (TIMESHIFT_GAME+(i+1)+j*TIMESHIFT_AVAILABILITY)*60*1000;
+								Point.m_Time = (TIMESHIFT_MENUCLASS+(i+1)+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
 								Point.m_Curvetype = 0;
 								Point.m_aValues[0] = HighlightValues[0];
 								Point.m_aValues[1] = HighlightValues[1];
@@ -569,7 +565,7 @@ void CMapConverter::Finalize()
 							}
 							{
 								CEnvPoint Point;
-								Point.m_Time = (TIMESHIFT_GAME+(i+2)+j*TIMESHIFT_AVAILABILITY)*60*1000;
+								Point.m_Time = (TIMESHIFT_MENUCLASS+(i+2)+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
 								Point.m_Curvetype = 0;
 								Point.m_aValues[0] = NormalValues[0];
 								Point.m_aValues[1] = NormalValues[1];
@@ -583,7 +579,7 @@ void CMapConverter::Finalize()
 						{
 							{
 								CEnvPoint Point;
-								Point.m_Time = (TIMESHIFT_GAME+j*TIMESHIFT_AVAILABILITY)*60*1000;
+								Point.m_Time = (TIMESHIFT_MENUCLASS+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
 								Point.m_Curvetype = 0;
 								Point.m_aValues[0] = HiddenValues[0];
 								Point.m_aValues[1] = HiddenValues[1];
@@ -594,7 +590,7 @@ void CMapConverter::Finalize()
 							}
 							{
 								CEnvPoint Point;
-								Point.m_Time = (TIMESHIFT_GAME+(j+1)*TIMESHIFT_AVAILABILITY)*60*1000;
+								Point.m_Time = (TIMESHIFT_MENUCLASS+(j+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000;
 								Point.m_Curvetype = 0;
 								Point.m_aValues[0] = NormalValues[0];
 								Point.m_aValues[1] = NormalValues[1];
@@ -607,7 +603,7 @@ void CMapConverter::Finalize()
 					}
 					{
 						CEnvPoint Point;
-						Point.m_Time = (TIMESHIFT_GAME+(MASK_ALL+1)*TIMESHIFT_AVAILABILITY)*60*1000;
+						Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000;
 						Point.m_Curvetype = 0;
 						Point.m_aValues[0] = NormalValues[0];
 						Point.m_aValues[1] = NormalValues[1];
@@ -618,7 +614,7 @@ void CMapConverter::Finalize()
 					}
 					{
 						CEnvPoint Point;
-						Point.m_Time = (TIMESHIFT_GAME+(MASK_ALL+1)*TIMESHIFT_AVAILABILITY)*60*1000+1000;
+						Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000+1000;
 						Point.m_Curvetype = 0;
 						Point.m_aValues[0] = HiddenValues[0];
 						Point.m_aValues[1] = HiddenValues[1];
@@ -648,28 +644,28 @@ void CMapConverter::Finalize()
 					vec2 Pos = m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i);
 					switch(i)
 					{
-						case MENUENTRY_MEDIC:
+						case MENUCLASS_MEDIC:
 							AddTeeLayer("Medic", MedicImageID, Pos, 64.0f, m_NumEnvs-1);
 							break;
-						case MENUENTRY_NINJA:
+						case MENUCLASS_NINJA:
 							AddTeeLayer("Ninja", NinjaImageID, Pos, 64.0f, m_NumEnvs-1);
 							break;
-						case MENUENTRY_MERCENARY:
+						case MENUCLASS_MERCENARY:
 							AddTeeLayer("Mercenary", MercenaryImageID, Pos, 64.0f, m_NumEnvs-1);
 							break;
-						case MENUENTRY_SNIPER:
+						case MENUCLASS_SNIPER:
 							AddTeeLayer("Sniper", SniperImageID, Pos, 64.0f, m_NumEnvs-1);
 							break;
-						case MENUENTRY_RANDOM:
+						case MENUCLASS_RANDOM:
 							AddTeeLayer("Random", SniperImageID, Pos, 64.0f, m_NumEnvs-1, true);
 							break;
-						case MENUENTRY_ENGINEER:
+						case MENUCLASS_ENGINEER:
 							AddTeeLayer("Engineer", EngineerImageID, Pos, 64.0f, m_NumEnvs-1);
 							break;
-						case MENUENTRY_SOLDIER:
+						case MENUCLASS_SOLDIER:
 							AddTeeLayer("Soldier", SoldierImageID, Pos, 64.0f, m_NumEnvs-1);
 							break;
-						case MENUENTRY_SCIENTIST:
+						case MENUCLASS_SCIENTIST:
 							AddTeeLayer("Scientist", ScientistImageID, Pos, 64.0f, m_NumEnvs-1);
 							break;
 					}
@@ -883,7 +879,6 @@ bool CMapConverter::CreateLowResMap()
 				switch(m_pGameLayerTiles[j*m_Width+i].m_Index)
 				{
 					case TILE_SOLID:
-					case ENTITY_OFFSET+ENTITY_MENU:
 						m_pTiles[j*m_Width+i].m_Index = 2;
 						break;
 					case TILE_NOHOOK:

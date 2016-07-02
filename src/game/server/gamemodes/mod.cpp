@@ -459,7 +459,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 	if(GameServer()->m_apPlayers[SnappingClient] && GameServer()->m_apPlayers[SnappingClient]->m_InClassChooserMenu)
 	{
 		int Item = GameServer()->m_apPlayers[SnappingClient]->m_MenuClassChooserItem;
-		int Timer = ((CMapConverter::TIMESHIFT_GAME + (Item+1) + ClassMask*CMapConverter::TIMESHIFT_AVAILABILITY)*60 + 30)*Server()->TickSpeed();
+		int Timer = ((CMapConverter::TIMESHIFT_MENUCLASS + (Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK)*60 + 30)*Server()->TickSpeed();
 		
 		pGameInfoObj->m_RoundStartTick = Server()->Tick() - Timer;
 		pGameInfoObj->m_TimeLimit = 0;

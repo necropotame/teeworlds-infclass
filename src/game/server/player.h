@@ -156,6 +156,11 @@ public:
 	
 	int m_InClassChooserMenu;
 	int m_MenuClassChooserItem;
+	
+	CTuningParams m_PrevTuningParams;
+	CTuningParams m_NextTuningParams;
+	
+	void HandleTuningParams();
 /* INFECTION MODIFICATION END *****************************************/
 };
 

@@ -1941,7 +1941,7 @@ void CGameContext::ConTuneParam(IConsole::IResult *pResult, void *pUserData)
 		char aBuf[256];
 		str_format(aBuf, sizeof(aBuf), "%s changed to %.2f", pParamName, NewValue);
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "tuning", aBuf);
-		pSelf->SendTuningParams(-1);
+		//~ pSelf->SendTuningParams(-1);
 	}
 	else
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "tuning", "No such tuning parameter");
@@ -1952,7 +1952,7 @@ void CGameContext::ConTuneReset(IConsole::IResult *pResult, void *pUserData)
 	CGameContext *pSelf = (CGameContext *)pUserData;
 	CTuningParams TuningParams;
 	*pSelf->Tuning() = TuningParams;
-	pSelf->SendTuningParams(-1);
+	//~ pSelf->SendTuningParams(-1);
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "tuning", "Tuning reset");
 }
 
@@ -2504,12 +2504,7 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 			{
 				vec2 Pos(x*32.0f+16.0f, y*32.0f+16.0f);
 				int ID = Index-ENTITY_OFFSET;
-				if(ID == ENTITY_MENU)
-				{
-					m_MenuPosition = Pos;
-				}
-				else
-					m_pController->OnEntity(ID, Pos);
+				m_pController->OnEntity(ID, Pos);
 			}
 		}
 	}

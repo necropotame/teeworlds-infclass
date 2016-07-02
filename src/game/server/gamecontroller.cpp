@@ -44,10 +44,7 @@ float IGameController::EvaluateSpawnPos(CSpawnEval *pEval, vec2 Pos)
 	float Score = 0.0f;
 	CCharacter *pC = static_cast<CCharacter *>(GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER));
 	for(; pC; pC = (CCharacter *)pC->TypeNext())
-	{
-		if(pC->GetPlayer() && pC->GetPlayer()->m_InClassChooserMenu)
-			continue;
-		
+	{		
 		// team mates are not as dangerous as enemies
 		float Scoremod = 1.0f;
 		if(pEval->m_FriendlyTeam != -1 && pC->GetPlayer()->GetTeam() == pEval->m_FriendlyTeam)
