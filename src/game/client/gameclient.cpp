@@ -400,6 +400,8 @@ void CGameClient::UpdatePositions()
 static void Evolve(CNetObj_Character *pCharacter, int Tick)
 {
 	CWorldCore TempWorld;
+	CCharacterCore::CParams CoreTickParams(&TempWorld.m_Tuning);
+	dbg_msg("InfClass", "Evolve, Gravity, %f", (float)CoreTickParams.m_pTuningParams->m_Gravity);
 	CCharacterCore TempCore;
 	mem_zero(&TempCore, sizeof(TempCore));
 	TempCore.Init(&TempWorld, g_GameClient.Collision());
@@ -408,8 +410,8 @@ static void Evolve(CNetObj_Character *pCharacter, int Tick)
 	while(pCharacter->m_Tick < Tick)
 	{
 		pCharacter->m_Tick++;
-		TempCore.Tick(false);
-		TempCore.Move();
+		TempCore.Tick(false, &CoreTickParams);
+		TempCore.Move(&CoreTickParams);
 		TempCore.Quantize();
 	}
 
@@ -511,6 +513,9 @@ void CGameClient::OnMessage(int MsgId, CUnpacker *pUnpacker)
 
 		// apply new tuning
 		m_Tuning = NewTuning;
+		
+		dbg_msg("InfClass", "NETMSGTYPE_SV_TUNEPARAMS, Gravity %f", (float) m_Tuning.m_Gravity);
+
 		return;
 	}
 
@@ -946,12 +951,16 @@ void CGameClient::OnPredict()
 		if(Tick == Client()->PredGameTick() && World.m_apCharacters[m_Snap.m_LocalClientID])
 			m_PredictedPrevChar = *World.m_apCharacters[m_Snap.m_LocalClientID];
 
+		CCharacterCore::CParams CoreParams(&World.m_Tuning);
+		dbg_msg("InfClass", "OnPredict, Gravity, %f", (float)CoreParams.m_pTuningParams->m_Gravity);
+			
 		// first calculate where everyone should move
 		for(int c = 0; c < MAX_CLIENTS; c++)
 		{
 			if(!World.m_apCharacters[c])
 				continue;
 
+				
 			mem_zero(&World.m_apCharacters[c]->m_Input, sizeof(World.m_apCharacters[c]->m_Input));
 			if(m_Snap.m_LocalClientID == c)
 			{
@@ -959,10 +968,10 @@ void CGameClient::OnPredict()
 				int *pInput = Client()->GetInput(Tick);
 				if(pInput)
 					World.m_apCharacters[c]->m_Input = *((CNetObj_PlayerInput*)pInput);
-				World.m_apCharacters[c]->Tick(true);
+				World.m_apCharacters[c]->Tick(true, &CoreParams);
 			}
 			else
-				World.m_apCharacters[c]->Tick(false);
+				World.m_apCharacters[c]->Tick(false, &CoreParams);
 
 		}
 
@@ -972,7 +981,7 @@ void CGameClient::OnPredict()
 			if(!World.m_apCharacters[c])
 				continue;
 
-			World.m_apCharacters[c]->Move();
+			World.m_apCharacters[c]->Move(&CoreParams);
 			World.m_apCharacters[c]->Quantize();
 		}
 

@@ -182,6 +182,22 @@ public:
 
 class CCharacterCore
 {
+public:
+	struct CParams : public CTuningParams
+	{
+		const CTuningParams* m_pTuningParams;
+		int m_HookMode;
+		int m_HookGrabTime;
+		
+		CParams(const CTuningParams* pTuningParams)
+		{
+			m_pTuningParams = pTuningParams;
+			m_HookMode = 0;
+			m_HookGrabTime = SERVER_TICK_SPEED+SERVER_TICK_SPEED/5;
+		}
+	};
+
+private:
 	CWorldCore *m_pWorld;
 	CCollision *m_pCollision;
 public:
@@ -204,8 +220,8 @@ public:
 
 	void Init(CWorldCore *pWorld, CCollision *pCollision);
 	void Reset();
-	void Tick(bool UseInput, int HookMode = 0, int GrabTime = SERVER_TICK_SPEED+SERVER_TICK_SPEED/5);
-	void Move();
+	void Tick(bool UseInput, CParams* pParams);
+	void Move(CParams* pParams);
 
 	void Read(const CNetObj_CharacterCore *pObjCore);
 	void Write(CNetObj_CharacterCore *pObjCore);

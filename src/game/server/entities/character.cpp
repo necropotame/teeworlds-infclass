@@ -72,6 +72,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_PoisonTick = 0;
 	m_HealTick = 0;
 	m_InAirTick = 0;
+	m_InWater = 1;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -344,6 +345,15 @@ void CCharacter::UpdateTuningParam()
 	{
 		NoActions = true;
 	}
+	if(m_HookMode == 1)
+	{
+		pTuningParams->m_HookDragSpeed = 0.0f;
+		pTuningParams->m_HookDragAccel = 1.0f;
+	}
+	if(m_InWater == 1)
+	{
+		pTuningParams->m_Gravity = 0.5f;
+	}
 	
 	if(NoActions)
 	{
@@ -358,11 +368,6 @@ void CCharacter::UpdateTuningParam()
 	if(FixedPosition)
 	{
 		pTuningParams->m_Gravity = 0.0f;
-	}
-	if(m_HookMode == 1)
-	{
-		pTuningParams->m_HookDragSpeed = 0.0f;
-		pTuningParams->m_HookDragAccel = 1.0f;
 	}
 }
 
@@ -1254,35 +1259,31 @@ void CCharacter::Tick()
 		m_Input.m_Direction = 0;
 		m_Input.m_Hook = 0;
 	}
+	else if(GetClass() == PLAYERCLASS_SNIPER && m_PositionLocked)
+	{
+		m_Input.m_Jump = 0;
+		m_Input.m_Direction = 0;
+		m_Input.m_Hook = 0;
+	}
+	
+	UpdateTuningParam();
 
 	m_Core.m_Input = m_Input;
 	
-	if(GetClass() == PLAYERCLASS_SNIPER)
+	CCharacterCore::CParams CoreTickParams(&m_pPlayer->m_NextTuningParams);
+	
+	if(GetClass() == PLAYERCLASS_SPIDER)
 	{
-		if(m_PositionLocked)
-		{
-			m_Input.m_Jump = 0;
-			m_Input.m_Direction = 0;
-			m_Input.m_Hook = 0;
-			
-			vec2 Pos = m_Core.m_Pos;
-			m_Core.Tick(true, m_HookMode);
-			
-			m_Core.m_Vel = vec2(0.0f, 0.0f);
-			m_Core.m_Pos = Pos;
-		}
-		else
-		{
-			m_Core.Tick(true, m_HookMode);
-		}
+		CoreTickParams.m_HookGrabTime = 2*SERVER_TICK_SPEED;
 	}
-	else if(GetClass() == PLAYERCLASS_SPIDER)
+	
+	vec2 PrevPos = m_Core.m_Pos;
+	m_Core.Tick(true, &CoreTickParams);
+	
+	if(GetClass() == PLAYERCLASS_SNIPER && m_PositionLocked)
 	{
-		m_Core.Tick(true, m_HookMode, 2*SERVER_TICK_SPEED);
-	}
-	else
-	{
-		m_Core.Tick(true, m_HookMode);
+		m_Core.m_Vel = vec2(0.0f, 0.0f);
+		m_Core.m_Pos = PrevPos;
 	}
 	
 	//Hook protection
@@ -1497,19 +1498,19 @@ void CCharacter::Tick()
 	// Previnput
 	m_PrevInput = m_Input;
 	
-	UpdateTuningParam();
-	
 	return;
 }
 
 void CCharacter::TickDefered()
 {
+	CCharacterCore::CParams CoreTickParams(&m_pPlayer->m_NextTuningParams);
+	
 	// advance the dummy
 	{
 		CWorldCore TempWorld;
 		m_ReckoningCore.Init(&TempWorld, GameServer()->Collision());
-		m_ReckoningCore.Tick(false);
-		m_ReckoningCore.Move();
+		m_ReckoningCore.Tick(false, &CoreTickParams);
+		m_ReckoningCore.Move(&CoreTickParams);
 		m_ReckoningCore.Quantize();
 	}
 
@@ -1518,7 +1519,7 @@ void CCharacter::TickDefered()
 	vec2 StartVel = m_Core.m_Vel;
 	bool StuckBefore = GameServer()->Collision()->TestBox(m_Core.m_Pos, vec2(28.0f, 28.0f));
 
-	m_Core.Move();
+	m_Core.Move(&CoreTickParams);
 	bool StuckAfterMove = GameServer()->Collision()->TestBox(m_Core.m_Pos, vec2(28.0f, 28.0f));
 	m_Core.Quantize();
 	bool StuckAfterQuant = GameServer()->Collision()->TestBox(m_Core.m_Pos, vec2(28.0f, 28.0f));

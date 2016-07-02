@@ -192,6 +192,7 @@ public:
 	int m_PoisonFrom;
 	int m_LastFreezer;
 	int m_HookMode;
+	int m_InWater;
 
 public:
 	void DestroyChildEntities();
