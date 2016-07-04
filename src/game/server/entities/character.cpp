@@ -1745,6 +1745,14 @@ void CCharacter::Die(int Killer, int Weapon)
 	GameServer()->m_World.m_Core.m_apCharacters[m_pPlayer->GetCID()] = 0;
 	GameServer()->CreateDeath(m_Pos, m_pPlayer->GetCID());
 	
+	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[Killer];
+	if(pKillerPlayer && pKillerPlayer->GetClass() == PLAYERCLASS_SNIPER)
+	{
+		CCharacter* pKiller = GameServer()->m_apPlayers[Killer]->GetCharacter();
+		if(pKiller)
+			GiveWeapon(WEAPON_RIFLE, 1);
+	}
+	
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME)
 	{
