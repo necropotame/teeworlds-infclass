@@ -25,8 +25,8 @@ bool CGameControllerCTF::OnEntity(int Index, vec2 Pos)
 		return true;
 
 	int Team = -1;
-	if(Index == ENTITY_FLAGSTAND_RED) Team = TEAM_RED;
-	if(Index == ENTITY_FLAGSTAND_BLUE) Team = TEAM_BLUE;
+	if(Index == TILE_ENTITY_FLAGSTAND_RED) Team = TEAM_RED;
+	if(Index == TILE_ENTITY_FLAGSTAND_BLUE) Team = TEAM_BLUE;
 	if(Team == -1 || m_apFlags[Team])
 		return false;
 
@@ -155,7 +155,7 @@ void CGameControllerCTF::Tick()
 			continue;
 
 		// flag hits death-tile or left the game layer, reset it
-		if(GameServer()->Collision()->GetCollisionAt(F->m_Pos.x, F->m_Pos.y)&CCollision::COLFLAG_DEATH || F->GameLayerClipped(F->m_Pos))
+		if(GameServer()->Collision()->CheckZoneFlag(vec2(F->m_Pos.x, F->m_Pos.y), CCollision::ZONEFLAG_DEATH) || F->GameLayerClipped(F->m_Pos))
 		{
 			GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", "flag_return");
 			GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);

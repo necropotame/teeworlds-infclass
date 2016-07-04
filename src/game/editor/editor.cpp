@@ -26,7 +26,9 @@
 int CEditor::ms_CheckerTexture;
 int CEditor::ms_BackgroundTexture;
 int CEditor::ms_CursorTexture;
+int CEditor::ms_PhysicsTexture;
 int CEditor::ms_EntitiesTexture;
+int CEditor::ms_ZoneTexture;
 const void* CEditor::ms_pUiGotContext;
 
 enum
@@ -115,7 +117,7 @@ void CLayerGroup::Render()
 
 	for(int i = 0; i < m_lLayers.size(); i++)
 	{
-		if(m_lLayers[i]->m_Visible && m_lLayers[i] != m_pMap->m_pGameLayer)
+		if(m_lLayers[i]->m_Visible && m_lLayers[i] != m_pMap->m_pPhysicsLayer && m_lLayers[i] != m_pMap->m_pEntityLayer && m_lLayers[i] != m_pMap->m_pZoneLayer)
 		{
 			if(m_pMap->m_pEditor->m_ShowDetail || !(m_lLayers[i]->m_Flags&LAYERFLAG_DETAIL))
 				m_lLayers[i]->Render();
@@ -1666,10 +1668,16 @@ void CEditor::DoMapEditor(CUIRect View, CUIRect ToolBar)
 		}
 
 		// render the game above everything else
-		if(m_Map.m_pGameGroup->m_Visible && m_Map.m_pGameLayer->m_Visible)
+		if(m_Map.m_pGameGroup->m_Visible)
 		{
 			m_Map.m_pGameGroup->MapScreen();
-			m_Map.m_pGameLayer->Render();
+			
+			if(m_Map.m_pPhysicsLayer->m_Visible)
+				m_Map.m_pPhysicsLayer->Render();
+			if(m_Map.m_pZoneLayer->m_Visible)
+				m_Map.m_pZoneLayer->Render();
+			if(m_Map.m_pEntityLayer->m_Visible)
+				m_Map.m_pEntityLayer->Render();
 		}
 
 		CLayerTiles *pT = static_cast<CLayerTiles *>(GetSelectedLayerType(0, LAYERTYPE_TILES));
@@ -2399,7 +2407,7 @@ void CEditor::RenderLayers(CUIRect ToolBox, CUIRect ToolBar, CUIRect View)
 
 				Button.VSplitRight(12.0f, &Button, &SaveCheck);
 				if(DoButton_Ex(&m_Map.m_lGroups[g]->m_lLayers[i]->m_SaveToMap, "S", m_Map.m_lGroups[g]->m_lLayers[i]->m_SaveToMap, &SaveCheck, 0, "Enable/disable layer for saving", CUI::CORNER_R))
-					if(m_Map.m_lGroups[g]->m_lLayers[i] != m_Map.m_pGameLayer)
+					if(m_Map.m_lGroups[g]->m_lLayers[i] != m_Map.m_pPhysicsLayer && m_Map.m_lGroups[g]->m_lLayers[i] != m_Map.m_pEntityLayer && m_Map.m_lGroups[g]->m_lLayers[i] != m_Map.m_pZoneLayer)
 						m_Map.m_lGroups[g]->m_lLayers[i]->m_SaveToMap = !m_Map.m_lGroups[g]->m_lLayers[i]->m_SaveToMap;
 
 				if(m_Map.m_lGroups[g]->m_lLayers[i]->m_aName[0])
@@ -3919,11 +3927,25 @@ void CEditorMap::DeleteEnvelope(int Index)
 	m_lEnvelopes.remove_index(Index);
 }
 
-void CEditorMap::MakeGameLayer(CLayer *pLayer)
+void CEditorMap::MakePhysicsLayer(CLayer *pLayer)
 {
-	m_pGameLayer = (CLayerGame *)pLayer;
-	m_pGameLayer->m_pEditor = m_pEditor;
-	m_pGameLayer->m_TexID = m_pEditor->ms_EntitiesTexture;
+	m_pPhysicsLayer = (CLayerPhysics *)pLayer;
+	m_pPhysicsLayer->m_pEditor = m_pEditor;
+	m_pPhysicsLayer->m_TexID = m_pEditor->ms_PhysicsTexture;
+}
+
+void CEditorMap::MakeEntityLayer(CLayer *pLayer)
+{
+	m_pEntityLayer = (CLayerEntity *)pLayer;
+	m_pEntityLayer->m_pEditor = m_pEditor;
+	m_pEntityLayer->m_TexID = m_pEditor->ms_EntitiesTexture;
+}
+
+void CEditorMap::MakeZoneLayer(CLayer *pLayer)
+{
+	m_pZoneLayer = (CLayerZone *)pLayer;
+	m_pZoneLayer->m_pEditor = m_pEditor;
+	m_pZoneLayer->m_TexID = m_pEditor->ms_ZoneTexture;
 }
 
 void CEditorMap::MakeGameGroup(CLayerGroup *pGroup)
@@ -3933,8 +3955,6 @@ void CEditorMap::MakeGameGroup(CLayerGroup *pGroup)
 	str_copy(m_pGameGroup->m_aName, "Game", sizeof(m_pGameGroup->m_aName));
 }
 
-
-
 void CEditorMap::Clean()
 {
 	m_lGroups.delete_all();
@@ -3943,7 +3963,9 @@ void CEditorMap::Clean()
 
 	m_MapInfo.Reset();
 
-	m_pGameLayer = 0x0;
+	m_pPhysicsLayer = 0x0;
+	m_pEntityLayer = 0x0;
+	m_pZoneLayer = 0x0;
 	m_pGameGroup = 0x0;
 
 	m_Modified = false;
@@ -3974,8 +3996,12 @@ void CEditorMap::CreateDefault(int EntitiesTexture)
 
 	// add game layer
 	MakeGameGroup(NewGroup());
-	MakeGameLayer(new CLayerGame(50, 50));
-	m_pGameGroup->AddLayer(m_pGameLayer);
+	MakePhysicsLayer(new CLayerPhysics(50, 50));
+	MakeZoneLayer(new CLayerZone(50, 50));
+	MakeEntityLayer(new CLayerEntity(50, 50));
+	m_pGameGroup->AddLayer(m_pPhysicsLayer);
+	m_pGameGroup->AddLayer(m_pZoneLayer);
+	m_pGameGroup->AddLayer(m_pEntityLayer);
 }
 
 void CEditor::Init()
@@ -3994,7 +4020,9 @@ void CEditor::Init()
 	ms_CheckerTexture = Graphics()->LoadTexture("editor/checker.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
 	ms_BackgroundTexture = Graphics()->LoadTexture("editor/background.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
 	ms_CursorTexture = Graphics()->LoadTexture("editor/cursor.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
+	ms_PhysicsTexture = Graphics()->LoadTexture("editor/physics.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
 	ms_EntitiesTexture = Graphics()->LoadTexture("editor/entities.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
+	ms_ZoneTexture = Graphics()->LoadTexture("editor/zones.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
 
 	m_TilesetPicker.m_pEditor = this;
 	m_TilesetPicker.MakePalette();

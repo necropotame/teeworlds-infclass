@@ -14,58 +14,99 @@
 
 CCollision::CCollision()
 {
-	m_pTiles = 0;
-	m_Width = 0;
-	m_Height = 0;
+	m_pPhysicsTiles = 0;
+	m_PhysicsWidth = 0;
+	m_PhysicsHeight = 0;
+	
+	m_pZoneTiles = 0;
+	m_ZoneWidth = 0;
+	m_ZoneHeight = 0;
+	
 	m_pLayers = 0;
+}
+
+CCollision::~CCollision()
+{
+	if(m_pPhysicsTiles)
+		delete[] m_pPhysicsTiles;
+	if(m_pZoneTiles)
+		delete[] m_pZoneTiles;
+	
+	m_pPhysicsTiles = 0;
+	m_pZoneTiles = 0;
 }
 
 void CCollision::Init(class CLayers *pLayers)
 {
 	m_pLayers = pLayers;
-	m_Width = m_pLayers->GameLayer()->m_Width;
-	m_Height = m_pLayers->GameLayer()->m_Height;
-	m_pTiles = static_cast<CTile *>(m_pLayers->Map()->GetData(m_pLayers->GameLayer()->m_Data));
+	
+	m_PhysicsWidth = m_pLayers->PhysicsLayer()->m_Width;
+	m_PhysicsHeight = m_pLayers->PhysicsLayer()->m_Height;
+	CTile* pPhysicsTiles = static_cast<CTile *>(m_pLayers->Map()->GetData(m_pLayers->PhysicsLayer()->m_Data));
+	if(m_pPhysicsTiles)
+		delete[] m_pPhysicsTiles;
+	m_pPhysicsTiles = new int[m_PhysicsWidth*m_PhysicsHeight];
 
-	for(int i = 0; i < m_Width*m_Height; i++)
+	for(int i = 0; i < m_PhysicsWidth*m_PhysicsHeight; i++)
 	{
-		int Index = m_pTiles[i].m_Index;
-
-		if(Index > 128)
-			continue;
-
-		switch(Index)
+		switch(pPhysicsTiles[i].m_Index)
 		{
-		case TILE_DEATH:
-			m_pTiles[i].m_Index = COLFLAG_DEATH;
+		case TILE_PHYSICS_WATER:
+			m_pPhysicsTiles[i] = COLFLAG_WATER;
 			break;
-		case TILE_SOLID:
-			m_pTiles[i].m_Index = COLFLAG_SOLID;
+		case TILE_PHYSICS_SOLID:
+			m_pPhysicsTiles[i] = COLFLAG_SOLID;
 			break;
-		case TILE_NOHOOK:
-			m_pTiles[i].m_Index = COLFLAG_SOLID|COLFLAG_NOHOOK;
+		case TILE_PHYSICS_NOHOOK:
+			m_pPhysicsTiles[i] = COLFLAG_SOLID|COLFLAG_NOHOOK;
 			break;
-/* INFECTION MODIFICATION START ***************************************/
-		case TILE_INFECTION:
-		case ENTITY_SPAWN_RED+ENTITY_OFFSET:
-			m_pTiles[i].m_Index = COLFLAG_INFECTION;
-			break;
-		case TILE_NOSPAWN:
-			m_pTiles[i].m_Index = COLFLAG_NOSPAWN;
-			break;
-/* INFECTION MODIFICATION END *****************************************/
 		default:
-			m_pTiles[i].m_Index = 0;
+			m_pPhysicsTiles[i] = 0x0;
+			break;
+		}
+	}
+	
+	m_ZoneWidth = m_pLayers->ZoneLayer()->m_Width;
+	m_ZoneHeight = m_pLayers->ZoneLayer()->m_Height;
+	CTile* pZoneTiles = static_cast<CTile *>(m_pLayers->Map()->GetData(m_pLayers->ZoneLayer()->m_Data));
+	if(m_pZoneTiles)
+		delete[] m_pZoneTiles;
+	m_pZoneTiles = new int[m_ZoneWidth*m_ZoneHeight];
+
+	for(int i = 0; i < m_ZoneWidth*m_ZoneHeight; i++)
+	{
+		switch(pZoneTiles[i].m_Index)
+		{
+		case TILE_ZONE_DEATH:
+			m_pZoneTiles[i] = ZONEFLAG_DEATH;
+			break;
+		case TILE_ZONE_INFECTION:
+			m_pZoneTiles[i] = ZONEFLAG_INFECTION;
+			break;
+		case TILE_ZONE_NOSPAWN:
+			m_pZoneTiles[i] = ZONEFLAG_NOSPAWN;
+			break;
+		default:
+			m_pZoneTiles[i] = 0x0;
+			break;
 		}
 	}
 }
 
 int CCollision::GetTile(int x, int y)
 {
-	int Nx = clamp(x/32, 0, m_Width-1);
-	int Ny = clamp(y/32, 0, m_Height-1);
+	int Nx = clamp(x/32, 0, m_PhysicsWidth-1);
+	int Ny = clamp(y/32, 0, m_PhysicsHeight-1);
 
-	return m_pTiles[Ny*m_Width+Nx].m_Index > 128 ? 0 : m_pTiles[Ny*m_Width+Nx].m_Index;
+	return m_pPhysicsTiles[Ny*m_PhysicsWidth+Nx];
+}
+
+int CCollision::GetZoneTile(int x, int y)
+{
+	int Nx = clamp(x/32, 0, m_ZoneWidth-1);
+	int Ny = clamp(y/32, 0, m_ZoneHeight-1);
+
+	return m_pZoneTiles[Ny*m_ZoneWidth+Nx];
 }
 
 bool CCollision::IsTileSolid(int x, int y)
@@ -213,8 +254,13 @@ void CCollision::MoveBox(vec2 *pInoutPos, vec2 *pInoutVel, vec2 Size, float Elas
 }
 
 /* INFECTION MODIFICATION START ***************************************/
-bool CCollision::CheckPointFlag(vec2 Pos, int Flag)
+bool CCollision::CheckPhysicsFlag(vec2 Pos, int Flag)
 {
 	return GetTile(Pos.x, Pos.y)&Flag;
+}
+
+bool CCollision::CheckZoneFlag(vec2 Pos, int Flag)
+{
+	return GetZoneTile(Pos.x, Pos.y)&Flag;
 }
 /* INFECTION MODIFICATION END *****************************************/

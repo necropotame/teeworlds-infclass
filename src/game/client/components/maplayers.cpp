@@ -157,7 +157,7 @@ void CMapLayers::OnRender()
 			bool Render = false;
 			bool IsGameLayer = false;
 
-			if(pLayer == (CMapItemLayer*)m_pLayers->GameLayer())
+			if(pLayer == (CMapItemLayer*)m_pLayers->PhysicsLayer())
 			{
 				IsGameLayer = true;
 				PassedGameLayer = 1;

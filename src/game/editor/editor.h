@@ -262,7 +262,9 @@ public:
 class CEditorMap
 {
 	void MakeGameGroup(CLayerGroup *pGroup);
-	void MakeGameLayer(CLayer *pLayer);
+	void MakePhysicsLayer(CLayer *pLayer);
+	void MakeEntityLayer(CLayer *pLayer);
+	void MakeZoneLayer(CLayer *pLayer);
 public:
 	CEditor *m_pEditor;
 	bool m_Modified;
@@ -304,7 +306,9 @@ public:
 	};
 	CMapInfo m_MapInfo;
 
-	class CLayerGame *m_pGameLayer;
+	class CLayerPhysics *m_pPhysicsLayer;
+	class CLayerEntity *m_pEntityLayer;
+	class CLayerZone *m_pZoneLayer;
 	CLayerGroup *m_pGameGroup;
 
 	CEnvelope *NewEnvelope(int Channels)
@@ -431,7 +435,7 @@ public:
 	void GetSize(float *w, float *h) { *w = m_Width*32.0f; *h = m_Height*32.0f; }
 
 	int m_TexID;
-	int m_Game;
+	int m_GameFlags;
 	int m_Image;
 	int m_Width;
 	int m_Height;
@@ -468,11 +472,29 @@ public:
 	array<CQuad> m_lQuads;
 };
 
-class CLayerGame : public CLayerTiles
+class CLayerPhysics : public CLayerTiles
 {
 public:
-	CLayerGame(int w, int h);
-	~CLayerGame();
+	CLayerPhysics(int w, int h);
+	~CLayerPhysics();
+
+	virtual int RenderProperties(CUIRect *pToolbox);
+};
+
+class CLayerEntity : public CLayerTiles
+{
+public:
+	CLayerEntity(int w, int h);
+	~CLayerEntity();
+
+	virtual int RenderProperties(CUIRect *pToolbox);
+};
+
+class CLayerZone : public CLayerTiles
+{
+public:
+	CLayerZone(int w, int h);
+	~CLayerZone();
 
 	virtual int RenderProperties(CUIRect *pToolbox);
 };
@@ -567,7 +589,9 @@ public:
 		ms_CheckerTexture = 0;
 		ms_BackgroundTexture = 0;
 		ms_CursorTexture = 0;
+		ms_PhysicsTexture = 0;
 		ms_EntitiesTexture = 0;
+		ms_ZoneTexture = 0;
 
 		ms_pUiGotContext = 0;
 	}
@@ -697,7 +721,9 @@ public:
 	static int ms_CheckerTexture;
 	static int ms_BackgroundTexture;
 	static int ms_CursorTexture;
+	static int ms_PhysicsTexture;
 	static int ms_EntitiesTexture;
+	static int ms_ZoneTexture;
 
 	CLayerGroup m_Brush;
 	CLayerTiles m_TilesetPicker;

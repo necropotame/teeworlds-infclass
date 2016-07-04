@@ -108,16 +108,23 @@ int CEditor::PopupGroup(CEditor *pEditor, CUIRect View)
 			array<CLayerTiles*> Layers;
 			for(int i = 0; i < pEditor->m_Map.m_pGameGroup->m_lLayers.size(); ++i)
 			{
-				if(pEditor->m_Map.m_pGameGroup->m_lLayers[i] != pEditor->m_Map.m_pGameLayer && pEditor->m_Map.m_pGameGroup->m_lLayers[i]->m_Type == LAYERTYPE_TILES)
+				if(pEditor->m_Map.m_pGameGroup->m_lLayers[i] == pEditor->m_Map.m_pPhysicsLayer)
+					continue;
+				if(pEditor->m_Map.m_pGameGroup->m_lLayers[i] == pEditor->m_Map.m_pZoneLayer)
+					continue;
+				if(pEditor->m_Map.m_pGameGroup->m_lLayers[i] == pEditor->m_Map.m_pEntityLayer)
+					continue;
+				
+				if(pEditor->m_Map.m_pGameGroup->m_lLayers[i]->m_Type == LAYERTYPE_TILES)
 					Layers.add(static_cast<CLayerTiles *>(pEditor->m_Map.m_pGameGroup->m_lLayers[i]));
 			}
 
 			// search for unneeded game tiles
-			CLayerTiles *gl = pEditor->m_Map.m_pGameLayer;
+			CLayerTiles *gl = pEditor->m_Map.m_pPhysicsLayer;
 			for(int y = 0; y < gl->m_Height; ++y)
 				for(int x = 0; x < gl->m_Width; ++x)
 				{
-					if(gl->m_pTiles[y*gl->m_Width+x].m_Index > static_cast<unsigned char>(TILE_NOHOOK))
+					if(gl->m_pTiles[y*gl->m_Width+x].m_Index > static_cast<unsigned char>(TILE_PHYSICS_NOHOOK))
 						continue;
 
 					bool Found = false;
@@ -132,7 +139,7 @@ int CEditor::PopupGroup(CEditor *pEditor, CUIRect View)
 
 					if(!Found)
 					{
-						gl->m_pTiles[y*gl->m_Width+x].m_Index = TILE_AIR;
+						gl->m_pTiles[y*gl->m_Width+x].m_Index = TILE_PHYSICS_AIR;
 						pEditor->m_Map.m_Modified = true;
 					}
 				}
@@ -250,15 +257,23 @@ int CEditor::PopupLayer(CEditor *pEditor, CUIRect View)
 	static int s_DeleteButton = 0;
 
 	// don't allow deletion of game layer
-	if(pEditor->m_Map.m_pGameLayer != pEditor->GetSelectedLayer(0) &&
-		pEditor->DoButton_Editor(&s_DeleteButton, "Delete layer", 0, &Button, 0, "Deletes the layer"))
+	if(
+		pEditor->m_Map.m_pPhysicsLayer != pEditor->GetSelectedLayer(0) &&
+		pEditor->m_Map.m_pEntityLayer != pEditor->GetSelectedLayer(0) &&
+		pEditor->m_Map.m_pZoneLayer != pEditor->GetSelectedLayer(0) &&
+		pEditor->DoButton_Editor(&s_DeleteButton, "Delete layer", 0, &Button, 0, "Deletes the layer")
+	)
 	{
 		pEditor->m_Map.m_lGroups[pEditor->m_SelectedGroup]->DeleteLayer(pEditor->m_SelectedLayer);
 		return 1;
 	}
 
 	// layer name
-	if(pEditor->m_Map.m_pGameLayer != pEditor->GetSelectedLayer(0))
+	if(
+		pEditor->m_Map.m_pPhysicsLayer != pEditor->GetSelectedLayer(0) &&
+		pEditor->m_Map.m_pEntityLayer != pEditor->GetSelectedLayer(0) &&
+		pEditor->m_Map.m_pZoneLayer != pEditor->GetSelectedLayer(0)
+	)
 	{
 		View.HSplitBottom(5.0f, &View, &Button);
 		View.HSplitBottom(12.0f, &View, &Button);
@@ -289,7 +304,11 @@ int CEditor::PopupLayer(CEditor *pEditor, CUIRect View)
 		{0},
 	};
 
-	if(pEditor->m_Map.m_pGameLayer == pEditor->GetSelectedLayer(0)) // dont use Group and Detail from the selection if this is the game layer
+	if(
+		pEditor->m_Map.m_pPhysicsLayer == pEditor->GetSelectedLayer(0) ||
+		pEditor->m_Map.m_pZoneLayer == pEditor->GetSelectedLayer(0) ||
+		pEditor->m_Map.m_pEntityLayer == pEditor->GetSelectedLayer(0)
+	) // dont use Group and Detail from the selection if this is the game layer
 	{
 		aProps[0].m_Type = PROPTYPE_NULL;
 		aProps[2].m_Type = PROPTYPE_NULL;

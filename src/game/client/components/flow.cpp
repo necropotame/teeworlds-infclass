@@ -48,7 +48,7 @@ void CFlow::Init()
 		m_pCells = 0;
 	}
 
-	CMapItemLayerTilemap *pTilemap = Layers()->GameLayer();
+	CMapItemLayerTilemap *pTilemap = Layers()->PhysicsLayer();
 	m_Width = pTilemap->m_Width*32/m_Spacing;
 	m_Height = pTilemap->m_Height*32/m_Spacing;
 

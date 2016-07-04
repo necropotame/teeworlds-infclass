@@ -76,12 +76,9 @@ void CCharacterCore::Reset()
 
 void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 {
-	//~ const CTuningParams* pTuningParams = pParams->m_pTuningParams;
-	const CTuningParams* pTuningParams = &m_pWorld->m_Tuning;
+	const CTuningParams* pTuningParams = pParams->m_pTuningParams;
 	float PhysSize = 28.0f;
 	m_TriggeredEvents = 0;
-
-	//~ dbg_msg("InfClass", "Tick, Gravity, %f", (float)pTuningParams->m_Gravity);
 
 	// get ground state
 	bool Grounded = false;
@@ -371,9 +368,6 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 void CCharacterCore::Move(CParams* pParams)
 {
 	const CTuningParams* pTuningParams = pParams->m_pTuningParams;
-	//~ const CTuningParams* pTuningParams = &m_pWorld->m_Tuning;
-	
-	//~ dbg_msg("InfClass", "Move, Gravity, %f", (float)pTuningParams->m_Gravity);
 	
 	float RampValue = VelocityRamp(length(m_Vel)*50, pTuningParams->m_VelrampStart, pTuningParams->m_VelrampRange, pTuningParams->m_VelrampCurvature);
 

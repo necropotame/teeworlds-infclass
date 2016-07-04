@@ -9,7 +9,9 @@ CLayers::CLayers()
 	m_LayersNum = 0;
 	m_LayersStart = 0;
 	m_pGameGroup = 0;
-	m_pGameLayer = 0;
+	m_pPhysicsLayer = 0;
+	m_pZoneLayer = 0;
+	m_pEntityLayer = 0;
 	m_pMap = 0;
 }
 
@@ -29,9 +31,9 @@ void CLayers::Init(class IKernel *pKernel)
 			if(pLayer->m_Type == LAYERTYPE_TILES)
 			{
 				CMapItemLayerTilemap *pTilemap = reinterpret_cast<CMapItemLayerTilemap *>(pLayer);
-				if(pTilemap->m_Flags&TILESLAYERFLAG_GAME)
+				if(pTilemap->m_Flags&TILESLAYERFLAG_PHYSICS)
 				{
-					m_pGameLayer = pTilemap;
+					m_pPhysicsLayer = pTilemap;
 					m_pGameGroup = pGroup;
 
 					// make sure the game group has standard settings
@@ -48,12 +50,62 @@ void CLayers::Init(class IKernel *pKernel)
 						m_pGameGroup->m_ClipW = 0;
 						m_pGameGroup->m_ClipH = 0;
 					}
+				}
+				else if(pTilemap->m_Flags&TILESLAYERFLAG_ZONE)
+				{
+					m_pZoneLayer = pTilemap;
+					m_pGameGroup = pGroup;
 
-					break;
+					// make sure the game group has standard settings
+					m_pGameGroup->m_OffsetX = 0;
+					m_pGameGroup->m_OffsetY = 0;
+					m_pGameGroup->m_ParallaxX = 100;
+					m_pGameGroup->m_ParallaxY = 100;
+
+					if(m_pGameGroup->m_Version >= 2)
+					{
+						m_pGameGroup->m_UseClipping = 0;
+						m_pGameGroup->m_ClipX = 0;
+						m_pGameGroup->m_ClipY = 0;
+						m_pGameGroup->m_ClipW = 0;
+						m_pGameGroup->m_ClipH = 0;
+					}
+				}
+				else if(pTilemap->m_Flags&TILESLAYERFLAG_ENTITY)
+				{
+					m_pEntityLayer = pTilemap;
+					m_pGameGroup = pGroup;
+
+					// make sure the game group has standard settings
+					m_pGameGroup->m_OffsetX = 0;
+					m_pGameGroup->m_OffsetY = 0;
+					m_pGameGroup->m_ParallaxX = 100;
+					m_pGameGroup->m_ParallaxY = 100;
+
+					if(m_pGameGroup->m_Version >= 2)
+					{
+						m_pGameGroup->m_UseClipping = 0;
+						m_pGameGroup->m_ClipX = 0;
+						m_pGameGroup->m_ClipY = 0;
+						m_pGameGroup->m_ClipW = 0;
+						m_pGameGroup->m_ClipH = 0;
+					}
 				}
 			}
 		}
+		
+		if(m_pPhysicsLayer)
+			break;
 	}
+	
+	if(!m_pPhysicsLayer)
+		dbg_msg("InfClass", "CLayer::Init: no Physics Layer found");
+	
+	if(!m_pZoneLayer)
+		dbg_msg("InfClass", "CLayer::Init: no Zone Layer found");
+	
+	if(!m_pEntityLayer)
+		dbg_msg("InfClass", "CLayer::Init: no Entity Layer found");
 }
 
 CMapItemGroup *CLayers::GetGroup(int Index) const

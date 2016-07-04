@@ -3,20 +3,57 @@
 #include "editor.h"
 
 
-CLayerGame::CLayerGame(int w, int h)
+CLayerPhysics::CLayerPhysics(int w, int h)
 : CLayerTiles(w, h)
 {
-	str_copy(m_aName, "Game", sizeof(m_aName));
-	m_Game = 1;
+	str_copy(m_aName, "Physics", sizeof(m_aName));
+	m_GameFlags = TILESLAYERFLAG_PHYSICS;
 }
 
-CLayerGame::~CLayerGame()
+CLayerPhysics::~CLayerPhysics()
 {
 }
 
-int CLayerGame::RenderProperties(CUIRect *pToolbox)
+int CLayerPhysics::RenderProperties(CUIRect *pToolbox)
 {
 	int r = CLayerTiles::RenderProperties(pToolbox);
 	m_Image = -1;
 	return r;
 }
+
+CLayerEntity::CLayerEntity(int w, int h)
+: CLayerTiles(w, h)
+{
+	str_copy(m_aName, "Entities", sizeof(m_aName));
+	m_GameFlags = TILESLAYERFLAG_ENTITY;
+}
+
+CLayerEntity::~CLayerEntity()
+{
+}
+
+int CLayerEntity::RenderProperties(CUIRect *pToolbox)
+{
+	int r = CLayerTiles::RenderProperties(pToolbox);
+	m_Image = -1;
+	return r;
+}
+
+CLayerZone::CLayerZone(int w, int h)
+: CLayerTiles(w, h)
+{
+	str_copy(m_aName, "Zones", sizeof(m_aName));
+	m_GameFlags = TILESLAYERFLAG_ZONE;
+}
+
+CLayerZone::~CLayerZone()
+{
+}
+
+int CLayerZone::RenderProperties(CUIRect *pToolbox)
+{
+	int r = CLayerTiles::RenderProperties(pToolbox);
+	m_Image = -1;
+	return r;
+}
+

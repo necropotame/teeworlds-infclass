@@ -32,7 +32,6 @@ IGameController::IGameController(class CGameContext *pGameServer)
 
 	m_aNumSpawnPoints[0] = 0;
 	m_aNumSpawnPoints[1] = 0;
-	m_aNumSpawnPoints[2] = 0;
 }
 
 IGameController::~IGameController()
@@ -107,19 +106,14 @@ bool IGameController::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 		Eval.m_FriendlyTeam = Team;
 
 		// first try own team spawn, then normal spawn and then enemy
-		EvaluateSpawnType(&Eval, 1+(Team&1));
+		EvaluateSpawnType(&Eval, (Team&1));
 		if(!Eval.m_Got)
-		{
-			EvaluateSpawnType(&Eval, 0);
-			if(!Eval.m_Got)
-				EvaluateSpawnType(&Eval, 1+((Team+1)&1));
-		}
+			EvaluateSpawnType(&Eval, ((Team+1)&1));
 	}
 	else
 	{
 		EvaluateSpawnType(&Eval, 0);
 		EvaluateSpawnType(&Eval, 1);
-		EvaluateSpawnType(&Eval, 2);
 	}
 
 	*pOutPos = Eval.m_Pos;
@@ -130,53 +124,10 @@ bool IGameController::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 
 bool IGameController::OnEntity(int Index, vec2 Pos)
 {
-/* INFECTION MODIFICATION START ***************************************/
-	if(!PickupAllowed(Index))
-		return false;
-/* INFECTION MODIFICATION END *****************************************/
-	
-	//~ int Type = -1;
-	//~ int SubType = 0;
-
-	if(Index == ENTITY_SPAWN)
+	if(Index == TILE_ENTITY_SPAWN_RED)
 		m_aaSpawnPoints[0][m_aNumSpawnPoints[0]++] = Pos;
-	else if(Index == ENTITY_SPAWN_RED)
+	else if(Index == TILE_ENTITY_SPAWN_BLUE)
 		m_aaSpawnPoints[1][m_aNumSpawnPoints[1]++] = Pos;
-	else if(Index == ENTITY_SPAWN_BLUE)
-		m_aaSpawnPoints[2][m_aNumSpawnPoints[2]++] = Pos;
-/* INFECTION MODIFICATION START ***************************************/
-	//~ else if(Index == ENTITY_ARMOR_1)
-		//~ Type = POWERUP_ARMOR;
-	//~ else if(Index == ENTITY_HEALTH_1)
-		//~ Type = POWERUP_HEALTH;
-	//~ else if(Index == ENTITY_WEAPON_SHOTGUN)
-	//~ {
-		//~ Type = POWERUP_WEAPON;
-		//~ SubType = WEAPON_SHOTGUN;
-	//~ }
-	//~ else if(Index == ENTITY_WEAPON_GRENADE)
-	//~ {
-		//~ Type = POWERUP_WEAPON;
-		//~ SubType = WEAPON_GRENADE;
-	//~ }
-	//~ else if(Index == ENTITY_WEAPON_RIFLE)
-	//~ {
-		//~ Type = POWERUP_WEAPON;
-		//~ SubType = WEAPON_RIFLE;
-	//~ }
-	//~ else if(Index == ENTITY_POWERUP_NINJA)
-	//~ {
-		//~ Type = POWERUP_NINJA;
-		//~ SubType = WEAPON_NINJA;
-	//~ }
-
-	//~ if(Type != -1)
-	//~ {
-		//~ CPickup *pPickup = new CPickup(&GameServer()->m_World, Type, SubType);
-		//~ pPickup->m_Pos = Pos;
-		//~ return true;
-	//~ }
-/* INFECTION MODIFICATION END *****************************************/
 
 	return false;
 }
@@ -812,12 +763,6 @@ int IGameController::ClampTeam(int Team)
 }
 
 /* INFECTION MODIFICATION START ***************************************/
-bool IGameController::PickupAllowed(int Index)
-{
-	if(Index == ENTITY_POWERUP_NINJA) return g_Config.m_SvPowerups;
-	else return true;
-}
-
 int IGameController::ChooseHumanClass(CPlayer* pPlayer)
 {
 	return PLAYERCLASS_ENGINEER;

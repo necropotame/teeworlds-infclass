@@ -20,8 +20,8 @@ protected:
 	IServer *Server() const { return m_pServer; }
 
 /* INFECTION MODIFICATION START ***************************************/
-	vec2 m_aaSpawnPoints[3][64];
-	int m_aNumSpawnPoints[3];
+	vec2 m_aaSpawnPoints[2][64];
+	int m_aNumSpawnPoints[2];
 /* INFECTION MODIFICATION START ***************************************/
 
 public:
@@ -157,10 +157,6 @@ public:
 	int ClampTeam(int Team);
 
 	virtual void PostReset();
-	
-/* INFECTION MODIFICATION START ***************************************/
-	virtual bool PickupAllowed(int Type);
-/* INFECTION MODIFICATION END *****************************************/
 };
 
 #endif

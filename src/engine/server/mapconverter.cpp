@@ -27,7 +27,7 @@ bool CMapConverter::Load()
 	Map()->GetType(MAPITEMTYPE_GROUP, &GroupsStart, &GroupsNum);
 	Map()->GetType(MAPITEMTYPE_LAYER, &LayersStart, &LayersNum);
 	
-	CMapItemLayerTilemap *pGameLayer = 0;
+	CMapItemLayerTilemap *pPhysicsLayer = 0;
 				
 	//Find the gamelayer
 	for(int g = 0; g < GroupsNum; g++)
@@ -41,26 +41,26 @@ bool CMapConverter::Load()
 			{
 				CMapItemLayerTilemap *pTileLayer = reinterpret_cast<CMapItemLayerTilemap *>(pLayer);
 				
-				if(pTileLayer->m_Flags&TILESLAYERFLAG_GAME)
+				if(pTileLayer->m_Flags&TILESLAYERFLAG_PHYSICS)
 				{
-					pGameLayer = pTileLayer;
+					pPhysicsLayer = pTileLayer;
 					break;
 				}
 			}
 		}
-		if(pGameLayer)
+		if(pPhysicsLayer)
 			break;
 	}
 	
-	if(!pGameLayer)
+	if(!pPhysicsLayer)
 	{
-		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "infclass", "no game layer in loaded map");
+		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "infclass", "no physics layer in loaded map");
 		return false;
 	}
 		
-	m_Width = pGameLayer->m_Width;
-	m_Height = pGameLayer->m_Height;
-	m_pGameLayerTiles = (CTile*) m_pMap->GetData(pGameLayer->m_Data);
+	m_Width = pPhysicsLayer->m_Width;
+	m_Height = pPhysicsLayer->m_Height;
+	m_pPhysicsLayerTiles = (CTile*) m_pMap->GetData(pPhysicsLayer->m_Data);
 	
 	if(m_pTiles)
 		delete[] m_pTiles;
@@ -74,7 +74,7 @@ bool CMapConverter::Load()
 			m_pTiles[j*m_Width+i].m_Flags = 0;
 			m_pTiles[j*m_Width+i].m_Reserved = 0;
 			
-			int Skip = m_pGameLayerTiles[j*m_Width+i].m_Skip;
+			int Skip = m_pPhysicsLayerTiles[j*m_Width+i].m_Skip;
 			m_pTiles[j*m_Width+i].m_Skip = Skip;
 			i += Skip;
 		}
@@ -325,7 +325,7 @@ void CMapConverter::CopyGameLayer()
 	Item.m_ColorEnvOffset = 0;
 	Item.m_Width = m_Width;
 	Item.m_Height = m_Height;
-	Item.m_Flags = TILESLAYERFLAG_GAME;
+	Item.m_Flags = 1;
 	Item.m_Image = -1;
 	
 	//Cleanup the game layer
@@ -334,18 +334,18 @@ void CMapConverter::CopyGameLayer()
 	{
 		for(int i=0; i<m_Width; i++)
 		{
-			switch(m_pGameLayerTiles[j*m_Width+i].m_Index)
+			switch(m_pPhysicsLayerTiles[j*m_Width+i].m_Index)
 			{
-				case TILE_SOLID:
-					m_pTiles[j*m_Width+i].m_Index = TILE_SOLID;
+				case TILE_PHYSICS_SOLID:
+					m_pTiles[j*m_Width+i].m_Index = TILE_PHYSICS_SOLID;
 					break;
-				case TILE_NOHOOK:
-					m_pTiles[j*m_Width+i].m_Index = TILE_NOHOOK;
+				case TILE_PHYSICS_NOHOOK:
+					m_pTiles[j*m_Width+i].m_Index = TILE_PHYSICS_NOHOOK;
 					break;
 				default:
-					m_pTiles[j*m_Width+i].m_Index = 0;
+					m_pTiles[j*m_Width+i].m_Index = TILE_PHYSICS_AIR;
 			}
-			i += m_pGameLayerTiles[j*m_Width+i].m_Skip;
+			i += m_pPhysicsLayerTiles[j*m_Width+i].m_Skip;
 		}
 	}
 	
@@ -369,12 +369,12 @@ void CMapConverter::CopyLayers()
 
 		if(pGItem->m_Version != CMapItemGroup::CURRENT_VERSION)
 			continue;
-		
+
 		CMapItemGroup GroupItem = *pGItem;
 		GroupItem.m_StartLayer = m_NumLayers;
 		
-		m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(GroupItem), &GroupItem);
-		
+		int GroupLayers = 0;
+
 		//Layers
 		for(int l = 0; l < pGItem->m_NumLayers; l++)
 		{
@@ -386,9 +386,18 @@ void CMapConverter::CopyLayers()
 			{
 				CMapItemLayerTilemap *pTilemapItem = (CMapItemLayerTilemap *)pLayerItem;
 
-				if(pTilemapItem->m_Flags&TILESLAYERFLAG_GAME)
+				if(pTilemapItem->m_Flags&TILESLAYERFLAG_PHYSICS)
 				{
 					CopyGameLayer();
+					GroupLayers++;
+				}
+				else if(pTilemapItem->m_Flags&TILESLAYERFLAG_ZONE)
+				{
+					
+				}
+				else if(pTilemapItem->m_Flags&TILESLAYERFLAG_ENTITY)
+				{
+					
 				}
 				else
 				{
@@ -401,6 +410,8 @@ void CMapConverter::CopyLayers()
 					m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(LayerItem), &LayerItem);
 
 					Map()->UnloadData(pTilemapItem->m_Data);
+					
+					GroupLayers++;
 				}
 			}
 			else if(pLayerItem->m_Type == LAYERTYPE_QUADS)
@@ -416,8 +427,14 @@ void CMapConverter::CopyLayers()
 				m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(LayerItem), &LayerItem);
 
 				Map()->UnloadData(pQuadsItem->m_Data);
+				
+				GroupLayers++;
 			}
 		}
+		
+		GroupItem.m_NumLayers = GroupLayers;
+		
+		m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(GroupItem), &GroupItem);
 	}
 }
 
@@ -691,215 +708,6 @@ void CMapConverter::Finalize()
 	m_DataFile.AddItem(MAPITEMTYPE_ENVPOINTS, 0, m_lEnvPoints.size()*sizeof(CEnvPoint), m_lEnvPoints.base_ptr());
 	
 	m_DataFile.Finish();
-}
-
-bool CMapConverter::CreateLowResMap()
-{
-	char aBuf[512];
-	if(!m_DataFile.Open(Storage(), "maps/infc_x_lowres.map"))
-	{
-		str_format(aBuf, sizeof(aBuf), "failed to open file '%s'...", "maps/infc_x_lowres.map");
-		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "infclass", aBuf);
-		return false;
-	}
-	
-	InitState();
-	
-	CopyVersion();
-	CopyMapInfo();
-	
-	int UnhookableImageID = AddExternalImage("./generic_unhookable", 1024, 1024);
-	int WhiteImageID = AddExternalImage("./jungle_midground", 1024, 1024);
-	
-	//Create Background
-		//Background Group
-	{
-		CMapItemGroup Item;
-		Item.m_Version = CMapItemGroup::CURRENT_VERSION;
-		Item.m_ParallaxX = 0;
-		Item.m_ParallaxY = 0;
-		Item.m_OffsetX = 0;
-		Item.m_OffsetY = 0;
-		Item.m_StartLayer = m_NumLayers;
-		Item.m_NumLayers = 1;
-		Item.m_UseClipping = 0;
-		Item.m_ClipX = 0;
-		Item.m_ClipY = 0;
-		Item.m_ClipW = 0;
-		Item.m_ClipH = 0;
-		StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "StaticBG");
-		
-		m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
-	}
-		//Background Layer
-	{
-		CQuad BackgroundQuad;
-
-		InitQuad(&BackgroundQuad, vec2(0.0f, 0.0f), vec2(1600.0f, 1200.0f));
-		BackgroundQuad.m_aColors[0].r = BackgroundQuad.m_aColors[1].r = 94;
-		BackgroundQuad.m_aColors[0].g = BackgroundQuad.m_aColors[1].g = 132;
-		BackgroundQuad.m_aColors[0].b = BackgroundQuad.m_aColors[1].b = 174;
-		BackgroundQuad.m_aColors[0].a = BackgroundQuad.m_aColors[1].a = 255;
-		BackgroundQuad.m_aColors[2].r = BackgroundQuad.m_aColors[3].r = 204;
-		BackgroundQuad.m_aColors[2].g = BackgroundQuad.m_aColors[3].g = 232;
-		BackgroundQuad.m_aColors[2].b = BackgroundQuad.m_aColors[3].b = 255;
-		BackgroundQuad.m_aColors[2].a = BackgroundQuad.m_aColors[3].a = 255;
-		
-		CMapItemLayerQuads Item;
-		Item.m_Version = 2;
-		Item.m_Layer.m_Flags = 0;
-		Item.m_Layer.m_Type = LAYERTYPE_QUADS;
-		Item.m_Image = -1;
-		Item.m_NumQuads = 1;
-		StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Background");
-		Item.m_Data = m_DataFile.AddDataSwapped(sizeof(CQuad), &BackgroundQuad);
-		
-		m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
-	}
-	
-	//Create Game Layer and Decorations
-		//Game Group
-	{
-		CMapItemGroup Item;
-		Item.m_Version = CMapItemGroup::CURRENT_VERSION;
-		Item.m_ParallaxX = 100;
-		Item.m_ParallaxY = 100;
-		Item.m_OffsetX = 0;
-		Item.m_OffsetY = 0;
-		Item.m_StartLayer = m_NumLayers;
-		Item.m_NumLayers = 4;
-		Item.m_UseClipping = 0;
-		Item.m_ClipX = 0;
-		Item.m_ClipY = 0;
-		Item.m_ClipW = 0;
-		Item.m_ClipH = 0;
-		StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Game");
-		
-		m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
-	}
-		//Death Layer
-	{
-		CMapItemLayerTilemap Item;
-		Item.m_Version = 3;
-		Item.m_Layer.m_Flags = 0;
-		Item.m_Layer.m_Type = LAYERTYPE_TILES;
-		Item.m_Color.r = 255;
-		Item.m_Color.g = 0;
-		Item.m_Color.b = 0;
-		Item.m_Color.a = 127;
-		Item.m_ColorEnv = -1;
-		Item.m_ColorEnvOffset = 0;
-		Item.m_Width = m_Width;
-		Item.m_Height = m_Height;
-		Item.m_Flags = 0;
-		Item.m_Image = WhiteImageID;
-		
-		for(int j=0; j<m_Height; j++)
-		{
-			for(int i=0; i<m_Width; i++)
-			{
-				switch(m_pGameLayerTiles[j*m_Width+i].m_Index)
-				{
-					case TILE_DEATH:
-						m_pTiles[j*m_Width+i].m_Index = 52;
-						break;
-					default:
-						m_pTiles[j*m_Width+i].m_Index = 0;
-				}
-				i += m_pGameLayerTiles[j*m_Width+i].m_Skip;
-			}
-		}
-		
-		Item.m_Data = m_DataFile.AddData(m_Width*m_Height*sizeof(CTile), m_pTiles);
-		StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "DecoDeath");
-		m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
-	}
-		//Infection Layer
-	{
-		CMapItemLayerTilemap Item;
-		Item.m_Version = 3;
-		Item.m_Layer.m_Flags = 0;
-		Item.m_Layer.m_Type = LAYERTYPE_TILES;
-		Item.m_Color.r = 0;
-		Item.m_Color.g = 255;
-		Item.m_Color.b = 0;
-		Item.m_Color.a = 127;
-		Item.m_ColorEnv = -1;
-		Item.m_ColorEnvOffset = 0;
-		Item.m_Width = m_Width;
-		Item.m_Height = m_Height;
-		Item.m_Flags = 0;
-		Item.m_Image = WhiteImageID;
-		
-		for(int j=0; j<m_Height; j++)
-		{
-			for(int i=0; i<m_Width; i++)
-			{
-				switch(m_pGameLayerTiles[j*m_Width+i].m_Index)
-				{
-					case TILE_INFECTION:
-					case ENTITY_OFFSET+ENTITY_SPAWN_RED:
-						m_pTiles[j*m_Width+i].m_Index = 52;
-						break;
-					default:
-						m_pTiles[j*m_Width+i].m_Index = 0;
-				}
-				i += m_pGameLayerTiles[j*m_Width+i].m_Skip;
-			}
-		}
-		
-		Item.m_Data = m_DataFile.AddData(m_Width*m_Height*sizeof(CTile), m_pTiles);
-		StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "DecoInf");
-		m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
-	}
-	
-	CopyGameLayer();
-		
-	//Decoration
-	{
-		CMapItemLayerTilemap Item;
-		Item.m_Version = 3;
-		Item.m_Layer.m_Flags = 0;
-		Item.m_Layer.m_Type = LAYERTYPE_TILES;
-		Item.m_Color.r = 255;
-		Item.m_Color.g = 255;
-		Item.m_Color.b = 255;
-		Item.m_Color.a = 255;
-		Item.m_ColorEnv = -1;
-		Item.m_ColorEnvOffset = 0;
-		Item.m_Width = m_Width;
-		Item.m_Height = m_Height;
-		Item.m_Flags = 0;
-		Item.m_Image = UnhookableImageID;
-		
-		for(int j=0; j<m_Height; j++)
-		{
-			for(int i=0; i<m_Width; i++)
-			{
-				switch(m_pGameLayerTiles[j*m_Width+i].m_Index)
-				{
-					case TILE_SOLID:
-						m_pTiles[j*m_Width+i].m_Index = 2;
-						break;
-					case TILE_NOHOOK:
-						m_pTiles[j*m_Width+i].m_Index = 9;
-						break;
-					default:
-						m_pTiles[j*m_Width+i].m_Index = 0;
-				}
-				i += m_pGameLayerTiles[j*m_Width+i].m_Skip;
-			}
-		}
-		
-		Item.m_Data = m_DataFile.AddData(m_Width*m_Height*sizeof(CTile), m_pTiles);
-		StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "DecoSolidHook");
-		m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
-	}
-	
-	Finalize();
-	
-	Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "infclass", "lowres map created");
-	return true;
 }
 
 bool CMapConverter::CreateMap()

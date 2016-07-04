@@ -154,8 +154,6 @@ void CPlayer::HandleTuningParams()
 			for(unsigned i = 0; i < sizeof(m_NextTuningParams)/sizeof(int); i++)
 				Msg.AddInt(pParams[i]);
 			Server()->SendMsg(&Msg, MSGFLAG_VITAL, GetCID());
-			
-			dbg_msg("InfClass", "NETMSGTYPE_SV_TUNEPARAMS, Gravity %f", (float) m_NextTuningParams.m_Gravity);
 		}
 		
 		m_PrevTuningParams = m_NextTuningParams;

@@ -65,6 +65,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_AntiFireTick = 0;
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
+	m_DartLifeSpan = -1;
 	m_IsInvisible = false;
 	m_InvisibleTick = 0;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
@@ -72,7 +73,8 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_PoisonTick = 0;
 	m_HealTick = 0;
 	m_InAirTick = 0;
-	m_InWater = 1;
+	m_InWater = 0;
+	m_WaterJumpLifeSpan = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -175,6 +177,41 @@ bool CCharacter::IsGrounded()
 	return false;
 }
 
+void CCharacter::HandleWaterJump()
+{
+	if(m_InWater)
+	{
+		m_Core.m_Jumped &= ~2;
+		m_Core.m_TriggeredEvents &= ~COREEVENT_GROUND_JUMP;
+		m_Core.m_TriggeredEvents &= ~COREEVENT_AIR_JUMP;
+
+		if(m_Input.m_Jump && m_DartLifeSpan <= 0 && m_WaterJumpLifeSpan <=0)
+		{
+			m_WaterJumpLifeSpan = Server()->TickSpeed()/2;
+			m_DartLifeSpan =  g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
+			vec2 Direction = normalize(vec2(m_LatestInput.m_TargetX, m_LatestInput.m_TargetY));
+			m_DartDir = Direction;
+			
+			m_Core.m_TriggeredEvents |= COREEVENT_AIR_JUMP;
+		}
+	}
+	
+	m_WaterJumpLifeSpan--;
+	
+	m_DartLifeSpan--;
+	
+	if(m_DartLifeSpan == 0)
+	{
+		m_Core.m_Vel = m_DartDir * 5.0f;
+	}
+	
+	if(m_DartLifeSpan > 0)
+	{
+		m_Core.m_Vel = m_DartDir * 15.0f;
+		GameServer()->Collision()->MoveBox(&m_Core.m_Pos, &m_Core.m_Vel, vec2(m_ProximityRadius, m_ProximityRadius), 0.f);
+		m_Core.m_Vel = vec2(0.f, 0.f);
+	}	
+}
 
 void CCharacter::HandleNinja()
 {
@@ -183,18 +220,18 @@ void CCharacter::HandleNinja()
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 
-	m_Ninja.m_CurrentMoveTime--;
+	m_DartLifeSpan--;
 
-	if (m_Ninja.m_CurrentMoveTime == 0)
+	if (m_DartLifeSpan == 0)
 	{
 		// reset velocity
-		m_Core.m_Vel = m_Ninja.m_ActivationDir*m_Ninja.m_OldVelAmount;
+		m_Core.m_Vel = m_DartDir*m_DartOldVelAmount;
 	}
 
-	if (m_Ninja.m_CurrentMoveTime > 0)
+	if (m_DartLifeSpan > 0)
 	{
 		// Set velocity
-		m_Core.m_Vel = m_Ninja.m_ActivationDir * g_pData->m_Weapons.m_Ninja.m_Velocity;
+		m_Core.m_Vel = m_DartDir * g_pData->m_Weapons.m_Ninja.m_Velocity;
 		vec2 OldPos = m_Pos;
 		GameServer()->Collision()->MoveBox(&m_Core.m_Pos, &m_Core.m_Vel, vec2(m_ProximityRadius, m_ProximityRadius), 0.f);
 
@@ -237,11 +274,7 @@ void CCharacter::HandleNinja()
 				aEnts[i]->TakeDamage(vec2(0, -10.0f), g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
-
-		return;
 	}
-
-	return;
 }
 
 
@@ -352,7 +385,15 @@ void CCharacter::UpdateTuningParam()
 	}
 	if(m_InWater == 1)
 	{
-		pTuningParams->m_Gravity = 0.5f;
+		pTuningParams->m_Gravity = -0.05f;
+		pTuningParams->m_GroundFriction = 0.95f;
+		pTuningParams->m_GroundControlSpeed = 250.0f / Server()->TickSpeed();
+		pTuningParams->m_GroundControlAccel = 1.5f;
+		pTuningParams->m_GroundJumpImpulse = 0.0f;
+		pTuningParams->m_AirFriction = 0.95f;
+		pTuningParams->m_AirControlSpeed = 250.0f / Server()->TickSpeed();
+		pTuningParams->m_AirControlAccel = 1.5f;
+		pTuningParams->m_AirJumpImpulse = 0.0f;
 	}
 	
 	if(NoActions)
@@ -448,7 +489,7 @@ void CCharacter::FireWeapon()
 					bool isAccepted = true;
 					for(int i=0; i<15; i++)
 					{
-						if(GameServer()->Collision()->CheckPointFlag(m_FirstShotCoord + (m_Pos - m_FirstShotCoord)*(static_cast<float>(i)/14.0f), CCollision::COLFLAG_INFECTION))
+						if(GameServer()->Collision()->CheckZoneFlag(m_FirstShotCoord + (m_Pos - m_FirstShotCoord)*(static_cast<float>(i)/14.0f), CCollision::ZONEFLAG_INFECTION))
 						{
 							isAccepted = false;
 						}
@@ -545,16 +586,17 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_NINJA)
 			{
-				if(m_Ninja.m_NbStrike)
+				if(m_DartLeft || m_InWater)
 				{
-					m_Ninja.m_NbStrike--;
+					if(!m_InWater)
+						m_DartLeft--;
 					
 					// reset Hit objects
 					m_NumObjectsHit = 0;
 
-					m_Ninja.m_ActivationDir = Direction;
-					m_Ninja.m_CurrentMoveTime = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
-					m_Ninja.m_OldVelAmount = length(m_Core.m_Vel);
+					m_DartDir = Direction;
+					m_DartLifeSpan = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
+					m_DartOldVelAmount = length(m_Core.m_Vel);
 
 					GameServer()->CreateSound(m_Pos, SOUND_NINJA_HIT);
 				}
@@ -679,28 +721,8 @@ void CCharacter::FireWeapon()
 				Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
 				
 				float MaxSpeed = GameServer()->Tuning()->m_GroundControlSpeed*1.7f;
-				
 				vec2 Recoil = Direction*(-MaxSpeed/5.0f);
-				float Speed = length(m_Core.m_Vel);
-				vec2 VelDir = normalize(m_Core.m_Vel);
-				if(Speed < 0.00001)
-				{
-					VelDir = Direction;
-				}
-				vec2 OrthoVelDir = vec2(-VelDir.y, VelDir.x);
-				float VelDirFactor = dot(Recoil, VelDir);
-				float OrthoVelDirFactor = dot(Recoil, OrthoVelDir);
-				vec2 NewVel = OrthoVelDir * OrthoVelDirFactor;
-				if(VelDirFactor < 0.0f)
-				{
-					NewVel += VelDir * (VelDirFactor + Speed);
-				}
-				else if(Speed < MaxSpeed)
-				{
-					NewVel += VelDir * min(VelDirFactor + Speed, MaxSpeed);
-				}
-				
-				m_Core.m_Vel = NewVel;
+				SaturateVelocity(Recoil, MaxSpeed);
 
 				GameServer()->CreateSound(m_Pos, SOUND_HOOK_LOOP);
 			}
@@ -871,6 +893,40 @@ void CCharacter::FireWeapon()
 	}
 }
 
+void CCharacter::SaturateVelocity(vec2 Force, float MaxSpeed)
+{
+	if(length(Force) < 0.00001)
+		return;
+	
+	float Speed = length(m_Core.m_Vel);
+	vec2 VelDir = normalize(m_Core.m_Vel);
+	if(Speed < 0.00001)
+	{
+		VelDir = normalize(Force);
+	}
+	vec2 OrthoVelDir = vec2(-VelDir.y, VelDir.x);
+	float VelDirFactor = dot(Force, VelDir);
+	float OrthoVelDirFactor = dot(Force, OrthoVelDir);
+	
+	vec2 NewVel = m_Core.m_Vel;
+	if(Speed < MaxSpeed || VelDirFactor < 0.0f)
+	{
+		NewVel += VelDir*VelDirFactor;
+		float NewSpeed = length(NewVel);
+		if(NewSpeed > MaxSpeed)
+		{
+			if(VelDirFactor > 0.f)
+				NewVel = VelDir*MaxSpeed;
+			else
+				NewVel = -VelDir*MaxSpeed;
+		}
+	}
+	
+	NewVel += OrthoVelDir * OrthoVelDirFactor;
+	
+	m_Core.m_Vel = NewVel;
+}
+
 void CCharacter::HandleWeapons()
 {
 	if(IsFrozen())
@@ -1033,9 +1089,24 @@ void CCharacter::ResetInput()
 
 void CCharacter::Tick()
 {
-/* INFECTION MODIFICATION START ***************************************/	
+/* INFECTION MODIFICATION START ***************************************/
+	if(GameServer()->Collision()->CheckPhysicsFlag(m_Core.m_Pos, CCollision::COLFLAG_WATER))
+	{
+		if(m_InWater == 0)
+		{
+			m_InWater = 1;
+			m_Core.m_Vel /= 2.0f;
+			m_WaterJumpLifeSpan = 0;
+			
+			if(length(m_Core.m_Vel) > 10.0f)
+				GameServer()->CreateDeath(m_Core.m_Pos, m_pPlayer->GetCID());
+		}
+	}
+	else
+		m_InWater = 0;
+	
 	//Check is the character is in toxic gaz
-	if(m_Alive && GameServer()->Collision()->CheckPointFlag(m_Pos, CCollision::COLFLAG_INFECTION))
+	if(m_Alive && GameServer()->Collision()->CheckZoneFlag(m_Pos, CCollision::ZONEFLAG_INFECTION))
 	{
 		if(IsInfected())
 		{
@@ -1094,7 +1165,7 @@ void CCharacter::Tick()
 		}
 	}
 	
-	if(!IsGrounded() && (m_Core.m_HookState != HOOK_GRABBED || m_Core.m_HookedPlayer != -1))
+	if(!m_InWater && !IsGrounded() && (m_Core.m_HookState != HOOK_GRABBED || m_Core.m_HookedPlayer != -1))
 	{
 		m_InAirTick++;
 	}
@@ -1247,10 +1318,9 @@ void CCharacter::Tick()
 		}
 	}
 	
-	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_Ninja.m_CurrentMoveTime <= 0)
+	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_DartLifeSpan <= 0)
 	{
-		m_Ninja.m_ActivationTick = Server()->Tick();
-		m_Ninja.m_NbStrike = 2;
+		m_DartLeft = 2;
 	}
 	
 	if(m_IsFrozen)
@@ -1271,6 +1341,7 @@ void CCharacter::Tick()
 	m_Core.m_Input = m_Input;
 	
 	CCharacterCore::CParams CoreTickParams(&m_pPlayer->m_NextTuningParams);
+	//~ CCharacterCore::CParams CoreTickParams(&GameWorld()->m_Core.m_Tuning);
 	
 	if(GetClass() == PLAYERCLASS_SPIDER)
 	{
@@ -1303,17 +1374,20 @@ void CCharacter::Tick()
 	
 
 	// handle death-tiles and leaving gamelayer
-	if(GameServer()->Collision()->GetCollisionAt(m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f)&CCollision::COLFLAG_DEATH ||
-		GameServer()->Collision()->GetCollisionAt(m_Pos.x+m_ProximityRadius/3.f, m_Pos.y+m_ProximityRadius/3.f)&CCollision::COLFLAG_DEATH ||
-		GameServer()->Collision()->GetCollisionAt(m_Pos.x-m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f)&CCollision::COLFLAG_DEATH ||
-		GameServer()->Collision()->GetCollisionAt(m_Pos.x-m_ProximityRadius/3.f, m_Pos.y+m_ProximityRadius/3.f)&CCollision::COLFLAG_DEATH ||
-		GameLayerClipped(m_Pos))
+	if(
+		GameServer()->Collision()->CheckZoneFlag(vec2(m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f), CCollision::ZONEFLAG_DEATH) ||
+		GameServer()->Collision()->CheckZoneFlag(vec2(m_Pos.x-m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f), CCollision::ZONEFLAG_DEATH) ||
+		GameServer()->Collision()->CheckZoneFlag(vec2(m_Pos.x+m_ProximityRadius/3.f, m_Pos.y+m_ProximityRadius/3.f), CCollision::ZONEFLAG_DEATH) ||
+		GameServer()->Collision()->CheckZoneFlag(vec2(m_Pos.x-m_ProximityRadius/3.f, m_Pos.y+m_ProximityRadius/3.f), CCollision::ZONEFLAG_DEATH) ||
+		GameLayerClipped(m_Pos)
+	)
 	{
 		Die(m_pPlayer->GetCID(), WEAPON_WORLD);
 	}
 
 	// handle Weapons
 /* INFECTION MODIFICATION START ***************************************/
+	HandleWaterJump();
 	HandleWeapons();
 
 	if(GetClass() == PLAYERCLASS_HUNTER || GetClass() == PLAYERCLASS_SNIPER)
@@ -1411,6 +1485,8 @@ void CCharacter::Tick()
 			
 			if(m_Input.m_Fire&1 && m_pPlayer->m_MenuClassChooserItem >= 0)
 			{
+				bool Bonus = false;
+				
 				int NewClass = -1;
 				switch(m_pPlayer->m_MenuClassChooserItem)
 				{
@@ -1428,6 +1504,7 @@ void CCharacter::Tick()
 						break;
 					case CMapConverter::MENUCLASS_RANDOM:
 						NewClass = GameServer()->m_pController->ChooseHumanClass(m_pPlayer);
+						Bonus = true;
 						break;
 					case CMapConverter::MENUCLASS_ENGINEER:
 						NewClass = PLAYERCLASS_ENGINEER;
@@ -1445,6 +1522,9 @@ void CCharacter::Tick()
 					m_AntiFireTick = Server()->Tick();
 					m_pPlayer->m_InClassChooserMenu = 0;
 					m_pPlayer->SetClass(NewClass);
+					
+					if(Bonus)
+						IncreaseArmor(10);
 				}
 			}
 		}
@@ -1503,10 +1583,10 @@ void CCharacter::Tick()
 
 void CCharacter::TickDefered()
 {
-	CCharacterCore::CParams CoreTickParams(&m_pPlayer->m_NextTuningParams);
 	
 	// advance the dummy
 	{
+		CCharacterCore::CParams CoreTickParams(&GameWorld()->m_Core.m_Tuning);
 		CWorldCore TempWorld;
 		m_ReckoningCore.Init(&TempWorld, GameServer()->Collision());
 		m_ReckoningCore.Tick(false, &CoreTickParams);
@@ -1514,6 +1594,8 @@ void CCharacter::TickDefered()
 		m_ReckoningCore.Quantize();
 	}
 
+	CCharacterCore::CParams CoreTickParams(&m_pPlayer->m_NextTuningParams);
+	
 	//lastsentcore
 	vec2 StartPos = m_Core.m_Pos;
 	vec2 StartVel = m_Core.m_Vel;
@@ -1593,7 +1675,6 @@ void CCharacter::TickPaused()
 {
 	++m_AttackTick;
 	++m_DamageTakenTick;
-	++m_Ninja.m_ActivationTick;
 	++m_ReckoningTick;
 	if(m_LastAction != -1)
 		++m_LastAction;
@@ -1715,11 +1796,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			//If the player is a new infected, don't infected other -> nobody knows that he is infected.
 			if(!pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
 		}
-	}
-	
-	//~ if(m_Ninja.m_CurrentMoveTime > 0 && GetClass() == PLAYERCLASS_NINJA)
-		//~ return false;
-	
+	}	
 	
 /* INFECTION MODIFICATION END *****************************************/
 

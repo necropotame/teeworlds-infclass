@@ -20,7 +20,7 @@ CLayerTiles::CLayerTiles(int w, int h)
 	m_Height = h;
 	m_Image = -1;
 	m_TexID = -1;
-	m_Game = 0;
+	m_GameFlags = 0;
 	m_Color.r = 255;
 	m_Color.g = 255;
 	m_Color.b = 255;
@@ -147,7 +147,7 @@ int CLayerTiles::BrushGrab(CLayerGroup *pBrush, CUIRect Rect)
 	pGrabbed->m_pEditor = m_pEditor;
 	pGrabbed->m_TexID = m_TexID;
 	pGrabbed->m_Image = m_Image;
-	pGrabbed->m_Game = m_Game;
+	pGrabbed->m_GameFlags = m_GameFlags;
 	pBrush->AddLayer(pGrabbed);
 
 	// copy the tiles
@@ -224,7 +224,7 @@ void CLayerTiles::BrushFlipX()
 			m_pTiles[y*m_Width+m_Width-1-x] = Tmp;
 		}
 
-	if(!m_Game)
+	if(!m_GameFlags)
 		for(int y = 0; y < m_Height; y++)
 			for(int x = 0; x < m_Width; x++)
 				m_pTiles[y*m_Width+x].m_Flags ^= m_pTiles[y*m_Width+x].m_Flags&TILEFLAG_ROTATE ? TILEFLAG_HFLIP : TILEFLAG_VFLIP;
@@ -240,7 +240,7 @@ void CLayerTiles::BrushFlipY()
 			m_pTiles[(m_Height-1-y)*m_Width+x] = Tmp;
 		}
 
-	if(!m_Game)
+	if(!m_GameFlags)
 		for(int y = 0; y < m_Height; y++)
 			for(int x = 0; x < m_Width; x++)
 				m_pTiles[y*m_Width+x].m_Flags ^= m_pTiles[y*m_Width+x].m_Flags&TILEFLAG_ROTATE ? TILEFLAG_VFLIP : TILEFLAG_HFLIP;
@@ -262,7 +262,7 @@ void CLayerTiles::BrushRotate(float Amount)
 			for(int y = m_Height-1; y >= 0; --y, ++pDst)
 			{
 				*pDst = pTempData[y*m_Width+x];
-				if(!m_Game)
+				if(!m_GameFlags)
 				{
 					if(pDst->m_Flags&TILEFLAG_ROTATE)
 						pDst->m_Flags ^= (TILEFLAG_HFLIP|TILEFLAG_VFLIP);
@@ -373,7 +373,7 @@ int CLayerTiles::RenderProperties(CUIRect *pToolBox)
 	CUIRect Button;
 
 	bool InGameGroup = !find_linear(m_pEditor->m_Map.m_pGameGroup->m_lLayers.all(), this).empty();
-	if(m_pEditor->m_Map.m_pGameLayer != this)
+	if(m_pEditor->m_Map.m_pPhysicsLayer != this && m_pEditor->m_Map.m_pZoneLayer != this && m_pEditor->m_Map.m_pEntityLayer != this)
 	{
 		if(m_Image >= 0 && m_Image < m_pEditor->m_Map.m_lImages.size() && m_pEditor->m_Map.m_lImages[m_Image]->m_AutoMapper.IsLoaded())
 		{
@@ -404,13 +404,13 @@ int CLayerTiles::RenderProperties(CUIRect *pToolBox)
 		int Result = m_pEditor->PopupSelectGameTileOpResult();
 		if(Result > -1)
 		{
-			CLayerTiles *gl = m_pEditor->m_Map.m_pGameLayer;
+			CLayerTiles *gl = m_pEditor->m_Map.m_pPhysicsLayer;
 			int w = min(gl->m_Width, m_Width);
 			int h = min(gl->m_Height, m_Height);
 			for(int y = 0; y < h; y++)
 				for(int x = 0; x < w; x++)
 					if(m_pTiles[y*m_Width+x].m_Index)
-						gl->m_pTiles[y*gl->m_Width+x].m_Index = TILE_AIR+Result;
+						gl->m_pTiles[y*gl->m_Width+x].m_Index = TILE_PHYSICS_AIR+Result;
 
 			return 1;
 		}
@@ -445,7 +445,7 @@ int CLayerTiles::RenderProperties(CUIRect *pToolBox)
 		{0},
 	};
 
-	if(m_pEditor->m_Map.m_pGameLayer == this) // remove the image and color properties if this is the game layer
+	if(m_pEditor->m_Map.m_pPhysicsLayer == this || m_pEditor->m_Map.m_pZoneLayer == this || m_pEditor->m_Map.m_pEntityLayer == this) // remove the image and color properties if this is the game layer
 	{
 		aProps[3].m_pName = 0;
 		aProps[4].m_pName = 0;

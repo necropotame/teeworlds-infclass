@@ -63,6 +63,7 @@ public:
 
 	void HandleWeapons();
 	void HandleNinja();
+	void HandleWaterJump();
 
 	void OnPredictedInput(CNetObj_PlayerInput *pNewInput);
 	void OnDirectInput(CNetObj_PlayerInput *pNewInput);
@@ -135,18 +136,16 @@ private:
 	int m_Health;
 	int m_Armor;
 
-	// ninja
-	struct
-	{
-		vec2 m_ActivationDir;
-		int m_ActivationTick;
-		int m_CurrentMoveTime;
-		int m_OldVelAmount;
-		int m_NbStrike;
-	} m_Ninja;
+/* INFECTION MODIFICATION START ***************************************/
+	//Dart
+	int m_DartLifeSpan;
+	vec2 m_DartDir;
+	int m_DartLeft;
+	int m_DartOldVelAmount;
+	
+	int m_WaterJumpLifeSpan;
 
 	// the player core for the physics
-/* INFECTION MODIFICATION START ***************************************/
 public:
 	CCharacterCore m_Core;
 	
@@ -210,6 +209,8 @@ public:
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);
 	void UpdateTuningParam();
+	
+	void SaturateVelocity(vec2 Force, float MaxSpeed);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

@@ -98,7 +98,7 @@ bool CGameControllerMOD::OnEntity(int Index, vec2 Pos)
 {
 	bool res = IGameController::OnEntity(Index, Pos);
 
-	if(Index == ENTITY_SPAWN_RED)
+	if(Index == TILE_ENTITY_SPAWN_RED)
 	{
 		int SpawnX = static_cast<int>(Pos.x)/32.0f;
 		int SpawnY = static_cast<int>(Pos.y)/32.0f;
@@ -176,6 +176,8 @@ void CGameControllerMOD::Tick()
 				else if(pPlayer->GetClass() == PLAYERCLASS_NONE)
 				{
 					pPlayer->SetClass(ChooseHumanClass(pPlayer));
+					if(pPlayer->GetCharacter())
+						pPlayer->GetCharacter()->IncreaseArmor(10);
 				}
 			}
 			
@@ -574,7 +576,7 @@ bool CGameControllerMOD::IsSpawnable(vec2 Pos)
 		for(int c = 0; c < Num; ++c)
 		{
 			if(
-				GameServer()->Collision()->CheckPointFlag(Pos+Positions[Index], CCollision::COLFLAG_NOSPAWN) ||
+				GameServer()->Collision()->CheckZoneFlag(Pos+Positions[Index], CCollision::ZONEFLAG_NOSPAWN) ||
 				distance(aEnts[c]->m_Pos, Pos+Positions[Index]) <= aEnts[c]->m_ProximityRadius
 			)
 			{
@@ -649,7 +651,7 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	Eval.m_FriendlyTeam = Team;
 
 	// first try own team spawn, then normal spawn and then enemy
-	EvaluateSpawnType(&Eval, 1+Team);
+	EvaluateSpawnType(&Eval, Team);
 
 	*pOutPos = Eval.m_Pos;
 	return Eval.m_Got;
@@ -657,10 +659,10 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 
 bool CGameControllerMOD::PickupAllowed(int Index)
 {
-	if(Index == ENTITY_POWERUP_NINJA) return false;
-	else if(Index == ENTITY_WEAPON_SHOTGUN) return false;
-	else if(Index == ENTITY_WEAPON_GRENADE) return false;
-	else if(Index == ENTITY_WEAPON_RIFLE) return false;
+	if(Index == TILE_ENTITY_POWERUP_NINJA) return false;
+	else if(Index == TILE_ENTITY_WEAPON_SHOTGUN) return false;
+	else if(Index == TILE_ENTITY_WEAPON_GRENADE) return false;
+	else if(Index == TILE_ENTITY_WEAPON_RIFLE) return false;
 	else return true;
 }
 

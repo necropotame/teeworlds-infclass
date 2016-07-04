@@ -46,7 +46,7 @@ protected:
 	CDataFileWriter m_DataFile;
 	
 	CTile* m_pTiles;
-	CTile* m_pGameLayerTiles;
+	CTile* m_pPhysicsLayerTiles;
 	int m_Width;
 	int m_Height;
 	
@@ -86,7 +86,6 @@ public:
 	~CMapConverter();
 	
 	bool Load();
-	bool CreateLowResMap();
 	bool CreateMap();
 };
 

@@ -317,7 +317,7 @@ int CEditorMap::Save(class IStorage *pStorage, const char *pFileName)
 
 				Item.m_Width = pLayer->m_Width;
 				Item.m_Height = pLayer->m_Height;
-				Item.m_Flags = pLayer->m_Game ? TILESLAYERFLAG_GAME : 0;
+				Item.m_Flags = pLayer->m_GameFlags;
 				Item.m_Image = pLayer->m_Image;
 				Item.m_Data = df.AddData(pLayer->m_Width*pLayer->m_Height*sizeof(CTile), pLayer->m_pTiles);
 
@@ -558,10 +558,22 @@ int CEditorMap::Load(class IStorage *pStorage, const char *pFileName, int Storag
 						CMapItemLayerTilemap *pTilemapItem = (CMapItemLayerTilemap *)pLayerItem;
 						CLayerTiles *pTiles = 0;
 
-						if(pTilemapItem->m_Flags&TILESLAYERFLAG_GAME)
+						if(pTilemapItem->m_Flags&TILESLAYERFLAG_PHYSICS)
 						{
-							pTiles = new CLayerGame(pTilemapItem->m_Width, pTilemapItem->m_Height);
-							MakeGameLayer(pTiles);
+							pTiles = new CLayerPhysics(pTilemapItem->m_Width, pTilemapItem->m_Height);
+							MakePhysicsLayer(pTiles);
+							MakeGameGroup(pGroup);
+						}
+						else if(pTilemapItem->m_Flags&TILESLAYERFLAG_ZONE)
+						{
+							pTiles = new CLayerZone(pTilemapItem->m_Width, pTilemapItem->m_Height);
+							MakeZoneLayer(pTiles);
+							MakeGameGroup(pGroup);
+						}
+						else if(pTilemapItem->m_Flags&TILESLAYERFLAG_ENTITY)
+						{
+							pTiles = new CLayerEntity(pTilemapItem->m_Width, pTilemapItem->m_Height);
+							MakeEntityLayer(pTiles);
 							MakeGameGroup(pGroup);
 						}
 						else
@@ -578,15 +590,23 @@ int CEditorMap::Load(class IStorage *pStorage, const char *pFileName, int Storag
 						pGroup->AddLayer(pTiles);
 						void *pData = DataFile.GetData(pTilemapItem->m_Data);
 						pTiles->m_Image = pTilemapItem->m_Image;
-						pTiles->m_Game = pTilemapItem->m_Flags&TILESLAYERFLAG_GAME;
+						pTiles->m_GameFlags = pTilemapItem->m_Flags;
 
 						// load layer name
 						if(pTilemapItem->m_Version >= 3)
-							IntsToStr(pTilemapItem->m_aName, sizeof(pTiles->m_aName)/sizeof(int), pTiles->m_aName);
-
+						{
+							if(pTilemapItem->m_Flags&TILESLAYERFLAG_PHYSICS)
+								str_copy(pTiles->m_aName, "Physics", sizeof(pTiles->m_aName));
+							else if(pTilemapItem->m_Flags&TILESLAYERFLAG_ZONE)
+								str_copy(pTiles->m_aName, "Zones", sizeof(pTiles->m_aName));
+							else if(pTilemapItem->m_Flags&TILESLAYERFLAG_ENTITY)
+								str_copy(pTiles->m_aName, "Entities", sizeof(pTiles->m_aName));
+							else
+								IntsToStr(pTilemapItem->m_aName, sizeof(pTiles->m_aName)/sizeof(int), pTiles->m_aName);
+						}
 						mem_copy(pTiles->m_pTiles, pData, pTiles->m_Width*pTiles->m_Height*sizeof(CTile));
 
-						if(pTiles->m_Game && pTilemapItem->m_Version == MakeVersion(1, *pTilemapItem))
+						if((pTiles->m_GameFlags & TILESLAYERFLAG_PHYSICS) && pTilemapItem->m_Version == MakeVersion(1, *pTilemapItem))
 						{
 							for(int i = 0; i < pTiles->m_Width*pTiles->m_Height; i++)
 							{
@@ -622,6 +642,26 @@ int CEditorMap::Load(class IStorage *pStorage, const char *pFileName, int Storag
 						pLayer->m_Flags = pLayerItem->m_Flags;
 				}
 			}
+		}
+		
+		if(!m_pGameGroup)
+		{
+			MakeGameGroup(NewGroup());
+		}
+		if(!m_pPhysicsLayer)
+		{
+			MakePhysicsLayer(new CLayerPhysics(50, 50));
+			m_pGameGroup->AddLayer(m_pPhysicsLayer);
+		}
+		if(!m_pEntityLayer)
+		{
+			MakeEntityLayer(new CLayerEntity(50, 50));
+			m_pGameGroup->AddLayer(m_pEntityLayer);
+		}
+		if(!m_pZoneLayer)
+		{
+			MakeZoneLayer(new CLayerZone(50, 50));
+			m_pGameGroup->AddLayer(m_pZoneLayer);
 		}
 
 		// load envelopes

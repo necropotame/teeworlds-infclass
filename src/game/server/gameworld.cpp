@@ -48,13 +48,6 @@ int CGameWorld::FindEntities(vec2 Pos, float Radius, CEntity **ppEnts, int Max, 
 	{
 		if(distance(pEnt->m_Pos, Pos) < Radius+pEnt->m_ProximityRadius)
 		{
-			if(Type == ENTTYPE_CHARACTER)
-			{
-				CCharacter* pChar = (CCharacter*)pEnt;
-				if(pChar->GetPlayer())
-					continue;
-			}
-			
 			if(ppEnts)
 				ppEnts[Num] = pEnt;
 			Num++;
@@ -207,9 +200,6 @@ CCharacter *CGameWorld::IntersectCharacter(vec2 Pos0, vec2 Pos1, float Radius, v
 	for(; p; p = (CCharacter *)p->TypeNext())
  	{
 		if(p == pNotThis)
-			continue;
-			
-		if(p->GetPlayer())
 			continue;
 
 		vec2 IntersectPos = closest_point_on_line(Pos0, Pos1, p->m_Pos);

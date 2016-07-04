@@ -1168,6 +1168,21 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					SendMODT(ClientID, aBuf);
 				}
 				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help scientist") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help scientist") == 0)
+				)
+				{
+					char aBuf[512];
+					const char* pLine1 = ServerLocalize("Scientist:", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine2 = ServerLocalize("The Scientist can pose floating mines with his hammer.", m_apPlayers[ClientID]->GetLanguage()); 
+					const char* pLine3 = ServerLocalize("He has also grenades that teleport him.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("Mines are limited to two per player at the same time.", m_apPlayers[ClientID]->GetLanguage());
+					
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
+					
+					SendMODT(ClientID, aBuf);
+				}
+				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help ninja") == 0) ||
 					(str_comp_nocase(pMsg->m_pMessage,"/help ninja") == 0)
 				)
@@ -2480,17 +2495,8 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	//	game.players[i].core.world = &game.world.core;
 
 	// create all entities from the game layer
-	CMapItemLayerTilemap *pTileMap = m_Layers.GameLayer();
+	CMapItemLayerTilemap *pTileMap = m_Layers.EntityLayer();
 	CTile *pTiles = (CTile *)Kernel()->RequestInterface<IMap>()->GetData(pTileMap->m_Data);
-
-
-
-
-	/*
-	num_spawn_points[0] = 0;
-	num_spawn_points[1] = 0;
-	num_spawn_points[2] = 0;
-	*/
 	
 	m_MenuPosition = vec2(0.0f, 0.0f);
 
@@ -2498,14 +2504,8 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	{
 		for(int x = 0; x < pTileMap->m_Width; x++)
 		{
-			int Index = pTiles[y*pTileMap->m_Width+x].m_Index;
-
-			if(Index >= ENTITY_OFFSET)
-			{
-				vec2 Pos(x*32.0f+16.0f, y*32.0f+16.0f);
-				int ID = Index-ENTITY_OFFSET;
-				m_pController->OnEntity(ID, Pos);
-			}
+			vec2 Pos(x*32.0f+16.0f, y*32.0f+16.0f);
+			m_pController->OnEntity(pTiles[y*pTileMap->m_Width+x].m_Index, Pos);
 		}
 	}
 
