@@ -1347,6 +1347,7 @@ void CCharacter::Tick()
 	{
 		CoreTickParams.m_HookGrabTime = 2*SERVER_TICK_SPEED;
 	}
+	CoreTickParams.m_HookMode = m_HookMode;
 	
 	vec2 PrevPos = m_Core.m_Pos;
 	m_Core.Tick(true, &CoreTickParams);
@@ -2335,6 +2336,9 @@ void CCharacter::DestroyChildEntities()
 		}
 	}		
 	m_FirstShot = true;
+	m_HookMode = 0;
+	m_PositionLockTick = 0;
+	m_PositionLocked = 0;
 }
 
 void CCharacter::SetClass(int ClassChoosed)
