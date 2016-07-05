@@ -124,6 +124,7 @@ public:
 		int m_Score;
 		int m_Authed;
 		int m_AuthTries;
+		int m_Logged;
 
 		const IConsole::CCommandInfo *m_pRconCmdToSend;
 
@@ -305,6 +306,7 @@ public:
 	virtual int GetClientScore(int ClientID);
 	
 	virtual int IsClassChooserEnabled();
+	virtual bool IsClientLogged(int ClientID);
 private:
 	static void ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData);
 	static void ConClassChooser(IConsole::IResult *pResult, void *pUserData);

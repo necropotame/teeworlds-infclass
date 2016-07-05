@@ -787,6 +787,7 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 	pThis->m_aClients[ClientID].m_Authed = AUTHED_NO;
 	pThis->m_aClients[ClientID].m_AuthTries = 0;
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
+	pThis->m_aClients[ClientID].m_Logged = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
 	pThis->m_aClients[ClientID].m_CustomSkin = 0;
@@ -2214,6 +2215,11 @@ int CServer::GetClientScore(int ClientID)
 int CServer::IsClassChooserEnabled()
 {
 	return m_InfClassChooser;
+}
+
+bool CServer::IsClientLogged(int ClientID)
+{
+	return m_aClients[ClientID].m_Logged;
 }
 
 /* INFECTION MODIFICATION END *****************************************/

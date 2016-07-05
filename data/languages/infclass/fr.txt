@@ -2,7 +2,7 @@
 ##### translated strings #####
 
 Switch language to english ?
-== Passer la langue en français ?	
+== Passer la langue en français ?
 
 %s entered and joined the game
 == %s est arrivé(e) et a rejoint la partie

@@ -272,62 +272,62 @@ void CPlayer::Snap(int SnappingClient)
 		}
 		else
 		{
+			char aClanName[12];
 			switch(GetClass())
 			{
 				case PLAYERCLASS_ENGINEER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Engineer*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Engineer");
+					str_format(aClanName, sizeof(aClanName), "%s%sEngineer", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SOLDIER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Soldier*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Soldier*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
 					break;
 				case PLAYERCLASS_MERCENARY:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Mercenary*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Mercenary*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Mercenary");
 					break;
 				case PLAYERCLASS_SNIPER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Sniper*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Sniper*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Sniper");
 					break;
 				case PLAYERCLASS_SCIENTIST:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Scientist*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Scientist*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
 					break;
 				case PLAYERCLASS_MEDIC:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Medic*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Medic*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Medic");
 					break;
 				case PLAYERCLASS_NINJA:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Ninja*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Ninja*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
 					break;
 				case PLAYERCLASS_SMOKER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Smoker*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Smoker*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Smoker");
 					break;
 				case PLAYERCLASS_BOOMER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Boomer*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Boomer*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
 					break;
 				case PLAYERCLASS_HUNTER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Hunter*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Hunter*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
 					break;
 				case PLAYERCLASS_GHOST:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Ghost*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Ghost*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Ghost");
 					break;
 				case PLAYERCLASS_SPIDER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Spider*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Spider*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Spider");
 					break;
 				case PLAYERCLASS_UNDEAD:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Undead*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Undead*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
 					break;
 				case PLAYERCLASS_WITCH:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "*Witch*");
+					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Witch*");
 					else StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
 					break;
 				default:
