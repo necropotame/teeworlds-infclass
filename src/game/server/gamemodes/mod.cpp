@@ -343,9 +343,9 @@ void CGameControllerMOD::Tick()
 				if(tileY < 0) tileY = 0;
 				if(tileY >= m_MapHeight) tileY = m_MapHeight-1;
 				
-				if(m_GrowingMap[tileY*m_MapWidth+tileX] & 2)
+				if(m_GrowingMap[tileY*m_MapWidth+tileX] & 2 && p->GetPlayer())
 				{
-					p->Die(-1, WEAPON_GAME);
+					p->Die(p->GetPlayer()->GetCID(), WEAPON_GAME);
 				}
 			}
 		
