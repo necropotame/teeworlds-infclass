@@ -161,6 +161,8 @@ public:
 	CTuningParams m_NextTuningParams;
 	
 	void HandleTuningParams();
+	
+	bool InscoreBoard() { return m_PlayerFlags & PLAYERFLAG_SCOREBOARD; };
 /* INFECTION MODIFICATION END *****************************************/
 };
 

@@ -210,9 +210,6 @@ public:
 			
 			if(!p->IsInfected())
 				continue;
-				
-			if(p->IsFrozen())
-				continue;
 			
 			if(tileX < 0 || tileX >= GROWINGMAP_LENGTH || tileY < 0 || tileY >= GROWINGMAP_LENGTH)
 				continue;

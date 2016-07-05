@@ -29,7 +29,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_NbRound = Server()->GetClientNbRound(ClientID);
 	m_NbInfection = Server()->GetClientNbInfection(ClientID);
 	m_ScoreRound = 0;
-	m_ScoreMode = PLAYERSCOREMODE_NORMAL;
+	m_ScoreMode = PLAYERSCOREMODE_SCORE;
 	m_WinAsHuman = 0;
 	m_class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
@@ -194,7 +194,7 @@ void CPlayer::Snap(int SnappingClient)
 
 	StrToInts(&pClientInfo->m_Name0, 4, Server()->ClientName(m_ClientID));
 	
-	int SnapScoreMode = PLAYERSCOREMODE_NORMAL;
+	int SnapScoreMode = PLAYERSCOREMODE_SCORE;
 	if(GameServer()->m_apPlayers[SnappingClient])
 	{
 		SnapScoreMode = GameServer()->m_apPlayers[SnappingClient]->GetScoreMode();
@@ -334,7 +334,66 @@ void CPlayer::Snap(int SnappingClient)
 					StrToInts(&pClientInfo->m_Clan0, 3, "");
 			}
 			
-			PlayerInfoScore = m_Score;
+			if(SnapScoreMode == PLAYERSCOREMODE_CLASS)
+			{
+				switch(GetClass())
+				{
+					case PLAYERCLASS_MEDIC:
+						PlayerInfoScore = 700 + GetCID();
+						break;
+						
+					case PLAYERCLASS_ENGINEER:
+						PlayerInfoScore = 600 + GetCID();
+						break;
+					case PLAYERCLASS_SOLDIER:
+						PlayerInfoScore = 500 + GetCID();
+						break;
+					case PLAYERCLASS_SCIENTIST:
+						PlayerInfoScore = 400 + GetCID();
+						break;
+						
+					case PLAYERCLASS_NINJA:
+						PlayerInfoScore = 300 + GetCID();
+						break;
+						
+					case PLAYERCLASS_MERCENARY:
+						PlayerInfoScore = 200 + GetCID();
+						break;
+					case PLAYERCLASS_SNIPER:
+						PlayerInfoScore = 100 + GetCID();
+						break;
+						
+					case PLAYERCLASS_NONE:
+						PlayerInfoScore = GetCID();
+						break;
+						
+					case PLAYERCLASS_SMOKER:
+						PlayerInfoScore = -100 - GetCID();
+						break;
+					case PLAYERCLASS_BOOMER:
+						PlayerInfoScore = -200 - GetCID();
+						break;
+					case PLAYERCLASS_HUNTER:
+						PlayerInfoScore = -300 - GetCID();
+						break;
+					case PLAYERCLASS_GHOST:
+						PlayerInfoScore = -400 - GetCID();
+						break;
+					case PLAYERCLASS_SPIDER:
+						PlayerInfoScore = -500 - GetCID();
+						break;
+					case PLAYERCLASS_UNDEAD:
+						PlayerInfoScore = -600 - GetCID();
+						break;
+					case PLAYERCLASS_WITCH:
+						PlayerInfoScore = -700 - GetCID();
+						break;
+					default:
+						PlayerInfoScore = -999;
+				}
+			}
+			else
+				PlayerInfoScore = m_Score;
 		}
 	}
 	

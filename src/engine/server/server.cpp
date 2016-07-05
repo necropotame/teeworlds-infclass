@@ -791,7 +791,7 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 /* INFECTION MODIFICATION START ***************************************/
 	pThis->m_aClients[ClientID].m_CustomSkin = 0;
 	pThis->m_aClients[ClientID].m_AlwaysRandom = 0;
-	pThis->m_aClients[ClientID].m_DefaultScoreMode = PLAYERSCOREMODE_NORMAL;
+	pThis->m_aClients[ClientID].m_DefaultScoreMode = PLAYERSCOREMODE_SCORE;
 	pThis->m_aClients[ClientID].m_Language = LANGUAGE_EN;
 /* INFECTION MODIFICATION END *****************************************/
 	

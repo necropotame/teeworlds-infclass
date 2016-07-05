@@ -191,6 +191,7 @@ void CCharacter::HandleWaterJump()
 			m_DartLifeSpan =  g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
 			vec2 Direction = normalize(vec2(m_LatestInput.m_TargetX, m_LatestInput.m_TargetY));
 			m_DartDir = Direction;
+			m_DartOldVelAmount = length(m_Core.m_Vel);
 			
 			m_Core.m_TriggeredEvents |= COREEVENT_AIR_JUMP;
 		}
@@ -202,7 +203,8 @@ void CCharacter::HandleWaterJump()
 	
 	if(m_DartLifeSpan == 0)
 	{
-		m_Core.m_Vel = m_DartDir * 5.0f;
+		//~ m_Core.m_Vel = m_DartDir * 5.0f;
+		m_Core.m_Vel = m_DartDir*m_DartOldVelAmount;
 	}
 	
 	if(m_DartLifeSpan > 0)
