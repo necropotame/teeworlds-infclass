@@ -1939,11 +1939,18 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Team = TEAM_RED;
 	}
 	
-	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
+	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() 
+		&& GameServer()->m_apPlayers[SnappingClient]->GetCharacter()->IsInfected() == IsInfected())
 	{
 		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
-		
-		if(pClient && pClient->GetClass() == PLAYERCLASS_MEDIC)
+		/*No if not boomer check, because it could be buggy if a new class will be added*/
+		if(pClient && (pClient->GetClass() == PLAYERCLASS_MEDIC 
+						|| pClient->GetClass() == PLAYERCLASS_SMOKER
+						|| pClient->GetClass() == PLAYERCLASS_HUNTER
+						|| pClient->GetClass() == PLAYERCLASS_GHOST
+						|| pClient->GetClass() == PLAYERCLASS_SPIDER
+						|| pClient->GetClass() == PLAYERCLASS_WITCH
+						|| pClient->GetClass() == PLAYERCLASS_UNDEAD))
 		{
 			CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
 			if(!pP)
