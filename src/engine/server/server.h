@@ -307,6 +307,8 @@ public:
 	
 	virtual int IsClassChooserEnabled();
 	virtual bool IsClientLogged(int ClientID);
+	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
+	virtual void Register(int ClientID, const char* pUsername, const char* pPassword);
 private:
 	static void ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData);
 	static void ConClassChooser(IConsole::IResult *pResult, void *pUserData);

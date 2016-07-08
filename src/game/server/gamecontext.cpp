@@ -1120,11 +1120,19 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					SendMODT(ClientID, aBuf);
 				}
 				else if(
+					(str_comp_nocase_num(pMsg->m_pMessage,"\\register ", 10) == 0) ||
+					(str_comp_nocase_num(pMsg->m_pMessage,"/register", 10) == 0)
+				)
+				{
+					
+					Server()->Register(ClientID, Server()->ClientName(ClientID), pMsg->m_pMessage+10);
+				}
+				else if(
 					(str_comp_nocase_num(pMsg->m_pMessage,"\\login ", 7) == 0) ||
 					(str_comp_nocase_num(pMsg->m_pMessage,"/login ", 7) == 0)
 				)
 				{
-					
+					Server()->Login(ClientID, Server()->ClientName(ClientID), pMsg->m_pMessage+7);
 				}
 				else if(
 					(str_comp_nocase(pMsg->m_pMessage,"\\help") == 0) ||

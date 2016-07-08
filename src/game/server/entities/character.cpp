@@ -2074,7 +2074,10 @@ void CCharacter::OpenClassChooser()
 
 int CCharacter::GetClass()
 {
-	return m_pPlayer->GetClass();
+	if(!m_pPlayer)
+		return PLAYERCLASS_NONE;
+	else
+		return m_pPlayer->GetClass();
 }
 
 void CCharacter::ClassSpawnAttributes()

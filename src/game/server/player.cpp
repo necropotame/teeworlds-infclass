@@ -279,60 +279,49 @@ void CPlayer::Snap(int SnappingClient)
 					str_format(aClanName, sizeof(aClanName), "%s%sEngineer", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SOLDIER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Soldier*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Soldier");
+					str_format(aClanName, sizeof(aClanName), "%s%sSoldier", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_MERCENARY:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Mercenary*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Mercenary");
+					str_format(aClanName, sizeof(aClanName), "%s%sMercenary", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SNIPER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Sniper*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Sniper");
+					str_format(aClanName, sizeof(aClanName), "%s%sSniper", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SCIENTIST:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Scientist*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Scientist");
+					str_format(aClanName, sizeof(aClanName), "%s%sScientist", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_MEDIC:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Medic*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Medic");
+					str_format(aClanName, sizeof(aClanName), "%s%sMedic", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_NINJA:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Ninja*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Ninja");
+					str_format(aClanName, sizeof(aClanName), "%s%sNinja", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SMOKER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Smoker*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Smoker");
+					str_format(aClanName, sizeof(aClanName), "%s%sSmoker", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_BOOMER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Boomer*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Boomer");
+					str_format(aClanName, sizeof(aClanName), "%s%sBoomer", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_HUNTER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Hunter*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Hunter");
+					str_format(aClanName, sizeof(aClanName), "%s%sHunter", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_GHOST:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Ghost*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Ghost");
+					str_format(aClanName, sizeof(aClanName), "%s%sGhost", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SPIDER:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Spider*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Spider");
+					str_format(aClanName, sizeof(aClanName), "%s%sSpider", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_UNDEAD:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Undead*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Undead");
+					str_format(aClanName, sizeof(aClanName), "%s%sUndead", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_WITCH:
-					if(m_WinAsHuman) StrToInts(&pClientInfo->m_Clan0, 3, "Witch*");
-					else StrToInts(&pClientInfo->m_Clan0, 3, "Witch");
+					str_format(aClanName, sizeof(aClanName), "%s%sWitch", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				default:
-					StrToInts(&pClientInfo->m_Clan0, 3, "");
+					str_format(aClanName, sizeof(aClanName), "%s%s", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 			}
+			
+			StrToInts(&pClientInfo->m_Clan0, 3, aClanName);
 			
 			if(SnapScoreMode == PLAYERSCOREMODE_CLASS)
 			{

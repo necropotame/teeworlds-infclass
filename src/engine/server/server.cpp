@@ -2222,5 +2222,15 @@ bool CServer::IsClientLogged(int ClientID)
 	return m_aClients[ClientID].m_Logged;
 }
 
+void CServer::Login(int ClientID, const char* pUsername, const char* pPassword)
+{
+	m_aClients[ClientID].m_Logged = true;
+}
+
+void CServer::Register(int ClientID, const char* pUsername, const char* pPassword)
+{
+	m_aClients[ClientID].m_Logged = true;
+}
+
 /* INFECTION MODIFICATION END *****************************************/
 

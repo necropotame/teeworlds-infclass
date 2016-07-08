@@ -164,6 +164,8 @@ public:
 	virtual int IsClassChooserEnabled() = 0;
 	
 	virtual bool IsClientLogged(int ClientID) = 0;
+	virtual void Login(int ClientID, const char* pUsername, const char* pPassword) = 0;
+	virtual void Register(int ClientID, const char* pUsername, const char* pPassword) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 
