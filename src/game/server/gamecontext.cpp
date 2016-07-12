@@ -557,7 +557,7 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 	if(Class < END_HUMANCLASS)
 		SendBroadcast_Language_s(ClientID, "You are a human: %s", pClassName);
 	else
-		SendBroadcast_Language_s(ClientID, "You are a infected: %s", pClassName);
+		SendBroadcast_Language_s(ClientID, "You are an infected: %s", pClassName);
 }
 
 /* INFECTION MODIFICATION END *****************************************/
