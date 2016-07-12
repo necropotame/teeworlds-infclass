@@ -39,6 +39,7 @@ void CGameContext::InitializeServerLocatization()
 		s_ServerLocalization[LANGUAGE_ES].Load("languages/infclass/es.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_AR].Load("languages/infclass/ar.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_HU].Load("languages/infclass/hu.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_PL].Load("languages/infclass/pl.txt", Storage(), Console());
 		
 		s_ServerLocalizationInitialized = true;
 	}
@@ -1426,6 +1427,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Language = LANGUAGE_AR;
 					else if(str_comp_nocase(pMsg->m_pMessage+10, "hu") == 0)
 						Language = LANGUAGE_HU;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "pl") == 0)
+						Language = LANGUAGE_PL;
 					
 					if(Language >= 0)
 					{
@@ -1438,7 +1441,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					else
 					{
 						SendChatTarget_Language(ClientID, "Unknown language");
-						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es|ar|hu>");
+						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es|ar|hu|pl>");
 					}
 				}
 				else
@@ -1826,6 +1829,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_FR);
 						m_VoteLanguage[ClientID] = LANGUAGE_FR;				
 						break;
+					case 616: //Poland
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_PL);
+						m_VoteLanguage[ClientID] = LANGUAGE_PL;				
+						break;
 					case 40: //Austria
 					case 276: //Germany
 					case 438: //Liechtenstein
@@ -1846,7 +1853,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_IT);
 						m_VoteLanguage[ClientID] = LANGUAGE_IT;				
 						break;
-					case 348: //Hungarian
+					case 348: //Hungary
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_HU);
 						m_VoteLanguage[ClientID] = LANGUAGE_HU;				
 						break;

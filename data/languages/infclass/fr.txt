@@ -293,7 +293,7 @@ Laser wall: %d sec
 == Barrière laser : %d sec
 
 Position lock: %d sec
-== Verrou de position : %d
+== Verrou de position : %d sec
 
 Web mode enabled
 == Mode toile activé
