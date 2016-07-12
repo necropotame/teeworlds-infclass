@@ -37,7 +37,8 @@ void CGameContext::InitializeServerLocatization()
 		s_ServerLocalization[LANGUAGE_RU].Load("languages/infclass/ru.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_IT].Load("languages/infclass/it.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_ES].Load("languages/infclass/es.txt", Storage(), Console());
-		//~ s_ServerLocalization[LANGUAGE_AR].Load("languages/infclass/ar.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_AR].Load("languages/infclass/ar.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_HU].Load("languages/infclass/hu.txt", Storage(), Console());
 		
 		s_ServerLocalizationInitialized = true;
 	}
@@ -1421,8 +1422,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Language = LANGUAGE_IT;
 					else if(str_comp_nocase(pMsg->m_pMessage+10, "es") == 0)
 						Language = LANGUAGE_ES;
-					//~ else if(str_comp_nocase(pMsg->m_pMessage+10, "ar") == 0)
-						//~ Language = LANGUAGE_AR;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "ar") == 0)
+						Language = LANGUAGE_AR;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "hu") == 0)
+						Language = LANGUAGE_HU;
 					
 					if(Language >= 0)
 					{
@@ -1435,7 +1438,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					else
 					{
 						SendChatTarget_Language(ClientID, "Unknown language");
-						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es>");
+						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es|ar|hu>");
 					}
 				}
 				else
@@ -1843,6 +1846,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_IT);
 						m_VoteLanguage[ClientID] = LANGUAGE_IT;				
 						break;
+					case 348: //Hungarian
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_HU);
+						m_VoteLanguage[ClientID] = LANGUAGE_HU;				
+						break;
 					case 32: //Argentina
 					case 68: //Bolivia
 					case 152: //Chile
@@ -1866,6 +1873,30 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 862: //Venezuela
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_ES);
 						m_VoteLanguage[ClientID] = LANGUAGE_ES;				
+						break;
+					case 12: //Algeria
+					case 48: //Bahrain
+					case 262: //Djibouti
+					case 818: //Egypt
+					case 368: //Iraq
+					case 400: //Jordan
+					case 414: //Kuwait
+					case 422: //Lebanon
+					case 434: //Libya
+					case 478: //Mauritania
+					case 504: //Morocco
+					case 512: //Oman
+					case 275: //Palestine
+					case 634: //Qatar
+					case 682: //Saudi Arabia
+					case 706: //Somalia
+					case 729: //Sudan
+					case 760: //Syria
+					case 788: //Tunisia
+					case 784: //United Arab Emirates
+					case 887: //Yemen
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_AR);
+						m_VoteLanguage[ClientID] = LANGUAGE_AR;				
 						break;
 				}
 				
