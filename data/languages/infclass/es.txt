@@ -79,25 +79,20 @@ Type "/help %s" for more information about your class
 You are frozen: %d sec
 == Estás congelado : %d seg
 
-### NOT TRANSLATED
-#Bombs left: %d
-#== 
+Bombs left: %d
+== Bombas restantes: %d 
 
-### NOT TRANSLATED
-#Laser wall: %d sec
-#== 
+Laser wall: %d sec
+== Barrera: %d sec
 
-### NOT TRANSLATED
-#Position lock: %d sec
-#== 
+Position lock: %d sec
+== Posición bloqueada: %d sec 
 
-### NOT TRANSLATED
-#Active mines: %d
-#== 
+Active mines: %d
+== Minas activadas: %d
 
-### NOT TRANSLATED
-#Web mode enabled
-#== 
+Web mode enabled
+== Modo web activado 
 
 ##### CLASSCHOOSER #####################################################
 
@@ -135,22 +130,19 @@ List of commands
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1> : Elegir automáticamente una clase aleatoria al comenzar la ronda
 
-### NOT TRANSLATED
-#/lowresmap and /highresmap: Switch between simplified and classical maps
-#== 
+/lowresmap and /highresmap: Switch between simplified and classical maps
+== /lowresmap y /highresmap: Cambia entre mapas simplicados y clasicos
 
-### NOT TRANSLATED
-#Press <F3> or <F4> to enable or disable hook protection
-#== 
+Press <F3> or <F4> to enable or disable hook protection
+== Pulsa <F3> o <F4> para activar o desactivar la predicción de gancho
 
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == Pulsa <F3> o <F4> mientras mantienes <TAB> para cambiar el sistema de puntuación
 
 ##### Language ##### 
 
-### NOT TRANSLATED
-#Unknown language
-#== 
+Unknown language
+== Idioma desconocido
 
 ##### Always Random ##### 
 
@@ -193,13 +185,11 @@ The goal for infected is to infect all humans.
 
 ##### Hook protection ##### 
 
-### NOT TRANSLATED
-#Hook protection enabled
-#== 
+Hook protection enabled
+== Protección de gancho activada
 
-### NOT TRANSLATED
-#Hook protection disabled
-#== 
+Hook protection disabled
+== Protección de gancho desactivada
 
 ##### CLASSES ##########################################################
 
@@ -248,17 +238,14 @@ Scientist
 Scientist:
 == Científico:
 
-### NOT TRANSLATED
-#The Scientist can pose floating mines with his hammer.
-#== 
+The Scientist can pose floating mines with his hammer.
+== El científico puede poner minas flotantes con su martillo.
 
-### NOT TRANSLATED
-#He has also grenades that teleport him.
-#== 
+He has also grenades that teleport him.
+== El también tiene granadas que lo teletransportan.
 
-### NOT TRANSLATED
-#Mines are limited to two per player at the same time.
-#== 
+Mines are limited to two per player at the same time.
+== Las minas están limitadas a dos por jugador al mismo tiempo.
 
 ##### Medic ##### 
 
@@ -290,39 +277,31 @@ His hammer is replaced by a katana, allowing him to jump two times before touchi
 
 ##### Mercenary ##### 
 
-### NOT TRANSLATED
-#Mercenary
-#== 
+Mercenary
+== Mercenario
 
-### NOT TRANSLATED
-#Mercenary:
-#== 
+Mercenary:
+== Mercenario:
 
-### NOT TRANSLATED
-#The Mercenary fly in air using his machine gun.
-#== 
+The Mercenary fly in air using his machine gun.
+== El mercenario vuela usando su metralleta.
 
-### NOT TRANSLATED
-#He can also throw poison grenades that deals 8 damage points.
-#== 
+He can also throw poison grenades that deals 8 damage points.
+== El puede también puede lanzar granadas de pociones que inflingen 8 puntos de daño.
 
 ##### Sniper ##### 
 
-### NOT TRANSLATED
-#Sniper
-#== 
+Sniper
+== Francotirador
 
-### NOT TRANSLATED
-#Sniper:
-#== 
+Sniper:
+== Francotirador: 
 
-### NOT TRANSLATED
-#The Sniper can lock his position in air for 15 seconds with his hammer.
-#== 
+The Sniper can lock his position in air for 15 seconds with his hammer.
+== El francotirador puede bloquear su posición en el aire por 15 segundos con su martillo.
 
-### NOT TRANSLATED
-#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-#== 
+He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+== El tiene también un rifle potente que inflinge 19-20 puntos de daño cuando está bloqueado en una posicion y 9-10 en otros casos.
 
 ##### Smoker ##### 
 
@@ -371,47 +350,37 @@ He can jump two times in air.
 
 ##### Spider ##### 
 
-### NOT TRANSLATED
-#Spider
-#== 
+Spider
+== Araña
 
-### NOT TRANSLATED
-#Spider:
-#== 
+Spider:
+== Araña:
 
-### NOT TRANSLATED
-#The Spider can infect humans and heal infected with his hammer.
-#== 
+The Spider can infect humans and heal infected with his hammer.
+== La Araña puede infectar humanos y herir infectados con su martillo.
 
-### NOT TRANSLATED
-#When selecting any gun, his hook enter in web mode.
-#== 
+When selecting any gun, his hook enter in web mode.
+== Cuando seleccion cualquier arma, el gancho entra en modo telaraña.
 
-### NOT TRANSLATED
-#Any human that touch a hook in web mode is automatically grabbed.
-#== 
+Any human that touch a hook in web mode is automatically grabbed.
+== Cualquier humano que toque el gancho en modo telaraña es automáticamente agarrado.
 
-### NOT TRANSLATED
-#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
-#== 
+The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+== EL gancho de la araña (en ambos modos) inflinge 1 punto de daño por segundo y puede agarrar a un humano durante 2 segundos.
 
 ##### Ghost #####
 
-### NOT TRANSLATED
-#Ghost
-#== 
+Ghost
+== Fantasma
 
-### NOT TRANSLATED
-#Ghost:
-#== 
+Ghost:
+== Fantasma:
 
-### NOT TRANSLATED
-#The Ghost can infect humans and heal infected with his hammer.
-#== 
+The Ghost can infect humans and heal infected with his hammer.
+== El Fantasma puede infectar humanos y curar infectados con su martillo.
 
-### NOT TRANSLATED
-#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
-#== 
+He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+== El es invisible, excepto si un humano esta cerca de él, si le inflingen daño o si usa su martillo.
 
 ##### Undead ##### 
 
