@@ -1473,10 +1473,71 @@ void CServer::InitRegister(CNetServer *pNetServer, IEngineMasterServer *pMasterS
 	m_Register.Init(pNetServer, pMasterServer, pConsole);
 }
 
+static bool IsSeparator(char c) { return c == ';' || c == ' ' || c == ',' || c == '\t'; }
+
 int CServer::Run()
 {
 	//
 	m_PrintCBIndex = Console()->RegisterPrintCallback(g_Config.m_ConsoleOutputLevel, SendRconLineAuthed, this);
+
+	//Choose a random map from the rotation
+	if(!str_length(g_Config.m_SvMap) && str_length(g_Config.m_SvMaprotation))
+	{
+		int nbMaps = 0;
+		{
+			const char *pNextMap = g_Config.m_SvMaprotation;
+			
+			//Skip initial separator
+			while(*pNextMap && IsSeparator(*pNextMap))
+				pNextMap++;
+				
+			while(*pNextMap)
+			{
+				while(*pNextMap && !IsSeparator(*pNextMap))
+					pNextMap++;
+				while(*pNextMap && IsSeparator(*pNextMap))
+					pNextMap++;
+
+				dbg_msg("InfClass", "map found");
+			
+				nbMaps++;
+			}
+		}
+		
+		int MapPos = (rand()+g_Config.m_SvPort+time_get())%nbMaps;
+		char aBuf[512] = {0};
+		
+		{
+			int MapPosIter = 0;
+			const char *pNextMap = g_Config.m_SvMaprotation;
+			
+			//Skip initial separator
+			while(*pNextMap && IsSeparator(*pNextMap))
+				pNextMap++;
+				
+			while(*pNextMap)
+			{
+				if(MapPosIter == MapPos)
+				{
+					int MapNameLength = 0;
+					while(pNextMap[MapNameLength] && !IsSeparator(pNextMap[MapNameLength]))
+						MapNameLength++;
+					mem_copy(aBuf, pNextMap, MapNameLength);	
+					aBuf[MapNameLength] = 0;
+					break;
+				}
+				
+				while(*pNextMap && !IsSeparator(*pNextMap))
+					pNextMap++;
+				while(*pNextMap && IsSeparator(*pNextMap))
+					pNextMap++;
+			
+				MapPosIter++;
+			}
+		}
+		
+		str_copy(g_Config.m_SvMap, aBuf, sizeof(g_Config.m_SvMap));
+	}
 
 	// load map
 	if(!LoadMap(g_Config.m_SvMap))
