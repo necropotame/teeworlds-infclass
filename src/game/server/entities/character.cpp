@@ -1403,7 +1403,7 @@ void CCharacter::Tick()
 		}
 	}
 	
-	if(m_pPlayer->m_InClassChooserMenu)
+	if(m_pPlayer->InClassChooserMenu())
 	{
 		if(GetClass() != PLAYERCLASS_NONE)
 		{

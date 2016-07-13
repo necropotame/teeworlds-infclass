@@ -15,6 +15,7 @@
 #include "gamemodes/tdm.h"
 #include "gamemodes/ctf.h"
 #include "gamemodes/mod.h"
+#include <game/arabicinputconverter.h>
 
 enum
 {
@@ -1128,6 +1129,19 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				{
 					
 					Server()->Register(ClientID, Server()->ClientName(ClientID), pMsg->m_pMessage+10);
+				}
+				else if(
+					(str_comp_nocase_num(pMsg->m_pMessage,"\\ar  ", 4) == 0) ||
+					(str_comp_nocase_num(pMsg->m_pMessage,"/ar ", 4) == 0) ||
+					(str_comp_nocase_num(pMsg->m_pMessage,"\\fa  ", 4) == 0) ||
+					(str_comp_nocase_num(pMsg->m_pMessage,"/fa ", 4) == 0)
+				)
+				{
+					//Inverse order and add ligature
+					char aTmp[sizeof(pMsg->m_pMessage)];
+					char aOutput[sizeof(pMsg->m_pMessage)];
+					ConvertArabicInput(pMsg->m_pMessage+4, aTmp, aOutput);
+					SendChat(ClientID, Team, aOutput);
 				}
 				else if(
 					(str_comp_nocase_num(pMsg->m_pMessage,"\\login ", 7) == 0) ||
@@ -2551,8 +2565,6 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	CMapItemLayerTilemap *pTileMap = m_Layers.EntityLayer();
 	CTile *pTiles = (CTile *)Kernel()->RequestInterface<IMap>()->GetData(pTileMap->m_Data);
 	
-	m_MenuPosition = vec2(0.0f, 0.0f);
-
 	for(int y = 0; y < pTileMap->m_Height; y++)
 	{
 		for(int x = 0; x < pTileMap->m_Width; x++)

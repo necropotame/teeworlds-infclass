@@ -1,1 +1,341 @@
+##### translated strings #####
 
+Switch language to english ?
+== ؟ ﺔﻴﺑﺮﻌﻟﺍ ﻰﻟﺇ ﺔﻐﻠﻟﺍ ﺮﻴﻴﻐﺗ
+
+%s entered and joined the game
+== ﺔﺒﻌﻠﻟﺍ ﻰﻟﺇ ﻢﻀﻧﺇ %s
+
+%s joined the game
+== ﻁﻮﺸﻟﺍ ﻰﻟﺇ ﻢﻀﻧﺇ %s
+
+%s joined the spectators
+== ﻦﻳﺪﻫﺎﺸﻤﻟﺍ ﻰﻟﺍ ﻢﻀﻧﺇ %s
+
+%s has left the game
+== ﺔﺒﻌﻠﻟﺍ ﺭﺩﺎﻏ %s
+
+%s has left the game (%s)
+== (%s) ﺔﺒﻌﻠﻟﺍ ﺭﺩﺎﻏ %s
+
+%s has been kicked (%s)
+== (%s) ﻩﺩﺮﻃ ﻢﺗ %s
+
+%s has been banned (%s)
+== (%s) ﻪﻴﻔﻧ ﻢﺗ %s
+
+%s changed their name to %s
+== %s ﻲﻟﺇ ﻪﻤﺳﺇ ﺮﻴﻏ %s
+
+Unknown command
+== ﻡﻮﻠﻌﻣ ﺮﻴﻏ ﺐﻠﻃ
+
+A random class will be automatically attributed to you when rounds start
+== ﻁﻮﺸﻟﺍ ﺔﻳﺍﺪﺑ ﺪﻨﻋ ﺎﻴﺋﺎﻘﻠﺗ ﺔﻴﺼﺨﺷ ﻦﻴﻴﻌﺗ ﻢﻴﺳ
+
+The class selector will be displayed when rounds start
+== ﻁﻮﺸﻟﺍ ﺔﻳﺍﺪﺑ ﺪﻨﻋ ﻚﺘﻴﺼﺨﺷ ﺭﺎﻴﺘﺧﺇ ﺔﻓﺮﻌﻣ ﻊﻴﻂﺘﺴﺗ
+
+You can't join the spectators right now
+== ﻥﻵﺍ ﻦﻳﺪﻫﺎﺸﻤﻟﺍ ﻰﻟﺍ ﻡﺎﻤﻀﻧﻻﺍ ﻚﻨﻛﻤﻳﻻ
+
+You have infected %s, +3 points
+== ﻁﺎﻘﻧ 3+ ,%s ﻯﻭﺪﻌﻟﺍ ﺕﺭﺮﻣ ﺪﻘﻟ
+
+You have killed a witch, +5 points
+== ﻁﺎﻘﻧ 5+ ,ﺓﺮﺣﺎﺳ ﺖﻠﺘﻗ ﺪﻘﻟ
+
+You have survived, +5 points
+== ﻁﺎﻘﻧ 5+ ,ﺕﻮﺠﻧ ﺪﻘﻟ
+
+%s has been infected
+== ﻯﻭﺪﻌﻟﺎﺑ ﺐﻴﺻﺃ %s
+
+The witch is coming!
+== ! ﺓﺮﺣﺎﺴﻟﺍ ﺖﺗﺍ
+
+The witch is dead
+== ! ﺓﺮﺣﺎﺴﻟﺍ ﺔﻠﺘﻗ
+
+Infected won the round in %i:%02i minutes
+== ﺔﻘﻴﻗﺩ %i:%02i  ﻲﻓ ﻯﻭﺪﻌﻟﺎﺑ ﻥﻮﺑﺎﺼﻤﻟﺍ ﺢﺑﺭ
+
+One human won the round
+== ﺔﻟﻮﺠﻟﺍ ﺢﺑﺭ ﺪﺣﺍﻭ ﻥﺎﺴﻧﺇ
+
+%i humans won the round
+== ﺔﻟﻮﺠﻟﺍ ﺍﻮﺤﺑﺭ ﻦﻴﺒﻋﻻ %i
+
+Choose your class
+== ﻚﺘﻴﺼﺨﺷ ﺮﺘﺧﺇ
+
+Random choice
+== ﻲﺋﺍﻮﺸﻋ ﺭﺎﻴﺘﺧﺇ
+
+You are a human: %s
+== %s : ﻥﺎﺴﻧﺇ ﺖﻧﺃ
+
+You are an infected: %s
+== %s : ﻯﻭﺪﻌﻟﺎﺑ ﺏﺎﺼﻣ ﺖﻧﺍ
+
+Type "/help %s" for more information about your class
+== ﻚﺘﻴﺼﺨﺷ ﻦﻋ ﺕﺎﻣﻮﻠﻌﻤﻟﺍ ﺔﻳﺰﻤﻟ "/help %s" ﺐﺘﻛﺃ
+
+Engineer
+== ﺱﺪﻨﻬﻣ
+
+Soldier
+== ﻱﺪﻨﺟ
+
+Scientist
+== ﻢﻟﺎﻋ
+
+Medic
+== ﺐﻴﺒﻃ
+
+Mercenary
+== ﻕﺰﺗﺮﻣ
+
+Sniper
+== ﺹﺎﻨﻗ
+
+Ninja
+== ﺎﺠﻨﻴﻧ
+
+Smoker
+== ﻦﺧﺪﻣ
+
+Boomer
+== ﻱﺭﺎﺤﺘﻧﺇ
+
+Hunter
+== ﺩﺎﻴﺻ
+
+Spider
+== ﺕﻮﺒﻛﻨﻋ
+
+Witch
+== ﺓﺮﺣﺎﺳ
+
+List of commands
+== ﺮﻣﺍﻭﻷﺍ ﺔﺣﻹ
+
+/info: Information about this mod
+== ﺔﺒﻌﻠﻟﺍ ﻝﻮﺣ ﺕﺎﻣﻮﻠﻌﻣ : /info
+
+/help: Rules of the game
+== ﺔﺒﻌﻠﻟﺍ ﺪﻋﺍﻮﻗ : /help
+
+/help <class>: Information about a particular class
+== ﺔﻨﻴﻌﻣ ﺔﻴﺼﺨﺷ ﻝﻮﺣ ﺕﺎﻣﻮﻠﻌﻣ : /help <class>
+
+/language <lang>: Change the language of the mod
+== ﺔﻐﻟﺍ ﺮﻴﻴﻐﺗ : /language <lang>
+
+/alwaysrandom <0|1>: Choose a random class at the beginning of each round
+== ﺔﻟﻮﺟ ﻞﻛ ﺔﻳﺍﺪﺑ ﺪﻨﻋ ﺔﻴﺼﺨﺸﻠﻟ ﻲﺋﺍﻮﺸﻋ ﺭﺎﻴﺘﺧﺇ : /alwaysrandom <0|1>
+
+Press <F3> or <F4> while holding <TAB> to switch the score system
+== ﻁﺎﻘﻨﻟﺍ ﻡﺎﻀﻧ  ﺮﻴﻴﻐﺘﻟ <TAB> ﻊﻣ <F4> ﻭﺃ <F3> ﻰﻠﻋ ﻂﻐﺿﺇ
+
+Thanks to %s
+== %s : ﻝ ﺍﺮﻛﺷ
+
+Rules of the game:
+== : ﺔﺒﻌﻠﻟﺍ ﺪﻋﺍﻮﻗ
+
+InfectionClass is a team game between humans and infected.
+== ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻭ ﺮﺸﺒﻟﺍ ﻦﻴﺑ ﺔﺒﻌﻟ ﻲﻫ "InfectionClass"
+
+All players start as human.
+== ﺮﺸﺒﻛ ﻥﺅﺪﺒﻳ ﻦﻴﺒﻋﻼﻟﺍ ﻊﻴﻤﺟ
+
+10 seconds later, two players become infected.
+== ﻯﻭﺪﻌﻟﺎﺑ ﻥﺎﺒﻋﻻ ﺏﺎﺼﻳ. ﻦﻧﺍﻮﺛ ﺮﺸﻋ ﺪﻌﺑ
+
+The goal for humans is to survive until the army clean the map.
+== ﺕﺍﻮﻣﻷﺍ ﻰﻠﻋ ﺶﻴﺠﻟﺍ ﻲﻀﻘﻳ ﻥﺍ ﻲﻟﺍ ﺍﻮﺠﻨﻳ ﻥﺍ ﺮﺸﺒﻟﺍ ﻰﻠﻋ ﺐﺠﻳ
+
+The goal for infected is to infect all humans.
+== ﺮﺸﺒﻟﺍ ﻰﻟﺇ ﺎﻫﻭﺭﺮﻤﻳ ﻥﺃ ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻑﺪﻫ
+
+Engineer:
+== : ﺱﺪﻨﻬﻣ
+
+The Engineer can build walls with his hammer to block infected.
+== ﺭﻭﺮﻤﻟﺍ ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻰﻠﻋ ﻊﻨﻤﺗ ﺔﻗﺮﻂﻤﻟﺎﺑ ﺰﺟﺍﻮﺣ ﻲﻨﺒﻳ ﻥﺃ ﺱﺪﻨﻬﻤﻠﻟ ﻦﻛﻤﻳ
+
+When an infected touch the wall, he dies.
+== ﺕﻮﻤﻳ ﻂﺋﺎﺤﻟﺍ ﻯﻭﺪﻌﻟﺎﺑ ﺏﺎﺼﻣ ﺲﻤﻠﻳ ﺎﻣﺪﻨﻋ
+
+Soldier:
+== : ﻱﺪﻨﺠﻟﺍ
+
+The Soldier can pose floating bombs with his hammer.
+== ﻪﺘﻗﺮﻂﻣ ﻝﺎﻤﻌﺘﺳﺈﺑ ﻞﺑﺎﻨﻗ ﻖﻠﺨﻳ ﻥﺃ ﻱﺪﻨﺠﻠﻟ ﻦﻛﻤﻳ
+
+Each bomb can explode three times.
+== ﺕﺍﺮﻣ ﺔﺛﻼﺛ ﺮﺠﻔﺘﺗ ﻥﺃ ﻦﻛﻤﻳ ﺔﻠﺒﻨﻗ ﻞﻛ
+
+Use the hammer to place the bomb and explode it multiple times.
+== ﺎﻫﺮﺠﻔﺗ ﺖﻗﻭ ﻲﻓ ﻢﻛﺤﺘﻟﺍ ﻭ ﺔﻠﺒﻨﻘﻟﺍ ﻊﺿﻮﻟ ﺔﻗﺮﻂﻤﻟﺍ ﻞﻤﻌﺘﺳﺇ
+
+Bombs are limited to one per player at the same time.
+== ﻱﺪﻨﺟ ﻞﻛﻟ ﺓﺪﺣﺍﻭ ﺔﻠﺒﻨﻗ ﻦﻣ ﺮﺜﻛﺃ ﻝﺎﻤﻌﺘﺳﺇ ﻦﻛﻤﻳﻻ
+
+Medic:
+== : ﺐﻴﺒﻃ
+
+The Medic can protect humans with his hammer by giving them armor.
+== عﺭﺪﺑ ﻢﻫﺪﻳﻭﺰﺗ ﻖﻳﺮﻃ ﻦﻋ ءﺎﻴﺣﻷﺍ ﻦﻴﺒﻋﻻﺍ ﻲﻔﺸﻳ ﻥﺃ ﺐﻴﺒﻂﻠﻟ ﻦﻛﻤﻳ
+
+He has also a powerful shotgun that can pullback infected.
+== ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻊﻓﺪﺗ ﻥﺃ ﺎﻬﻨﻛﻤﻳ ﺔﻴﻗﺪﻨﺑ ﺎﻆﻳﺃ ﻪﻳﺪﻟ
+
+Ninja:
+== : ﺎﺠﻨﻴﻧ
+
+The Ninja can throw flash grenades that can freeze infected during three seconds.
+== ﻦﻧﺍﻮﺛ ﺔﺛﻼﺜﻟ ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﺔﻛﺮﺣ ﻞﺸﺗ ﻞﺑﺎﻨﻗ ﻲﻣﺮﻳ ﻥﺃ ﺎﺠﻨﻴﻨﻟﻻ ﻦﻛﻤﻳ
+
+His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
+== ﺽﺭﻷﺍ ﺲﻤﻠﻳ ﻥﺃ ﻰﻟﺇ ﻦﻴﺗﺮﻤﻟ ﻖﻴﻠﺤﺘﻟﺍ ﻦﻣ ﻪﻨﻛﻤﻳ ﻑﻴﺴﺑ ﺎﻬﻀﻳﻮﻌﺗ ﻢﺗ ﻪﺘﻗﺮﻂﻣ
+
+Smoker:
+== : ﻦﺧﺪﻣ
+
+The Smoker can infect humans and heal infected with his hammer.
+== . ﻪﺘﻗﺮﻂﻤﺑ ﺮﺸﺒﻟﺍ ﻱﺪﻌﻳ ﻥﺃ ﻭ ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻲﻔﺸﻳ ﻥﺃ ﻦﺧﺪﻤﻠﻟ ﻦﻛﻤﻳ
+
+He can also inflict 4 damage points per seconds by hooking humans.
+== . ﺔﻴﻧﺎﺛ ﻞﻛ ﻁﺎﻘﻧ ﻊﺑﺭﺄﺑ ﺮﺸﺒﻟﺍ ﺔﻗﺎﻃ ﻦﻣ ﻑﻌﻀﻳ ﻥﺃ ﻦﻛﻤﻳ ﻭ
+
+Boomer:
+== ﻱﺭﺎﺤﺘﻧﺇ
+
+The Boomer explodes when he attack.
+== .ﻢﺟﺎﻬﻳ ﺎﻣﺪﻨﻋ ﺮﺠﻔﺘﻳ ﻥﺃ ﻦﻛﻤﻳ
+
+All humans affected by the explosion become infected.
+== ﻯﻭﺪﻌﻟﺎﺑ ﻮﺑﺎﺼﻳ ﺭﺎﺠﻔﻧﻹﺍ ﻢﻬﻠﺼﻳ ﻦﻳﺬﻟﺃ ﺮﺸﺒﻟﺍ ﻞﻛ
+
+He can also inflict 1 damage point per seconds by hooking humans.
+== ﻢﻬﺑ ﻙﺎﺴﻣﻹﺍ ﻖﻳﺮﻃ ﻦﻋ ﺮﺸﺒﻟﺍ ﺔﻗﺎﻃ ﻑﺎﻌﺿﺇ ﺎﻆﻳﺃ ﻪﻨﻛﻤﻳ
+
+Hunter:
+== : ﺩﺎﻴﺻ
+
+The Hunter can infect humans and heal infected with his hammer.
+== ﻪﺘﻗﺮﻂﻤﺑ ﻯﻭﺪﻌﻟﺎﺑ ﻦﺑﺎﺼﻤﻟﺍ ﻲﻔﺸﻳ ﻥﺃ ﻭ ﻪﺘﻗﺮﻂﻤﺑ ﺮﺸﺒﻟﺍ ﻲﻟﺇ ﻯﻭﺪﻌﻟﺍ ﺭﺮﻤﻳ ﻥﺃ ﺩﺎﻴﺼﻠﻟ ﻦﻛﻤﻳ
+
+He can jump two times in air.
+== ءﺍﻮﻬﻟﺍ ﻲﻓ ﻦﻴﺗﺮﻣ ﺰﻔﻘﻳ ﻥﺃ ﻪﻨﻛﻤﻳ
+
+Witch:
+== : ﺓﺮﺣﺎﺴﻟﺍ
+
+The Witch can infect humans and heal infected with his hammer.
+== ﻪﺘﻗﺮﻂﻤﺑ ﻯﻭﺪﻌﻟﺎﺑ ﻦﺑﺎﺼﻤﻟﺍ ﻲﻔﺸﻳ ﻥﺃ ﻭ ﻪﺘﻗﺮﻂﻤﺑ ﺮﺸﺒﻟﺍ ﻲﻟﺇ ﻯﻭﺪﻌﻟﺍ ﺭﺮﻤﻳ ﻥﺃ ﺓﺮﺣﺎﺴﻠﻟ ﻦﻛﻤﻳ
+
+When an infected dies, he may re-spawn near her.
+== ﻯﺮﺧﺃ ﺓﺮﻣ ﺎﻬﻴﻧﺎﺠﺑ ﺮﻬﻀﻳ ﻥﺃ ﻦﻛﻤﻳ . ﻦﻴﺑﺎﺼﻤﻟﺍ ﺪﺣﺃ ﺕﻮﻤﻳ ﻰﻣﺪﻨﻋ
+
+If the Witch dies, she disappear and is replaced by an another class of infected.
+== ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻦﻣ ﻯﺮﺧﺃ ﺔﻴﺼﺨﺸﺑ ﺎﻬﻀﻳﻮﻌﺗ ﻢﺘﻴﺳ . ﺓﺮﺣﺎﺴﻟﺍ ﺖﺗﺎﻣ ﺍﺫﺇ
+
+She can also inflict 1 damage point per seconds by hooking humans.
+== ﻪﺑ ﻙﺎﺴﻣﻹﺍ ﺪﻨﻋ ﺮﺸﺒﻠﻟ ﺪﺣﺍﻭ ﺭﺮﺿ ﺙﺍﺪﺣﺇ ﺎﻀﻳﺃ ﺎﻬﻨﻛﻨﻤﻳ ﻭ
+
+Hook protection enabled
+== ﻚﺑ ﻙﺎﺴﻣﻹﺍ ﻦﻴﺒﻋﻼﻟ ﻦﻛﻤﻳ
+
+Hook protection disabled
+== ﻚﺑ ﻙﺎﺴﻣﻹﺍ ﻦﻴﺒﻋﻼﻟ ﻦﻛﻤﻳ ﻻ
+
+Unknown language
+== ﺔﻣﻮﻠﻌﻣ ﺮﻴﻏ ﺔﻐﻟ
+
+Bombs left: %d
+== %d : ﺔﻴﻗﺎﺑ ﻞﺑﺎﻨﻗ
+
+Web mode enabled
+== ﺕﻮﺒﻛﻨﻌﻟﺍ ﺔﻴﻌﺿﻭ
+
+Mercenary:
+== : ﻕﺰﺗﺮﻣ
+
+The Mercenary fly in air using his machine gun.
+== ﻪﺷﺎﺷﺭ ﻝﺎﻤﻌﺘﺳﺈﺑ ءﺍﻮﻬﻟﺍ ﻲﻓ ﻕﺰﺗﺮﻤﻟﺍ ﻖﻠﻠﺤﻳ
+
+He can also throw poison grenades that deals 8 damage points.
+== ﻁﺎﻘﻧ ﻥﺎﻤﺜﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﺔﻗﺎﻃ ﻦﻣ ﻑﻌﻀﺗ  ﺔﻣﺎﺳ ﻞﺑﺎﻨﻗ ﻲﻣﺮﻳ ﻥﺃ ﺎﻆﻳﺃ ﻪﻨﻛﻤﻳ
+
+Sniper:
+== : ﺹﺎﻨﻗ
+
+The Sniper can lock his position in air for 15 seconds with his hammer.
+== ﺔﻴﻧﺎﺛ 15 ﺓﺪﻤﻟ ءﺍﻮﻬﻟﺍ ﻲﻓ ﻪﺘﻛﺮﺣ ﻑﻗﻮﻳ ﻥﺃ ﺹﺎﻨﻘﻠﻟ ﻦﻛﻤﻳ
+
+Spider:
+== : ﺕﻮﺒﻛﻨﻋ
+
+The Spider can infect humans and heal infected with his hammer.
+== ﻪﺘﻗﺮﻂﻣ ﻝﺎﻤﻌﺘﺳﺈﻳ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻲﻔﺸﻳ ﻥﺃ ﻭ ﺮﺸﺒﻟﺍ ﻰﻟﺇ ﻯﻭﺪﻌﻟﺍ ﺭﺮﻤﻳ ﻥﺃ ﺕﻮﺒﻛﻨﻌﻠﻟ ﻦﻛﻤﻳ
+
+When selecting any gun, his hook enter in web mode.
+== ﺕﻮﺒﻛﻨﻌﻟﺍ ﺔﻴﻌﻴﺿﻭ ﻞﻴﻐﺸﺘﻟﺍ ﻦﻛﻤﻳ ﺡﻼﺴﻟﺍ ﺮﻴﻴﻐﺗ ﺪﻨﻋ
+
+##### to correct #####
+
+#You are frozen: %d sec
+#== تم شللك : %d sec
+
+#Laser wall: %d sec
+#== حاجز الليزر : %d sec
+
+#Position lock: %d sec
+#== تجمد الموقف : %d sec
+
+#The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
+== يدوم الحائط ثلاثين ثانية#
+
+#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+#== يحدث سلاحه عشرين نقطة خسارة للمصابين عندما يوقف حركته 
+
+##### to translate #####
+
+#The undead is coming!
+#==
+
+#The undead is finally dead
+#==
+
+#Undead
+#==
+
+#/customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans
+#==
+
+#InfectionClass, by necropotame (version %s)
+#==
+
+#Based on Infection mod by Gravity
+#==
+
+#Undead:
+#==
+
+#The Undead can infect humans and heal infected with his hammer.
+#==
+
+#Instead of dying, he freezes during 10 seconds.
+#==
+
+#If an infected heals him, the freeze effect disappear.
+#==
+
+#Any human that touch a hook in web mode is automatically grabbed.
+#==
+
+#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+#==

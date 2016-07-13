@@ -163,6 +163,7 @@ public:
 	void HandleTuningParams();
 	
 	bool InscoreBoard() { return m_PlayerFlags & PLAYERFLAG_SCOREBOARD; };
+	bool InClassChooserMenu() { return m_InClassChooserMenu && (m_Team != TEAM_SPECTATORS); };
 /* INFECTION MODIFICATION END *****************************************/
 };
 
