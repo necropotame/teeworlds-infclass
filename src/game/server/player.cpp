@@ -42,6 +42,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	
 	m_InClassChooserMenu = 0;
 	m_MenuClassChooserItem = -1;
+	m_HookProtectionAutomatic = true;
 	
 	m_PrevTuningParams = *pGameServer->Tuning();
 	m_NextTuningParams = m_PrevTuningParams;

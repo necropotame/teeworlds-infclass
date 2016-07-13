@@ -1,8 +1,7 @@
-
-##### translated strings #####
+##### SERVER ###########################################################
 
 Switch language to english ?
-== Cambiare la lingua in Italiano ?	
+== Cambiare la lingua in Italiano ?
 
 %s entered and joined the game
 == %s è entrato e si è unito alla partita
@@ -28,20 +27,10 @@ Switch language to english ?
 %s changed their name to %s
 == %s ha cambiato il suo nome in %s
 
-Unknown command
-== Comando sconosiuto
-
-A random class will be automatically attributed to you when rounds start
-== Una classe casuale ti sarà attribuita automaticamente quando l'incontro avrà inizio
-
-The class selector will be displayed when rounds start
-== Il selezionatore della classe apparirà quando l'incontro avrà inizio
-
 You can't join the spectators right now
 == Non puoi unirti agli spettatori in questo momento
 
-You are frozen: %d sec
-== Sei congelato per %d secondi
+##### INFCLASS #########################################################
 
 You have infected %s, +3 points
 == Hai infettato %s, +3 punti
@@ -51,9 +40,6 @@ You have killed a witch, +5 points
 
 You have survived, +5 points
 == Sei sopravvissuto, +5 punti
-
-You have infected %s using portals, -5 points
-== Hai infettato %s usando un portale, -5 punti
 
 %s has been infected
 == %s è stato infettato
@@ -79,42 +65,6 @@ One human won the round
 %i humans won the round
 == %i umani hanno vinto l'incontro
 
-Choose your class by clicking on the weapon
-== Scegli la tua classe cliccando sull'arma
-
-Random choice
-== Scelta casuale
-
-Engineer
-== Ingegnere
-
-Soldier
-== Soldato
-
-Scientist
-== Scienziato
-
-Medic
-== Medico
-
-Ninja
-== Ninja
-
-Smoker
-== Smoker
-
-Boomer
-== Boomer
-
-Hunter
-== Cacciatore
-
-Undead
-== Morto Vivente
-
-Witch
-== Strega
-
 You are a human: %s
 == Sei un umano : %s
 
@@ -123,6 +73,46 @@ You are an infected: %s
 
 Type "/help %s" for more information about your class
 == Scrivi "/help %s" per avere più informazioni sulla tua classe
+
+##### STATE ############################################################
+
+You are frozen: %d sec
+== Sei congelato per %d secondi
+
+### NOT TRANSLATED
+#Bombs left: %d
+#== 
+
+### NOT TRANSLATED
+#Laser wall: %d sec
+#== 
+
+### NOT TRANSLATED
+#Position lock: %d sec
+#== 
+
+### NOT TRANSLATED
+#Active mines: %d
+#== 
+
+### NOT TRANSLATED
+#Web mode enabled
+#== 
+
+##### CLASSCHOOSER #####################################################
+
+Choose your class
+== Scegli la tua classe
+
+Random choice
+== Scelta casuale
+
+##### COMMANDS #########################################################
+
+Unknown command
+== Comando sconosiuto
+
+##### CmdList ##### 
 
 List of commands
 == Lista dei comandi
@@ -145,8 +135,32 @@ List of commands
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1> : Sceglie automaticamente una classe casuale durante l'inizio dell'incontro
 
+### NOT TRANSLATED
+#/lowresmap and /highresmap: Switch between simplified and classical maps
+#== 
+
+### NOT TRANSLATED
+#Press <F3> or <F4> to enable or disable hook protection
+#== 
+
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == Premi <F3> o <F4> mentre tieni premuto <TAB> per cambiare il sistema di punteggio
+
+##### Language ##### 
+
+### NOT TRANSLATED
+#Unknown language
+#== 
+
+##### Always Random ##### 
+
+A random class will be automatically attributed to you when rounds start
+== Una classe casuale ti sarà attribuita automaticamente quando l'incontro avrà inizio
+
+The class selector will be displayed when rounds start
+== Il selezionatore della classe apparirà quando l'incontro avrà inizio
+
+##### Info ##### 
 
 InfectionClass, by necropotame (version %s)
 == InfectionClass, di necropotame (versione %s)
@@ -157,6 +171,8 @@ Based on Infection mod by Gravity
 Thanks to %s
 == Ringaziamenti a %s
 
+##### Help ##### 
+
 Rules of the game:
 == Regole del gioco:
 
@@ -164,8 +180,7 @@ InfectionClass is a team game between humans and infected.
 == InfectionClass è un gioco di squadra tra umani e infetti.
 
 All players start as human.
-== Tous les joueurs commencent comme humains.
-Tutti i giocatori incominciano come umani.
+== Tutti i giocatori incominciano come umani.
 
 10 seconds later, two players become infected.
 == 10 secondi dopo, due giocatori diventano infetti.
@@ -175,6 +190,23 @@ The goal for humans is to survive until the army clean the map.
 
 The goal for infected is to infect all humans.
 == Lo scopo degli infetti è di infettare tutti gli umani.
+
+##### Hook protection ##### 
+
+### NOT TRANSLATED
+#Hook protection enabled
+#== 
+
+### NOT TRANSLATED
+#Hook protection disabled
+#== 
+
+##### CLASSES ##########################################################
+
+##### Engineer ##### 
+
+Engineer
+== Ingegnere
 
 Engineer:
 == Ingegnere:
@@ -187,6 +219,11 @@ When an infected touch the wall, he dies.
 
 The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
 == La durata di vita di una barriera è di 30 secondi e sono limitate ad una per giocatore nello stesso momento.
+
+##### Soldier ##### 
+
+Soldier
+== Soldato
 
 Soldier:
 == Soldato:
@@ -203,6 +240,31 @@ Use the hammer to place the bomb and explode it multiple times.
 Bombs are limited to one per player at the same time.
 == L'insieme di bombe sono limitate ad una per giocatore nello stesso momento.
 
+##### Scientist ##### 
+
+Scientist
+== Scienziato
+
+Scientist:
+== Scienziato:
+
+### NOT TRANSLATED
+#The Scientist can pose floating mines with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He has also grenades that teleport him.
+#== 
+
+### NOT TRANSLATED
+#Mines are limited to two per player at the same time.
+#== 
+
+##### Medic ##### 
+
+Medic
+== Medico
+
 Medic:
 == Medico:
 
@@ -212,14 +274,60 @@ The Medic can protect humans with his hammer by giving them armor.
 He has also a powerful shotgun that can pullback infected.
 == Possiede anche un potente fucile a pompa che può respingere gli infetti.
 
+##### Ninja ##### 
+
+Ninja
+== Ninja
+
 Ninja:
-== Ninja:
+== Ninja :
 
 The Ninja can throw flash grenades that can freeze infected during three seconds.
 == Il Ninja può lanciare granate stordenti che possono immobilizzare gli infetti per 3 secondi.
 
 His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
 == Il suo martello è rimpiazzato da una katana che gli permette di saltare 2 volte prima di toccare terra.
+
+##### Mercenary ##### 
+
+### NOT TRANSLATED
+#Mercenary
+#== 
+
+### NOT TRANSLATED
+#Mercenary:
+#== 
+
+### NOT TRANSLATED
+#The Mercenary fly in air using his machine gun.
+#== 
+
+### NOT TRANSLATED
+#He can also throw poison grenades that deals 8 damage points.
+#== 
+
+##### Sniper ##### 
+
+### NOT TRANSLATED
+#Sniper
+#== 
+
+### NOT TRANSLATED
+#Sniper:
+#== 
+
+### NOT TRANSLATED
+#The Sniper can lock his position in air for 15 seconds with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+#== 
+
+##### Smoker ##### 
+
+Smoker
+== Smoker
 
 Smoker:
 == Smoker:
@@ -229,6 +337,11 @@ The Smoker can infect humans and heal infected with his hammer.
 
 He can also inflict 4 damage points per seconds by hooking humans.
 == Lui può anche infliggere 4 punti di danno per secondo quando afferra un umano col suo gancio.
+
+##### Boomer ##### 
+
+Boomer
+== Boomer
 
 Boomer:
 == Boomer:
@@ -242,6 +355,11 @@ All humans affected by the explosion become infected.
 He can also inflict 1 damage point per seconds by hooking humans.
 == Lui può anche infliggere 1 punto di danno per secondo quando afferra un umano col suo gancio.
 
+##### Hunter ##### 
+
+Hunter
+== Cacciatore
+
 Hunter:
 == Cacciatore:
 
@@ -250,6 +368,55 @@ The Hunter can infect humans and heal infected with his hammer.
 
 He can jump two times in air.
 == Lui può saltare due volte in aria.
+
+##### Spider ##### 
+
+### NOT TRANSLATED
+#Spider
+#== 
+
+### NOT TRANSLATED
+#Spider:
+#== 
+
+### NOT TRANSLATED
+#The Spider can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#When selecting any gun, his hook enter in web mode.
+#== 
+
+### NOT TRANSLATED
+#Any human that touch a hook in web mode is automatically grabbed.
+#== 
+
+### NOT TRANSLATED
+#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+#== 
+
+##### Ghost #####
+
+### NOT TRANSLATED
+#Ghost
+#== 
+
+### NOT TRANSLATED
+#Ghost:
+#== 
+
+### NOT TRANSLATED
+#The Ghost can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+#== 
+
+##### Undead ##### 
+
+Undead
+== Morto Vivente
 
 Undead:
 == Morto Vivente:
@@ -262,6 +429,11 @@ Instead of dying, he freezes during 10 seconds.
 
 If an infected heals him, the freeze effect disappear.
 == Se un infetto lo guarisce, l'effetto del congelamento svanisce.
+
+##### Witch ##### 
+
+Witch
+== Strega
 
 Witch:
 == Strega:

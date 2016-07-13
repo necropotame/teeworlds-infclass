@@ -1,5 +1,4 @@
-
-##### translated strings #####
+##### SERVER ###########################################################
 
 Switch language to english ?
 == Serversprache auf Deutsch stellen?
@@ -28,17 +27,10 @@ Switch language to english ?
 %s changed their name to %s
 == %s wechselte den Namen zu %s
 
-Unknown command
-== Unbekannter Befehl
-
-A random class will be automatically attributed to you when rounds start
-== Du erhältst ab jetzt eine zufällig Klasse am Anfang jeder Runde
-
-The class selector will be displayed when rounds start
-== Du kannst wieder eine Klasse am Anfang jeder Runde wählen
-
 You can't join the spectators right now
 == Du kannst gerade nicht zuschauen
+
+##### INFCLASS #########################################################
 
 You have infected %s, +3 points
 == Du hast %s infiziert, +3 Punkte
@@ -73,42 +65,6 @@ One human won the round
 %i humans won the round
 == %i Überlebende haben die Runde gewonnen
 
-Choose your class by clicking on the weapon
-== Wähle deine Klasse indem du auf die entsprechende Waffe klickst
-
-Random choice
-== Zufällige Auswahl
-
-Engineer
-== Engineer
-
-Soldier
-== Soldier
-
-Scientist
-== Scientist
-
-Medic
-== Medic
-
-Ninja
-== Ninja
-
-Smoker
-== Smoker
-
-Boomer
-== Boomer
-
-Hunter
-== Hunter
-
-Undead
-== Untoter
-
-Witch
-== Hexe
-
 You are a human: %s
 == Du bist folgender Überlebender: %s
 
@@ -117,6 +73,47 @@ You are an infected: %s
 
 Type "/help %s" for more information about your class
 == Gib "/help %s" ein für zusätzliche Informationen zu deiner Klasse
+
+##### STATE ############################################################
+
+### NOT TRANSLATED
+#You are frozen: %d sec
+#== 
+
+### NOT TRANSLATED
+#Bombs left: %d
+#== 
+
+### NOT TRANSLATED
+#Laser wall: %d sec
+#== 
+
+### NOT TRANSLATED
+#Position lock: %d sec
+#== 
+
+### NOT TRANSLATED
+#Active mines: %d
+#== 
+
+### NOT TRANSLATED
+#Web mode enabled
+#== 
+
+##### CLASSCHOOSER #####################################################
+
+Choose your class
+== Wähle deine Klasse
+
+Random choice
+== Zufällige Auswahl
+
+##### COMMANDS #########################################################
+
+Unknown command
+== Unbekannter Befehl
+
+##### CmdList ##### 
 
 List of commands
 == Liste der Befehle
@@ -139,8 +136,32 @@ List of commands
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1>: Wählt automatisch eine zufällige Klasse wenn die Runde beginnt
 
+### NOT TRANSLATED
+#/lowresmap and /highresmap: Switch between simplified and classical maps
+#== 
+
+### NOT TRANSLATED
+#Press <F3> or <F4> to enable or disable hook protection
+#== 
+
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == Drücke <F3> oder <F4> während du <TAB> gedrückt hast, um eine andere Anzeige im Score zu erhalten
+
+##### Language ##### 
+
+### NOT TRANSLATED
+#Unknown language
+#== 
+
+##### Always Random ##### 
+
+A random class will be automatically attributed to you when rounds start
+== Du erhältst ab jetzt eine zufällig Klasse am Anfang jeder Runde
+
+The class selector will be displayed when rounds start
+== Du kannst wieder eine Klasse am Anfang jeder Runde wählen
+
+##### Info ##### 
 
 InfectionClass, by necropotame (version %s)
 == InfectionClass, von necropotame (version %s)
@@ -150,6 +171,8 @@ Based on Infection mod by Gravity
 
 Thanks to %s
 == Dank an %s
+
+##### Help ##### 
 
 Rules of the game:
 == Regeln zum Spiel:
@@ -169,6 +192,23 @@ The goal for humans is to survive until the army clean the map.
 The goal for infected is to infect all humans.
 == Das Ziel der Infizierten ist es, alle Überlebenden zu verseuchen.
 
+##### Hook protection ##### 
+
+### NOT TRANSLATED
+#Hook protection enabled
+#== 
+
+### NOT TRANSLATED
+#Hook protection disabled
+#== 
+
+##### CLASSES ##########################################################
+
+##### Engineer ##### 
+
+Engineer
+== Engineer
+
 Engineer:
 == Engineer:
 
@@ -180,6 +220,11 @@ When an infected touch the wall, he dies.
 
 The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
 == Die Lebensdauer einer Wall beträgt 30 Sekunden. Außerdem kann nur eine Wall pro Ingenieur aktiv sein.
+
+##### Soldier ##### 
+
+Soldier
+== Soldier
 
 Soldier:
 == Soldier:
@@ -196,6 +241,31 @@ Use the hammer to place the bomb and explode it multiple times.
 Bombs are limited to one per player at the same time.
 == Es kann nur eine Bombe pro Soldat gesetzt sein.
 
+##### Scientist ##### 
+
+Scientist
+== Scientist
+
+Scientist:
+== Scientist:
+
+### NOT TRANSLATED
+#The Scientist can pose floating mines with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He has also grenades that teleport him.
+#== 
+
+### NOT TRANSLATED
+#Mines are limited to two per player at the same time.
+#== 
+
+##### Medic ##### 
+
+Medic
+== Medic
+
 Medic:
 == Medic:
 
@@ -204,6 +274,11 @@ The Medic can protect humans with his hammer by giving them armor.
 
 He has also a powerful shotgun that can pullback infected.
 == Er hat eine starke Schrotflinte, mit der er Infizierte weit zurückschießen kann.
+
+##### Ninja ##### 
+
+Ninja
+== Ninja
 
 Ninja:
 == Ninja:
@@ -214,6 +289,47 @@ The Ninja can throw flash grenades that can freeze infected during three seconds
 His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
 == Sein Hammer ist durch eine Katana ersetzt, die ihm erlaubt zwei Mal mir ihr durch die Luft zu schlagen, bevor der Spieler wieder den Boden berühren muss.
 
+##### Mercenary ##### 
+
+### NOT TRANSLATED
+#Mercenary
+#== 
+
+### NOT TRANSLATED
+#Mercenary:
+#== 
+
+### NOT TRANSLATED
+#The Mercenary fly in air using his machine gun.
+#== 
+
+### NOT TRANSLATED
+#He can also throw poison grenades that deals 8 damage points.
+#== 
+
+##### Sniper ##### 
+
+### NOT TRANSLATED
+#Sniper
+#== 
+
+### NOT TRANSLATED
+#Sniper:
+#== 
+
+### NOT TRANSLATED
+#The Sniper can lock his position in air for 15 seconds with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+#== 
+
+##### Smoker ##### 
+
+Smoker
+== Smoker
+
 Smoker:
 == Smoker:
 
@@ -222,6 +338,11 @@ The Smoker can infect humans and heal infected with his hammer.
 
 He can also inflict 4 damage points per seconds by hooking humans.
 == Außerdem kann er Überlebenden 4 Schadenspunkte pro Sekunde zufügen, in denen er sie hookt.
+
+##### Boomer ##### 
+
+Boomer
+== Boomer
 
 Boomer:
 == Boomer:
@@ -235,6 +356,11 @@ All humans affected by the explosion become infected.
 He can also inflict 1 damage point per seconds by hooking humans.
 == Außerdem kann er Überlebenden 1 Schadenspunkt pro Sekunde zufügen, in denen er sie hookt.
 
+##### Hunter ##### 
+
+Hunter
+== Hunter
+
 Hunter:
 == Hunter:
 
@@ -243,6 +369,55 @@ The Hunter can infect humans and heal infected with his hammer.
 
 He can jump two times in air.
 == Er kann zwei mal in der Luft springen.
+
+##### Spider ##### 
+
+### NOT TRANSLATED
+#Spider
+#== 
+
+### NOT TRANSLATED
+#Spider:
+#== 
+
+### NOT TRANSLATED
+#The Spider can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#When selecting any gun, his hook enter in web mode.
+#== 
+
+### NOT TRANSLATED
+#Any human that touch a hook in web mode is automatically grabbed.
+#== 
+
+### NOT TRANSLATED
+#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+#== 
+
+##### Ghost #####
+
+### NOT TRANSLATED
+#Ghost
+#== 
+
+### NOT TRANSLATED
+#Ghost:
+#== 
+
+### NOT TRANSLATED
+#The Ghost can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+#== 
+
+##### Undead ##### 
+
+Undead
+== Untoter
 
 Undead:
 == Untoter:
@@ -255,6 +430,11 @@ Instead of dying, he freezes during 10 seconds.
 
 If an infected heals him, the freeze effect disappear.
 == Wenn er von einem Infizierten geheilt wird, so wird der Einfriereffekt sofort wieder aufgehoben.
+
+##### Witch ##### 
+
+Witch
+== Hexe
 
 Witch:
 == Hexe:

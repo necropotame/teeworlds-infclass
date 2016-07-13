@@ -1,4 +1,4 @@
-##### translated strings #####
+##### SERVER ###########################################################
 
 Switch language to english ?
 == ؟ ﺔﻴﺑﺮﻌﻟﺍ ﻰﻟﺇ ﺔﻐﻠﻟﺍ ﺮﻴﻴﻐﺗ
@@ -27,17 +27,10 @@ Switch language to english ?
 %s changed their name to %s
 == %s ﻲﻟﺇ ﻪﻤﺳﺇ ﺮﻴﻏ %s
 
-Unknown command
-== ﻡﻮﻠﻌﻣ ﺮﻴﻏ ﺐﻠﻃ
-
-A random class will be automatically attributed to you when rounds start
-== ﻁﻮﺸﻟﺍ ﺔﻳﺍﺪﺑ ﺪﻨﻋ ﺎﻴﺋﺎﻘﻠﺗ ﺔﻴﺼﺨﺷ ﻦﻴﻴﻌﺗ ﻢﻴﺳ
-
-The class selector will be displayed when rounds start
-== ﻁﻮﺸﻟﺍ ﺔﻳﺍﺪﺑ ﺪﻨﻋ ﻚﺘﻴﺼﺨﺷ ﺭﺎﻴﺘﺧﺇ ﺔﻓﺮﻌﻣ ﻊﻴﻂﺘﺴﺗ
-
 You can't join the spectators right now
 == ﻥﻵﺍ ﻦﻳﺪﻫﺎﺸﻤﻟﺍ ﻰﻟﺍ ﻡﺎﻤﻀﻧﻻﺍ ﻚﻨﻛﻤﻳﻻ
+
+##### INFCLASS #########################################################
 
 You have infected %s, +3 points
 == ﻁﺎﻘﻧ 3+ ,%s ﻯﻭﺪﻌﻟﺍ ﺕﺭﺮﻣ ﺪﻘﻟ
@@ -55,7 +48,15 @@ The witch is coming!
 == ! ﺓﺮﺣﺎﺴﻟﺍ ﺖﺗﺍ
 
 The witch is dead
-== ! ﺓﺮﺣﺎﺴﻟﺍ ﺔﻠﺘﻗ
+== ﺓﺮﺣﺎﺴﻟﺍ ﺔﻠﺘﻗ
+
+### NOT TRANSLATED
+#The undead is coming!
+#== 
+
+### NOT TRANSLATED
+#The undead is finally dead
+#== 
 
 Infected won the round in %i:%02i minutes
 == ﺔﻘﻴﻗﺩ %i:%02i  ﻲﻓ ﻯﻭﺪﻌﻟﺎﺑ ﻥﻮﺑﺎﺼﻤﻟﺍ ﺢﺑﺭ
@@ -66,12 +67,6 @@ One human won the round
 %i humans won the round
 == ﺔﻟﻮﺠﻟﺍ ﺍﻮﺤﺑﺭ ﻦﻴﺒﻋﻻ %i
 
-Choose your class
-== ﻚﺘﻴﺼﺨﺷ ﺮﺘﺧﺇ
-
-Random choice
-== ﻲﺋﺍﻮﺸﻋ ﺭﺎﻴﺘﺧﺇ
-
 You are a human: %s
 == %s : ﻥﺎﺴﻧﺇ ﺖﻧﺃ
 
@@ -81,41 +76,44 @@ You are an infected: %s
 Type "/help %s" for more information about your class
 == ﻚﺘﻴﺼﺨﺷ ﻦﻋ ﺕﺎﻣﻮﻠﻌﻤﻟﺍ ﺔﻳﺰﻤﻟ "/help %s" ﺐﺘﻛﺃ
 
-Engineer
-== ﺱﺪﻨﻬﻣ
+##### STATE ############################################################
 
-Soldier
-== ﻱﺪﻨﺟ
+### TO CORRECT
+#You are frozen: %d sec
+#== تم شللك : %d sec
 
-Scientist
-== ﻢﻟﺎﻋ
+Bombs left: %d
+== %d : ﺔﻴﻗﺎﺑ ﻞﺑﺎﻨﻗ
 
-Medic
-== ﺐﻴﺒﻃ
+### TO CORRECT
+#Laser wall: %d sec
+#== حاجز الليزر : %d sec
 
-Mercenary
-== ﻕﺰﺗﺮﻣ
+### TO CORRECT
+#Position lock: %d sec
+#== تجمد الموقف : %d sec
 
-Sniper
-== ﺹﺎﻨﻗ
+### NOT TRANSLATED
+#Active mines: %d
+#== 
 
-Ninja
-== ﺎﺠﻨﻴﻧ
+Web mode enabled
+== ﺕﻮﺒﻛﻨﻌﻟﺍ ﺔﻴﻌﺿﻭ
 
-Smoker
-== ﻦﺧﺪﻣ
+##### CLASSCHOOSER #####################################################
 
-Boomer
-== ﻱﺭﺎﺤﺘﻧﺇ
+Choose your class
+== ﻚﺘﻴﺼﺨﺷ ﺮﺘﺧﺇ
 
-Hunter
-== ﺩﺎﻴﺻ
+Random choice
+== ﻲﺋﺍﻮﺸﻋ ﺭﺎﻴﺘﺧﺇ
 
-Spider
-== ﺕﻮﺒﻛﻨﻋ
+##### COMMANDS #########################################################
 
-Witch
-== ﺓﺮﺣﺎﺳ
+Unknown command
+== ﻡﻮﻠﻌﻣ ﺮﻴﻏ ﺐﻠﻃ
+
+##### CmdList ##### 
 
 List of commands
 == ﺮﻣﺍﻭﻷﺍ ﺔﺣﻹ
@@ -132,14 +130,51 @@ List of commands
 /language <lang>: Change the language of the mod
 == ﺔﻐﻟﺍ ﺮﻴﻴﻐﺗ : /language <lang>
 
-/alwaysrandom <0|1>: Choose a random class at the beginning of each round
+### NOT TRANSLATED
+#/customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans
+#== 
+
+/alwaysrandom <0|1>: Choose automatically random class when the round start
 == ﺔﻟﻮﺟ ﻞﻛ ﺔﻳﺍﺪﺑ ﺪﻨﻋ ﺔﻴﺼﺨﺸﻠﻟ ﻲﺋﺍﻮﺸﻋ ﺭﺎﻴﺘﺧﺇ : /alwaysrandom <0|1>
+
+### NOT TRANSLATED
+#/lowresmap and /highresmap: Switch between simplified and classical maps
+#== 
+
+### NOT TRANSLATED
+#Press <F3> or <F4> to enable or disable hook protection
+#== 
 
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == ﻁﺎﻘﻨﻟﺍ ﻡﺎﻀﻧ  ﺮﻴﻴﻐﺘﻟ <TAB> ﻊﻣ <F4> ﻭﺃ <F3> ﻰﻠﻋ ﻂﻐﺿﺇ
 
+##### Language ##### 
+
+Unknown language
+== ﺔﻣﻮﻠﻌﻣ ﺮﻴﻏ ﺔﻐﻟ
+
+##### Always Random ##### 
+
+A random class will be automatically attributed to you when rounds start
+== ﻁﻮﺸﻟﺍ ﺔﻳﺍﺪﺑ ﺪﻨﻋ ﺎﻴﺋﺎﻘﻠﺗ ﺔﻴﺼﺨﺷ ﻦﻴﻴﻌﺗ ﻢﻴﺳ
+
+The class selector will be displayed when rounds start
+== ﻁﻮﺸﻟﺍ ﺔﻳﺍﺪﺑ ﺪﻨﻋ ﻚﺘﻴﺼﺨﺷ ﺭﺎﻴﺘﺧﺇ ﺔﻓﺮﻌﻣ ﻊﻴﻂﺘﺴﺗ
+
+##### Info ##### 
+
+### NOT TRANSLATED
+#InfectionClass, by necropotame (version %s)
+#== 
+
+### NOT TRANSLATED
+#Based on Infection mod by Gravity
+#== 
+
 Thanks to %s
 == %s : ﻝ ﺍﺮﻛﺷ
+
+##### Help ##### 
 
 Rules of the game:
 == : ﺔﺒﻌﻠﻟﺍ ﺪﻋﺍﻮﻗ
@@ -159,6 +194,21 @@ The goal for humans is to survive until the army clean the map.
 The goal for infected is to infect all humans.
 == ﺮﺸﺒﻟﺍ ﻰﻟﺇ ﺎﻫﻭﺭﺮﻤﻳ ﻥﺃ ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻑﺪﻫ
 
+##### Hook protection ##### 
+
+Hook protection enabled
+== ﻚﺑ ﻙﺎﺴﻣﻹﺍ ﻦﻴﺒﻋﻼﻟ ﻦﻛﻤﻳ
+
+Hook protection disabled
+== ﻚﺑ ﻙﺎﺴﻣﻹﺍ ﻦﻴﺒﻋﻼﻟ ﻦﻛﻤﻳ ﻻ
+
+##### CLASSES ##########################################################
+
+##### Engineer ##### 
+
+Engineer
+== ﺱﺪﻨﻬﻣ
+
 Engineer:
 == : ﺱﺪﻨﻬﻣ
 
@@ -167,6 +217,15 @@ The Engineer can build walls with his hammer to block infected.
 
 When an infected touch the wall, he dies.
 == ﺕﻮﻤﻳ ﻂﺋﺎﺤﻟﺍ ﻯﻭﺪﻌﻟﺎﺑ ﺏﺎﺼﻣ ﺲﻤﻠﻳ ﺎﻣﺪﻨﻋ
+
+### TO CORRECT
+#The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
+== يدوم الحائط ثلاثين ثانية#
+
+##### Soldier ##### 
+
+Soldier
+== ﻱﺪﻨﺟ
 
 Soldier:
 == : ﻱﺪﻨﺠﻟﺍ
@@ -183,6 +242,31 @@ Use the hammer to place the bomb and explode it multiple times.
 Bombs are limited to one per player at the same time.
 == ﻱﺪﻨﺟ ﻞﻛﻟ ﺓﺪﺣﺍﻭ ﺔﻠﺒﻨﻗ ﻦﻣ ﺮﺜﻛﺃ ﻝﺎﻤﻌﺘﺳﺇ ﻦﻛﻤﻳﻻ
 
+##### Scientist ##### 
+
+Scientist
+== ﻢﻟﺎﻋ
+
+Scientist:
+== : ﻢﻟﺎﻋ
+
+### NOT TRANSLATED
+#The Scientist can pose floating mines with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He has also grenades that teleport him.
+#== 
+
+### NOT TRANSLATED
+#Mines are limited to two per player at the same time.
+#== 
+
+##### Medic ##### 
+
+Medic
+== ﺐﻴﺒﻃ
+
 Medic:
 == : ﺐﻴﺒﻃ
 
@@ -191,6 +275,11 @@ The Medic can protect humans with his hammer by giving them armor.
 
 He has also a powerful shotgun that can pullback infected.
 == ﻯﻭﺪﻌﻟﺎﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻊﻓﺪﺗ ﻥﺃ ﺎﻬﻨﻛﻤﻳ ﺔﻴﻗﺪﻨﺑ ﺎﻆﻳﺃ ﻪﻳﺪﻟ
+
+##### Ninja ##### 
+
+Ninja
+== ﺎﺠﻨﻴﻧ
 
 Ninja:
 == : ﺎﺠﻨﻴﻧ
@@ -201,6 +290,40 @@ The Ninja can throw flash grenades that can freeze infected during three seconds
 His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
 == ﺽﺭﻷﺍ ﺲﻤﻠﻳ ﻥﺃ ﻰﻟﺇ ﻦﻴﺗﺮﻤﻟ ﻖﻴﻠﺤﺘﻟﺍ ﻦﻣ ﻪﻨﻛﻤﻳ ﻑﻴﺴﺑ ﺎﻬﻀﻳﻮﻌﺗ ﻢﺗ ﻪﺘﻗﺮﻂﻣ
 
+##### Mercenary ##### 
+
+Mercenary
+== ﻕﺰﺗﺮﻣ
+
+Mercenary:
+== : ﻕﺰﺗﺮﻣ
+
+The Mercenary fly in air using his machine gun.
+== ﻪﺷﺎﺷﺭ ﻝﺎﻤﻌﺘﺳﺈﺑ ءﺍﻮﻬﻟﺍ ﻲﻓ ﻕﺰﺗﺮﻤﻟﺍ ﻖﻠﻠﺤﻳ
+
+He can also throw poison grenades that deals 8 damage points.
+== ﻁﺎﻘﻧ ﻥﺎﻤﺜﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﺔﻗﺎﻃ ﻦﻣ ﻑﻌﻀﺗ  ﺔﻣﺎﺳ ﻞﺑﺎﻨﻗ ﻲﻣﺮﻳ ﻥﺃ ﺎﻆﻳﺃ ﻪﻨﻛﻤﻳ
+
+##### Sniper ##### 
+
+Sniper
+== ﺹﺎﻨﻗ
+
+Sniper:
+== : ﺹﺎﻨﻗ
+
+The Sniper can lock his position in air for 15 seconds with his hammer.
+== ﺔﻴﻧﺎﺛ 15 ﺓﺪﻤﻟ ءﺍﻮﻬﻟﺍ ﻲﻓ ﻪﺘﻛﺮﺣ ﻑﻗﻮﻳ ﻥﺃ ﺹﺎﻨﻘﻠﻟ ﻦﻛﻤﻳ
+
+### TO CORRECT
+#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+#== يحدث سلاحه عشرين نقطة خسارة للمصابين عندما يوقف حركته 
+
+##### Smoker ##### 
+
+Smoker
+== ﻦﺧﺪﻣ
+
 Smoker:
 == : ﻦﺧﺪﻣ
 
@@ -210,8 +333,13 @@ The Smoker can infect humans and heal infected with his hammer.
 He can also inflict 4 damage points per seconds by hooking humans.
 == . ﺔﻴﻧﺎﺛ ﻞﻛ ﻁﺎﻘﻧ ﻊﺑﺭﺄﺑ ﺮﺸﺒﻟﺍ ﺔﻗﺎﻃ ﻦﻣ ﻑﻌﻀﻳ ﻥﺃ ﻦﻛﻤﻳ ﻭ
 
-Boomer:
+##### Boomer ##### 
+
+Boomer
 == ﻱﺭﺎﺤﺘﻧﺇ
+
+Boomer:
+== : ﻱﺭﺎﺤﺘﻧﺇ
 
 The Boomer explodes when he attack.
 == .ﻢﺟﺎﻬﻳ ﺎﻣﺪﻨﻋ ﺮﺠﻔﺘﻳ ﻥﺃ ﻦﻛﻤﻳ
@@ -222,6 +350,11 @@ All humans affected by the explosion become infected.
 He can also inflict 1 damage point per seconds by hooking humans.
 == ﻢﻬﺑ ﻙﺎﺴﻣﻹﺍ ﻖﻳﺮﻃ ﻦﻋ ﺮﺸﺒﻟﺍ ﺔﻗﺎﻃ ﻑﺎﻌﺿﺇ ﺎﻆﻳﺃ ﻪﻨﻛﻤﻳ
 
+##### Hunter ##### 
+
+Hunter
+== ﺩﺎﻴﺻ
+
 Hunter:
 == : ﺩﺎﻴﺻ
 
@@ -230,6 +363,73 @@ The Hunter can infect humans and heal infected with his hammer.
 
 He can jump two times in air.
 == ءﺍﻮﻬﻟﺍ ﻲﻓ ﻦﻴﺗﺮﻣ ﺰﻔﻘﻳ ﻥﺃ ﻪﻨﻛﻤﻳ
+
+##### Spider ##### 
+
+Spider
+== ﺕﻮﺒﻛﻨﻋ
+
+Spider:
+== : ﺕﻮﺒﻛﻨﻋ
+
+The Spider can infect humans and heal infected with his hammer.
+== ﻪﺘﻗﺮﻂﻣ ﻝﺎﻤﻌﺘﺳﺈﻳ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻲﻔﺸﻳ ﻥﺃ ﻭ ﺮﺸﺒﻟﺍ ﻰﻟﺇ ﻯﻭﺪﻌﻟﺍ ﺭﺮﻤﻳ ﻥﺃ ﺕﻮﺒﻛﻨﻌﻠﻟ ﻦﻛﻤﻳ
+
+When selecting any gun, his hook enter in web mode.
+== ﺕﻮﺒﻛﻨﻌﻟﺍ ﺔﻴﻌﻴﺿﻭ ﻞﻴﻐﺸﺘﻟﺍ ﻦﻛﻤﻳ ﺡﻼﺴﻟﺍ ﺮﻴﻴﻐﺗ ﺪﻨﻋ
+
+### NOT TRANSLATED
+#Any human that touch a hook in web mode is automatically grabbed.
+#== 
+
+### NOT TRANSLATED
+#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+#== 
+
+##### Ghost #####
+
+### NOT TRANSLATED
+#Ghost
+#== 
+
+### NOT TRANSLATED
+#Ghost:
+#== 
+
+### NOT TRANSLATED
+#The Ghost can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+#== 
+
+##### Undead ##### 
+
+### NOT TRANSLATED
+#Undead
+#== 
+
+### NOT TRANSLATED
+#Undead:
+#== 
+
+### NOT TRANSLATED
+#The Undead can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#Instead of dying, he freezes during 10 seconds.
+#== 
+
+### NOT TRANSLATED
+#If an infected heals him, the freeze effect disappear.
+#== 
+
+##### Witch ##### 
+
+Witch
+== ﺓﺮﺣﺎﺳ
 
 Witch:
 == : ﺓﺮﺣﺎﺴﻟﺍ
@@ -245,97 +445,3 @@ If the Witch dies, she disappear and is replaced by an another class of infected
 
 She can also inflict 1 damage point per seconds by hooking humans.
 == ﻪﺑ ﻙﺎﺴﻣﻹﺍ ﺪﻨﻋ ﺮﺸﺒﻠﻟ ﺪﺣﺍﻭ ﺭﺮﺿ ﺙﺍﺪﺣﺇ ﺎﻀﻳﺃ ﺎﻬﻨﻛﻨﻤﻳ ﻭ
-
-Hook protection enabled
-== ﻚﺑ ﻙﺎﺴﻣﻹﺍ ﻦﻴﺒﻋﻼﻟ ﻦﻛﻤﻳ
-
-Hook protection disabled
-== ﻚﺑ ﻙﺎﺴﻣﻹﺍ ﻦﻴﺒﻋﻼﻟ ﻦﻛﻤﻳ ﻻ
-
-Unknown language
-== ﺔﻣﻮﻠﻌﻣ ﺮﻴﻏ ﺔﻐﻟ
-
-Bombs left: %d
-== %d : ﺔﻴﻗﺎﺑ ﻞﺑﺎﻨﻗ
-
-Web mode enabled
-== ﺕﻮﺒﻛﻨﻌﻟﺍ ﺔﻴﻌﺿﻭ
-
-Mercenary:
-== : ﻕﺰﺗﺮﻣ
-
-The Mercenary fly in air using his machine gun.
-== ﻪﺷﺎﺷﺭ ﻝﺎﻤﻌﺘﺳﺈﺑ ءﺍﻮﻬﻟﺍ ﻲﻓ ﻕﺰﺗﺮﻤﻟﺍ ﻖﻠﻠﺤﻳ
-
-He can also throw poison grenades that deals 8 damage points.
-== ﻁﺎﻘﻧ ﻥﺎﻤﺜﺑ ﻦﻴﺑﺎﺼﻤﻟﺍ ﺔﻗﺎﻃ ﻦﻣ ﻑﻌﻀﺗ  ﺔﻣﺎﺳ ﻞﺑﺎﻨﻗ ﻲﻣﺮﻳ ﻥﺃ ﺎﻆﻳﺃ ﻪﻨﻛﻤﻳ
-
-Sniper:
-== : ﺹﺎﻨﻗ
-
-The Sniper can lock his position in air for 15 seconds with his hammer.
-== ﺔﻴﻧﺎﺛ 15 ﺓﺪﻤﻟ ءﺍﻮﻬﻟﺍ ﻲﻓ ﻪﺘﻛﺮﺣ ﻑﻗﻮﻳ ﻥﺃ ﺹﺎﻨﻘﻠﻟ ﻦﻛﻤﻳ
-
-Spider:
-== : ﺕﻮﺒﻛﻨﻋ
-
-The Spider can infect humans and heal infected with his hammer.
-== ﻪﺘﻗﺮﻂﻣ ﻝﺎﻤﻌﺘﺳﺈﻳ ﻦﻴﺑﺎﺼﻤﻟﺍ ﻲﻔﺸﻳ ﻥﺃ ﻭ ﺮﺸﺒﻟﺍ ﻰﻟﺇ ﻯﻭﺪﻌﻟﺍ ﺭﺮﻤﻳ ﻥﺃ ﺕﻮﺒﻛﻨﻌﻠﻟ ﻦﻛﻤﻳ
-
-When selecting any gun, his hook enter in web mode.
-== ﺕﻮﺒﻛﻨﻌﻟﺍ ﺔﻴﻌﻴﺿﻭ ﻞﻴﻐﺸﺘﻟﺍ ﻦﻛﻤﻳ ﺡﻼﺴﻟﺍ ﺮﻴﻴﻐﺗ ﺪﻨﻋ
-
-##### to correct #####
-
-#You are frozen: %d sec
-#== تم شللك : %d sec
-
-#Laser wall: %d sec
-#== حاجز الليزر : %d sec
-
-#Position lock: %d sec
-#== تجمد الموقف : %d sec
-
-#The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
-== يدوم الحائط ثلاثين ثانية#
-
-#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-#== يحدث سلاحه عشرين نقطة خسارة للمصابين عندما يوقف حركته 
-
-##### to translate #####
-
-#The undead is coming!
-#==
-
-#The undead is finally dead
-#==
-
-#Undead
-#==
-
-#/customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans
-#==
-
-#InfectionClass, by necropotame (version %s)
-#==
-
-#Based on Infection mod by Gravity
-#==
-
-#Undead:
-#==
-
-#The Undead can infect humans and heal infected with his hammer.
-#==
-
-#Instead of dying, he freezes during 10 seconds.
-#==
-
-#If an infected heals him, the freeze effect disappear.
-#==
-
-#Any human that touch a hook in web mode is automatically grabbed.
-#==
-
-#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
-#==

@@ -50,7 +50,7 @@ static ArabicCharacter g_aArabicCharacters[] =
 	ADD_CHARLEFTRIGHTLIGATURE("غ", "ﻍ", "ﻏ", "ﻐ", "ﻎ"),
 	ADD_CHARLEFTRIGHTLIGATURE("ف", "ﻑ", "ﻓ", "ﻔ", "ﻑ"),
 	ADD_CHARLEFTRIGHTLIGATURE("ق", "ﻕ", "ﻗ", "ﻘ", "ﻖ"),
-	ADD_CHARLEFTRIGHTLIGATURE("ك", "ﻙ", "ﻛ", "ﻛ", "ﻚ"),
+	ADD_CHARLEFTRIGHTLIGATURE("ك", "ﻙ", "ﻛ", "ﻜ", "ﻚ"),
 	ADD_CHARLEFTRIGHTLIGATURE("گ", "ﮒ", "ﮔ", "ﮕ", "ﮓ"),
 	ADD_CHARLEFTRIGHTLIGATURE("ل", "ﻝ", "ﻟ", "ﻠ", "ﻞ"),
 	ADD_CHARLEFTRIGHTLIGATURE("م", "ﻡ", "ﻣ", "ﻤ", "ﻢ"),
@@ -116,45 +116,53 @@ void ConvertArabicInput(const char* pInput, char* pTmp, char* pOutput)
 	int prevC = 0;
 	int currC = 0;
 	int nextC = str_utf8_decode(&pReadIter);
+	bool skip = false;
 	do
 	{
-		if(currC > 0)
+		if(!skip)
 		{
-			int newC = currC;
-			ArabicCharacter* currAC = GetArabicCharacter(currC);
-			if(currAC)
+			if(currC > 0)
 			{
-				ArabicCharacter* prevAC = GetArabicCharacter(prevC);
-				bool left = (prevAC && prevAC->right && currAC->left);
-				
-				ArabicCombinaison* combinaison = GetArabicCombinaison(currC, nextC);
-				if(combinaison)
+				int newC = currC;
+				ArabicCharacter* currAC = GetArabicCharacter(currC);
+				if(currAC)
 				{
-					if(left)
-						pTmpIter = combinaison->c1;
-					else
-						pTmpIter = combinaison->c0;
-				}
-				else
-				{
-					ArabicCharacter* nextAC = GetArabicCharacter(nextC);
-					bool right = (nextAC && nextAC->left && currAC->right);
+					ArabicCharacter* prevAC = GetArabicCharacter(prevC);
+					bool left = (prevAC && prevAC->right && currAC->left);
 					
-					if(left && right)
-						pTmpIter = currAC->c11;
-					else if(!left && right)
-						pTmpIter = currAC->c01;
-					else if(left && !right)
-						pTmpIter = currAC->c10;
+					ArabicCombinaison* combinaison = GetArabicCombinaison(currC, nextC);
+					if(combinaison)
+					{
+						if(left)
+							pTmpIter = combinaison->c1;
+						else
+							pTmpIter = combinaison->c0;
+						
+						skip = true;
+					}
 					else
-						pTmpIter = currAC->c00;
+					{
+						ArabicCharacter* nextAC = GetArabicCharacter(nextC);
+						bool right = (nextAC && nextAC->left && currAC->right);
+						
+						if(left && right)
+							pTmpIter = currAC->c11;
+						else if(!left && right)
+							pTmpIter = currAC->c01;
+						else if(left && !right)
+							pTmpIter = currAC->c10;
+						else
+							pTmpIter = currAC->c00;
+					}
+					
+					newC = str_utf8_decode(&pTmpIter);
 				}
 				
-				newC = str_utf8_decode(&pTmpIter);
+				pWriteIter += str_utf8_encode(pWriteIter, newC);
 			}
-			
-			pWriteIter += str_utf8_encode(pWriteIter, newC);
 		}
+		else
+			skip = false;
 		
 		prevC = currC;
 		currC = nextC;

@@ -1,6 +1,6 @@
+##### SERVER ###########################################################
 
-##### translated strings #####
-
+### NOT TRANSLATED
 Switch language to english ?
 == Switch language to russian ?
 
@@ -28,20 +28,10 @@ Switch language to english ?
 %s changed their name to %s
 == %s сменил своё имя на %s
 
-Unknown command
-== Неизвестная команда
-
-A random class will be automatically attributed to you when rounds start
-== Как только начнётся раунд, тебе будет назначен случайный класс
-
-The class selector will be displayed when rounds start
-== Выбор класса появится с началом раунда
-
 You can't join the spectators right now
 == Ты не можешь присоединиться к наблюдателям в данный момент
 
-You are frozen: %d sec
-== Ты заморожён: %d секунд
+##### INFCLASS #########################################################
 
 You have infected %s, +3 points
 == Ты заразил %s, +3 очка
@@ -76,42 +66,6 @@ One human won the round
 %i humans won the round
 == %i людей победило
 
-Choose your class by clicking on the weapon
-== Выбери класс, нажав на оружие
-
-Random choice
-== Случайный выбор
-
-Engineer
-== Engineer/Инженер
-
-Soldier
-== Soldier/Солдат
-
-Scientist
-== Scientist/Учёный
-
-Medic
-== Medic/Врач
-
-Ninja
-== Ninja/Ниндзя
-
-Smoker
-== Smoker
-
-Boomer
-== Boomer
-
-Hunter
-== Hunter
-
-Undead
-== Undead
-
-Witch
-== Witch
-
 You are a human: %s
 == Ты человек в роли: %s
 
@@ -120,6 +74,47 @@ You are an infected: %s
 
 Type "/help %s" for more information about your class
 == Напиши \"/help %s\", чтобы больше узнать о своём классе
+
+##### STATE ############################################################
+
+You are frozen: %d sec
+== Ты заморожён: %d секунд
+
+### NOT TRANSLATED
+#Bombs left: %d
+#== 
+
+### NOT TRANSLATED
+#Laser wall: %d sec
+#== 
+
+### NOT TRANSLATED
+#Position lock: %d sec
+#== 
+
+### NOT TRANSLATED
+#Active mines: %d
+#== 
+
+### NOT TRANSLATED
+#Web mode enabled
+#== 
+
+##### CLASSCHOOSER #####################################################
+
+### NOT TRANSLATED
+#Choose your class
+#== Wähle deine Klasse
+
+Random choice
+== Случайный выбор
+
+##### COMMANDS #########################################################
+
+Unknown command
+== Неизвестная команда
+
+##### CmdList ##### 
 
 List of commands
 == Список команд
@@ -142,8 +137,32 @@ List of commands
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1>: Всегда выбирать случайный класс, когда начинается раунд
 
+### NOT TRANSLATED
+#/lowresmap and /highresmap: Switch between simplified and classical maps
+#== 
+
+### NOT TRANSLATED
+#Press <F3> or <F4> to enable or disable hook protection
+#== 
+
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == Нажми <F3> или <F4> пока зажимаешь <TAB>, чтобы сменить систему очков
+
+##### Language ##### 
+
+### NOT TRANSLATED
+#Unknown language
+#== 
+
+##### Always Random ##### 
+
+A random class will be automatically attributed to you when rounds start
+== Как только начнётся раунд, тебе будет назначен случайный класс
+
+The class selector will be displayed when rounds start
+== Выбор класса появится с началом раунда
+
+##### Info ##### 
 
 InfectionClass, by necropotame (version %s)
 == InfectionClass, от necropotame (version %s)
@@ -153,6 +172,8 @@ Based on Infection mod by Gravity
 
 Thanks to %s
 == Благодарю %s
+
+##### Help ##### 
 
 Rules of the game:
 == Правила игры:
@@ -172,6 +193,23 @@ The goal for humans is to survive until the army clean the map.
 The goal for infected is to infect all humans.
 == Цель заражённых инфицировать людей.
 
+##### Hook protection ##### 
+
+### NOT TRANSLATED
+#Hook protection enabled
+#== 
+
+### NOT TRANSLATED
+#Hook protection disabled
+#== 
+
+##### CLASSES ##########################################################
+
+##### Engineer ##### 
+
+Engineer
+== Инженер
+
 Engineer:
 == Инженер:
 
@@ -183,6 +221,11 @@ When an infected touch the wall, he dies.
 
 The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
 == Стена существует 30 секунд. Один человек может поставить только одну стену за раз.
+
+##### Soldier ##### 
+
+Soldier
+== Солдат
 
 Soldier:
 == Солдат:
@@ -199,6 +242,31 @@ Use the hammer to place the bomb and explode it multiple times.
 Bombs are limited to one per player at the same time.
 == Ты можешь ставить только одну бомбу за раз.
 
+##### Scientist ##### 
+
+Scientist
+== Учёный
+
+Scientist:
+== Учёный:
+
+### NOT TRANSLATED
+#The Scientist can pose floating mines with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He has also grenades that teleport him.
+#== 
+
+### NOT TRANSLATED
+#Mines are limited to two per player at the same time.
+#== 
+
+##### Medic ##### 
+
+Medic
+== Врач
+
 Medic:
 == Врач:
 
@@ -207,6 +275,11 @@ The Medic can protect humans with his hammer by giving them armor.
 
 He has also a powerful shotgun that can pullback infected.
 == Также он обладает мощным дробовиком, способным отталкивать заражённых.
+
+##### Ninja ##### 
+
+Ninja
+== Ниндзя
 
 Ninja:
 == Ниндзя:
@@ -217,6 +290,47 @@ The Ninja can throw flash grenades that can freeze infected during three seconds
 His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
 == Его молот заменён катаной, позволяющей ему делать рывок 2 раза, пока он не коснётся земли.
 
+##### Mercenary ##### 
+
+### NOT TRANSLATED
+#Mercenary
+#== 
+
+### NOT TRANSLATED
+#Mercenary:
+#== 
+
+### NOT TRANSLATED
+#The Mercenary fly in air using his machine gun.
+#== 
+
+### NOT TRANSLATED
+#He can also throw poison grenades that deals 8 damage points.
+#== 
+
+##### Sniper ##### 
+
+### NOT TRANSLATED
+#Sniper
+#== 
+
+### NOT TRANSLATED
+#Sniper:
+#== 
+
+### NOT TRANSLATED
+#The Sniper can lock his position in air for 15 seconds with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+#== 
+
+##### Smoker ##### 
+
+Smoker
+== Курильщик
+
 Smoker:
 == Курильщик:
 
@@ -225,6 +339,11 @@ The Smoker can infect humans and heal infected with his hammer.
 
 He can also inflict 4 damage points per seconds by hooking humans.
 == Также он наносит 4 урона в секунду человеку, к которому прицеплен цепочкой(хуком).
+
+##### Boomer ##### 
+
+Boomer
+== Взрывун
 
 Boomer:
 == Взрывун:
@@ -238,6 +357,11 @@ All humans affected by the explosion become infected.
 He can also inflict 1 damage point per seconds by hooking humans.
 == Ещё он наносит 1 урон в секунду человеку, к которому прицеплен цепочкой(хуком).
 
+##### Hunter ##### 
+
+Hunter
+== Охотник
+
 Hunter:
 == Охотник:
 
@@ -246,6 +370,55 @@ The Hunter can infect humans and heal infected with his hammer.
 
 He can jump two times in air.
 == Он обладает тройным прыжком
+
+##### Spider ##### 
+
+### NOT TRANSLATED
+#Spider
+#== 
+
+### NOT TRANSLATED
+#Spider:
+#== 
+
+### NOT TRANSLATED
+#The Spider can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#When selecting any gun, his hook enter in web mode.
+#== 
+
+### NOT TRANSLATED
+#Any human that touch a hook in web mode is automatically grabbed.
+#== 
+
+### NOT TRANSLATED
+#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+#== 
+
+##### Ghost #####
+
+### NOT TRANSLATED
+#Ghost
+#== 
+
+### NOT TRANSLATED
+#Ghost:
+#== 
+
+### NOT TRANSLATED
+#The Ghost can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+#== 
+
+##### Undead ##### 
+
+Undead
+== Бессмертный
 
 Undead:
 == Бессмертный:
@@ -258,6 +431,11 @@ Instead of dying, he freezes during 10 seconds.
 
 If an infected heals him, the freeze effect disappear.
 == Если заражённый его излечит, то Бессмертный пробуждается ото сна.
+
+##### Witch ##### 
+
+Witch
+== Ведьма
 
 Witch:
 == Ведьма:

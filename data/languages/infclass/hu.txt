@@ -1,5 +1,7 @@
+##### SERVER ###########################################################
+
 Switch language to english ?
-== Módosítod a nyelvet magyarra??
+== Módosítod a nyelvet magyarra?
 
 %s entered and joined the game
 == %s belépett, és csatlakozott a játékhoz
@@ -25,20 +27,10 @@ Switch language to english ?
 %s changed their name to %s
 == %s megváltoztatta nevét %s-ra
 
-Unknown command
-== Ismeretlen parancs
-
-A random class will be automatically attributed to you when rounds start
-== Ha a kör elkezdődik, és nem választottál, véletlenszerű osztályt kapsz
-
-The class selector will be displayed when rounds start
-== Az osztály-választó eltűnik, ha a kör elkezdődik
-
 You can't join the spectators right now
 == Most nem csatlakozhatsz a megfigyelőkhöz
 
-You are frozen: %d sec
-== Lefagytál: %d másodperc
+##### INFCLASS #########################################################
 
 You have infected %s, +3 points
 == Megfertőzted %s-t, +3 pont
@@ -48,9 +40,6 @@ You have killed a witch, +5 points
 
 You have survived, +5 points
 == Túlélted az inváziót, +5 pont
-
-You have infected %s using portals, -5 points
-== Megfertőzted %s-t portálok segítségével, -5 pont
 
 %s has been infected
 == %s-t megfertőzték
@@ -76,42 +65,6 @@ One human won the round
 %i humans won the round
 == %i ember nyerte meg játékot
 
-Choose your class
-== Választd ki az osztályodat!
-
-Random choice
-== Véletlenszerű
-
-Engineer
-== Mérnök
-
-Soldier
-== Közkatona
-
-Scientist
-== Tudós
-
-Medic
-== Orvos
-
-Ninja
-== Nindzsa
-
-Smoker
-== Füstös
-
-Boomer
-== Robbanó
-
-Hunter
-== Vadász
-
-Undead
-== Halhatatlan
-
-Witch
-== Boszorkány
-
 You are a human: %s
 == Ember vagy: %s
 
@@ -120,6 +73,42 @@ You are an infected: %s
 
 Type "/help %s" for more information about your class
 == Írd be, hogy "/help %s", hogy többet megtudhass az osztályodról
+
+##### STATE ############################################################
+
+You are frozen: %d sec
+== Lefagytál: %d másodperc
+
+Bombs left: %d
+== Megmaradt bombák: %d
+
+Laser wall: %d sec
+== Lézer-fal: %d sec
+
+Position lock: %d sec
+== Mozgás-zár: %d sec
+
+### NOT TRANSLATED
+#Active mines: %d
+#== 
+
+Web mode enabled
+== Háló mód bekapcsolva
+
+##### CLASSCHOOSER #####################################################
+
+Choose your class
+== Választd ki az osztályodat!
+
+Random choice
+== Véletlenszerű
+
+##### COMMANDS #########################################################
+
+Unknown command
+== Ismeretlen parancs
+
+##### CmdList ##### 
 
 List of commands
 == Parancsok listája
@@ -142,8 +131,31 @@ List of commands
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1> : Automatikusan véletlenszerű osztályt kapsz a körök elején
 
+### NOT TRANSLATED
+#/lowresmap and /highresmap: Switch between simplified and classical maps
+#== 
+
+### NOT TRANSLATED
+#Press <F3> or <F4> to enable or disable hook protection
+#== 
+
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == Nyomd le az <F3>-at vagy <F4>-et és a <TAB>-ot egyszerre, hogy pontozási rendszert válts
+
+##### Language ##### 
+
+Unknown language
+== Ismeretlen nyelv
+
+##### Always Random ##### 
+
+A random class will be automatically attributed to you when rounds start
+== Ha a kör elkezdődik, és nem választottál, véletlenszerű osztályt kapsz
+
+The class selector will be displayed when rounds start
+== Az osztály-választó eltűnik, ha a kör elkezdődik
+
+##### Info ##### 
 
 InfectionClass, by necropotame (version %s)
 == InfectionClass, készítette: necropotame (version %s)
@@ -153,6 +165,8 @@ Based on Infection mod by Gravity
 
 Thanks to %s
 == Köszönet illeti: %s
+
+##### Help ##### 
 
 Rules of the game:
 == A játékszabályok:
@@ -172,6 +186,21 @@ The goal for humans is to survive until the army clean the map.
 The goal for infected is to infect all humans.
 == A zombik célja, hogy minden embert megfertőzzenek.
 
+##### Hook protection ##### 
+
+Hook protection enabled
+== Horog-védelem bekapcsolva
+
+Hook protection disabled
+== Horog-védelem kikapcsolva
+
+##### CLASSES ##########################################################
+
+##### Engineer ##### 
+
+Engineer
+== Mérnök
+
 Engineer:
 == Mérnök:
 
@@ -183,6 +212,11 @@ When an infected touch the wall, he dies.
 
 The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
 == A fal 30 másodperc múlva megsemmisül, és egy mérnöknek egyszerre csak egy felállított fala lehet.
+
+##### Soldier ##### 
+
+Soldier
+== Közkatona
 
 Soldier:
 == Közkatona:
@@ -199,6 +233,31 @@ Use the hammer to place the bomb and explode it multiple times.
 Bombs are limited to one per player at the same time.
 == Egy közkatonának egyszerre csak egy lerakott bombája lehet.
 
+##### Scientist ##### 
+
+Scientist
+== Tudós
+
+Scientist:
+== Tudós:
+
+### NOT TRANSLATED
+#The Scientist can pose floating mines with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He has also grenades that teleport him.
+#== 
+
+### NOT TRANSLATED
+#Mines are limited to two per player at the same time.
+#== 
+
+##### Medic ##### 
+
+Medic
+== Orvos
+
 Medic:
 == Orvos:
 
@@ -207,6 +266,11 @@ The Medic can protect humans with his hammer by giving them armor.
 
 He has also a powerful shotgun that can pullback infected.
 == Van továbbá egy erős gépfegyvere, ami ellöki a zombikat.
+
+##### Ninja ##### 
+
+Ninja
+== Nindzsa
 
 Ninja:
 == Nindzsa:
@@ -217,6 +281,39 @@ The Ninja can throw flash grenades that can freeze infected during three seconds
 His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
 == Kalapács helyett katanája van, amivel kétszer is ugorhat levegőben.
 
+##### Mercenary ##### 
+
+Mercenary
+== Zsoldos
+
+Mercenary:
+== Zsoldos:
+
+The Mercenary fly in air using his machine gun.
+== A soldos tud repülni a sorozatlövőjável.
+
+He can also throw poison grenades that deals 8 damage points.
+== Továbbá mérgezett bombákat lőhet, amik 8 pontot sebzenek.
+
+##### Sniper ##### 
+
+Sniper
+== Mesterlövész
+
+Sniper:
+== Mesterlövész:
+
+The Sniper can lock his position in air for 15 seconds with his hammer.
+== A mesterlövész levegőbel a tud maradni, amit kalapácsával aktiválhat.
+
+He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+== Továbbá van egy igen erős lézerpisztolya, ami 19-20 pontot sebez a levegőből, egyébként 9-10-et.
+
+##### Smoker ##### 
+
+Smoker
+== Füstös
+
 Smoker:
 == Füstös:
 
@@ -225,6 +322,11 @@ The Smoker can infect humans and heal infected with his hammer.
 
 He can also inflict 4 damage points per seconds by hooking humans.
 == Továbbá másodpercenként 4 ponttal sebzi az embereket, ha rájuk akaszkodik.
+
+##### Boomer ##### 
+
+Boomer
+== Robbanó
 
 Boomer:
 == Robbanó:
@@ -238,6 +340,11 @@ All humans affected by the explosion become infected.
 He can also inflict 1 damage point per seconds by hooking humans.
 == Továbbá másodpercenként 1 ponttal sebzi az embereket, ha rájuk akaszkodik.
 
+##### Hunter ##### 
+
+Hunter
+== Vadász
+
 Hunter:
 == Vadász:
 
@@ -246,6 +353,49 @@ The Hunter can infect humans and heal infected with his hammer.
 
 He can jump two times in air.
 == Kétszer ugorhat levegőben.
+
+##### Spider ##### 
+
+Spider
+== Pók
+
+Spider:
+== Pók:
+
+The Spider can infect humans and heal infected with his hammer.
+== A pók kalapácsával megfertőzhet embereket, és gyógyíthat zombikat.
+
+When selecting any gun, his hook enter in web mode.
+== Amikor fegyvert vált, a horgot háló módban használhatja.
+
+Any human that touch a hook in web mode is automatically grabbed.
+== Ha egy ember hozzáér a horoghoz háló módban, a zombi automatikusan ráakaszkodik.
+
+The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+== Mindkét esetben másodpercenként 1 ponttal sebzi az embereket, ha rájuk akaszkodik.
+
+##### Ghost #####
+
+### NOT TRANSLATED
+#Ghost
+#== 
+
+### NOT TRANSLATED
+#Ghost:
+#== 
+
+### NOT TRANSLATED
+#The Ghost can infect humans and heal infected with his hammer.
+#== 
+
+### NOT TRANSLATED
+#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+#== 
+
+##### Undead ##### 
+
+Undead
+== Halhatatlan
 
 Undead:
 == Halhatatlan:
@@ -258,6 +408,11 @@ Instead of dying, he freezes during 10 seconds.
 
 If an infected heals him, the freeze effect disappear.
 == Ha egy zombi megüti kalapácsával, újra játszhat.
+
+##### Witch ##### 
+
+Witch
+== Boszorkány
 
 Witch:
 == Boszorkány:
@@ -273,66 +428,3 @@ If the Witch dies, she disappear and is replaced by an another class of infected
 
 She can also inflict 1 damage point per seconds by hooking humans.
 == Továbbá másodpercenként 1 ponttal sebzi az embereket, ha rájuk akaszkodik.
-
-Hook protection enabled
-== Horog-védelem bekapcsolva
-
-Hook protection disabled
-== Horog-védelem kikapcsolva
-
-Unknown language
-== Ismeretlen nyelv
-
-Bombs left: %d
-== Megmaradt bombák: %d
-
-Laser wall: %d sec
-== Lézer-fal: %d sec
-
-Position lock: %d sec
-== Mozgás-zár: %d sec
-
-Web mode enabled
-== Háló mód bekapcsolva
-
-Mercenary
-== Zsoldos
-
-Mercenary:
-== Zsoldos:
-
-The Mercenary fly in air using his machine gun.
-== A soldos tud repülni a sorozatlövőjável.
-
-He can also throw poison grenades that deals 8 damage points.
-== Továbbá mérgezett bombákat lőhet, amik 8 pontot sebzenek.
-
-Sniper
-== Mesterlövész
-
-Sniper:
-== Mesterlövész:
-
-The Sniper can lock his position in air for 15 seconds with his hammer.
-== A mesterlövész levegőbel a tud maradni, amit kalapácsával aktiválhat.
-
-He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-== Továbbá van egy igen erős lézerpisztolya, ami 19-20 pontot sebez a levegőből, egyébként 9-10-et.
-
-Spider
-== Pók
-
-Spider:
-== Pók:
-
-The Spider can infect humans and heal infected with his hammer.
-== A pók kalapácsával megfertőzhet embereket, és gyógyíthat zombikat..
-
-When selecting any gun, his hook enter in web mode.
-== Amikor fegyvert vált, a horgot háló módban használhatja.
-
-Any human that touch a hook in web mode is automatically grabbed.
-== Ha egy ember hozzáér a horoghoz háló módban, a zombi automatikusan ráakaszkodik.
-
-The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
-== Mindkét esetben másodpercenként 1 ponttal sebzi az embereket, ha rájuk akaszkodik.

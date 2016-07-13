@@ -1123,14 +1123,6 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					SendMODT(ClientID, aBuf);
 				}
 				else if(
-					(str_comp_nocase_num(pMsg->m_pMessage,"\\register ", 10) == 0) ||
-					(str_comp_nocase_num(pMsg->m_pMessage,"/register", 10) == 0)
-				)
-				{
-					
-					Server()->Register(ClientID, Server()->ClientName(ClientID), pMsg->m_pMessage+10);
-				}
-				else if(
 					(str_comp_nocase_num(pMsg->m_pMessage,"\\ar  ", 4) == 0) ||
 					(str_comp_nocase_num(pMsg->m_pMessage,"/ar ", 4) == 0) ||
 					(str_comp_nocase_num(pMsg->m_pMessage,"\\fa  ", 4) == 0) ||
@@ -1142,6 +1134,14 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					char aOutput[sizeof(pMsg->m_pMessage)];
 					ConvertArabicInput(pMsg->m_pMessage+4, aTmp, aOutput);
 					SendChat(ClientID, Team, aOutput);
+				}
+				else if(
+					(str_comp_nocase_num(pMsg->m_pMessage,"\\register ", 10) == 0) ||
+					(str_comp_nocase_num(pMsg->m_pMessage,"/register", 10) == 0)
+				)
+				{
+					
+					Server()->Register(ClientID, Server()->ClientName(ClientID), pMsg->m_pMessage+10);
 				}
 				else if(
 					(str_comp_nocase_num(pMsg->m_pMessage,"\\login ", 7) == 0) ||
@@ -1164,6 +1164,24 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					const char* pLine6 = ServerLocalize("The goal for infected is to infect all humans.", m_apPlayers[ClientID]->GetLanguage());
 					
 					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5, pLine6);
+					
+					SendMODT(ClientID, aBuf);
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\help translate") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/help translate") == 0)
+				)
+				{
+					char aBuf[512];
+					const char* pLine1 = "How to translate the mod:"; 
+					const char* pLine2 = "Download this file:";
+					const char* pLine3 = "https://raw.githubusercontent.com";
+					const char* pLine4 = "   /necropotame/teeworlds-infclass/master";
+					const char* pLine5 = "   /data/languages/infclass/fr.txt";
+					const char* pLine6 = "Keep the english line and replace the french line with your translation";
+					const char* pLine7 = "Send the new file in github or at necropotame@gmail.com";
+	
+					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5, pLine6, pLine7);
 					
 					SendMODT(ClientID, aBuf);
 				}
@@ -1206,8 +1224,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					char aBuf[512];
 					const char* pLine1 = ServerLocalize("Scientist:", m_apPlayers[ClientID]->GetLanguage()); 
 					const char* pLine2 = ServerLocalize("The Scientist can pose floating mines with his hammer.", m_apPlayers[ClientID]->GetLanguage()); 
-					const char* pLine3 = ServerLocalize("He has also grenades that teleport him.", m_apPlayers[ClientID]->GetLanguage());
-					const char* pLine4 = ServerLocalize("Mines are limited to two per player at the same time.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine3 = ServerLocalize("Mines are limited to two per player at the same time.", m_apPlayers[ClientID]->GetLanguage());
+					const char* pLine4 = ServerLocalize("He has also grenades that teleport him.", m_apPlayers[ClientID]->GetLanguage());
 					
 					str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 					
@@ -1417,6 +1435,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				{
 					Server()->SetClientAlwaysRandom(ClientID, 1);
 					SendChatTarget_Language(ClientID, "A random class will be automatically attributed to you when rounds start");
+				}
+				else if(
+					(str_comp_nocase(pMsg->m_pMessage,"\\language") == 0) ||
+					(str_comp_nocase(pMsg->m_pMessage,"/language") == 0)
+				)
+				{
+					SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es|ar|hu|pl>");
 				}
 				else if(
 					(str_comp_nocase_num(pMsg->m_pMessage,"\\language ", 10) == 0) ||
@@ -1925,6 +1950,11 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				{
 					Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
 					m_VoteLanguageTick[ClientID] = 10*Server()->TickSpeed();
+				}
+				else
+				{
+					SendChatTarget_Language(ClientID, "You can change the language of this mod using the command /language.");
+					SendChatTarget_Language(ClientID, "If your language is not available, you can help with translation (/help translate).");
 				}
 			}
 			
