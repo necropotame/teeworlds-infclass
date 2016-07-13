@@ -51,10 +51,10 @@ The witch is dead
 == A boszorkány meghalt
 
 The undead is coming!
-== Jön a halhatatlan!
+== Jön az élőhalott!
 
 The undead is finally dead
-== A halhatatlan végre meghalt
+== Az élőhalott végre meghalt
 
 Infected won the round in %i:%02i minutes
 == A zombik megnyerték a játékot %i:%02i perc alatt
@@ -80,7 +80,7 @@ You are frozen: %d sec
 == Lefagytál: %d másodperc
 
 Bombs left: %d
-== Megmaradt bombák: %d
+== Aktív bombák: %d
 
 Laser wall: %d sec
 == Lézer-fal: %d sec
@@ -88,9 +88,8 @@ Laser wall: %d sec
 Position lock: %d sec
 == Mozgás-zár: %d sec
 
-### NOT TRANSLATED
-#Active mines: %d
-#== 
+Active mines: %d
+== Aktív aknák: %d
 
 Web mode enabled
 == Háló mód bekapcsolva
@@ -131,13 +130,11 @@ List of commands
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1> : Automatikusan véletlenszerű osztályt kapsz a körök elején
 
-### NOT TRANSLATED
-#/lowresmap and /highresmap: Switch between simplified and classical maps
-#== 
+/lowresmap and /highresmap: Switch between simplified and classical maps
+== /lowresmap és /highresmap: Váltás az egyszerűsített és eredeti pályák közt
 
-### NOT TRANSLATED
-#Press <F3> or <F4> to enable or disable hook protection
-#== 
+Press <F3> or <F4> to enable or disable hook protection
+== Nyomd le az <F3>-at vagy <F4>-et, hogy engedélyezd vagy letiltsd a horog-védelmet
 
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == Nyomd le az <F3>-at vagy <F4>-et és a <TAB>-ot egyszerre, hogy pontozási rendszert válts
@@ -222,7 +219,7 @@ Soldier:
 == Közkatona:
 
 The Soldier can pose floating bombs with his hammer.
-== A közkatona lerakhat lebegő bombákat kalapácsával.
+== A közkatona felállíthat lebegő bombákat kalapácsával.
 
 Each bomb can explode three times.
 == Minden bomba háromszor robbanhat fel.
@@ -231,7 +228,7 @@ Use the hammer to place the bomb and explode it multiple times.
 == Szintén kalapáccsal lehet a bombákat aktiválni, hogy felrobbanjanak.
 
 Bombs are limited to one per player at the same time.
-== Egy közkatonának egyszerre csak egy lerakott bombája lehet.
+== Egy közkatonának egyszerre csak egy felállított bombája lehet.
 
 ##### Scientist ##### 
 
@@ -241,17 +238,14 @@ Scientist
 Scientist:
 == Tudós:
 
-### NOT TRANSLATED
-#The Scientist can pose floating mines with his hammer.
-#== 
+The Scientist can pose floating mines with his hammer.
+== A tudós felállíthat lebegő aknákat kalapácsával.
 
-### NOT TRANSLATED
-#He has also grenades that teleport him.
-#== 
+He has also grenades that teleport him.
+== Továbbá teleportálhat gránátvetőjével.
 
-### NOT TRANSLATED
-#Mines are limited to two per player at the same time.
-#== 
+Mines are limited to two per player at the same time.
+== Egy tudósnak egyszerre csak két felállított aknája lehet.
 
 ##### Medic ##### 
 
@@ -326,13 +320,13 @@ He can also inflict 4 damage points per seconds by hooking humans.
 ##### Boomer ##### 
 
 Boomer
-== Robbanó
+== Bomba
 
 Boomer:
-== Robbanó:
+== Bomba:
 
 The Boomer explodes when he attack.
-== A robbanó támadáskor felrobban.
+== A bomba támadáskor felrobban.
 
 All humans affected by the explosion become infected.
 == A robbanás közelében minden embert megfertől.
@@ -376,32 +370,28 @@ The hook of the spider (in both mode) deal 1 damage point per seconds and can gr
 
 ##### Ghost #####
 
-### NOT TRANSLATED
-#Ghost
-#== 
+Ghost
+== Szellem
 
-### NOT TRANSLATED
-#Ghost:
-#== 
+Ghost:
+== Szellem:
 
-### NOT TRANSLATED
-#The Ghost can infect humans and heal infected with his hammer.
-#== 
+The Ghost can infect humans and heal infected with his hammer.
+== A szellem kalapácsával megfertőzhet embereket, és gyógyíthat zombikat.
 
-### NOT TRANSLATED
-#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
-#== 
+He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+== Láthatatlan az emberek szábára kivéve ha közel vannak hozzá, vagy kasználja kalapácsát.
 
 ##### Undead ##### 
 
 Undead
-== Halhatatlan
+== Élőhalott
 
 Undead:
-== Halhatatlan:
+== Élőhalott:
 
 The Undead can infect humans and heal infected with his hammer.
-== A halhatatlan kalapácsával megfertőzhet embereket, és gyógyíthat zombikat.
+== Az élőhalott kalapácsával megfertőzhet embereket, és gyógyíthat zombikat.
 
 Instead of dying, he freezes during 10 seconds.
 == Nem hal meg, hanem lefagy 10 másodpercre.
