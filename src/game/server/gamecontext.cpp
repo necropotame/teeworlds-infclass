@@ -1468,6 +1468,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Language = LANGUAGE_HU;
 					else if(str_comp_nocase(pMsg->m_pMessage+10, "pl") == 0)
 						Language = LANGUAGE_PL;
+					else if(str_comp_nocase(pMsg->m_pMessage+10, "en") == 0)
+						Language = LANGUAGE_EN;
 					
 					if(Language >= 0)
 					{
@@ -1480,7 +1482,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					else
 					{
 						SendChatTarget_Language(ClientID, "Unknown language");
-						SendChatTarget_Language(ClientID, "Help: /language <fr|de|uk|ru|it|es|ar|hu|pl>");
+						SendChatTarget_Language(ClientID, "Help: /language <en|fr|de|uk|ru|it|es|ar|hu|pl>");
 					}
 				}
 				else
