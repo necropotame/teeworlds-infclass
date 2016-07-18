@@ -1547,7 +1547,7 @@ int CServer::Run()
 
 	if(g_Config.m_InfCaptcha)
 	{
-		if(!InitCaptcha() && !m_lCaptcha.size())
+		if(!InitCaptcha() || !m_lCaptcha.size())
 		{
 			dbg_msg("server", "failed to create captcha list");
 			return -1;
