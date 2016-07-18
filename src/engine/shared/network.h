@@ -307,7 +307,7 @@ public:
 	void SetMaxClientsPerIP(int Max);
 	
 	void AddCaptcha(const char* pText);
-	const char* GetCaptcha(const NETADDR* pAddr);
+	const char* GetCaptcha(const NETADDR* pAddr, bool Debug=false);
 	bool IsCaptchaInitialized() { return m_lCaptcha.size() > 0; }
 };
 

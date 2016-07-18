@@ -145,8 +145,7 @@ int CNetServer::Recv(CNetChunk *pChunk)
 							net_addr_comp(m_aSlots[i].m_Connection.PeerAddress(), &Addr) == 0)
 						{
 							ClientID = i;
-							
-							//~ break;
+							break;
 						}
 					}
 					
@@ -172,7 +171,7 @@ int CNetServer::Recv(CNetChunk *pChunk)
 								if(Iter+1 < Bytes)
 									pPassword = m_RecvUnpacker.m_aBuffer+Iter+1;
 								
-								if(!pPassword || str_comp(GetCaptcha(&Addr), (const char*) pPassword))
+								if(!pPassword || (str_comp(GetCaptcha(&Addr, true), (const char*) pPassword) != 0))
 								{
 									const char WrongPasswordMsg[] = "Wrong password";
 									CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, WrongPasswordMsg, sizeof(WrongPasswordMsg));
@@ -287,7 +286,7 @@ void CNetServer::SetMaxClientsPerIP(int Max)
 	m_MaxClientsPerIP = Max;
 }
 
-const char* CNetServer::GetCaptcha(const NETADDR* pAddr)
+const char* CNetServer::GetCaptcha(const NETADDR* pAddr, bool Debug)
 {
 	if(!m_lCaptcha.size())
 		return "???";
@@ -295,9 +294,18 @@ const char* CNetServer::GetCaptcha(const NETADDR* pAddr)
 	int IpHash = 0;
 	for(int i=0; i<4; i++)
 	{
-		IpHash ^= *((int*)(pAddr->ip+i*4));
+		IpHash |= (pAddr->ip[i]<<(i*8));
 	}
+	
 	int CaptchaId = IpHash%m_lCaptcha.size();
+	
+	if(Debug)
+	{
+		char aBuf[64];
+		net_addr_str(pAddr, aBuf, 64, 0);
+		dbg_msg("InfClass", "GetCaptcha: %s -> %d -> %d", aBuf, IpHash, CaptchaId);
+	}
+	
 	return m_lCaptcha[CaptchaId].m_aText;
 }
 
