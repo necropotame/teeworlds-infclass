@@ -106,7 +106,7 @@ int CNetServer::Recv(CNetChunk *pChunk)
 		// no more packets for now
 		if(Bytes <= 0)
 			break;
-
+							
 		if(CNetBase::UnpackPacket(m_RecvUnpacker.m_aBuffer, Bytes, &m_RecvUnpacker.m_Data) == 0)
 		{
 			// check if we just should drop the packet
@@ -154,8 +154,19 @@ int CNetServer::Recv(CNetChunk *pChunk)
 					if(ClientID < 0)
 					{
 						//If the message is NETMSG_INFO, connect the client.
-						if(m_RecvUnpacker.m_Data.m_aChunkData[0] == ((NETMSG_INFO << 1) | 1))
+						static const char m_NetMsgInfoHeader1[] = { 0x00, 0x00, 0x01 };
+						static const char m_NetMsgInfoHeader2[] = { 0x01, 0x03 };
+						if(Bytes > 10
+							&& (mem_comp(m_RecvUnpacker.m_aBuffer, m_NetMsgInfoHeader1, sizeof(m_NetMsgInfoHeader1)/sizeof(unsigned char)) == 0)
+							&& (mem_comp(m_RecvUnpacker.m_aBuffer+5, m_NetMsgInfoHeader2, sizeof(m_NetMsgInfoHeader2)/sizeof(unsigned char)) == 0)
+						)
 						{
+							//Check password if captcha are enabled
+							if(g_Config.m_InfCaptcha)
+							{
+								m_RecvUnpacker.m_Data.m_aChunkData[NET_MAX_PAYLOAD-1] = 0;
+							}
+							
 							// only allow a specific number of players with the same ip
 							NETADDR ThisAddr = Addr, OtherAddr;
 							int FoundAddr = 1;
