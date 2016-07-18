@@ -291,19 +291,19 @@ const char* CNetServer::GetCaptcha(const NETADDR* pAddr, bool Debug)
 	if(!m_lCaptcha.size())
 		return "???";
 	
-	int IpHash = 0;
-	for(int i=0; i<4; i++)
+	unsigned int IpHash = 0;
+	for(unsigned int i=0; i<4; i++)
 	{
 		IpHash |= (pAddr->ip[i]<<(i*8));
 	}
 	
-	int CaptchaId = IpHash%m_lCaptcha.size();
+	unsigned int CaptchaId = IpHash%m_lCaptcha.size();
 	
 	if(Debug)
 	{
 		char aBuf[64];
 		net_addr_str(pAddr, aBuf, 64, 0);
-		dbg_msg("InfClass", "GetCaptcha: %s -> %d -> %d", aBuf, IpHash, CaptchaId);
+		dbg_msg("InfClass", "GetCaptcha: %s -> %d -> %d -> %s", aBuf, IpHash, CaptchaId, m_lCaptcha[CaptchaId].m_aText);
 	}
 	
 	return m_lCaptcha[CaptchaId].m_aText;
