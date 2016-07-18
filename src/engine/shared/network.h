@@ -3,6 +3,7 @@
 #ifndef ENGINE_SHARED_NETWORK_H
 #define ENGINE_SHARED_NETWORK_H
 
+#include <base/tl/array.h>
 #include "ringbuffer.h"
 #include "huffman.h"
 
@@ -186,6 +187,7 @@ public:
 	int Update();
 	int Flush();
 
+	int SimulateConnexionWithInfo(NETADDR *pAddr);
 	int Feed(CNetPacketConstruct *pPacket, NETADDR *pAddr);
 	int QueueChunk(int Flags, int DataSize, const void *pData);
 
@@ -273,6 +275,12 @@ class CNetServer
 
 	CNetRecvUnpacker m_RecvUnpacker;
 
+	struct CCaptcha
+	{
+		char m_aText[16];
+	};
+	array<CCaptcha> m_lCaptcha;
+
 public:
 	int SetCallbacks(NETFUNC_NEWCLIENT pfnNewClient, NETFUNC_DELCLIENT pfnDelClient, void *pUser);
 
@@ -297,6 +305,10 @@ public:
 
 	//
 	void SetMaxClientsPerIP(int Max);
+	
+	void AddCaptcha(const char* pText);
+	const char* GetCaptcha(const NETADDR* pAddr);
+	bool IsCaptchaInitialized() { return m_lCaptcha.size() > 0; }
 };
 
 class CNetConsole

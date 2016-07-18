@@ -194,6 +194,27 @@ void CNetConnection::Disconnect(const char *pReason)
 	Reset();
 }
 
+int CNetConnection::SimulateConnexionWithInfo(NETADDR *pAddr)
+{
+	int64 Now = time_get();
+
+	if(State() == NET_CONNSTATE_OFFLINE)
+	{
+		// send response and init connection
+		Reset();
+		m_State = NET_CONNSTATE_PENDING;
+		m_PeerAddr = *pAddr;
+		mem_zero(m_ErrorString, sizeof(m_ErrorString));
+		m_LastSendTime = Now;
+		m_LastRecvTime = Now;
+		m_LastUpdateTime = Now;
+		if(g_Config.m_Debug)
+			dbg_msg("connection", "got connection using info");
+	}
+
+	return 1;
+}
+
 int CNetConnection::Feed(CNetPacketConstruct *pPacket, NETADDR *pAddr)
 {
 	int64 Now = time_get();

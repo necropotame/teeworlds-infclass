@@ -3,9 +3,11 @@
 #include <base/system.h>
 
 #include <engine/console.h>
+#include <engine/shared/config.h>
 
 #include "netban.h"
 #include "network.h"
+#include "protocol.h"
 
 
 bool CNetServer::Open(NETADDR BindAddr, CNetBan *pNetBan, int MaxClients, int MaxClientsPerIP, int Flags)
@@ -127,79 +129,85 @@ int CNetServer::Recv(CNetChunk *pChunk)
 			}
 			else
 			{
-				// TODO: check size here
+				//If the message is NET_PACKETFLAG_CONTROL, send fake
+				//control message to force the client to send a NETMSG_INFO	
 				if(m_RecvUnpacker.m_Data.m_Flags&NET_PACKETFLAG_CONTROL && m_RecvUnpacker.m_Data.m_aChunkData[0] == NET_CTRLMSG_CONNECT)
 				{
-					bool Found = false;
-
-					// check if we already got this client
+					CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CONNECTACCEPT, 0, 0);
+				}
+				else
+				{
+					int ClientID = -1;
+					
 					for(int i = 0; i < MaxClients(); i++)
 					{
 						if(m_aSlots[i].m_Connection.State() != NET_CONNSTATE_OFFLINE &&
 							net_addr_comp(m_aSlots[i].m_Connection.PeerAddress(), &Addr) == 0)
 						{
-							Found = true; // silent ignore.. we got this client already
-							break;
+							ClientID = i;
+							
+							//~ break;
 						}
 					}
-
-					// client that wants to connect
-					if(!Found)
+					
+					//The client is unknown, check for NETMSG_INFO
+					if(ClientID < 0)
 					{
-						// only allow a specific number of players with the same ip
-						NETADDR ThisAddr = Addr, OtherAddr;
-						int FoundAddr = 1;
-						ThisAddr.port = 0;
-						for(int i = 0; i < MaxClients(); ++i)
+						//If the message is NETMSG_INFO, connect the client.
+						if(m_RecvUnpacker.m_Data.m_aChunkData[0] == ((NETMSG_INFO << 1) | 1))
 						{
-							if(m_aSlots[i].m_Connection.State() == NET_CONNSTATE_OFFLINE)
-								continue;
-
-							OtherAddr = *m_aSlots[i].m_Connection.PeerAddress();
-							OtherAddr.port = 0;
-							if(!net_addr_comp(&ThisAddr, &OtherAddr))
+							// only allow a specific number of players with the same ip
+							NETADDR ThisAddr = Addr, OtherAddr;
+							int FoundAddr = 1;
+							ThisAddr.port = 0;
+							for(int i = 0; i < MaxClients(); ++i)
 							{
-								if(FoundAddr++ >= m_MaxClientsPerIP)
+								if(m_aSlots[i].m_Connection.State() == NET_CONNSTATE_OFFLINE)
+									continue;
+
+								OtherAddr = *m_aSlots[i].m_Connection.PeerAddress();
+								OtherAddr.port = 0;
+								if(!net_addr_comp(&ThisAddr, &OtherAddr))
 								{
-									char aBuf[128];
-									str_format(aBuf, sizeof(aBuf), "Only %d players with the same IP are allowed", m_MaxClientsPerIP);
-									CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, sizeof(aBuf));
-									return 0;
+									if(FoundAddr++ >= m_MaxClientsPerIP)
+									{
+										char aBuf[128];
+										str_format(aBuf, sizeof(aBuf), "Only %d players with the same IP are allowed", m_MaxClientsPerIP);
+										CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, sizeof(aBuf));
+										return 0;
+									}
 								}
 							}
-						}
 
-						for(int i = 0; i < MaxClients(); i++)
-						{
-							if(m_aSlots[i].m_Connection.State() == NET_CONNSTATE_OFFLINE)
+							bool Found = false;
+							for(int i = 0; i < MaxClients(); i++)
 							{
-								Found = true;
-								m_aSlots[i].m_Connection.Feed(&m_RecvUnpacker.m_Data, &Addr);
-								if(m_pfnNewClient)
-									m_pfnNewClient(i, m_UserPtr);
-								break;
+								if(m_aSlots[i].m_Connection.State() == NET_CONNSTATE_OFFLINE)
+								{
+									Found = true;
+									m_aSlots[i].m_Connection.SimulateConnexionWithInfo(&Addr);
+									if(m_pfnNewClient)
+										m_pfnNewClient(i, m_UserPtr);
+									ClientID = i;
+									break;
+								}
+							}
+
+							if(!Found)
+							{
+								const char FullMsg[] = "This server is full";
+								CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, FullMsg, sizeof(FullMsg));
 							}
 						}
-
-						if(!Found)
-						{
-							const char FullMsg[] = "This server is full";
-							CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, FullMsg, sizeof(FullMsg));
-						}
+						//Otherwise, just drop the message
 					}
-				}
-				else
-				{
-					// normal packet, find matching slot
-					for(int i = 0; i < MaxClients(); i++)
+					
+					if(ClientID >= 0)
 					{
-						if(net_addr_comp(m_aSlots[i].m_Connection.PeerAddress(), &Addr) == 0)
+						if(m_aSlots[ClientID].m_Connection.Feed(&m_RecvUnpacker.m_Data, &Addr))
 						{
-							if(m_aSlots[i].m_Connection.Feed(&m_RecvUnpacker.m_Data, &Addr))
-							{
-								if(m_RecvUnpacker.m_Data.m_DataSize)
-									m_RecvUnpacker.Start(&Addr, &m_aSlots[i].m_Connection, i);
-							}
+							if(m_RecvUnpacker.m_Data.m_DataSize)
+								m_RecvUnpacker.Start(&Addr, &m_aSlots[ClientID].m_Connection, ClientID);
 						}
 					}
 				}
@@ -253,4 +261,25 @@ void CNetServer::SetMaxClientsPerIP(int Max)
 		Max = NET_MAX_CLIENTS;
 
 	m_MaxClientsPerIP = Max;
+}
+
+const char* CNetServer::GetCaptcha(const NETADDR* pAddr)
+{
+	if(!m_lCaptcha.size())
+		return "???";
+	
+	int IpHash = 0;
+	for(int i=0; i<4; i++)
+	{
+		IpHash ^= *((int*)(pAddr->ip+i*4));
+	}
+	int CaptchaId = IpHash%m_lCaptcha.size();
+	return m_lCaptcha[CaptchaId].m_aText;
+}
+
+void CNetServer::AddCaptcha(const char* pText)
+{
+	CCaptcha Captcha;
+	str_copy(Captcha.m_aText, pText, sizeof(Captcha));
+	m_lCaptcha.add(Captcha);
 }
