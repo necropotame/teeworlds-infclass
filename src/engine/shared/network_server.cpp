@@ -159,12 +159,25 @@ int CNetServer::Recv(CNetChunk *pChunk)
 						if(Bytes > 10
 							&& (mem_comp(m_RecvUnpacker.m_aBuffer, m_NetMsgInfoHeader1, sizeof(m_NetMsgInfoHeader1)/sizeof(unsigned char)) == 0)
 							&& (mem_comp(m_RecvUnpacker.m_aBuffer+5, m_NetMsgInfoHeader2, sizeof(m_NetMsgInfoHeader2)/sizeof(unsigned char)) == 0)
+							&& m_RecvUnpacker.m_aBuffer[Bytes-1] == 0
 						)
 						{
 							//Check password if captcha are enabled
 							if(g_Config.m_InfCaptcha)
 							{
-								m_RecvUnpacker.m_Data.m_aChunkData[NET_MAX_PAYLOAD-1] = 0;
+								const unsigned char* pPassword = 0;
+								int Iter = 7; //Skin the header and the ID
+								while(m_RecvUnpacker.m_aBuffer[Iter] != 0 && Iter < Bytes)
+									++Iter;
+								if(Iter+1 < Bytes)
+									pPassword = m_RecvUnpacker.m_aBuffer+Iter+1;
+								
+								if(!pPassword || str_comp(GetCaptcha(&Addr), (const char*) pPassword))
+								{
+									const char WrongPasswordMsg[] = "Wrong password";
+									CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, WrongPasswordMsg, sizeof(WrongPasswordMsg));
+									return 0;
+								}
 							}
 							
 							// only allow a specific number of players with the same ip

@@ -971,10 +971,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				}
 
 				const char *pPassword = Unpacker.GetString(CUnpacker::SANITIZE_CC);
-				if(
-					(g_Config.m_Password[0] != 0 && str_comp(g_Config.m_Password, pPassword) != 0) ||
-					(g_Config.m_InfCaptcha && str_comp(m_NetServer.GetCaptcha(m_NetServer.ClientAddr(ClientID)), pPassword) != 0)
-				)
+				if(!g_Config.m_InfCaptcha && g_Config.m_Password[0] != 0 && str_comp(g_Config.m_Password, pPassword) != 0)
 				{
 					// wrong password
 					m_NetServer.Drop(ClientID, CLIENTDROPTYPE_WRONG_PASSWORD, "Wrong password");
