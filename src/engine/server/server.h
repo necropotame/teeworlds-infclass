@@ -312,6 +312,19 @@ public:
 private:
 	static void ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData);
 	static void ConClassChooser(IConsole::IResult *pResult, void *pUserData);
+	
+	//Captcha
+private:
+	struct CCaptcha
+	{
+		char m_aText[16];
+	};
+	array<CCaptcha> m_lCaptcha;
+	
+	
+private:
+	bool InitCaptcha();
+	const char* GenerateCaptcha(const NETADDR* pAddr);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

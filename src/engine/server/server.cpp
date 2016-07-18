@@ -901,6 +901,58 @@ void CServer::UpdateClientRconCommands()
 	}
 }
 
+bool CServer::InitCaptcha()
+{
+	IOHANDLE File = Storage()->OpenFile("security/captcha.txt", IOFLAG_READ, IStorage::TYPE_ALL);
+	if(!File)
+		return false;
+	
+	char CaptchaText[16];
+	bool isEndOfFile = false;
+	while(!isEndOfFile)
+	{
+		isEndOfFile = true;
+		
+		//Load one line
+		int LineLenth = 0;
+		char c;
+		while(io_read(File, &c, 1))
+		{
+			isEndOfFile = false;
+			
+			if(c == '\n') break;
+			else
+			{
+				CaptchaText[LineLenth] = c;
+				LineLenth++;
+			}
+		}
+		
+		CaptchaText[LineLenth] = 0;
+		
+		//Get the key
+		if(CaptchaText[0])
+		{
+			CCaptcha Captcha;
+			str_copy(Captcha.m_aText, CaptchaText, sizeof(Captcha));
+			m_lCaptcha.add(Captcha);
+		}
+	}
+
+	io_close(File);
+}
+
+const char* CServer::GenerateCaptcha(const NETADDR* pAddr)
+{
+	int IpHash = 0;
+	for(int i=0; i<4; i++)
+	{
+		IpHash ^= *((int*)(pAddr->ip+i*4));
+	}
+	int CaptchaId = IpHash%m_lCaptcha.size();
+	return m_lCaptcha[CaptchaId].m_aText;
+}
+
 void CServer::ProcessClientPacket(CNetChunk *pPacket)
 {
 	int ClientID = pPacket->m_ClientID;
@@ -933,7 +985,10 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				}
 
 				const char *pPassword = Unpacker.GetString(CUnpacker::SANITIZE_CC);
-				if(g_Config.m_Password[0] != 0 && str_comp(g_Config.m_Password, pPassword) != 0)
+				if(
+					(g_Config.m_Password[0] != 0 && str_comp(g_Config.m_Password, pPassword) != 0) ||
+					(g_Config.m_InfCaptcha && str_comp(GenerateCaptcha(m_NetServer.ClientAddr(ClientID)), pPassword) != 0)
+				)
 				{
 					// wrong password
 					m_NetServer.Drop(ClientID, CLIENTDROPTYPE_WRONG_PASSWORD, "Wrong password");
@@ -1218,7 +1273,17 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token)
 	p.AddString(aBuf, 6);
 
 	p.AddString(GameServer()->Version(), 32);
-	p.AddString(g_Config.m_SvName, 64);
+	
+	//Add captcha if needed
+	if(g_Config.m_InfCaptcha)
+	{
+		str_format(aBuf, sizeof(aBuf), "%s - Password: %s", g_Config.m_SvName, GenerateCaptcha(pAddr));
+		p.AddString(aBuf, 64);
+	}
+	else
+	{
+		p.AddString(g_Config.m_SvName, 64);
+	}
 	p.AddString(GetMapName(), 32);
 
 	// gametype
@@ -1479,6 +1544,15 @@ int CServer::Run()
 {
 	//
 	m_PrintCBIndex = Console()->RegisterPrintCallback(g_Config.m_ConsoleOutputLevel, SendRconLineAuthed, this);
+
+	if(g_Config.m_InfCaptcha)
+	{
+		if(!InitCaptcha() && !m_lCaptcha.size())
+		{
+			dbg_msg("server", "failed to create captcha list");
+			return -1;
+		}
+	}
 
 	//Choose a random map from the rotation
 	if(!str_length(g_Config.m_SvMap) && str_length(g_Config.m_SvMaprotation))
