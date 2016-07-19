@@ -305,6 +305,17 @@ CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 	m_RconClientID = IServer::RCON_CID_SERV;
 	m_RconAuthLevel = AUTHED_ADMIN;
 
+/* DDNET MODIFICATION START *******************************************/
+	for (int i = 0; i < MAX_SQLSERVERS; i++)
+	{
+		m_apSqlReadServers[i] = 0;
+		m_apSqlWriteServers[i] = 0;
+	}
+
+	CSqlConnector::SetReadServers(m_apSqlReadServers);
+	CSqlConnector::SetWriteServers(m_apSqlWriteServers);
+/* DDNET MODIFICATION END *********************************************/
+	
 	Init();
 }
 
@@ -1797,6 +1808,18 @@ int CServer::Run()
 
 	if(m_pCurrentMapData)
 		mem_free(m_pCurrentMapData);
+	
+/* DDNET MODIFICATION START *******************************************/
+	for (int i = 0; i < MAX_SQLSERVERS; i++)
+	{
+		if (m_apSqlReadServers[i])
+			delete m_apSqlReadServers[i];
+
+		if (m_apSqlWriteServers[i])
+			delete m_apSqlWriteServers[i];
+	}
+/* DDNET MODIFICATION END *********************************************/
+		
 	return 0;
 }
 
@@ -2015,51 +2038,85 @@ void CServer::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void 
 	}
 }
 
-/* INFECTION MODIFICATION START ***************************************/
-void CServer::ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData)
+/* DDNET MODIFICATION START *******************************************/
+
+void CServer::ConAddSqlServer(IConsole::IResult *pResult, void *pUserData)
 {
-	CServer *pServer = (CServer*) pUserData;
-	
-	const char *pClassName = pResult->GetString(0);
-	int NewValue = pResult->GetInteger(1);
-	int ClassId = 0;
-	
-	if(NewValue < 0) NewValue = 0;
-	
-	if(str_comp(pClassName, "engineer") == 0) ClassId = PLAYERCLASS_ENGINEER;
-	else if(str_comp(pClassName, "soldier") == 0) ClassId = PLAYERCLASS_SOLDIER;
-	else if(str_comp(pClassName, "mercenary") == 0) ClassId = PLAYERCLASS_MERCENARY;
-	else if(str_comp(pClassName, "sniper") == 0) ClassId = PLAYERCLASS_SNIPER;
-	else if(str_comp(pClassName, "scientist") == 0) ClassId = PLAYERCLASS_SCIENTIST;
-	else if(str_comp(pClassName, "medic") == 0) ClassId = PLAYERCLASS_MEDIC;
-	else if(str_comp(pClassName, "ninja") == 0) ClassId = PLAYERCLASS_NINJA;
-	else if(str_comp(pClassName, "smoker") == 0) ClassId = PLAYERCLASS_SMOKER;
-	else if(str_comp(pClassName, "hunter") == 0) ClassId = PLAYERCLASS_HUNTER;
-	else if(str_comp(pClassName, "ghost") == 0) ClassId = PLAYERCLASS_GHOST;
-	else if(str_comp(pClassName, "spider") == 0) ClassId = PLAYERCLASS_SPIDER;
-	else if(str_comp(pClassName, "boomer") == 0) ClassId = PLAYERCLASS_BOOMER;
-	else if(str_comp(pClassName, "undead") == 0) ClassId = PLAYERCLASS_UNDEAD;
-	else if(str_comp(pClassName, "witch") == 0) ClassId = PLAYERCLASS_WITCH;
+	CServer *pSelf = (CServer *)pUserData;
+
+	if (pResult->NumArguments() != 7 && pResult->NumArguments() != 8)
+	{
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "7 or 8 arguments are required");
+		return;
+	}
+
+	bool ReadOnly;
+	if (str_comp_nocase(pResult->GetString(0), "w") == 0)
+		ReadOnly = false;
+	else if (str_comp_nocase(pResult->GetString(0), "r") == 0)
+		ReadOnly = true;
 	else
 	{
-		pServer->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "inf_set_class_availability", "No such class");
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "choose either 'r' for SqlReadServer or 'w' for SqlWriteServer");
+		return;
 	}
-	
-	if(NewValue > 2) NewValue = 2;
-	
-	pServer->SetClassAvailability(ClassId, NewValue);
+
+	bool SetUpDb = pResult->NumArguments() == 8 ? pResult->GetInteger(7) : false;
+
+	CSqlServer** apSqlServers = ReadOnly ? pSelf->m_apSqlReadServers : pSelf->m_apSqlWriteServers;
+
+	for (int i = 0; i < MAX_SQLSERVERS; i++)
+	{
+		if (!apSqlServers[i])
+		{
+			apSqlServers[i] = new CSqlServer(pResult->GetString(1), pResult->GetString(2), pResult->GetString(3), pResult->GetString(4), pResult->GetString(5), pResult->GetInteger(6), ReadOnly, SetUpDb);
+
+			if(SetUpDb)
+			{
+				void *TablesThread = thread_init(CreateTablesThread, apSqlServers[i]);
+				thread_detach(TablesThread);
+			}
+
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "Added new Sql%sServer: %d: DB: '%s' Prefix: '%s' User: '%s' IP: '%s' Port: %d", ReadOnly ? "Read" : "Write", i, apSqlServers[i]->GetDatabase(), apSqlServers[i]->GetPrefix(), apSqlServers[i]->GetUser(), apSqlServers[i]->GetIP(), apSqlServers[i]->GetPort());
+			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
+			return;
+		}
+	}
+	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "failed to add new sqlserver: limit of sqlservers reached");
 }
 
-void CServer::ConClassChooser(IConsole::IResult *pResult, void *pUserData)
+void CServer::ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData)
 {
-	CServer *pServer = (CServer*) pUserData;
-	
-	int NewValue = pResult->GetInteger(0);
-	
-	pServer->m_InfClassChooser = (NewValue > 0 ? 1 : 0);
+	CServer *pSelf = (CServer *)pUserData;
+
+	bool ReadOnly;
+	if (str_comp_nocase(pResult->GetString(0), "w") == 0)
+		ReadOnly = false;
+	else if (str_comp_nocase(pResult->GetString(0), "r") == 0)
+		ReadOnly = true;
+	else
+	{
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "choose either 'r' for SqlReadServer or 'w' for SqlWriteServer");
+		return;
+	}
+
+	CSqlServer** apSqlServers = ReadOnly ? pSelf->m_apSqlReadServers : pSelf->m_apSqlWriteServers;
+
+	for (int i = 0; i < MAX_SQLSERVERS; i++)
+		if (apSqlServers[i])
+		{
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "SQL-%s %d: DB: '%s' Prefix: '%s' User: '%s' Pass: '%s' IP: '%s' Port: %d", ReadOnly ? "Read" : "Write", i, apSqlServers[i]->GetDatabase(), apSqlServers[i]->GetPrefix(), apSqlServers[i]->GetUser(), apSqlServers[i]->GetPass(), apSqlServers[i]->GetIP(), apSqlServers[i]->GetPort());
+			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
+		}
 }
 
-/* INFECTION MODIFICATION END *****************************************/
+void CServer::CreateTablesThread(void *pData)
+{
+	((CSqlServer *)pData)->CreateTables();
+}
+/* DDNET MODIFICATION END *********************************************/
 
 void CServer::RegisterCommands()
 {
@@ -2087,8 +2144,8 @@ void CServer::RegisterCommands()
 	Console()->Chain("console_output_level", ConchainConsoleOutputLevelUpdate, this);
 
 /* INFECTION MODIFICATION START ***************************************/
-	Console()->Register("inf_set_class_availability", "si", CFGFLAG_SERVER, ConSetClassAvailability, this, "Enable/Disable a class");
-	Console()->Register("inf_classchooser", "i", CFGFLAG_SERVER, ConClassChooser, this, "Enable/Disable class chooser");
+	Console()->Register("inf_add_sqlserver", "s['r'|'w'] s[Database] s[Prefix] s[User] s[Password] s[IP] i[Port] ?i[SetUpDatabase ?]", CFGFLAG_SERVER, ConAddSqlServer, this, "add a sqlserver");
+	Console()->Register("inf_list_sqlservers", "s['r'|'w']", CFGFLAG_SERVER, ConDumpSqlServers, this, "list all sqlservers readservers = r, writeservers = w");
 /* INFECTION MODIFICATION END *****************************************/
 
 	// register console commands in sub parts

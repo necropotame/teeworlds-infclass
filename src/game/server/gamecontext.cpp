@@ -11,9 +11,6 @@
 #include <game/collision.h>
 #include <game/gamecore.h>
 #include <iostream>
-#include "gamemodes/dm.h"
-#include "gamemodes/tdm.h"
-#include "gamemodes/ctf.h"
 #include "gamemodes/mod.h"
 #include <game/arabicinputconverter.h>
 
@@ -2587,14 +2584,7 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	//players = new CPlayer[MAX_CLIENTS];
 
 	// select gametype
-	if(str_comp(g_Config.m_SvGametype, "mod") == 0)
-		m_pController = new CGameControllerMOD(this);
-	else if(str_comp(g_Config.m_SvGametype, "ctf") == 0)
-		m_pController = new CGameControllerCTF(this);
-	else if(str_comp(g_Config.m_SvGametype, "tdm") == 0)
-		m_pController = new CGameControllerTDM(this);
-	else
-		m_pController = new CGameControllerDM(this);
+	m_pController = new CGameControllerMOD(this);
 
 	// setup core world
 	//for(int i = 0; i < MAX_CLIENTS; i++)

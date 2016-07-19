@@ -4,10 +4,12 @@
 #define ENGINE_SERVER_SERVER_H
 
 #include <engine/server.h>
-
-/* INFECTION MODIFICATION START ***************************************/
 #include <game/server/classes.h>
-/* INFECTION MODIFICATION END *****************************************/
+
+/* DDNET MODIFICATION START *******************************************/
+#include "sql_connector.h"
+#include "sql_server.h"
+/* DDNET MODIFICATION END *********************************************/
 
 class CSnapIDPool
 {
@@ -67,6 +69,11 @@ class CServer : public IServer
 	class IGameServer *m_pGameServer;
 	class IConsole *m_pConsole;
 	class IStorage *m_pStorage;
+
+/* DDNET MODIFICATION START *******************************************/
+	CSqlServer* m_apSqlReadServers[MAX_SQLSERVERS];
+	CSqlServer* m_apSqlWriteServers[MAX_SQLSERVERS];
+/* DDNET MODIFICATION END *********************************************/
 public:
 	class IGameServer *GameServer() { return m_pGameServer; }
 	class IConsole *Console() { return m_pConsole; }
@@ -248,6 +255,13 @@ public:
 	static void ConchainModCommandUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 	static void ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
+/* DDNET MODIFICATION START *******************************************/
+	static void ConAddSqlServer(IConsole::IResult *pResult, void *pUserData);
+	static void ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData);
+
+	static void CreateTablesThread(void *pData);
+/* DDNET MODIFICATION END *********************************************/
+	
 	void RegisterCommands();
 
 
@@ -309,10 +323,8 @@ public:
 	virtual bool IsClientLogged(int ClientID);
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword);
+
 private:
-	static void ConSetClassAvailability(IConsole::IResult *pResult, void *pUserData);
-	static void ConClassChooser(IConsole::IResult *pResult, void *pUserData);
-	
 	bool InitCaptcha();
 /* INFECTION MODIFICATION END *****************************************/
 };

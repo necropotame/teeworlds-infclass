@@ -383,6 +383,21 @@ void *thread_create(void (*threadfunc)(void *), void *u)
 #endif
 }
 
+/* DDNET MODIFICATION START *******************************************/
+void *thread_init(void (*threadfunc)(void *), void *u)
+{
+#if defined(CONF_FAMILY_UNIX)
+	pthread_t id;
+	pthread_create(&id, NULL, (void *(*)(void*))threadfunc, u);
+	return (void*)id;
+#elif defined(CONF_FAMILY_WINDOWS)
+	return CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadfunc, u, 0, NULL);
+#else
+	#error not implemented
+#endif
+}
+/* DDNET MODIFICATION END *********************************************/
+
 void thread_wait(void *thread)
 {
 #if defined(CONF_FAMILY_UNIX)
@@ -506,6 +521,19 @@ void lock_release(LOCK lock)
 	#error not implemented on this platform
 #endif
 }
+
+/* DDNET MODIFICATION START *******************************************/
+void lock_unlock(LOCK lock)
+{
+#if defined(CONF_FAMILY_UNIX)
+	pthread_mutex_unlock((LOCKINTERNAL *)lock);
+#elif defined(CONF_FAMILY_WINDOWS)
+	LeaveCriticalSection((LPCRITICAL_SECTION)lock);
+#else
+	#error not implemented on this platform
+#endif
+}
+/* DDNET MODIFICATION END *********************************************/
 
 #if !defined(CONF_PLATFORM_MACOSX)
 	#if defined(CONF_FAMILY_UNIX)
@@ -1748,16 +1776,23 @@ void str_hex(char *dst, int dst_size, const void *data, int data_size)
 	}
 }
 
+/* DDNET MODIFICATION START *******************************************/
+void str_timestamp_ex(time_t time_data, char *buffer, int buffer_size, const char *format)
+{
+	struct tm *time_info;
+
+	time_info = localtime(&time_data);
+	strftime(buffer, buffer_size, format, time_info);
+	buffer[buffer_size-1] = 0;	/* assure null termination */
+}
+
 void str_timestamp(char *buffer, int buffer_size)
 {
 	time_t time_data;
-	struct tm *time_info;
-
 	time(&time_data);
-	time_info = localtime(&time_data);
-	strftime(buffer, buffer_size, "%Y-%m-%d_%H-%M-%S", time_info);
-	buffer[buffer_size-1] = 0;	/* assure null termination */
+	str_timestamp_ex(time_data, buffer, buffer_size, "%Y-%m-%d_%H-%M-%S");
 }
+/* DDNET MODIFICATION END *********************************************/
 
 int mem_comp(const void *a, const void *b, int size)
 {
@@ -1828,7 +1863,6 @@ char str_uppercase(char c)
 int str_toint(const char *str) { return atoi(str); }
 float str_tofloat(const char *str) { return atof(str); }
 
-
 const char *str_utf8_skip_whitespaces(const char *str)
 {
 	const char *str_old;
@@ -1851,7 +1885,7 @@ const char *str_utf8_skip_whitespaces(const char *str)
 	return str;
 }
 
-static int str_utf8_isstart(char c)
+int str_utf8_isstart(char c)
 {
 	if((c&0xC0) == 0x80) /* 10xxxxxx */
 		return 0;

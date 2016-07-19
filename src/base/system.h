@@ -372,6 +372,17 @@ void *thread_create(void (*threadfunc)(void *), void *user);
 void thread_wait(void *thread);
 
 /*
+	Function: thread_init
+		Creates a new thread.
+
+	Parameters:
+		threadfunc - Entry point for the new thread.
+		user - Pointer to pass to the thread.
+
+*/
+void *thread_init(void (*threadfunc)(void *), void *user);
+
+/*
 	Function: thread_destroy
 		Destroys a thread.
 
@@ -406,6 +417,7 @@ void lock_destroy(LOCK lock);
 int lock_try(LOCK lock);
 void lock_wait(LOCK lock);
 void lock_release(LOCK lock);
+void lock_unlock(LOCK lock);
 
 
 /* Group: Semaphores */
@@ -1001,6 +1013,7 @@ void str_hex(char *dst, int dst_size, const void *data, int data_size);
 		- Guarantees that buffer string will contain zero-termination.
 */
 void str_timestamp(char *buffer, int buffer_size);
+void str_timestamp_ex(time_t time, char *buffer, int buffer_size, const char *format);
 
 /* Group: Filesystem */
 
@@ -1212,6 +1225,8 @@ unsigned str_quickhash(const char *str);
 		message - text to display
 */
 void gui_messagebox(const char *title, const char *message);
+
+int str_utf8_isstart(char c);
 
 const char *str_utf8_skip_whitespaces(const char *str);
 

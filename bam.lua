@@ -3,6 +3,7 @@ CheckVersion("0.4")
 Import("configure.lua")
 Import("other/sdl/sdl.lua")
 Import("other/freetype/freetype.lua")
+Import("other/mysql/mysql.lua")
 
 --- Setup Config -------
 config = NewConfig()
@@ -13,6 +14,7 @@ config:Add(OptTestCompileC("macosxppc", "int main(){return 0;}", "-arch ppc"))
 config:Add(OptLibrary("zlib", "zlib.h", false))
 config:Add(SDL.OptFind("sdl", true))
 config:Add(FreeType.OptFind("freetype", true))
+config:Add(Mysql.OptFind("mysql", false))
 config:Finalize("config.lua")
 
 -- data compiler
@@ -113,6 +115,7 @@ nethash = CHash("src/game/generated/nethash.cpp", "src/engine/shared/protocol.h"
 client_link_other = {}
 client_depends = {}
 server_link_other = {}
+server_sql_depends = {}
 
 if family == "windows" then
 	if platform == "win32" then
@@ -122,6 +125,8 @@ if family == "windows" then
 		table.insert(client_depends, CopyToDirectory(".", "other\\freetype\\lib64\\freetype.dll"))
 		table.insert(client_depends, CopyToDirectory(".", "other\\sdl\\lib64\\SDL.dll"))
 	end
+	table.insert(server_sql_depends, CopyToDirectory(".", "other/mysql/vc2005libs/mysqlcppconn.dll"))
+	table.insert(server_sql_depends, CopyToDirectory(".", "other/mysql/vc2005libs/libmysql.dll"))
 
 	if config.compiler.driver == "cl" then
 		client_link_other = {ResCompile("other/icons/teeworlds_cl.rc")}
@@ -146,7 +151,7 @@ function build(settings)
 	if config.compiler.driver == "cl" then
 		settings.cc.flags:Add("/wd4244")
 	else
-		settings.cc.flags:Add("-Wall", "-fno-exceptions")
+		settings.cc.flags:Add("-Wall")
 		if family == "windows" then
 			-- disable visibility attribute support for gcc on windows
 			settings.cc.defines:Add("NO_VIZ")
@@ -225,6 +230,8 @@ function build(settings)
 		client_settings.link.libs:Add("opengl32")
 		client_settings.link.libs:Add("glu32")
 		client_settings.link.libs:Add("winmm")
+		server_settings.link.libpath:Add("other/mysql/vc2005libs")
+		server_settings.link.libs:Add("mysqlcppconn")
 	end
 
 	-- apply sdl settings
@@ -280,7 +287,7 @@ function build(settings)
 
 	-- make targets
 	c = PseudoTarget("client".."_"..settings.config_name, client_exe, client_depends)
-	s = PseudoTarget("server".."_"..settings.config_name, server_exe, serverlaunch)
+	s = PseudoTarget("server".."_"..settings.config_name, server_exe, serverlaunch, server_sql_depends)
 	g = PseudoTarget("game".."_"..settings.config_name, client_exe, server_exe)
 
 	v = PseudoTarget("versionserver".."_"..settings.config_name, versionserver_exe)
@@ -305,6 +312,9 @@ release_settings.config_ext = ""
 release_settings.debug = 0
 release_settings.optimize = 1
 release_settings.cc.defines:Add("CONF_RELEASE")
+
+config.mysql:Apply(debug_settings)
+config.mysql:Apply(release_settings)
 
 if platform == "macosx" then
 	debug_settings_ppc = debug_settings:Copy()
