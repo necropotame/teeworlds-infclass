@@ -42,7 +42,7 @@ void CEcon::SendLineCB(const char *pLine, void *pUserData)
 	static_cast<CEcon *>(pUserData)->Send(-1, pLine);
 }
 
-void CEcon::ConchainEconOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
+bool CEcon::ConchainEconOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	pfnCallback(pResult, pCallbackUserData);
 	if(pResult->NumArguments() == 1)
@@ -50,14 +50,18 @@ void CEcon::ConchainEconOutputLevelUpdate(IConsole::IResult *pResult, void *pUse
 		CEcon *pThis = static_cast<CEcon *>(pUserData);
 		pThis->Console()->SetPrintOutputLevel(pThis->m_PrintCBIndex, pResult->GetInteger(0));
 	}
+	
+	return true;
 }
 
-void CEcon::ConLogout(IConsole::IResult *pResult, void *pUserData)
+bool CEcon::ConLogout(IConsole::IResult *pResult, void *pUserData)
 {
 	CEcon *pThis = static_cast<CEcon *>(pUserData);
 
 	if(pThis->m_UserClientID >= 0 && pThis->m_UserClientID < NET_MAX_CONSOLE_CLIENTS && pThis->m_aClients[pThis->m_UserClientID].m_State != CClient::STATE_EMPTY)
 		pThis->m_NetConsole.Drop(pThis->m_UserClientID, CLIENTDROPTYPE_LOGOUT, "Logout");
+		
+	return true;
 }
 
 void CEcon::Init(IConsole *pConsole, CNetBan *pNetBan)
@@ -148,7 +152,7 @@ void CEcon::Update()
 			str_format(aFormatted, sizeof(aFormatted), "cid=%d cmd='%s'", ClientID, aBuf);
 			Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aFormatted);
 			m_UserClientID = ClientID;
-			Console()->ExecuteLine(aBuf);
+			Console()->ExecuteLine(aBuf, ClientID);
 			m_UserClientID = -1;
 		}
 	}

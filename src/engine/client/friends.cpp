@@ -15,16 +15,20 @@ CFriends::CFriends()
 	m_NumFriends = 0;
 }
 
-void CFriends::ConAddFriend(IConsole::IResult *pResult, void *pUserData)
+bool CFriends::ConAddFriend(IConsole::IResult *pResult, void *pUserData)
 {
 	CFriends *pSelf = (CFriends *)pUserData;
 	pSelf->AddFriend(pResult->GetString(0), pResult->GetString(1));
+	
+	return true;
 }
 
-void CFriends::ConRemoveFriend(IConsole::IResult *pResult, void *pUserData)
+bool CFriends::ConRemoveFriend(IConsole::IResult *pResult, void *pUserData)
 {
 	CFriends *pSelf = (CFriends *)pUserData;
 	pSelf->RemoveFriend(pResult->GetString(0), pResult->GetString(1));
+	
+	return true;
 }
 
 void CFriends::Init()

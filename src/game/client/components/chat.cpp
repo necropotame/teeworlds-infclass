@@ -64,17 +64,21 @@ void CChat::OnStateChange(int NewState, int OldState)
 	}
 }
 
-void CChat::ConSay(IConsole::IResult *pResult, void *pUserData)
+bool CChat::ConSay(IConsole::IResult *pResult, void *pUserData)
 {
 	((CChat*)pUserData)->Say(0, pResult->GetString(0));
+	
+	return true;
 }
 
-void CChat::ConSayTeam(IConsole::IResult *pResult, void *pUserData)
+bool CChat::ConSayTeam(IConsole::IResult *pResult, void *pUserData)
 {
 	((CChat*)pUserData)->Say(1, pResult->GetString(0));
+	
+	return true;
 }
 
-void CChat::ConChat(IConsole::IResult *pResult, void *pUserData)
+bool CChat::ConChat(IConsole::IResult *pResult, void *pUserData)
 {
 	const char *pMode = pResult->GetString(0);
 	if(str_comp(pMode, "all") == 0)
@@ -83,11 +87,15 @@ void CChat::ConChat(IConsole::IResult *pResult, void *pUserData)
 		((CChat*)pUserData)->EnableMode(1);
 	else
 		((CChat*)pUserData)->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "console", "expected all or team as mode");
+	
+	return true;
 }
 
-void CChat::ConShowChat(IConsole::IResult *pResult, void *pUserData)
+bool CChat::ConShowChat(IConsole::IResult *pResult, void *pUserData)
 {
 	((CChat *)pUserData)->m_Show = pResult->GetInteger(0) != 0;
+	
+	return true;
 }
 
 void CChat::OnConsoleInit()

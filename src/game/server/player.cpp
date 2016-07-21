@@ -25,6 +25,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_TeamChangeTick = Server()->Tick();
 	
 /* INFECTION MODIFICATION START ***************************************/
+	m_Authed = IServer::AUTHED_NO;
 	m_Score = Server()->GetClientScore(ClientID);
 	m_NbRound = Server()->GetClientNbRound(ClientID);
 	m_NbInfection = Server()->GetClientNbInfection(ClientID);

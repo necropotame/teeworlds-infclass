@@ -225,6 +225,7 @@ function build(settings)
 			client_settings.link.libs:Add("GL")
 			client_settings.link.libs:Add("GLU")
 		end
+		server_settings.link.libs:Add("crypt")
 
 	elseif family == "windows" then
 		client_settings.link.libs:Add("opengl32")
@@ -249,6 +250,7 @@ function build(settings)
 	game_client = Compile(settings, CollectRecursive("src/game/client/*.cpp"), client_content_source)
 	game_server = Compile(settings, CollectRecursive("src/game/server/*.cpp"), server_content_source)
 	game_editor = Compile(settings, Collect("src/game/editor/*.cpp"))
+
 
 	-- build tools (TODO: fix this so we don't get double _d_d stuff)
 	tools_src = Collect("src/tools/*.cpp", "src/tools/*.c")

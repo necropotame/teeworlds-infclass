@@ -74,7 +74,7 @@ void CGameConsole::CInstance::ClearHistory()
 void CGameConsole::CInstance::ExecuteLine(const char *pLine)
 {
 	if(m_Type == CGameConsole::CONSOLETYPE_LOCAL)
-		m_pGameConsole->m_pConsole->ExecuteLine(pLine);
+		m_pGameConsole->m_pConsole->ExecuteLine(pLine, -1);
 	else
 	{
 		if(m_pGameConsole->Client()->RconAuthed())
@@ -627,34 +627,40 @@ void CGameConsole::Dump(int Type)
 	}
 }
 
-void CGameConsole::ConToggleLocalConsole(IConsole::IResult *pResult, void *pUserData)
+bool CGameConsole::ConToggleLocalConsole(IConsole::IResult *pResult, void *pUserData)
 {
 	((CGameConsole *)pUserData)->Toggle(CONSOLETYPE_LOCAL);
+	return true;
 }
 
-void CGameConsole::ConToggleRemoteConsole(IConsole::IResult *pResult, void *pUserData)
+bool CGameConsole::ConToggleRemoteConsole(IConsole::IResult *pResult, void *pUserData)
 {
 	((CGameConsole *)pUserData)->Toggle(CONSOLETYPE_REMOTE);
+	return true;
 }
 
-void CGameConsole::ConClearLocalConsole(IConsole::IResult *pResult, void *pUserData)
+bool CGameConsole::ConClearLocalConsole(IConsole::IResult *pResult, void *pUserData)
 {
 	((CGameConsole *)pUserData)->m_LocalConsole.ClearBacklog();
+	return true;
 }
 
-void CGameConsole::ConClearRemoteConsole(IConsole::IResult *pResult, void *pUserData)
+bool CGameConsole::ConClearRemoteConsole(IConsole::IResult *pResult, void *pUserData)
 {
 	((CGameConsole *)pUserData)->m_RemoteConsole.ClearBacklog();
+	return true;
 }
 
-void CGameConsole::ConDumpLocalConsole(IConsole::IResult *pResult, void *pUserData)
+bool CGameConsole::ConDumpLocalConsole(IConsole::IResult *pResult, void *pUserData)
 {
 	((CGameConsole *)pUserData)->Dump(CONSOLETYPE_LOCAL);
+	return true;
 }
 
-void CGameConsole::ConDumpRemoteConsole(IConsole::IResult *pResult, void *pUserData)
+bool CGameConsole::ConDumpRemoteConsole(IConsole::IResult *pResult, void *pUserData)
 {
 	((CGameConsole *)pUserData)->Dump(CONSOLETYPE_REMOTE);
+	return true;
 }
 
 void CGameConsole::ClientConsolePrintCallback(const char *pStr, void *pUserData)
@@ -662,7 +668,7 @@ void CGameConsole::ClientConsolePrintCallback(const char *pStr, void *pUserData)
 	((CGameConsole *)pUserData)->m_LocalConsole.PrintLine(pStr);
 }
 
-void CGameConsole::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
+bool CGameConsole::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	pfnCallback(pResult, pCallbackUserData);
 	if(pResult->NumArguments() == 1)
@@ -670,6 +676,7 @@ void CGameConsole::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, 
 		CGameConsole *pThis = static_cast<CGameConsole *>(pUserData);
 		pThis->Console()->SetPrintOutputLevel(pThis->m_PrintCBIndex, pResult->GetInteger(0));
 	}
+	return true;
 }
 
 void CGameConsole::PrintLine(int Type, const char *pLine)

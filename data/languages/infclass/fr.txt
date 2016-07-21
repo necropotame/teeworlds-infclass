@@ -163,7 +163,15 @@ Based on Infection mod by Gravity
 Thanks to %s
 == Remerciements à %s
 
-##### Help ##### 
+##### Help #####
+
+Choose a help page with /help <page>
+== Choisissez une page d'aide avec /help <page>
+
+Available help pages: %s
+== Pages d'aides disponibles : %s
+
+##### Help Game ##### 
 
 Rules of the game:
 == Règles du jeu :
@@ -190,6 +198,11 @@ Hook protection enabled
 
 Hook protection disabled
 == Protection contre le grappin désactivé
+
+##### Account ##### 
+
+This user name is already taken by an existing account
+== Ce nom d'utilisateur est déjà pris par un compte existant
 
 ##### CLASSES ##########################################################
 

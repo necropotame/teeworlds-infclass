@@ -60,7 +60,7 @@ public:
 	virtual int BanAddr(const NETADDR *pAddr, int Seconds, const char *pReason);
 	virtual int BanRange(const CNetRange *pRange, int Seconds, const char *pReason);
 
-	static void ConBanExt(class IConsole::IResult *pResult, void *pUser);
+	static bool ConBanExt(class IConsole::IResult *pResult, void *pUser);
 };
 
 
@@ -81,10 +81,6 @@ public:
 
 	enum
 	{
-		AUTHED_NO=0,
-		AUTHED_MOD,
-		AUTHED_ADMIN,
-
 		MAX_RCONCMD_SEND=16,
 	};
 
@@ -243,21 +239,21 @@ public:
 	void InitRegister(CNetServer *pNetServer, IEngineMasterServer *pMasterServer, IConsole *pConsole);
 	int Run();
 
-	static void ConKick(IConsole::IResult *pResult, void *pUser);
-	static void ConStatus(IConsole::IResult *pResult, void *pUser);
-	static void ConShutdown(IConsole::IResult *pResult, void *pUser);
-	static void ConRecord(IConsole::IResult *pResult, void *pUser);
-	static void ConStopRecord(IConsole::IResult *pResult, void *pUser);
-	static void ConMapReload(IConsole::IResult *pResult, void *pUser);
-	static void ConLogout(IConsole::IResult *pResult, void *pUser);
-	static void ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
-	static void ConchainMaxclientsperipUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
-	static void ConchainModCommandUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
-	static void ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
+	static bool ConKick(IConsole::IResult *pResult, void *pUser);
+	static bool ConStatus(IConsole::IResult *pResult, void *pUser);
+	static bool ConShutdown(IConsole::IResult *pResult, void *pUser);
+	static bool ConRecord(IConsole::IResult *pResult, void *pUser);
+	static bool ConStopRecord(IConsole::IResult *pResult, void *pUser);
+	static bool ConMapReload(IConsole::IResult *pResult, void *pUser);
+	static bool ConLogout(IConsole::IResult *pResult, void *pUser);
+	static bool ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
+	static bool ConchainMaxclientsperipUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
+	static bool ConchainModCommandUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
+	static bool ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
 /* DDNET MODIFICATION START *******************************************/
-	static void ConAddSqlServer(IConsole::IResult *pResult, void *pUserData);
-	static void ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData);
+	static bool ConAddSqlServer(IConsole::IResult *pResult, void *pUserData);
+	static bool ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData);
 
 	static void CreateTablesThread(void *pData);
 /* DDNET MODIFICATION END *********************************************/
@@ -324,6 +320,7 @@ public:
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword);
 
+	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
 	bool InitCaptcha();
 /* INFECTION MODIFICATION END *****************************************/

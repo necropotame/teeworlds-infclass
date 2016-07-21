@@ -15,8 +15,8 @@ class CEmoticon : public CComponent
 	vec2 m_SelectorMouse;
 	int m_SelectedEmote;
 
-	static void ConKeyEmoticon(IConsole::IResult *pResult, void *pUserData);
-	static void ConEmote(IConsole::IResult *pResult, void *pUserData);
+	static bool ConKeyEmoticon(IConsole::IResult *pResult, void *pUserData);
+	static bool ConEmote(IConsole::IResult *pResult, void *pUserData);
 
 public:
 	CEmoticon();

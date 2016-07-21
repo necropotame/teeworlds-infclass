@@ -72,13 +72,13 @@ class CGameConsole : public CComponent
 
 	static void PossibleCommandsRenderCallback(const char *pStr, void *pUser);
 	static void ClientConsolePrintCallback(const char *pStr, void *pUserData);
-	static void ConToggleLocalConsole(IConsole::IResult *pResult, void *pUserData);
-	static void ConToggleRemoteConsole(IConsole::IResult *pResult, void *pUserData);
-	static void ConClearLocalConsole(IConsole::IResult *pResult, void *pUserData);
-	static void ConClearRemoteConsole(IConsole::IResult *pResult, void *pUserData);
-	static void ConDumpLocalConsole(IConsole::IResult *pResult, void *pUserData);
-	static void ConDumpRemoteConsole(IConsole::IResult *pResult, void *pUserData);
-	static void ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
+	static bool ConToggleLocalConsole(IConsole::IResult *pResult, void *pUserData);
+	static bool ConToggleRemoteConsole(IConsole::IResult *pResult, void *pUserData);
+	static bool ConClearLocalConsole(IConsole::IResult *pResult, void *pUserData);
+	static bool ConClearRemoteConsole(IConsole::IResult *pResult, void *pUserData);
+	static bool ConDumpLocalConsole(IConsole::IResult *pResult, void *pUserData);
+	static bool ConDumpRemoteConsole(IConsole::IResult *pResult, void *pUserData);
+	static bool ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
 public:
 	enum

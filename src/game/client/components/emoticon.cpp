@@ -15,16 +15,20 @@ CEmoticon::CEmoticon()
 	OnReset();
 }
 
-void CEmoticon::ConKeyEmoticon(IConsole::IResult *pResult, void *pUserData)
+bool CEmoticon::ConKeyEmoticon(IConsole::IResult *pResult, void *pUserData)
 {
 	CEmoticon *pSelf = (CEmoticon *)pUserData;
 	if(!pSelf->m_pClient->m_Snap.m_SpecInfo.m_Active && pSelf->Client()->State() != IClient::STATE_DEMOPLAYBACK)
 		pSelf->m_Active = pResult->GetInteger(0) != 0;
+	
+	return true;
 }
 
-void CEmoticon::ConEmote(IConsole::IResult *pResult, void *pUserData)
+bool CEmoticon::ConEmote(IConsole::IResult *pResult, void *pUserData)
 {
 	((CEmoticon *)pUserData)->Emote(pResult->GetInteger(0));
+	
+	return true;
 }
 
 void CEmoticon::OnConsoleInit()

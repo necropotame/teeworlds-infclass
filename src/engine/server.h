@@ -58,6 +58,7 @@ enum
 	LANGUAGE_AR,
 	LANGUAGE_HU,
 	LANGUAGE_PL,
+	LANGUAGE_NL,
 	LANGUAGE_LA,
 	LANGUAGE_EN, //Must be the last
 	NUM_LANGUAGES,
@@ -73,6 +74,14 @@ protected:
 	int m_CurrentGameTick;
 	int m_TickSpeed;
 
+public:
+	enum
+	{
+		AUTHED_NO=0,
+		AUTHED_MOD,
+		AUTHED_ADMIN,
+	};
+	
 public:
 	/*
 		Structure: CClientInfo
@@ -169,6 +178,8 @@ public:
 	virtual bool IsClientLogged(int ClientID) = 0;
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword) = 0;
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword) = 0;
+	
+	virtual void Ban(int i, int Seconds, const char* pReason) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 
@@ -211,6 +222,8 @@ public:
 	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2) = 0;
 	virtual void SendMODT_Language(int To, const char* pText) = 0;
 	virtual void SendMODT_Language_s(int To, const char* pText, const char* pParam) = 0;
+	
+	virtual void OnSetAuthed(int ClientID, int Level) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

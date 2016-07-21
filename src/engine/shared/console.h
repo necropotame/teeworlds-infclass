@@ -51,16 +51,16 @@ class CConsole : public IConsole
 	CCommand *m_pRecycleList;
 	CHeap m_TempCommands;
 
-	static void Con_Chain(IResult *pResult, void *pUserData);
-	static void Con_Echo(IResult *pResult, void *pUserData);
-	static void Con_Exec(IResult *pResult, void *pUserData);
-	static void ConToggle(IResult *pResult, void *pUser);
-	static void ConToggleStroke(IResult *pResult, void *pUser);
-	static void ConModCommandAccess(IResult *pResult, void *pUser);
-	static void ConModCommandStatus(IConsole::IResult *pResult, void *pUser);
+	static bool Con_Chain(IResult *pResult, void *pUserData);
+	static bool Con_Echo(IResult *pResult, void *pUserData);
+	static bool Con_Exec(IResult *pResult, void *pUserData);
+	static bool ConToggle(IResult *pResult, void *pUser);
+	static bool ConToggleStroke(IResult *pResult, void *pUser);
+	static bool ConModCommandAccess(IResult *pResult, void *pUser);
+	static bool ConModCommandStatus(IConsole::IResult *pResult, void *pUser);
 
 	void ExecuteFileRecurse(const char *pFilename);
-	void ExecuteLineStroked(int Stroke, const char *pStr);
+	void ExecuteLineStroked(int Stroke, const char *pStr, int ClientID);
 
 	struct
 	{
@@ -120,6 +120,10 @@ class CConsole : public IConsole
 	int ParseStart(CResult *pResult, const char *pString, int Length);
 	int ParseArgs(CResult *pResult, const char *pFormat);
 
+	char NextParam(const char *&pFormat);
+	
+	void GenerateUsage(const char* pParam, char* pUsage);
+	
 	class CExecutionQueue
 	{
 		CHeap m_Queue;
@@ -170,8 +174,8 @@ public:
 	virtual void StoreCommands(bool Store);
 
 	virtual bool LineIsValid(const char *pStr);
-	virtual void ExecuteLine(const char *pStr);
-	virtual void ExecuteLineFlag(const char *pStr, int FlagMask);
+	virtual void ExecuteLine(const char *pStr, int ClientID);
+	virtual void ExecuteLineFlag(const char *pStr, int ClientID, int FlagMask);
 	virtual void ExecuteFile(const char *pFilename);
 
 	virtual int RegisterPrintCallback(int OutputLevel, FPrintCallback pfnPrintCallback, void *pUserData);

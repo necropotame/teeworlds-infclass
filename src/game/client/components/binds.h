@@ -11,10 +11,10 @@ class CBinds : public CComponent
 
 	int GetKeyID(const char *pKeyName);
 
-	static void ConBind(IConsole::IResult *pResult, void *pUserData);
-	static void ConUnbind(IConsole::IResult *pResult, void *pUserData);
-	static void ConUnbindAll(IConsole::IResult *pResult, void *pUserData);
-	static void ConDumpBinds(IConsole::IResult *pResult, void *pUserData);
+	static bool ConBind(IConsole::IResult *pResult, void *pUserData);
+	static bool ConUnbind(IConsole::IResult *pResult, void *pUserData);
+	static bool ConUnbindAll(IConsole::IResult *pResult, void *pUserData);
+	static bool ConDumpBinds(IConsole::IResult *pResult, void *pUserData);
 	class IConsole *GetConsole() const { return Console(); }
 
 	static void ConfigSaveCallback(class IConfig *pConfig, void *pUserData);

@@ -38,6 +38,8 @@
 #include <sstream>
 #include <iostream>
 #include <engine/server/mapconverter.h>
+#include <engine/server/sql_job.h>
+#include <crypt.h>
 /* INFECTION MODIFICATION END *****************************************/
 
 #if defined(CONF_FAMILY_WINDOWS)
@@ -242,7 +244,7 @@ int CServerBan::BanRange(const CNetRange *pRange, int Seconds, const char *pReas
 	return -1;
 }
 
-void CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
+bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 {
 	CServerBan *pThis = static_cast<CServerBan *>(pUser);
 
@@ -260,6 +262,8 @@ void CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 	}
 	else
 		ConBan(pResult, pUser);
+	
+	return true;
 }
 
 /* INFECTION MODIFICATION START ***************************************/
@@ -948,6 +952,8 @@ bool CServer::InitCaptcha()
 	}
 
 	io_close(File);
+	
+	return true;
 }
 
 void CServer::ProcessClientPacket(CNetChunk *pPacket)
@@ -1135,8 +1141,18 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBuf);
 				m_RconClientID = ClientID;
 				m_RconAuthLevel = m_aClients[ClientID].m_Authed;
-				Console()->SetAccessLevel(m_aClients[ClientID].m_Authed == AUTHED_ADMIN ? IConsole::ACCESS_LEVEL_ADMIN : IConsole::ACCESS_LEVEL_MOD);
-				Console()->ExecuteLineFlag(pCmd, CFGFLAG_SERVER);
+				switch(m_aClients[ClientID].m_Authed)
+				{
+					case AUTHED_ADMIN:
+						Console()->SetAccessLevel(IConsole::ACCESS_LEVEL_ADMIN);
+						break;
+					case AUTHED_MOD:
+						Console()->SetAccessLevel(IConsole::ACCESS_LEVEL_MOD);
+						break;
+					default:
+						Console()->SetAccessLevel(IConsole::ACCESS_LEVEL_USER);
+				}	
+				Console()->ExecuteLineFlag(pCmd, ClientID, CFGFLAG_SERVER);
 				Console()->SetAccessLevel(IConsole::ACCESS_LEVEL_ADMIN);
 				m_RconClientID = IServer::RCON_CID_SERV;
 				m_RconAuthLevel = AUTHED_ADMIN;
@@ -1162,6 +1178,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 					SendMsgEx(&Msg, MSGFLAG_VITAL, ClientID, true);
 
 					m_aClients[ClientID].m_Authed = AUTHED_ADMIN;
+					GameServer()->OnSetAuthed(ClientID, m_aClients[ClientID].m_Authed);
 					int SendRconCmds = Unpacker.GetInt();
 					if(Unpacker.Error() == 0 && SendRconCmds)
 						m_aClients[ClientID].m_pRconCmdToSend = Console()->FirstCommandInfo(IConsole::ACCESS_LEVEL_ADMIN, CFGFLAG_SERVER);
@@ -1823,7 +1840,7 @@ int CServer::Run()
 	return 0;
 }
 
-void CServer::ConKick(IConsole::IResult *pResult, void *pUser)
+bool CServer::ConKick(IConsole::IResult *pResult, void *pUser)
 {
 	if(pResult->NumArguments() > 1)
 	{
@@ -1833,9 +1850,11 @@ void CServer::ConKick(IConsole::IResult *pResult, void *pUser)
 	}
 	else
 		((CServer *)pUser)->Kick(pResult->GetInteger(0), "Kicked by console");
+	
+	return true;
 }
 
-void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
+bool CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 {
 	char aBuf[1024];
 	char aAddrStr[NETADDR_MAXSTRSIZE];
@@ -1880,6 +1899,9 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 					case LANGUAGE_PL:
 						str_copy(aLangBuf, "pl", sizeof(aLangBuf));
 						break;
+					case LANGUAGE_NL:
+						str_copy(aLangBuf, "nl", sizeof(aLangBuf));
+						break;
 					case LANGUAGE_HU:
 						str_copy(aLangBuf, "hu", sizeof(aLangBuf));
 						break;
@@ -1905,12 +1927,16 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", aBuf);
 		}
 	}
+	
+	return true;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
-void CServer::ConShutdown(IConsole::IResult *pResult, void *pUser)
+bool CServer::ConShutdown(IConsole::IResult *pResult, void *pUser)
 {
 	((CServer *)pUser)->m_RunServer = 0;
+	
+	return true;
 }
 
 void CServer::DemoRecorder_HandleAutoStart()
@@ -1937,7 +1963,7 @@ bool CServer::DemoRecorder_IsRecording()
 	return m_DemoRecorder.IsRecording();
 }
 
-void CServer::ConRecord(IConsole::IResult *pResult, void *pUser)
+bool CServer::ConRecord(IConsole::IResult *pResult, void *pUser)
 {
 	CServer* pServer = (CServer *)pUser;
 	char aFilename[128];
@@ -1951,19 +1977,25 @@ void CServer::ConRecord(IConsole::IResult *pResult, void *pUser)
 		str_format(aFilename, sizeof(aFilename), "demos/demo_%s.demo", aDate);
 	}
 	pServer->m_DemoRecorder.Start(pServer->Storage(), pServer->Console(), aFilename, pServer->GameServer()->NetVersion(), pServer->m_aCurrentMap, pServer->m_CurrentMapCrc, "server");
+	
+	return true;
 }
 
-void CServer::ConStopRecord(IConsole::IResult *pResult, void *pUser)
+bool CServer::ConStopRecord(IConsole::IResult *pResult, void *pUser)
 {
 	((CServer *)pUser)->m_DemoRecorder.Stop();
+	
+	return true;
 }
 
-void CServer::ConMapReload(IConsole::IResult *pResult, void *pUser)
+bool CServer::ConMapReload(IConsole::IResult *pResult, void *pUser)
 {
 	((CServer *)pUser)->m_MapReload = 1;
+	
+	return true;
 }
 
-void CServer::ConLogout(IConsole::IResult *pResult, void *pUser)
+bool CServer::ConLogout(IConsole::IResult *pResult, void *pUser)
 {
 	CServer *pServer = (CServer *)pUser;
 
@@ -1983,23 +2015,29 @@ void CServer::ConLogout(IConsole::IResult *pResult, void *pUser)
 		str_format(aBuf, sizeof(aBuf), "ClientID=%d logged out", pServer->m_RconClientID);
 		pServer->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
 	}
+	
+	return true;
 }
 
-void CServer::ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
+bool CServer::ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	pfnCallback(pResult, pCallbackUserData);
 	if(pResult->NumArguments())
 		((CServer *)pUserData)->UpdateServerInfo();
+	
+	return true;
 }
 
-void CServer::ConchainMaxclientsperipUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
+bool CServer::ConchainMaxclientsperipUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	pfnCallback(pResult, pCallbackUserData);
 	if(pResult->NumArguments())
 		((CServer *)pUserData)->m_NetServer.SetMaxClientsPerIP(pResult->GetInteger(0));
+	
+	return true;
 }
 
-void CServer::ConchainModCommandUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
+bool CServer::ConchainModCommandUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	if(pResult->NumArguments() == 2)
 	{
@@ -2026,9 +2064,11 @@ void CServer::ConchainModCommandUpdate(IConsole::IResult *pResult, void *pUserDa
 	}
 	else
 		pfnCallback(pResult, pCallbackUserData);
+	
+	return true;
 }
 
-void CServer::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
+bool CServer::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	pfnCallback(pResult, pCallbackUserData);
 	if(pResult->NumArguments() == 1)
@@ -2036,19 +2076,18 @@ void CServer::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void 
 		CServer *pThis = static_cast<CServer *>(pUserData);
 		pThis->Console()->SetPrintOutputLevel(pThis->m_PrintCBIndex, pResult->GetInteger(0));
 	}
+	
+	return true;
 }
 
 /* DDNET MODIFICATION START *******************************************/
 
-void CServer::ConAddSqlServer(IConsole::IResult *pResult, void *pUserData)
+bool CServer::ConAddSqlServer(IConsole::IResult *pResult, void *pUserData)
 {
 	CServer *pSelf = (CServer *)pUserData;
 
 	if (pResult->NumArguments() != 7 && pResult->NumArguments() != 8)
-	{
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "7 or 8 arguments are required");
-		return;
-	}
+		return false;
 
 	bool ReadOnly;
 	if (str_comp_nocase(pResult->GetString(0), "w") == 0)
@@ -2058,7 +2097,7 @@ void CServer::ConAddSqlServer(IConsole::IResult *pResult, void *pUserData)
 	else
 	{
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "choose either 'r' for SqlReadServer or 'w' for SqlWriteServer");
-		return;
+		return true;
 	}
 
 	bool SetUpDb = pResult->NumArguments() == 8 ? pResult->GetInteger(7) : false;
@@ -2080,13 +2119,15 @@ void CServer::ConAddSqlServer(IConsole::IResult *pResult, void *pUserData)
 			char aBuf[512];
 			str_format(aBuf, sizeof(aBuf), "Added new Sql%sServer: %d: DB: '%s' Prefix: '%s' User: '%s' IP: '%s' Port: %d", ReadOnly ? "Read" : "Write", i, apSqlServers[i]->GetDatabase(), apSqlServers[i]->GetPrefix(), apSqlServers[i]->GetUser(), apSqlServers[i]->GetIP(), apSqlServers[i]->GetPort());
 			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
-			return;
+			return true;
 		}
 	}
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "failed to add new sqlserver: limit of sqlservers reached");
+
+	return true;
 }
 
-void CServer::ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData)
+bool CServer::ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData)
 {
 	CServer *pSelf = (CServer *)pUserData;
 
@@ -2098,7 +2139,7 @@ void CServer::ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData)
 	else
 	{
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "choose either 'r' for SqlReadServer or 'w' for SqlWriteServer");
-		return;
+		return true;
 	}
 
 	CSqlServer** apSqlServers = ReadOnly ? pSelf->m_apSqlReadServers : pSelf->m_apSqlWriteServers;
@@ -2110,6 +2151,8 @@ void CServer::ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData)
 			str_format(aBuf, sizeof(aBuf), "SQL-%s %d: DB: '%s' Prefix: '%s' User: '%s' Pass: '%s' IP: '%s' Port: %d", ReadOnly ? "Read" : "Write", i, apSqlServers[i]->GetDatabase(), apSqlServers[i]->GetPrefix(), apSqlServers[i]->GetUser(), apSqlServers[i]->GetPass(), apSqlServers[i]->GetIP(), apSqlServers[i]->GetPort());
 			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
 		}
+	
+	return true;
 }
 
 void CServer::CreateTablesThread(void *pData)
@@ -2144,8 +2187,8 @@ void CServer::RegisterCommands()
 	Console()->Chain("console_output_level", ConchainConsoleOutputLevelUpdate, this);
 
 /* INFECTION MODIFICATION START ***************************************/
-	Console()->Register("inf_add_sqlserver", "s['r'|'w'] s[Database] s[Prefix] s[User] s[Password] s[IP] i[Port] ?i[SetUpDatabase ?]", CFGFLAG_SERVER, ConAddSqlServer, this, "add a sqlserver");
-	Console()->Register("inf_list_sqlservers", "s['r'|'w']", CFGFLAG_SERVER, ConDumpSqlServers, this, "list all sqlservers readservers = r, writeservers = w");
+	Console()->Register("inf_add_sqlserver", "ssssssi?i", CFGFLAG_SERVER, ConAddSqlServer, this, "add a sqlserver");
+	Console()->Register("inf_list_sqlservers", "s", CFGFLAG_SERVER, ConDumpSqlServers, this, "list all sqlservers readservers = r, writeservers = w");
 /* INFECTION MODIFICATION END *****************************************/
 
 	// register console commands in sub parts
@@ -2412,9 +2455,74 @@ void CServer::Login(int ClientID, const char* pUsername, const char* pPassword)
 	m_aClients[ClientID].m_Logged = true;
 }
 
+class CSqlJob_Server_Register : public CSqlJob
+{
+private:
+	IGameServer* m_pGameServer;
+	int m_ClientID;
+	char m_aName[16];
+	char m_aPasswordHash[32];
+	
+public:
+	CSqlJob_Server_Register(IGameServer* pGameServer, int ClientID, const char* pName, const char* pPasswordHash)
+	{
+		m_pGameServer = pGameServer;
+		m_ClientID = ClientID;
+		str_copy(m_aName, pName, sizeof(m_aName));
+		str_copy(m_aPasswordHash, pPasswordHash, sizeof(m_aPasswordHash));
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[512];
+		
+		//Check if the username is already taken
+		str_format(aBuf, sizeof(aBuf), 
+			"SELECT UserId FROM %s_Users "
+			"WHERE Username = '%s';"
+			, pSqlServer->GetPrefix(), m_aName);
+		pSqlServer->executeSqlQuery(aBuf);
+
+		if(pSqlServer->GetResults()->next())
+		{
+			m_pGameServer->SendChatTarget_Language(m_ClientID, "This user name is already taken by an existing account");
+			return true;
+		}
+		
+		//Create the account
+		
+		str_format(aBuf, sizeof(aBuf), 
+			"INSERT INTO %s_Users "
+			"(Username, PasswordHash, SubscriptionDate) "
+			"VALUES ('%s', '%s', UTC_TIMESTAMP());"
+			, pSqlServer->GetPrefix(), m_aName, m_aPasswordHash);
+		pSqlServer->executeSqlQuery(aBuf);
+		
+		return true;
+	}
+};
+
 void CServer::Register(int ClientID, const char* pUsername, const char* pPassword)
 {
-	m_aClients[ClientID].m_Logged = true;
+	//Create PasswordHash
+	struct crypt_data data;
+	data.initialized = 0;
+	
+	char aHash[32]; //Result
+	mem_zero(aHash, sizeof(aHash));
+	char* pCryptRes = crypt_r(pPassword, "d9", &data);
+	if(!pCryptRes)
+		return;
+	
+	dbg_msg("InfClass", "Hash:%s", aHash);
+	
+	CSqlJob* pJob = new CSqlJob_Server_Register(GameServer(), ClientID, pUsername, aHash);
+	pJob->Start();
+}
+
+void CServer::Ban(int ClientID, int Seconds, const char* pReason)
+{
+	m_ServerBan.BanAddr(m_NetServer.ClientAddr(ClientID), Seconds, pReason);
 }
 
 /* INFECTION MODIFICATION END *****************************************/

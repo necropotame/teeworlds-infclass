@@ -23,7 +23,7 @@ public:
 	IStorage *m_pStorage;
 	bool m_Logging;
 
-	static void Con_DbgDumpmem(IConsole::IResult *pResult, void *pUserData)
+	static bool Con_DbgDumpmem(IConsole::IResult *pResult, void *pUserData)
 	{
 		CEngine *pEngine = static_cast<CEngine *>(pUserData);
 		char aBuf[32];
@@ -31,9 +31,11 @@ public:
 		char aFilename[128];
 		str_format(aFilename, sizeof(aFilename), "dumps/memory_%s.txt", aBuf);
 		mem_debug_dump(pEngine->m_pStorage->OpenFile(aFilename, IOFLAG_WRITE, IStorage::TYPE_SAVE));
+		
+		return true;
 	}
 
-	static void Con_DbgLognetwork(IConsole::IResult *pResult, void *pUserData)
+	static bool Con_DbgLognetwork(IConsole::IResult *pResult, void *pUserData)
 	{
 		CEngine *pEngine = static_cast<CEngine *>(pUserData);
 
@@ -53,6 +55,8 @@ public:
 								pEngine->m_pStorage->OpenFile(aFilenameRecv, IOFLAG_WRITE, IStorage::TYPE_SAVE));
 			pEngine->m_Logging = true;
 		}
+		
+		return true;
 	}
 
 	CEngine(const char *pAppname)

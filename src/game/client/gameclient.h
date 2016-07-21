@@ -58,10 +58,10 @@ class CGameClient : public IGameClient
 
 	int64 m_LastSendInfo;
 
-	static void ConTeam(IConsole::IResult *pResult, void *pUserData);
-	static void ConKill(IConsole::IResult *pResult, void *pUserData);
+	static bool ConTeam(IConsole::IResult *pResult, void *pUserData);
+	static bool ConKill(IConsole::IResult *pResult, void *pUserData);
 
-	static void ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
+	static bool ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
 public:
 	IKernel *Kernel() { return IInterface::Kernel(); }

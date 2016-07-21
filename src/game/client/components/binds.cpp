@@ -13,7 +13,7 @@ bool CBinds::CBindsSpecial::OnInput(IInput::CEvent Event)
 		if(Event.m_Flags&IInput::FLAG_PRESS)
 			Stroke = 1;
 
-		m_pBinds->GetConsole()->ExecuteLineStroked(Stroke, m_pBinds->m_aaKeyBindings[Event.m_Key]);
+		m_pBinds->GetConsole()->ExecuteLineStroked(Stroke, m_pBinds->m_aaKeyBindings[Event.m_Key], -1);
 		return true;
 	}
 
@@ -50,7 +50,7 @@ bool CBinds::OnInput(IInput::CEvent e)
 	int Stroke = 0;
 	if(e.m_Flags&IInput::FLAG_PRESS)
 		Stroke = 1;
-	Console()->ExecuteLineStroked(Stroke, m_aaKeyBindings[e.m_Key]);
+	Console()->ExecuteLineStroked(Stroke, m_aaKeyBindings[e.m_Key], -1);
 	return true;
 }
 
@@ -135,7 +135,7 @@ void CBinds::OnConsoleInit()
 	SetDefaults();
 }
 
-void CBinds::ConBind(IConsole::IResult *pResult, void *pUserData)
+bool CBinds::ConBind(IConsole::IResult *pResult, void *pUserData)
 {
 	CBinds *pBinds = (CBinds *)pUserData;
 	const char *pKeyName = pResult->GetString(0);
@@ -146,14 +146,16 @@ void CBinds::ConBind(IConsole::IResult *pResult, void *pUserData)
 		char aBuf[256];
 		str_format(aBuf, sizeof(aBuf), "key %s not found", pKeyName);
 		pBinds->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "binds", aBuf);
-		return;
+		return true;
 	}
 
 	pBinds->Bind(id, pResult->GetString(1));
+	
+	return true;
 }
 
 
-void CBinds::ConUnbind(IConsole::IResult *pResult, void *pUserData)
+bool CBinds::ConUnbind(IConsole::IResult *pResult, void *pUserData)
 {
 	CBinds *pBinds = (CBinds *)pUserData;
 	const char *pKeyName = pResult->GetString(0);
@@ -164,21 +166,25 @@ void CBinds::ConUnbind(IConsole::IResult *pResult, void *pUserData)
 		char aBuf[256];
 		str_format(aBuf, sizeof(aBuf), "key %s not found", pKeyName);
 		pBinds->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "binds", aBuf);
-		return;
+		return true;
 	}
 
 	pBinds->Bind(id, "");
+	
+	return true;
 }
 
 
-void CBinds::ConUnbindAll(IConsole::IResult *pResult, void *pUserData)
+bool CBinds::ConUnbindAll(IConsole::IResult *pResult, void *pUserData)
 {
 	CBinds *pBinds = (CBinds *)pUserData;
 	pBinds->UnbindAll();
+	
+	return true;
 }
 
 
-void CBinds::ConDumpBinds(IConsole::IResult *pResult, void *pUserData)
+bool CBinds::ConDumpBinds(IConsole::IResult *pResult, void *pUserData)
 {
 	CBinds *pBinds = (CBinds *)pUserData;
 	char aBuf[1024];
@@ -189,6 +195,8 @@ void CBinds::ConDumpBinds(IConsole::IResult *pResult, void *pUserData)
 		str_format(aBuf, sizeof(aBuf), "%s (%d) = %s", pBinds->Input()->KeyName(i), i, pBinds->m_aaKeyBindings[i]);
 		pBinds->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "binds", aBuf);
 	}
+	
+	return true;
 }
 
 int CBinds::GetKeyID(const char *pKeyName)

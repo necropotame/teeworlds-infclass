@@ -7,10 +7,10 @@ Switch language to english ?
 == %s hat den Server und das Spiel betreten
 
 %s joined the game
-== %s hat das Spiel betreten
+== %s ist dem Spiele beigetreten
 
 %s joined the spectators
-== %s wurde ein Zuschauer
+== %s ist Zuschauer geworden
 
 %s has left the game
 == %s hat den Server verlassen
@@ -19,13 +19,13 @@ Switch language to english ?
 == %s hat den Server verlassen (%s)
 
 %s has been kicked (%s)
-== %s wurde vom Server geworfen (%s)
+== %s ist vom Server geworfen worden (%s)
 
 %s has been banned (%s)
-== %s wurde vom Server gebannt (%s)
+== %s ist vom Server gebannt worden (%s)
 
 %s changed their name to %s
-== %s wechselte den Namen zu %s
+== %s hat den Namen zu %s gewechselt
 
 You can't join the spectators right now
 == Du kannst gerade nicht zuschauen
@@ -33,7 +33,7 @@ You can't join the spectators right now
 ##### INFCLASS #########################################################
 
 You have infected %s, +3 points
-== Du hast %s infiziert, +3 Punkte
+== Du hast %s angesteckt, +3 Punkte
 
 You have killed a witch, +5 points
 == Du hast eine Hexe getötet, +5 Punkte
@@ -42,7 +42,7 @@ You have survived, +5 points
 == Du hast überlebt, +5 Punkte
 
 %s has been infected
-== %s wurde infiziert
+== %s ist angesteckt worden
 
 The witch is coming!
 == Die Hexe ist da!
@@ -57,7 +57,7 @@ The undead is finally dead
 == Der Untote ist nun endgültig tot
 
 Infected won the round in %i:%02i minutes
-== Die Infizierten haben die Runde in %i:%02i Minuten gewonnen
+== Die Erkrankten haben die Runde in %i:%02i Minuten gewonnen
 
 One human won the round
 == Ein Überlebender hat die Runde gewonnen
@@ -69,10 +69,10 @@ You are a human: %s
 == Du bist folgender Überlebender: %s
 
 You are an infected: %s
-== Du bist folgender Infizierter: %s
+== Du bist folgender Erkrankter: %s
 
 Type "/help %s" for more information about your class
-== Gib "/help %s" ein für zusätzliche Informationen zu deiner Klasse
+== Gib "/help %s" ein für zusätzliche Angaben in betreff auf deine Klasse
 
 ##### STATE ############################################################
 
@@ -86,13 +86,13 @@ Laser wall: %d sec
 == Laser-Wand: %d Sekunde(n)
 
 Position lock: %d sec
-== Feste Position: %d Sekunde(n)
+== Feste Aufstellung: %d Sekunde(n)
 
 Active mines: %d
-== Aktive Minen: %d
+== Scharfe Minen: %d
 
 Web mode enabled
-== Spinnennetz-Modus eingeschaltet
+== Spinnennetz-Betrieb eingeschalten
 
 ##### CLASSCHOOSER #####################################################
 
@@ -113,31 +113,31 @@ List of commands
 == Liste der Befehle
 
 /info: Information about this mod
-== /info: Informationen zu dieser Mod
+== /info: Hintergrundangaben zu dieser Spielart
 
 /help: Rules of the game
 == /help: Spielregeln
 
 /help <class>: Information about a particular class
-== /help <Klasse>: Informationen zu einer bestimmten Klasse
+== /help <Klasse>: Einweisungen zu einer bestimmten Klasse
 
 /language <lang>: Change the language of the mod
-== /language <lang>: Ändert die Sprache der Mod
+== /language <lang>: Wechselt die Sprache der Spielart
 
 /customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans
 == /customskin <none|me|all>: Macht den eigenen Skin für niemanden, nur für mich oder alle Überlebenden sichtbar
 
 /alwaysrandom <0|1>: Choose automatically random class when the round start
-== /alwaysrandom <0|1>: Wählt automatisch eine zufällige Klasse wenn die Runde beginnt
+== /alwaysrandom <0|1>: Wählt selbsttätig eine zufällige Klasse, wenn die Runde beginnt
 
 /lowresmap and /highresmap: Switch between simplified and classical maps
-== Wechsel zwischen vereinfachten und klassischen Karten
+== Wechsel zwischen vereinfachter und vollkommener Karte
 
 Press <F3> or <F4> to enable or disable hook protection
-== Drücke <F3> oder <F4> um den Hook-Schutz an- oder auszuschalten
+== Drücke <F3> oder <F4>, um den Verhakungsschutz an- oder auszuschalten
 
 Press <F3> or <F4> while holding <TAB> to switch the score system
-== Drücke <F3> oder <F4> während du <TAB> gedrückt hast, um eine andere Anzeige im Score zu erhalten
+== Drücke <F3> oder <F4>, während du <TAB> gedrückt hast, um eine andere Anzeige deiner Leistungen zu erhalten
 
 ##### Language ##### 
 
@@ -147,7 +147,7 @@ Unknown language
 ##### Always Random ##### 
 
 A random class will be automatically attributed to you when rounds start
-== Du erhältst ab jetzt eine zufällig Klasse am Anfang jeder Runde
+== Dir wird ab jetzt eine zufällige Klasse am Anfange jeder Runde zugewiesen
 
 The class selector will be displayed when rounds start
 == Du kannst wieder eine Klasse am Anfang jeder Runde wählen
@@ -158,7 +158,7 @@ InfectionClass, by necropotame (version %s)
 == InfectionClass, von necropotame (Version %s)
 
 Based on Infection mod by Gravity
-== Basierend auf der Infection-Mod von Gravity
+== Fußend auf der Infection-Mod von Gravity
 
 Thanks to %s
 == Dank an %s
@@ -169,27 +169,27 @@ Rules of the game:
 == Spielanleitung:
 
 InfectionClass is a team game between humans and infected.
-== InfectionClass ist ein Teamspiel: Überlebende gegen Infizierte!
+== InfectionClass ist ein Mannschaftspiel: Überlebende gegen Erkrankte!
 
 All players start as human.
-== Alle Spieler starten als normale Tees (i.F. Überlebende).
+== Alle Spieler setzen als gemeine Tees ein (i.F. Überlebende).
 
 10 seconds later, two players become infected.
-== Nach 10 Sekunden werden zwei Überlebende zu Infizierten.
+== Nach 10 Sekunden werden zwei Überlebende zu Erkrankten.
 
 The goal for humans is to survive until the army clean the map.
-== Das Ziel der Überlebenden ist es, nicht infiziert zu werden bis die Armee eintrifft.
+== Das Ziel der Überlebenden ist es, Ansteckung zu vermeiden, bis die Armee eintrifft und die Karte bereinigt.
 
 The goal for infected is to infect all humans.
-== Das Ziel der Infizierten ist es, alle Überlebenden zu verseuchen.
+== Das Ziel der Erkrankten ist es, alle Überlebenden anzustecken.
 
 ##### Hook protection ##### 
 
 Hook protection enabled
-== Hook-Schutz eingeschaltet
+== Verhakungsschutz eingeschalten
 
 Hook protection disabled
-== Hook-Schutz ausgeschaltet
+== Verhakungsschutz ausgeschalten
 
 ##### CLASSES ##########################################################
 
@@ -202,13 +202,13 @@ Engineer:
 == Ingenieur:
 
 The Engineer can build walls with his hammer to block infected.
-== Der Ingenieur kann Wände aus Licht (i.F. Walls) erzeugen, die die Infizierten abblocken.
+== Der Ingenieur kann Wände aus Licht (i.F. Walls) aufbauen, welche die Erkrankten absperren.
 
 When an infected touch the wall, he dies.
-== Wenn ein Infizierter eine Wall berührt, so stirbt er.
+== Wenn ein Erkrankter eine Wall berührt, führt dies zu dessen Tode.
 
 The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
-== Die Lebensdauer einer Wall beträgt 30 Sekunden. Außerdem kann nur eine Wall pro Ingenieur aktiv sein.
+== Die Lebensdauer einer Wall beträgt 30 Sekunden. Außerdem ist nur eine Wall je Ingenieur möglich.
 
 ##### Soldier ##### 
 
@@ -219,16 +219,16 @@ Soldier:
 == Soldat:
 
 The Soldier can pose floating bombs with his hammer.
-== Der Soldat kann mit seinem Hammer schwebende Bomben erzeugen.
+== Der Soldat kann vermöge seines Hammers schwebende Bomben erzeugen.
 
 Each bomb can explode three times.
-== Jede Bombe kann drei mal explodieren.
+== Jede Bombe kann dreimal gesprengt werden.
 
 Use the hammer to place the bomb and explode it multiple times.
-== Benutze den Hammer um die Bomben zu setzen, und sie danach explodieren zu lassen.
+== Benutze den Hammer, um deine Bombe zu setzen; imgleichen, um sie danach zu sprengen.
 
 Bombs are limited to one per player at the same time.
-== Ein Spieler kann nicht mehr als eine Bombe gleichzeitig erzeugen.
+== Ein Spieler vermag nicht mehr als eine Bombe zur selben Zeit zu setzen.
 
 ##### Scientist ##### 
 
@@ -239,27 +239,27 @@ Scientist:
 == Wissenschaftler:
 
 The Scientist can pose floating mines with his hammer.
-== Der Wissenschaftler kann mit seinem Hammer schwebende Minen erzeugen.
+== Der Wissenschaftler kann mit seinem Hammer schwebende Minen legen.
 
 He has also grenades that teleport him.
-== Er besitzt ebenfalls Granaten, die ihn telepotieren.
+== Er besitzt darüberhinaus Granaten, die ihn teleportieren.
 
 Mines are limited to two per player at the same time.
-== Ein Spieler kann nicht mehr als zwei Minen gleichzeitig erzeugen.
+== Ein Spieler kann nicht mehr als zwei Minen zur selben Zeit legen.
 
 ##### Medic ##### 
 
 Medic
-== Artzt
+== Arzt
 
 Medic:
-== Artzt:
+== Arzt:
 
 The Medic can protect humans with his hammer by giving them armor.
-== Der Artzt kann, mithilfe von Schlägen seines Hammers, die Schilde anderer Spieler regenerieren.
+== Die besondere Fähigkeit des Arztes ist es, andere Überlebende um Schilde zu bereichern, indem er sie mit dem Hammer schlägt.
 
 He has also a powerful shotgun that can pullback infected.
-== Er hat ebenfalls eine starke Schrotflinte, mit der er Infizierte weit zurückschießen kann.
+== Er hat als Waffe eine starke Schrotflinte, mit der er Erkrankte zurückschießen kann.
 
 ##### Ninja ##### 
 
@@ -270,10 +270,10 @@ Ninja:
 == Ninja:
 
 The Ninja can throw flash grenades that can freeze infected during three seconds.
-== Der Ninja kann Granaten werfen, die Infizierte für drei Sekunden einfrieren.
+== Der Ninja kann Granaten werfen, die beim Aufprall getroffene Erkrankte für drei Sekunden einfrieren.
 
 His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
-== Sein Hammer wurde durch ein japanisches Langschwert ersetzt, welches seinem Träger die Fähigkeit zu zwei großen Sprüngen verleiht, ehe der Boden wieder berührt werden muss.
+== Sein Hammer ist durch ein japanisches Langschwert ersetzt, welches seinem Träger die Fähigkeit verleiht, zweimal durch die Luft zu stoßen, ehe er wieder den Boden berühren muß.
 
 ##### Mercenary ##### 
 
@@ -284,10 +284,10 @@ Mercenary:
 == Söldner:
 
 The Mercenary fly in air using his machine gun.
-== Der Söldner wurde mit einem Maschienengewehr ausgestattet, dessen Rückstoß ihn in die Lüfte erhebt.
+== Der Söldner ist mit einem Maschinengewehr ausgestattet, dessen Rückstoß ihn in die Lüfte erhebt.
 
 He can also throw poison grenades that deals 8 damage points.
-== Er kann ebenfalls vergiftete Granaten erzeugen, die acht Schadenspunkte machen.
+== Er kann zudem Giftgranaten werfen, welche bei Zündung jedem betroffenen Erkrankten acht Schadenspunkte zufügen.
 
 ##### Sniper ##### 
 
@@ -298,10 +298,10 @@ Sniper:
 == Scharfschütze:
 
 The Sniper can lock his position in air for 15 seconds with his hammer.
-== Der Scharfschütze kann, mittels dem Hammer und purer Gedankenkraft, seine Position in der Luft für 15 Sekunden unverändert halten.
+== Der Scharfschütze hat die Fähigkeit, mittels des Hammers für 15 Sekunden an einem beliebigen Orte, auch in der Luft, einzurasten.
 
 He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-== Hat er eine feste Position eingenommen, so ergibt sich durch die gebündelte Macht eine Verstärkung seines Gewehrs: 19 - 20 Schadenspunkte sind möglich. Ist er abgelenkt, so sind es immerhin noch 9 - 10.
+== Hat er eine feste Stellung eingenommen, so verstärkt dies sein Gewehr: 19–20 Schadenspunkte durch dessen Schüsse sind gangbar. Ist der Scharfschütze einer festen Stellung ledig, so fügt er Erkrankten immerhin 9–10 Schadenspunkte zu.
 
 ##### Smoker ##### 
 
@@ -312,10 +312,10 @@ Smoker:
 == Raucher:
 
 The Smoker can infect humans and heal infected with his hammer.
-== Der Raucher kann mit seinem Hammer entweder Infizierte heilen, oder Überlebende verseuchen.
+== Der Raucher kann unter Verwendung seines Hammers entweder Erkrankte heilen oder Überlebende anstecken.
 
 He can also inflict 4 damage points per seconds by hooking humans.
-== Außerdem kann er Überlebenden vier Schadenspunkte für jede Sekunde, in denen er sich an sie klammert, zufügen.
+== Außerdem kann er einem Überlebenden einen Schadenspunkt für jede Sekunde, in der er sich an ihn klammert, zufügen.
 
 ##### Boomer ##### 
 
@@ -326,13 +326,13 @@ Boomer:
 == Boomer:
 
 The Boomer explodes when he attack.
-== Der Boomer explodiert, wenn er angreift.
+== Der Boomer führt keinen Hammer. Sein Angriff ist Sprengung.
 
 All humans affected by the explosion become infected.
-== Alle Überlebenden, die von der Explosion etwas abbekommen, werden von ihr verseucht.
+== Alle Überlebenden, die von der Sprengung etwas abbekommen, werden angesteckt.
 
 He can also inflict 1 damage point per seconds by hooking humans.
-== Außerdem kann er Überlebenden einen Schadenspunkt für jede Sekunde, in denen er sich an sie klammert, zufügen.
+== Außerdem kann er einem Überlebenden einen Schadenspunkt für jede Sekunde, in der er sich an ihn klammert, zufügen.
 
 ##### Hunter ##### 
 
@@ -343,10 +343,10 @@ Hunter:
 == Jäger:
 
 The Hunter can infect humans and heal infected with his hammer.
-== Der Jäger kann mit seinem Hammer entweder Infizierte heilen, oder Überlebende verseuchen.
+== Der Jäger kann kann unter Verwendung seines Hammers entweder Erkrankte heilen oder Überlebende anstecken.
 
 He can jump two times in air.
-== Er kann 2x hintereinander springen.
+== Er kann zweimal in der Luft springen.
 
 ##### Spider ##### 
 
@@ -357,16 +357,16 @@ Spider:
 == Spinne:
 
 The Spider can infect humans and heal infected with his hammer.
-== Die Spinne kann Überlebende mit ihrem Hammer verseuchen, und zugleich Infizierte heilen.
+== Die Spinne kann unter Verwendung ihres Hammers entweder Erkrankte heilen oder Überlebende anstecken.
 
 When selecting any gun, his hook enter in web mode.
-== Wenn etwas anderes als ihr Hammer ausgewählt wird, so wird aus ihrem Hook ein Spinnenfaden (Spinnennetz-Modus).
+== Beim Waffenwechsel wird aus ihrem Haken ein Spinnenfaden (Spinnennetz-Betrieb).
 
 Any human that touch a hook in web mode is automatically grabbed.
-== Jeder Überlebender, der einen Spinnenfaden berührt, wird von diesem erfasst.
+== Jeder Überlebender, der einen Spinnenfaden berührt, wird von diesem erfaßt.
 
 The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
-== Die Berührung eines Spinnenfadens, oder dem normalen Hook einer Spinne, erzeugt einen Schadenspunkt pro Sekunde, und kann einen Überlebenden innerhalb von zwei Sekunden schnappen.
+== Die Berührung eines Spinnenfadens sowohl wie eines gemeinen Haken einer Spinne durch einen Überlebenden fügt diesem einen Schadenspunkt je Sekunde zu und hält ihn zwei Sekunden lang am Haken fest.
 
 ##### Ghost #####
 
@@ -377,10 +377,10 @@ Ghost:
 == Geist:
 
 The Ghost can infect humans and heal infected with his hammer.
-== Der Geist kann Überlebende mit seinem Hammer verseuchen, und zugleich Infizierte heilen. 
+== Der Geist kann unter Verwendung seines Hammers entweder Erkrankte heilen oder Überlebende anstecken. 
 
 He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
-== Solange sich kein Überlebender in seiner Nähe befindet, ihm Schaden zugefügt wird oder er seinen Hammer nutzt, ist er unsichtbar.
+== Solange sich kein Überlebender in seiner Nähe befindet, ihm Schaden zugefügt wird oder er seinen Hammer nutzt, ist er für Überlebende unsichtbar.
 
 ##### Undead ##### 
 
@@ -391,13 +391,13 @@ Undead:
 == Untoter:
 
 The Undead can infect humans and heal infected with his hammer.
-== Der Untote kann mit seinem Hammer entweder Infizierte heilen, oder Überlebende verseuchen.
+== Der Untote kann unter Verwendung seines Hammers entweder Erkrankte heilen oder Überlebende anstecken.
 
 Instead of dying, he freezes during 10 seconds.
-== Anstatt zu sterben friert er für zehn Sekunden ein.
+== Anstatt zu sterben, friert er für zehn Sekunden ein.
 
 If an infected heals him, the freeze effect disappear.
-== Wenn er von einem Infizierten geheilt wird, so taut er sofort wieder auf.
+== Wird er von einem Erkrankten gehämmert, taut er sofort wieder auf.
 
 ##### Witch ##### 
 
@@ -408,13 +408,13 @@ Witch:
 == Hexe:
 
 The Witch can infect humans and heal infected with his hammer.
-== Die Hexe kann mit ihrem Hammer entweder Infizierte heilen oder Überlebende verseuchen.
+== Die Hexe kann unter Verwendung ihres Hammers entweder Erkrankte heilen oder Überlebende anstecken.
 
 When an infected dies, he may re-spawn near her.
-== Wenn ein Infizierter stirbt, so besteht eine gewisse Chance darauf, dass er neben ihr wieder zum Leben erwacht.
+== Wenn ein Erkrankter stirbt, besteht eine Aussicht darauf, daß er neben ihr wieder zum Leben erwacht.
 
 If the Witch dies, she disappear and is replaced by an another class of infected.
-== Wenn die Hexe stirbt, verschwindet sie und wird durch eine andere Klasse der Infizierten ersetzt.
+== Wenn die Hexe stirbt, verschwindet sie und wird durch eine andere Erkrankten-Klasse ersetzt.
 
 She can also inflict 1 damage point per seconds by hooking humans.
-== Außerdem kann sie Überlebenden einen Schadenspunkt für jede Sekunde, in der sie sich an sie klammert, zufügen.
+== Außerdem kann sie einem Überlebenden einen Schadenspunkt für jede Sekunde, in der sie sich an ihn klammert, zufügen.

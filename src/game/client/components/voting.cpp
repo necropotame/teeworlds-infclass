@@ -7,19 +7,23 @@
 #include <game/client/render.h>
 #include "voting.h"
 
-void CVoting::ConCallvote(IConsole::IResult *pResult, void *pUserData)
+bool CVoting::ConCallvote(IConsole::IResult *pResult, void *pUserData)
 {
 	CVoting *pSelf = (CVoting*)pUserData;
 	pSelf->Callvote(pResult->GetString(0), pResult->GetString(1), pResult->NumArguments() > 2 ? pResult->GetString(2) : "");
+	
+	return true;
 }
 
-void CVoting::ConVote(IConsole::IResult *pResult, void *pUserData)
+bool CVoting::ConVote(IConsole::IResult *pResult, void *pUserData)
 {
 	CVoting *pSelf = (CVoting *)pUserData;
 	if(str_comp_nocase(pResult->GetString(0), "yes") == 0)
 		pSelf->Vote(1);
 	else if(str_comp_nocase(pResult->GetString(0), "no") == 0)
 		pSelf->Vote(-1);
+	
+	return true;
 }
 
 void CVoting::Callvote(const char *pType, const char *pValue, const char *pReason)

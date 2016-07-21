@@ -1129,21 +1129,27 @@ void CGameClient::SendKill(int ClientID)
 	Client()->SendPackMsg(&Msg, MSGFLAG_VITAL);
 }
 
-void CGameClient::ConTeam(IConsole::IResult *pResult, void *pUserData)
+bool CGameClient::ConTeam(IConsole::IResult *pResult, void *pUserData)
 {
 	((CGameClient*)pUserData)->SendSwitchTeam(pResult->GetInteger(0));
+	
+	return true;
 }
 
-void CGameClient::ConKill(IConsole::IResult *pResult, void *pUserData)
+bool CGameClient::ConKill(IConsole::IResult *pResult, void *pUserData)
 {
 	((CGameClient*)pUserData)->SendKill(-1);
+	
+	return true;
 }
 
-void CGameClient::ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
+bool CGameClient::ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	pfnCallback(pResult, pCallbackUserData);
 	if(pResult->NumArguments())
 		((CGameClient*)pUserData)->SendInfo(false);
+	
+	return true;
 }
 
 IGameClient *CreateGameClient()

@@ -1989,37 +1989,47 @@ void CClient::Run()
 }
 
 
-void CClient::Con_Connect(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Connect(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	str_copy(pSelf->m_aCmdConnect, pResult->GetString(0), sizeof(pSelf->m_aCmdConnect));
+	
+	return true;
 }
 
-void CClient::Con_Disconnect(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Disconnect(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->Disconnect();
+	
+	return true;
 }
 
-void CClient::Con_Quit(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Quit(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->Quit();
+	
+	return true;
 }
 
-void CClient::Con_Minimize(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Minimize(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->Graphics()->Minimize();
+	
+	return true;
 }
 
-void CClient::Con_Ping(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Ping(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 
 	CMsgPacker Msg(NETMSG_PING);
 	pSelf->SendMsgEx(&Msg, 0);
 	pSelf->m_PingStartTime = time_get();
+	
+	return true;
 }
 
 void CClient::AutoScreenshot_Start()
@@ -2045,38 +2055,48 @@ void CClient::AutoScreenshot_Cleanup()
 	}
 }
 
-void CClient::Con_Screenshot(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Screenshot(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->Graphics()->TakeScreenshot(0);
+	
+	return true;
 }
 
-void CClient::Con_Rcon(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Rcon(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->Rcon(pResult->GetString(0));
+	
+	return true;
 }
 
-void CClient::Con_RconAuth(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_RconAuth(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->RconAuth("", pResult->GetString(0));
+	
+	return true;
 }
 
-void CClient::Con_AddFavorite(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_AddFavorite(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	NETADDR Addr;
 	if(net_addr_from_str(&Addr, pResult->GetString(0)) == 0)
 		pSelf->m_ServerBrowser.AddFavorite(Addr);
+	
+	return true;
 }
 
-void CClient::Con_RemoveFavorite(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_RemoveFavorite(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	NETADDR Addr;
 	if(net_addr_from_str(&Addr, pResult->GetString(0)) == 0)
 		pSelf->m_ServerBrowser.RemoveFavorite(Addr);
+	
+	return true;
 }
 
 const char *CClient::DemoPlayer_Play(const char *pFilename, int StorageType)
@@ -2131,10 +2151,12 @@ const char *CClient::DemoPlayer_Play(const char *pFilename, int StorageType)
 	return 0;
 }
 
-void CClient::Con_Play(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Play(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->DemoPlayer_Play(pResult->GetString(0), IStorage::TYPE_ALL);
+	
+	return true;
 }
 
 void CClient::DemoRecorder_Start(const char *pFilename, bool WithTimestamp)
@@ -2181,25 +2203,31 @@ void CClient::DemoRecorder_AddDemoMarker()
 	m_DemoRecorder.AddDemoMarker();
 }
 
-void CClient::Con_Record(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_Record(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	if(pResult->NumArguments())
 		pSelf->DemoRecorder_Start(pResult->GetString(0), false);
 	else
 		pSelf->DemoRecorder_Start("demo", true);
+	
+	return true;
 }
 
-void CClient::Con_StopRecord(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_StopRecord(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->DemoRecorder_Stop();
+	
+	return true;
 }
 
-void CClient::Con_AddDemoMarker(IConsole::IResult *pResult, void *pUserData)
+bool CClient::Con_AddDemoMarker(IConsole::IResult *pResult, void *pUserData)
 {
 	CClient *pSelf = (CClient *)pUserData;
 	pSelf->DemoRecorder_AddDemoMarker();
+	
+	return true;
 }
 
 void CClient::ServerBrowserUpdate()
@@ -2207,11 +2235,13 @@ void CClient::ServerBrowserUpdate()
 	m_ResortServerBrowser = true;
 }
 
-void CClient::ConchainServerBrowserUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
+bool CClient::ConchainServerBrowserUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
 	pfnCallback(pResult, pCallbackUserData);
 	if(pResult->NumArguments())
 		((CClient *)pUserData)->ServerBrowserUpdate();
+	
+	return true;
 }
 
 void CClient::RegisterCommands()

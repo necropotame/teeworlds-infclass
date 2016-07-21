@@ -49,26 +49,26 @@ class CGameContext : public IGameServer
 	CNetObjHandler m_NetObjHandler;
 	CTuningParams m_Tuning;
 
-	static void ConTuneParam(IConsole::IResult *pResult, void *pUserData);
-	static void ConTuneReset(IConsole::IResult *pResult, void *pUserData);
-	static void ConTuneDump(IConsole::IResult *pResult, void *pUserData);
-	static void ConPause(IConsole::IResult *pResult, void *pUserData);
-	static void ConChangeMap(IConsole::IResult *pResult, void *pUserData);
-	static void ConSkipMap(IConsole::IResult *pResult, void *pUserData);
-	static void ConRestart(IConsole::IResult *pResult, void *pUserData);
-	static void ConBroadcast(IConsole::IResult *pResult, void *pUserData);
-	static void ConSay(IConsole::IResult *pResult, void *pUserData);
-	static void ConSetTeam(IConsole::IResult *pResult, void *pUserData);
-	static void ConSetTeamAll(IConsole::IResult *pResult, void *pUserData);
-	static void ConSwapTeams(IConsole::IResult *pResult, void *pUserData);
-	static void ConShuffleTeams(IConsole::IResult *pResult, void *pUserData);
-	static void ConLockTeams(IConsole::IResult *pResult, void *pUserData);
-	static void ConAddVote(IConsole::IResult *pResult, void *pUserData);
-	static void ConRemoveVote(IConsole::IResult *pResult, void *pUserData);
-	static void ConForceVote(IConsole::IResult *pResult, void *pUserData);
-	static void ConClearVotes(IConsole::IResult *pResult, void *pUserData);
-	static void ConVote(IConsole::IResult *pResult, void *pUserData);
-	static void ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
+	static bool ConTuneParam(IConsole::IResult *pResult, void *pUserData);
+	static bool ConTuneReset(IConsole::IResult *pResult, void *pUserData);
+	static bool ConTuneDump(IConsole::IResult *pResult, void *pUserData);
+	static bool ConPause(IConsole::IResult *pResult, void *pUserData);
+	static bool ConChangeMap(IConsole::IResult *pResult, void *pUserData);
+	static bool ConSkipMap(IConsole::IResult *pResult, void *pUserData);
+	static bool ConRestart(IConsole::IResult *pResult, void *pUserData);
+	static bool ConBroadcast(IConsole::IResult *pResult, void *pUserData);
+	static bool ConSay(IConsole::IResult *pResult, void *pUserData);
+	static bool ConSetTeam(IConsole::IResult *pResult, void *pUserData);
+	static bool ConSetTeamAll(IConsole::IResult *pResult, void *pUserData);
+	static bool ConSwapTeams(IConsole::IResult *pResult, void *pUserData);
+	static bool ConShuffleTeams(IConsole::IResult *pResult, void *pUserData);
+	static bool ConLockTeams(IConsole::IResult *pResult, void *pUserData);
+	static bool ConAddVote(IConsole::IResult *pResult, void *pUserData);
+	static bool ConRemoveVote(IConsole::IResult *pResult, void *pUserData);
+	static bool ConForceVote(IConsole::IResult *pResult, void *pUserData);
+	static bool ConClearVotes(IConsole::IResult *pResult, void *pUserData);
+	static bool ConVote(IConsole::IResult *pResult, void *pUserData);
+	static bool ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
 	CGameContext(int Resetting);
 	void Construct(int Resetting);
@@ -181,8 +181,25 @@ public:
 	virtual const char *NetVersion();
 	
 /* INFECTION MODIFICATION START ***************************************/
+public:
+	int m_ChatResponseTargetID;
+	int m_ChatPrintCBIndex;
+
 private:
-	static void ConSetClass(IConsole::IResult *pResult, void *pUserData);
+	static void ChatConsolePrintCallback(const char *pLine, void *pUser);
+
+	static bool ConSetClass(IConsole::IResult *pResult, void *pUserData);
+	
+	static bool ConChatInfo(IConsole::IResult *pResult, void *pUserData);
+	static bool ConRegister(IConsole::IResult *pResult, void *pUserData);
+	static bool ConLogin(IConsole::IResult *pResult, void *pUserData);
+	static bool ConHelp(IConsole::IResult *pResult, void *pUserData);
+	static bool ConCustomSkin(IConsole::IResult *pResult, void *pUserData);
+	static bool ConAlwaysRandom(IConsole::IResult *pResult, void *pUserData);
+	static bool ConLanguage(IConsole::IResult *pResult, void *pUserData);
+	static bool ConCmdList(IConsole::IResult *pResult, void *pUserData);
+	
+	static bool ConFriendlyBan(IConsole::IResult *pResult, void *pUserData);
 	
 	static bool s_ServerLocalizationInitialized;
 	static CLocalizationDatabase s_ServerLocalization[NUM_TRANSLATED_LANGUAGES];
@@ -190,6 +207,7 @@ private:
 	void InitializeServerLocatization();
 	
 public:
+	virtual void OnSetAuthed(int ClientID,int Level);
 	virtual const char* ServerLocalize(const char* pText, int Language);
 	
 	virtual void SendBroadcast_Language(int To, const char* pText, bool LowPriority = false);

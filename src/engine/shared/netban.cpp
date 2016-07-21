@@ -472,7 +472,7 @@ bool CNetBan::IsBanned(const NETADDR *pAddr, char *pBuf, unsigned BufferSize) co
 	return false;
 }
 
-void CNetBan::ConBan(IConsole::IResult *pResult, void *pUser)
+bool CNetBan::ConBan(IConsole::IResult *pResult, void *pUser)
 {
 	CNetBan *pThis = static_cast<CNetBan *>(pUser);
 
@@ -485,9 +485,11 @@ void CNetBan::ConBan(IConsole::IResult *pResult, void *pUser)
 		pThis->BanAddr(&Addr, Minutes*60, pReason);
 	else
 		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", "ban error (invalid network address)");
+
+	return true;
 }
 
-void CNetBan::ConBanRange(IConsole::IResult *pResult, void *pUser)
+bool CNetBan::ConBanRange(IConsole::IResult *pResult, void *pUser)
 {
 	CNetBan *pThis = static_cast<CNetBan *>(pUser);
 
@@ -501,9 +503,11 @@ void CNetBan::ConBanRange(IConsole::IResult *pResult, void *pUser)
 		pThis->BanRange(&Range, Minutes*60, pReason);
 	else
 		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", "ban error (invalid range)");
+
+	return true;
 }
 
-void CNetBan::ConUnban(IConsole::IResult *pResult, void *pUser)
+bool CNetBan::ConUnban(IConsole::IResult *pResult, void *pUser)
 {
 	CNetBan *pThis = static_cast<CNetBan *>(pUser);
 
@@ -518,9 +522,11 @@ void CNetBan::ConUnban(IConsole::IResult *pResult, void *pUser)
 		else
 			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", "unban error (invalid network address)");
 	}
+	
+	return true;
 }
 
-void CNetBan::ConUnbanRange(IConsole::IResult *pResult, void *pUser)
+bool CNetBan::ConUnbanRange(IConsole::IResult *pResult, void *pUser)
 {
 	CNetBan *pThis = static_cast<CNetBan *>(pUser);
 
@@ -532,17 +538,21 @@ void CNetBan::ConUnbanRange(IConsole::IResult *pResult, void *pUser)
 		pThis->UnbanByRange(&Range);
 	else
 		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", "unban error (invalid range)");
+	
+	return true;
 }
 
-void CNetBan::ConUnbanAll(IConsole::IResult *pResult, void *pUser)
+bool CNetBan::ConUnbanAll(IConsole::IResult *pResult, void *pUser)
 {
 	CNetBan *pThis = static_cast<CNetBan *>(pUser);
 
 	pThis->UnbanAll();
 	pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", "unbanned all entries");
+	
+	return true;
 }
 
-void CNetBan::ConBans(IConsole::IResult *pResult, void *pUser)
+bool CNetBan::ConBans(IConsole::IResult *pResult, void *pUser)
 {
 	CNetBan *pThis = static_cast<CNetBan *>(pUser);
 
@@ -562,9 +572,11 @@ void CNetBan::ConBans(IConsole::IResult *pResult, void *pUser)
 	}
 	str_format(aMsg, sizeof(aMsg), "%d %s", Count, Count==1?"ban":"bans");
 	pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", aMsg);
+	
+	return true;
 }
 
-void CNetBan::ConBansSave(IConsole::IResult *pResult, void *pUser)
+bool CNetBan::ConBansSave(IConsole::IResult *pResult, void *pUser)
 {
 	CNetBan *pThis = static_cast<CNetBan *>(pUser);
 
@@ -574,7 +586,7 @@ void CNetBan::ConBansSave(IConsole::IResult *pResult, void *pUser)
 	{
 		str_format(aBuf, sizeof(aBuf), "failed to save banlist to '%s'", pResult->GetString(0));
 		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", aBuf);
-		return;
+		return true;
 	}
 
 	int Now = time_timestamp();
@@ -600,4 +612,6 @@ void CNetBan::ConBansSave(IConsole::IResult *pResult, void *pUser)
 	io_close(File);
 	str_format(aBuf, sizeof(aBuf), "saved banlist to '%s'", pResult->GetString(0));
 	pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", aBuf);
+	
+	return true;
 }

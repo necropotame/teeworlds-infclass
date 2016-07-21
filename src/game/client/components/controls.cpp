@@ -43,17 +43,21 @@ void CControls::OnPlayerDeath()
 	m_LastData.m_WantedWeapon = m_InputData.m_WantedWeapon = 0;
 }
 
-static void ConKeyInputState(IConsole::IResult *pResult, void *pUserData)
+static bool ConKeyInputState(IConsole::IResult *pResult, void *pUserData)
 {
 	((int *)pUserData)[0] = pResult->GetInteger(0);
+	
+	return true;
 }
 
-static void ConKeyInputCounter(IConsole::IResult *pResult, void *pUserData)
+static bool ConKeyInputCounter(IConsole::IResult *pResult, void *pUserData)
 {
 	int *v = (int *)pUserData;
 	if(((*v)&1) != pResult->GetInteger(0))
 		(*v)++;
 	*v &= INPUT_STATE_MASK;
+	
+	return true;
 }
 
 struct CInputSet
@@ -63,18 +67,22 @@ struct CInputSet
 	int m_Value;
 };
 
-static void ConKeyInputSet(IConsole::IResult *pResult, void *pUserData)
+static bool ConKeyInputSet(IConsole::IResult *pResult, void *pUserData)
 {
 	CInputSet *pSet = (CInputSet *)pUserData;
 	if(pResult->GetInteger(0))
 		*pSet->m_pVariable = pSet->m_Value;
+	
+	return true;
 }
 
-static void ConKeyInputNextPrevWeapon(IConsole::IResult *pResult, void *pUserData)
+static bool ConKeyInputNextPrevWeapon(IConsole::IResult *pResult, void *pUserData)
 {
 	CInputSet *pSet = (CInputSet *)pUserData;
 	ConKeyInputCounter(pResult, pSet->m_pVariable);
 	pSet->m_pControls->m_InputData.m_WantedWeapon = 0;
+	
+	return true;
 }
 
 void CControls::OnConsoleInit()

@@ -14,20 +14,24 @@
 #include "spectator.h"
 
 
-void CSpectator::ConKeySpectator(IConsole::IResult *pResult, void *pUserData)
+bool CSpectator::ConKeySpectator(IConsole::IResult *pResult, void *pUserData)
 {
 	CSpectator *pSelf = (CSpectator *)pUserData;
 	if(pSelf->m_pClient->m_Snap.m_SpecInfo.m_Active &&
 		(pSelf->Client()->State() != IClient::STATE_DEMOPLAYBACK || pSelf->DemoPlayer()->GetDemoType() == IDemoPlayer::DEMOTYPE_SERVER))
 		pSelf->m_Active = pResult->GetInteger(0) != 0;
+	
+	return true;
 }
 
-void CSpectator::ConSpectate(IConsole::IResult *pResult, void *pUserData)
+bool CSpectator::ConSpectate(IConsole::IResult *pResult, void *pUserData)
 {
 	((CSpectator *)pUserData)->Spectate(pResult->GetInteger(0));
+	
+	return true;
 }
 
-void CSpectator::ConSpectateNext(IConsole::IResult *pResult, void *pUserData)
+bool CSpectator::ConSpectateNext(IConsole::IResult *pResult, void *pUserData)
 {
 	CSpectator *pSelf = (CSpectator *)pUserData;
 	int NewSpectatorID;
@@ -72,9 +76,11 @@ void CSpectator::ConSpectateNext(IConsole::IResult *pResult, void *pUserData)
 	}
 	if(GotNewSpectatorID)
 		pSelf->Spectate(NewSpectatorID);
+	
+	return true;
 }
 
-void CSpectator::ConSpectatePrevious(IConsole::IResult *pResult, void *pUserData)
+bool CSpectator::ConSpectatePrevious(IConsole::IResult *pResult, void *pUserData)
 {
 	CSpectator *pSelf = (CSpectator *)pUserData;
 	int NewSpectatorID;
@@ -119,6 +125,8 @@ void CSpectator::ConSpectatePrevious(IConsole::IResult *pResult, void *pUserData
 	}
 	if(GotNewSpectatorID)
 		pSelf->Spectate(NewSpectatorID);
+	
+	return true;
 }
 
 CSpectator::CSpectator()

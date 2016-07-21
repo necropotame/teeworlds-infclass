@@ -19,6 +19,7 @@ public:
 
 		ACCESS_LEVEL_ADMIN=0,
 		ACCESS_LEVEL_MOD,
+		ACCESS_LEVEL_USER,
 
 		TEMPCMD_NAME_LENGTH=32,
 		TEMPCMD_HELP_LENGTH=96,
@@ -32,13 +33,18 @@ public:
 	{
 	protected:
 		unsigned m_NumArgs;
+		int m_ClientID;
+		
 	public:
-		IResult() { m_NumArgs = 0; }
+		IResult() { m_NumArgs = 0; m_ClientID = -1; }
 		virtual ~IResult() {}
 
 		virtual int GetInteger(unsigned Index) = 0;
 		virtual float GetFloat(unsigned Index) = 0;
 		virtual const char *GetString(unsigned Index) = 0;
+		
+		int GetClientID() { return m_ClientID; }
+		void SetClientID(int ClientID) { m_ClientID = ClientID; }
 
 		int NumArguments() const { return m_NumArgs; }
 	};
@@ -51,6 +57,7 @@ public:
 		CCommandInfo() { m_AccessLevel = ACCESS_LEVEL_ADMIN; }
 		virtual ~CCommandInfo() {}
 		const char *m_pName;
+		char m_pUsage[128];
 		const char *m_pHelp;
 		const char *m_pParams;
 
@@ -61,8 +68,8 @@ public:
 
 	typedef void (*FPrintCallback)(const char *pStr, void *pUser);
 	typedef void (*FPossibleCallback)(const char *pCmd, void *pUser);
-	typedef void (*FCommandCallback)(IResult *pResult, void *pUserData);
-	typedef void (*FChainCommandCallback)(IResult *pResult, void *pUserData, FCommandCallback pfnCallback, void *pCallbackUserData);
+	typedef bool (*FCommandCallback)(IResult *pResult, void *pUserData);
+	typedef bool (*FChainCommandCallback)(IResult *pResult, void *pUserData, FCommandCallback pfnCallback, void *pCallbackUserData);
 
 	virtual const CCommandInfo *FirstCommandInfo(int AccessLevel, int Flagmask) const = 0;
 	virtual const CCommandInfo *GetCommandInfo(const char *pName, int FlagMask, bool Temp) = 0;
@@ -77,9 +84,9 @@ public:
 	virtual void StoreCommands(bool Store) = 0;
 
 	virtual bool LineIsValid(const char *pStr) = 0;
-	virtual void ExecuteLine(const char *Sptr) = 0;
-	virtual void ExecuteLineFlag(const char *Sptr, int FlasgMask) = 0;
-	virtual void ExecuteLineStroked(int Stroke, const char *pStr) = 0;
+	virtual void ExecuteLine(const char *Sptr, int ClientID) = 0;
+	virtual void ExecuteLineFlag(const char *Sptr, int ClientID, int FlasgMask) = 0;
+	virtual void ExecuteLineStroked(int Stroke, const char *pStr, int ClientID) = 0;
 	virtual void ExecuteFile(const char *pFilename) = 0;
 
 	virtual int RegisterPrintCallback(int OutputLevel, FPrintCallback pfnPrintCallback, void *pUserData) = 0;

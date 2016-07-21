@@ -127,6 +127,7 @@ private:
 	int m_Language;
 	
 public:
+	int m_Authed;
 	int m_ScoreRound;
 	int m_HumanTime;
 	

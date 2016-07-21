@@ -23,9 +23,11 @@ CScoreboard::CScoreboard()
 	OnReset();
 }
 
-void CScoreboard::ConKeyScoreboard(IConsole::IResult *pResult, void *pUserData)
+bool CScoreboard::ConKeyScoreboard(IConsole::IResult *pResult, void *pUserData)
 {
 	((CScoreboard *)pUserData)->m_Active = pResult->GetInteger(0) != 0;
+	
+	return true;
 }
 
 void CScoreboard::OnReset()
