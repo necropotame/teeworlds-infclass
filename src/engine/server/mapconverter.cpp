@@ -710,12 +710,12 @@ void CMapConverter::Finalize()
 	m_DataFile.Finish();
 }
 
-bool CMapConverter::CreateMap()
+bool CMapConverter::CreateMap(const char* pFilename)
 {
 	char aBuf[512];
-	if(!m_DataFile.Open(Storage(), "maps/infc_x_current.map"))
+	if(!m_DataFile.Open(Storage(), pFilename))
 	{
-		str_format(aBuf, sizeof(aBuf), "failed to open file '%s'...", "maps/infc_x_current.map");
+		str_format(aBuf, sizeof(aBuf), "failed to open file '%s'...", pFilename);
 		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "infclass", aBuf);
 		return false;
 	}

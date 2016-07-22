@@ -86,7 +86,7 @@ public:
 	~CMapConverter();
 	
 	bool Load();
-	bool CreateMap();
+	bool CreateMap(const char* pFilename);
 };
 
 #endif
