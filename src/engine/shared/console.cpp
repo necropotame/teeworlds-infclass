@@ -840,6 +840,8 @@ void CConsole::GenerateUsage(const char* pParam, char* pUsage)
 			pUsage += sizeof("<int> ");
 		}
 	}
+	
+	*pUsage = 0;
 }
 
 void CConsole::Register(const char *pName, const char *pParams,
