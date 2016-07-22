@@ -2596,14 +2596,16 @@ private:
 	int m_ClientID;
 	CSqlString<64> m_sName;
 	CSqlString<64> m_sPasswordHash;
+	CSqlString<64> m_sEmail;
 	
 public:
-	CSqlJob_Server_Register(CServer* pServer, int ClientID, const char* pName, const char* pPasswordHash)
+	CSqlJob_Server_Register(CServer* pServer, int ClientID, const char* pName, const char* pPasswordHash, const char* pEmail)
 	{
 		m_pServer = pServer;
 		m_ClientID = ClientID;
 		m_sName = CSqlString<64>(pName);
 		m_sPasswordHash = CSqlString<64>(pPasswordHash);
+		m_sEmail = CSqlString<64>(pEmail);
 	}
 
 	virtual bool Job(CSqlServer* pSqlServer)
@@ -2625,8 +2627,6 @@ public:
 				"WHERE RegisterIp = '%s' AND TIMESTAMPDIFF(MINUTE, RegisterDate, UTC_TIMESTAMP()) < 60;"
 				, pSqlServer->GetPrefix(), aAddrStr);
 			pSqlServer->executeSqlQuery(aBuf);
-
-			dbg_msg("sql", aBuf);
 			
 			if(pSqlServer->GetResults()->next())
 			{
@@ -2651,14 +2651,14 @@ public:
 			//Check if the username is already taken
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT UserId FROM %s_Users "
-				"WHERE Username = '%s';"
+				"WHERE Username COLLATE UTF8_GENERAL_CI = '%s' COLLATE UTF8_GENERAL_CI;"
 				, pSqlServer->GetPrefix(), m_sName.ClrStr());
 			pSqlServer->executeSqlQuery(aBuf);
 
 			if(pSqlServer->GetResults()->next())
 			{
 				dbg_msg("infclass", "User already taken");
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "This user name is already taken by an existing account");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "This username is already taken by an existing account");
 				m_pServer->AddGameServerCmd(pCmd);
 				
 				return true;
@@ -2678,9 +2678,9 @@ public:
 		{	
 			str_format(aBuf, sizeof(aBuf), 
 				"INSERT INTO %s_Users "
-				"(Username, PasswordHash, RegisterDate, RegisterIp) "
-				"VALUES ('%s', '%s', UTC_TIMESTAMP(), '%s');"
-				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_sPasswordHash.ClrStr(), aAddrStr);
+				"(Username, PasswordHash, Email, RegisterDate, RegisterIp) "
+				"VALUES ('%s', '%s', '%s', UTC_TIMESTAMP(), '%s');"
+				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_sPasswordHash.ClrStr(), m_sEmail.ClrStr(), aAddrStr);
 			pSqlServer->executeSql(aBuf);
 		}
 		catch (sql::SQLException &e)
@@ -2748,7 +2748,7 @@ public:
 	}
 };
 
-void CServer::Register(int ClientID, const char* pUsername, const char* pPassword)
+void CServer::Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail)
 {
 	if(m_aClients[ClientID].m_LogInstance >= 0)
 		return;
@@ -2757,7 +2757,7 @@ void CServer::Register(int ClientID, const char* pUsername, const char* pPasswor
 	mem_zero(aHash, sizeof(aHash));
 	Crypt(pPassword, (const unsigned char*) "d9", 1, 16, aHash);
 	
-	CSqlJob* pJob = new CSqlJob_Server_Register(this, ClientID, pUsername, aHash);
+	CSqlJob* pJob = new CSqlJob_Server_Register(this, ClientID, pUsername, aHash, pEmail);
 	m_aClients[ClientID].m_LogInstance = pJob->GetInstance();
 	pJob->Start();
 }

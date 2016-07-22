@@ -323,7 +323,7 @@ public:
 	virtual int IsClassChooserEnabled();
 	virtual bool IsClientLogged(int ClientID);
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
-	virtual void Register(int ClientID, const char* pUsername, const char* pPassword);
+	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail);
 
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
