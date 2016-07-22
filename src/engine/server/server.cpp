@@ -39,7 +39,7 @@
 #include <iostream>
 #include <engine/server/mapconverter.h>
 #include <engine/server/sql_job.h>
-#include <crypt.h>
+#include <engine/server/crypt.h>
 /* INFECTION MODIFICATION END *****************************************/
 
 #if defined(CONF_FAMILY_WINDOWS)
@@ -320,9 +320,15 @@ CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 	CSqlConnector::SetWriteServers(m_apSqlWriteServers);
 /* DDNET MODIFICATION END *********************************************/
 	
+	m_GameServerCmdLock = lock_create();
+	
 	Init();
 }
 
+CServer::~CServer()
+{
+	lock_destroy(m_GameServerCmdLock);
+}
 
 int CServer::TrySetClientName(int ClientID, const char *pName)
 {
@@ -349,7 +355,7 @@ int CServer::TrySetClientName(int ClientID, const char *pName)
 	for(int i = 0; i < MAX_CLIENTS; i++)
 		if(i != ClientID && m_aClients[i].m_State >= CClient::STATE_READY)
 		{
-			if(str_comp(pName, m_aClients[i].m_aName) == 0)
+			if(str_comp(pName, ClientName(i)) == 0)
 				return -1;
 		}
 
@@ -554,7 +560,7 @@ int CServer::GetClientInfo(int ClientID, CClientInfo *pInfo)
 
 	if(m_aClients[ClientID].m_State == CClient::STATE_INGAME)
 	{
-		pInfo->m_pName = m_aClients[ClientID].m_aName;
+		pInfo->m_pName = ClientName(ClientID);
 		pInfo->m_Latency = m_aClients[ClientID].m_Latency;
 		return 1;
 	}
@@ -572,8 +578,14 @@ const char *CServer::ClientName(int ClientID)
 {
 	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State == CServer::CClient::STATE_EMPTY)
 		return "(invalid)";
+		
 	if(m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME)
-		return m_aClients[ClientID].m_aName;
+	{
+		if(m_aClients[ClientID].m_UserID >= 0)
+			return m_aClients[ClientID].m_aUsername;
+		else
+			return m_aClients[ClientID].m_aName;
+	}
 	else
 		return "(connecting)";
 
@@ -802,9 +814,11 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 	pThis->m_aClients[ClientID].m_Authed = AUTHED_NO;
 	pThis->m_aClients[ClientID].m_AuthTries = 0;
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
-	pThis->m_aClients[ClientID].m_Logged = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
+	pThis->m_aClients[ClientID].m_UserID = -1;
+	pThis->m_aClients[ClientID].m_LogInstance = -1;
+	
 	pThis->m_aClients[ClientID].m_CustomSkin = 0;
 	pThis->m_aClients[ClientID].m_AlwaysRandom = 0;
 	pThis->m_aClients[ClientID].m_DefaultScoreMode = PLAYERSCOREMODE_SCORE;
@@ -838,6 +852,8 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
 	pThis->m_aClients[ClientID].m_Snapshots.PurgeAll();
 	pThis->m_aClients[ClientID].m_WaitingTime = 0;
+	pThis->m_aClients[ClientID].m_UserID = -1;
+	pThis->m_aClients[ClientID].m_LogInstance = -1;
 	return 0;
 }
 
@@ -1573,8 +1589,6 @@ int CServer::Run()
 					pNextMap++;
 				while(*pNextMap && IsSeparator(*pNextMap))
 					pNextMap++;
-
-				dbg_msg("InfClass", "map found");
 			
 				nbMaps++;
 			}
@@ -1766,6 +1780,18 @@ int CServer::Run()
 				}
 
 				GameServer()->OnTick();
+				
+				if(m_lGameServerCmds.size())
+				{
+					lock_wait(m_GameServerCmdLock);
+					for(int i=0; i<m_lGameServerCmds.size(); i++)
+					{
+						m_lGameServerCmds[i]->Execute(GameServer());
+						delete m_lGameServerCmds[i];
+					}
+					m_lGameServerCmds.clear();
+					lock_release(m_GameServerCmdLock);
+				} 
 			}
 
 			// snap game
@@ -1825,7 +1851,7 @@ int CServer::Run()
 
 	if(m_pCurrentMapData)
 		mem_free(m_pCurrentMapData);
-	
+		
 /* DDNET MODIFICATION START *******************************************/
 	for (int i = 0; i < MAX_SQLSERVERS; i++)
 	{
@@ -1915,7 +1941,7 @@ bool CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 				str_format(aBuf, sizeof(aBuf), "#%02i (%s) %s, [%s], cs:%i | ar:%i | language:%s",
 					i,
 					aAddrStr,
-					pThis->m_aClients[i].m_aName,
+					pThis->ClientName(i),
 					pAuthStr,
 					pThis->m_aClients[i].m_CustomSkin,
 					pThis->m_aClients[i].m_AlwaysRandom,
@@ -2447,76 +2473,292 @@ int CServer::IsClassChooserEnabled()
 
 bool CServer::IsClientLogged(int ClientID)
 {
-	return m_aClients[ClientID].m_Logged;
+	return m_aClients[ClientID].m_UserID >= 0;
 }
 
-void CServer::Login(int ClientID, const char* pUsername, const char* pPassword)
+void CServer::AddGameServerCmd(CGameServerCmd* pCmd)
 {
-	m_aClients[ClientID].m_Logged = true;
+	lock_wait(m_GameServerCmdLock);
+	m_lGameServerCmds.add(pCmd);
+	lock_release(m_GameServerCmdLock);
 }
 
-class CSqlJob_Server_Register : public CSqlJob
+class CGameServerCmd_SendChatTarget_Language : public CServer::CGameServerCmd
 {
 private:
-	IGameServer* m_pGameServer;
 	int m_ClientID;
-	char m_aName[16];
-	char m_aPasswordHash[32];
+	char m_aText[128];
 	
 public:
-	CSqlJob_Server_Register(IGameServer* pGameServer, int ClientID, const char* pName, const char* pPasswordHash)
+	CGameServerCmd_SendChatTarget_Language(int ClientID, const char* pText)
 	{
-		m_pGameServer = pGameServer;
 		m_ClientID = ClientID;
-		str_copy(m_aName, pName, sizeof(m_aName));
-		str_copy(m_aPasswordHash, pPasswordHash, sizeof(m_aPasswordHash));
+		str_copy(m_aText, pText, sizeof(m_aText));
+	}
+
+	virtual void Execute(IGameServer* pGameServer)
+	{
+		pGameServer->SendChatTarget_Language(m_ClientID, m_aText);
+	}
+};
+
+class CSqlJob_Server_Login : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	int m_ClientID;
+	CSqlString<64> m_sName;
+	CSqlString<64> m_sPasswordHash;
+	
+public:
+	CSqlJob_Server_Login(CServer* pServer, int ClientID, const char* pName, const char* pPasswordHash)
+	{
+		m_pServer = pServer;
+		m_ClientID = ClientID;
+		m_sName = CSqlString<64>(pName);
+		m_sPasswordHash = CSqlString<64>(pPasswordHash);
 	}
 
 	virtual bool Job(CSqlServer* pSqlServer)
 	{
 		char aBuf[512];
 		
-		//Check if the username is already taken
-		str_format(aBuf, sizeof(aBuf), 
-			"SELECT UserId FROM %s_Users "
-			"WHERE Username = '%s';"
-			, pSqlServer->GetPrefix(), m_aName);
-		pSqlServer->executeSqlQuery(aBuf);
+		try
+		{	
+			//Check for username/password
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT UserId FROM %s_Users "
+				"WHERE Username = '%s' AND PasswordHash = '%s';"
+				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_sPasswordHash.ClrStr());
+			pSqlServer->executeSqlQuery(aBuf);
 
-		if(pSqlServer->GetResults()->next())
+			if(pSqlServer->GetResults()->next())
+			{
+				//The client is still the same
+				if(m_pServer->m_aClients[m_ClientID].m_LogInstance == GetInstance())
+				{
+					int UserID = (int)pSqlServer->GetResults()->getInt("UserId");
+					m_pServer->m_aClients[m_ClientID].m_UserID = UserID;
+					str_copy(m_pServer->m_aClients[m_ClientID].m_aUsername, m_sName.Str(), sizeof(m_pServer->m_aClients[m_ClientID].m_aUsername));
+					
+					CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "You are now logged.");
+					m_pServer->AddGameServerCmd(pCmd);
+					
+					//If we are really unlucky, the client can deconnect and an another one connect during this small code
+					if(m_pServer->m_aClients[m_ClientID].m_LogInstance != GetInstance())
+					{
+						m_pServer->m_aClients[m_ClientID].m_UserID = -1;
+					}
+				}
+			}
+			else
+			{
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "Wrong username/password.");
+				m_pServer->AddGameServerCmd(pCmd);
+			}
+		}
+		catch (sql::SQLException &e)
 		{
-			m_pGameServer->SendChatTarget_Language(m_ClientID, "This user name is already taken by an existing account");
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the logging.");
+			m_pServer->AddGameServerCmd(pCmd);
+			dbg_msg("sql", "Can't check username/password (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+	
+	virtual void CleanInstanceRef()
+	{
+		m_pServer->m_aClients[m_ClientID].m_LogInstance = -1;
+	}
+};
+
+void CServer::Login(int ClientID, const char* pUsername, const char* pPassword)
+{
+	if(m_aClients[ClientID].m_LogInstance >= 0)
+		return;
+	
+	char aHash[64]; //Result
+	mem_zero(aHash, sizeof(aHash));
+	Crypt(pPassword, (const unsigned char*) "d9", 1, 16, aHash);
+	
+	CSqlJob* pJob = new CSqlJob_Server_Login(this, ClientID, pUsername, aHash);
+	m_aClients[ClientID].m_LogInstance = pJob->GetInstance();
+	pJob->Start();
+}
+
+class CSqlJob_Server_Register : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	int m_ClientID;
+	CSqlString<64> m_sName;
+	CSqlString<64> m_sPasswordHash;
+	
+public:
+	CSqlJob_Server_Register(CServer* pServer, int ClientID, const char* pName, const char* pPasswordHash)
+	{
+		m_pServer = pServer;
+		m_ClientID = ClientID;
+		m_sName = CSqlString<64>(pName);
+		m_sPasswordHash = CSqlString<64>(pPasswordHash);
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[512];
+		char aAddrStr[64];
+		
+		//Drop the registration if the client leave because we will not be able to detect register flooding
+		if(m_pServer->m_aClients[m_ClientID].m_LogInstance != GetInstance())
 			return true;
+		
+		net_addr_str(m_pServer->m_NetServer.ClientAddr(m_ClientID), aAddrStr, sizeof(aAddrStr), false);
+		
+		try
+		{
+			//Check for registration flooding
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT UserId FROM %s_Users "
+				"WHERE RegisterIp = '%s' AND TIMESTAMPDIFF(MINUTE, RegisterDate, UTC_TIMESTAMP()) < 60;"
+				, pSqlServer->GetPrefix(), aAddrStr);
+			pSqlServer->executeSqlQuery(aBuf);
+
+			dbg_msg("sql", aBuf);
+			
+			if(pSqlServer->GetResults()->next())
+			{
+				dbg_msg("infclass", "Registration flooding");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "Please wait 60 minutes before create an another account");
+				m_pServer->AddGameServerCmd(pCmd);
+				
+				return true;
+			}
+		}
+		catch (sql::SQLException &e)
+		{
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+			m_pServer->AddGameServerCmd(pCmd);
+			dbg_msg("sql", "Can't check username existance (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		try
+		{
+			//Check if the username is already taken
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT UserId FROM %s_Users "
+				"WHERE Username = '%s';"
+				, pSqlServer->GetPrefix(), m_sName.ClrStr());
+			pSqlServer->executeSqlQuery(aBuf);
+
+			if(pSqlServer->GetResults()->next())
+			{
+				dbg_msg("infclass", "User already taken");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "This user name is already taken by an existing account");
+				m_pServer->AddGameServerCmd(pCmd);
+				
+				return true;
+			}
+		}
+		catch (sql::SQLException &e)
+		{
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+			m_pServer->AddGameServerCmd(pCmd);
+			dbg_msg("sql", "Can't check username existance (MySQL Error: %s)", e.what());
+			
+			return false;
 		}
 		
 		//Create the account
+		try
+		{	
+			str_format(aBuf, sizeof(aBuf), 
+				"INSERT INTO %s_Users "
+				"(Username, PasswordHash, RegisterDate, RegisterIp) "
+				"VALUES ('%s', '%s', UTC_TIMESTAMP(), '%s');"
+				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_sPasswordHash.ClrStr(), aAddrStr);
+			pSqlServer->executeSql(aBuf);
+		}
+		catch (sql::SQLException &e)
+		{
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+			m_pServer->AddGameServerCmd(pCmd);
+			dbg_msg("sql", "Can't create new user (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
 		
-		str_format(aBuf, sizeof(aBuf), 
-			"INSERT INTO %s_Users "
-			"(Username, PasswordHash, SubscriptionDate) "
-			"VALUES ('%s', '%s', UTC_TIMESTAMP());"
-			, pSqlServer->GetPrefix(), m_aName, m_aPasswordHash);
-		pSqlServer->executeSqlQuery(aBuf);
+		//Get the new user
+		try
+		{	
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT UserId FROM %s_Users "
+				"WHERE Username = '%s' AND PasswordHash = '%s';"
+				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_sPasswordHash.ClrStr());
+			pSqlServer->executeSqlQuery(aBuf);
+
+			if(pSqlServer->GetResults()->next())
+			{
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "Your account has been created and you are now logged.");
+				m_pServer->AddGameServerCmd(pCmd);
+							
+				//The client is still the same
+				if(m_pServer->m_aClients[m_ClientID].m_LogInstance == GetInstance())
+				{
+					int UserID = (int)pSqlServer->GetResults()->getInt("UserId");
+					m_pServer->m_aClients[m_ClientID].m_UserID = UserID;
+					str_copy(m_pServer->m_aClients[m_ClientID].m_aUsername, m_sName.Str(), sizeof(m_pServer->m_aClients[m_ClientID].m_aUsername));
+					
+					//If we are really unlucky, the client can deconnect and an another one connect during this small code
+					if(m_pServer->m_aClients[m_ClientID].m_LogInstance != GetInstance())
+					{
+						m_pServer->m_aClients[m_ClientID].m_UserID = -1;
+					}
+				}
+				
+				return true;
+			}
+			else
+			{
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+				m_pServer->AddGameServerCmd(pCmd);
+				
+				return false;
+			}
+		}
+		catch (sql::SQLException &e)
+		{
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+			m_pServer->AddGameServerCmd(pCmd);
+			dbg_msg("sql", "Can't get the ID of the new user (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
 		
 		return true;
+	}
+	
+	virtual void CleanInstanceRef()
+	{
+		m_pServer->m_aClients[m_ClientID].m_LogInstance = -1;
 	}
 };
 
 void CServer::Register(int ClientID, const char* pUsername, const char* pPassword)
 {
-	//Create PasswordHash
-	struct crypt_data data;
-	data.initialized = 0;
-	
-	char aHash[32]; //Result
-	mem_zero(aHash, sizeof(aHash));
-	char* pCryptRes = crypt_r(pPassword, "d9", &data);
-	if(!pCryptRes)
+	if(m_aClients[ClientID].m_LogInstance >= 0)
 		return;
 	
-	dbg_msg("InfClass", "Hash:%s", aHash);
+	char aHash[64]; //Result
+	mem_zero(aHash, sizeof(aHash));
+	Crypt(pPassword, (const unsigned char*) "d9", 1, 16, aHash);
 	
-	CSqlJob* pJob = new CSqlJob_Server_Register(GameServer(), ClientID, pUsername, aHash);
+	CSqlJob* pJob = new CSqlJob_Server_Register(this, ClientID, pUsername, aHash);
+	m_aClients[ClientID].m_LogInstance = pJob->GetInstance();
 	pJob->Start();
 }
 

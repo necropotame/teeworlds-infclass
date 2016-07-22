@@ -127,7 +127,6 @@ public:
 		int m_Score;
 		int m_Authed;
 		int m_AuthTries;
-		int m_Logged;
 
 		const IConsole::CCommandInfo *m_pRconCmdToSend;
 
@@ -143,6 +142,11 @@ public:
 		int m_Language;
 		int m_WaitingTime;
 		int m_WasInfected;
+		
+		//Login
+		int m_LogInstance;
+		int m_UserID;
+		char m_aUsername[MAX_NAME_LENGTH];
 /* INFECTION MODIFICATION END *****************************************/
 	};
 
@@ -179,6 +183,7 @@ public:
 	CMapChecker m_MapChecker;
 
 	CServer();
+	virtual ~CServer();
 
 	int TrySetClientName(int ClientID, const char *pName);
 
@@ -323,6 +328,21 @@ public:
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
 	bool InitCaptcha();
+	
+public:
+	class CGameServerCmd
+	{
+	public:
+		virtual ~CGameServerCmd() {};
+		virtual void Execute(IGameServer* pGameServer) = 0;
+	};
+
+private:
+	LOCK m_GameServerCmdLock;
+	array<CGameServerCmd*> m_lGameServerCmds;
+
+public:
+	void AddGameServerCmd(CGameServerCmd* pCmd);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

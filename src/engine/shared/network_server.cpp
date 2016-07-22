@@ -303,7 +303,6 @@ const char* CNetServer::GetCaptcha(const NETADDR* pAddr, bool Debug)
 	{
 		char aBuf[64];
 		net_addr_str(pAddr, aBuf, 64, 0);
-		dbg_msg("InfClass", "GetCaptcha: %s -> %d -> %d -> %s", aBuf, IpHash, CaptchaId, m_lCaptcha[CaptchaId].m_aText);
 	}
 	
 	return m_lCaptcha[CaptchaId].m_aText;

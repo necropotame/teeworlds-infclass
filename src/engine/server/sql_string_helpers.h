@@ -13,6 +13,7 @@ void agoTimeToString(int agoTime, char agoString[]);
 
 void getTimeStamp(char* dest, unsigned int size);
 
+}
 
 template<unsigned int size>
 class CSqlString
@@ -24,7 +25,7 @@ public:
 	{
 		str_copy(m_aString, pStr, size);
 		str_copy(m_aClearString, pStr, size);
-		ClearString(m_aClearString, sizeof(m_aClearString));
+		sqlstr::ClearString(m_aClearString, sizeof(m_aClearString));
 	}
 
 	const char* Str() const { return m_aString; }
@@ -34,7 +35,7 @@ public:
 	{
 		str_copy(m_aString, pStr, size);
 		str_copy(m_aClearString, pStr, size);
-		ClearString(m_aClearString, sizeof(m_aClearString));
+		sqlstr::ClearString(m_aClearString, sizeof(m_aClearString));
 		return *this;
 	}
 
@@ -42,7 +43,5 @@ private:
 	char m_aString[size];
 	char m_aClearString[size * 2 - 1];
 };
-
-}
 
 #endif

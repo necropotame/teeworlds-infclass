@@ -401,7 +401,6 @@ static void Evolve(CNetObj_Character *pCharacter, int Tick)
 {
 	CWorldCore TempWorld;
 	CCharacterCore::CParams CoreTickParams(&TempWorld.m_Tuning);
-	dbg_msg("InfClass", "Evolve, Gravity, %f", (float)CoreTickParams.m_pTuningParams->m_Gravity);
 	CCharacterCore TempCore;
 	mem_zero(&TempCore, sizeof(TempCore));
 	TempCore.Init(&TempWorld, g_GameClient.Collision());
@@ -514,8 +513,6 @@ void CGameClient::OnMessage(int MsgId, CUnpacker *pUnpacker)
 		// apply new tuning
 		m_Tuning = NewTuning;
 		
-		dbg_msg("InfClass", "NETMSGTYPE_SV_TUNEPARAMS, Gravity %f", (float) m_Tuning.m_Gravity);
-
 		return;
 	}
 
@@ -952,8 +949,7 @@ void CGameClient::OnPredict()
 			m_PredictedPrevChar = *World.m_apCharacters[m_Snap.m_LocalClientID];
 
 		CCharacterCore::CParams CoreParams(&World.m_Tuning);
-		dbg_msg("InfClass", "OnPredict, Gravity, %f", (float)CoreParams.m_pTuningParams->m_Gravity);
-			
+
 		// first calculate where everyone should move
 		for(int c = 0; c < MAX_CLIENTS; c++)
 		{

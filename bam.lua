@@ -225,7 +225,8 @@ function build(settings)
 			client_settings.link.libs:Add("GL")
 			client_settings.link.libs:Add("GLU")
 		end
-		server_settings.link.libs:Add("crypt")
+		server_settings.link.libs:Add("ssl")
+		server_settings.link.libs:Add("crypto")
 
 	elseif family == "windows" then
 		client_settings.link.libs:Add("opengl32")

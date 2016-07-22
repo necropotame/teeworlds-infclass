@@ -172,9 +172,10 @@ void CSqlServer::CreateTables()
 		str_format(aBuf, sizeof(aBuf),
 				"CREATE TABLE IF NOT EXISTS %s_Users ("
 					"UserId INT NOT NULL AUTO_INCREMENT, "
-					"Username VARCHAR(128) BINARY NOT NULL, "
-					"PasswordHash VARCHAR(128) BINARY NOT NULL, "
+					"Username VARCHAR(64) BINARY NOT NULL, "
+					"PasswordHash VARCHAR(64) BINARY NOT NULL, "
 					"RegisterDate DATETIME NOT NULL, "
+					"RegisterIp VARCHAR(64) NOT NULL, " //The IP is kept in order to prevent registration flooding
 					"PRIMARY KEY (UserId)"
 				") CHARACTER SET utf8 ;"
 			, m_aPrefix);

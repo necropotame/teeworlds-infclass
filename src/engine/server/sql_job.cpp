@@ -21,6 +21,7 @@ void CSqlJob::Start(bool ReadOnly)
 void CSqlJob::Exec(void* pData)
 {
 	CSqlJob* pSelf = (CSqlJob*) pData;
+	
 	CSqlConnector connector;
 
 	bool Success = false;
@@ -35,5 +36,7 @@ void CSqlJob::Exec(void* pData)
 		connector.SqlServer()->Disconnect();
 	}
 	
+	pSelf->CleanInstanceRef();
+
 	delete pSelf;
 }

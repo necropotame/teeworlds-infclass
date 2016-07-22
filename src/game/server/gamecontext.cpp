@@ -2685,7 +2685,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("language", "s<fr|de|uk|ru|it|es|ar|hu|pl|nl|la>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
 	
-	Console()->Register("fban", "s<playername>", CFGFLAG_CHAT, ConFriendlyBan, this, "Friendly version of ban cmd");
+	Console()->Register("fban", "r<playername>", CFGFLAG_CHAT, ConFriendlyBan, this, "Friendly version of ban cmd");
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);

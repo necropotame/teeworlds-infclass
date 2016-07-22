@@ -94,8 +94,6 @@ int CConsole::ParseArgs(CResult *pResult, const char *pFormat)
 	int Error = 0;
 
 	pStr = pResult->m_pArgsStart;
-
-	dbg_msg("InfClass", "Line:%s, %s", pResult->m_pArgsStart, pFormat);
 				
 	while(1)
 	{
