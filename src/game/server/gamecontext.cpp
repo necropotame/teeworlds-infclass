@@ -774,6 +774,9 @@ void CGameContext::OnTick()
 {
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
+		if(!m_apPlayers[i])
+			continue;
+		
 		if(m_BroadcastStates[i].m_HighPriorityTick > 0)
 		{
 			m_BroadcastStates[i].m_HighPriorityTick--;
@@ -828,24 +831,34 @@ void CGameContext::OnTick()
 	
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
-		//Send broadcast only if the message is different, or to fight auto-fading
-		if(
-			str_comp(m_BroadcastStates[i].m_PrevMessage, m_BroadcastStates[i].m_NextMessage) != 0 ||
-			m_BroadcastStates[i].m_NoChangeTick > Server()->TickSpeed()
-		)
+		if(!m_apPlayers[i])
 		{
-			CNetMsg_Sv_Broadcast Msg;
-			Msg.m_pMessage = m_BroadcastStates[i].m_NextMessage;
-			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
-			
-			str_copy(m_BroadcastStates[i].m_PrevMessage, m_BroadcastStates[i].m_NextMessage, sizeof(m_BroadcastStates[i].m_PrevMessage));
-			
 			m_BroadcastStates[i].m_NoChangeTick = 0;
+			m_BroadcastStates[i].m_HighPriorityTick = 0;
+			m_BroadcastStates[i].m_PrevMessage[0] = 0;
+			m_BroadcastStates[i].m_NextMessage[0] = 0;
 		}
 		else
-			m_BroadcastStates[i].m_NoChangeTick++;
-		
-		m_BroadcastStates[i].m_NextMessage[0] = 0;
+		{
+			//Send broadcast only if the message is different, or to fight auto-fading
+			if(
+				str_comp(m_BroadcastStates[i].m_PrevMessage, m_BroadcastStates[i].m_NextMessage) != 0 ||
+				m_BroadcastStates[i].m_NoChangeTick > Server()->TickSpeed()
+			)
+			{
+				CNetMsg_Sv_Broadcast Msg;
+				Msg.m_pMessage = m_BroadcastStates[i].m_NextMessage;
+				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+				
+				str_copy(m_BroadcastStates[i].m_PrevMessage, m_BroadcastStates[i].m_NextMessage, sizeof(m_BroadcastStates[i].m_PrevMessage));
+				
+				m_BroadcastStates[i].m_NoChangeTick = 0;
+			}
+			else
+				m_BroadcastStates[i].m_NoChangeTick++;
+			
+			m_BroadcastStates[i].m_NextMessage[0] = 0;
+		}
 	}
 	
 	Server()->RoundStatistics()->UpdateNumberOfPlayers(NumActivePlayers);
@@ -1023,6 +1036,11 @@ void CGameContext::OnClientConnected(int ClientID)
 	CNetMsg_Sv_Motd Msg;
 	Msg.m_pMessage = g_Config.m_SvMotd;
 	Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
+	
+	m_BroadcastStates[ClientID].m_NoChangeTick = 0;
+	m_BroadcastStates[ClientID].m_HighPriorityTick = 0;
+	m_BroadcastStates[ClientID].m_PrevMessage[0] = 0;
+	m_BroadcastStates[ClientID].m_NextMessage[0] = 0;
 }
 
 void CGameContext::OnClientDrop(int ClientID, int Type, const char *pReason)
