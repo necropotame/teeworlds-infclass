@@ -2790,9 +2790,9 @@ public:
 		
 		//Get the worst score in the database
 		str_format(aBuf, sizeof(aBuf), 
-			"INSERT INTO %s_infc_BestScore "
+			"INSERT INTO %s_infc_RoundScore "
 			"(UserId, ScoreType, ScoreDate, Score) "
-			"VALUES ('%s', '%s', UTC_TIMESTAMP(), '%s');"
+			"VALUES ('%d', '%d', UTC_TIMESTAMP(), '%d');"
 			, pSqlServer->GetPrefix(), m_UserID, ScoreType, Score);
 		pSqlServer->executeSql(aBuf);
 	}
