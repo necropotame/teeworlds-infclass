@@ -129,5 +129,5 @@ bool CRoundStatistics::IsValidePlayer(int ClientID)
 	
 bool CRoundStatistics::IsValideRound()
 {
-	return m_NumPlayersMin >= 2;
+	return m_NumPlayersMin >= 6;
 }
