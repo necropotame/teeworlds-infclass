@@ -4,6 +4,7 @@
 #define ENGINE_SERVER_SERVER_H
 
 #include <engine/server.h>
+#include <engine/server/roundstatistics.h>
 #include <game/server/classes.h>
 
 /* DDNET MODIFICATION START *******************************************/
@@ -124,7 +125,6 @@ public:
 		char m_aName[MAX_NAME_LENGTH];
 		char m_aClan[MAX_CLAN_LENGTH];
 		int m_Country;
-		int m_Score;
 		int m_Authed;
 		int m_AuthTries;
 
@@ -134,7 +134,6 @@ public:
 		void Reset(bool ResetScore=true);
 		
 		int m_NbRound;
-		int m_NbInfection;
 		
 		int m_CustomSkin;
 		int m_AlwaysRandom;
@@ -190,7 +189,6 @@ public:
 	virtual void SetClientName(int ClientID, const char *pName);
 	virtual void SetClientClan(int ClientID, char const *pClan);
 	virtual void SetClientCountry(int ClientID, int Country);
-	virtual void SetClientScore(int ClientID, int Score);
 
 	void Kick(int ClientID, const char *pReason);
 
@@ -312,13 +310,8 @@ public:
 	virtual int GetClassAvailability(int CID);
 	virtual void SetClassAvailability(int CID, int n);
 	
-	virtual int GetClientNbInfection(int ClientID);
-	virtual void SetClientNbInfection(int ClientID, int Score);
-	
 	virtual int GetClientNbRound(int ClientID);
 	virtual void SetClientNbRound(int ClientID, int Score);
-	
-	virtual int GetClientScore(int ClientID);
 	
 	virtual int IsClassChooserEnabled();
 	virtual bool IsClientLogged(int ClientID);
@@ -340,9 +333,14 @@ public:
 private:
 	LOCK m_GameServerCmdLock;
 	array<CGameServerCmd*> m_lGameServerCmds;
+	CRoundStatistics m_RoundStatistics;
 
 public:
 	void AddGameServerCmd(CGameServerCmd* pCmd);
+	
+	virtual CRoundStatistics* RoundStatistics() { return &m_RoundStatistics; }
+	virtual void OnRoundStart();
+	virtual void OnRoundEnd();
 /* INFECTION MODIFICATION END *****************************************/
 };
 

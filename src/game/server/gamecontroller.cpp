@@ -140,6 +140,9 @@ void IGameController::EndRound()
 	GameServer()->m_World.m_Paused = true;
 	m_GameOverTick = Server()->Tick();
 	m_SuddenDeath = 0;
+	
+	//Send score to the server
+	Server()->OnRoundEnd();
 }
 
 void IGameController::ResetGame()
@@ -171,9 +174,11 @@ void IGameController::StartRound()
 {	
 	ResetGame();
 	
+	Server()->OnRoundStart();
+	
 /* INFECTION MODIFICATION START ***************************************/
 	for(int i = 0; i < MAX_CLIENTS; i++)
-	{
+	{		
 		if(GameServer()->m_apPlayers[i])
 		{
 			GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);			
@@ -332,15 +337,6 @@ int IGameController::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *
 	// do scoreing
 	if(!pKiller || Weapon == WEAPON_GAME)
 		return 0;
-	if(pKiller == pVictim->GetPlayer())
-		pVictim->GetPlayer()->IncreaseScore(-1); // suicide
-	else
-	{
-		if(IsTeamplay() && pVictim->GetPlayer()->GetTeam() == pKiller->GetTeam())
-			pKiller->IncreaseScore(-1); // teamkill
-		else
-			pKiller->IncreaseScore(1); // normal kill
-	}
 	if(Weapon == WEAPON_SELF)
 		pVictim->GetPlayer()->m_RespawnTick = Server()->Tick()+Server()->TickSpeed()*3.0f;
 	return 0;
@@ -426,27 +422,14 @@ void IGameController::Tick()
 		}
 		else
 		{
-			int ScoreMode = PLAYERSCOREMODE_ROUNDSCORE;
+			int ScoreMode = PLAYERSCOREMODE_SCORE;
 			if((Server()->Tick() - m_GameOverTick) > Server()->TickSpeed() * 8)
 			{
-				//Random stats
-				int Rnd = m_RoundCount%3;
-				switch(Rnd)
-				{
-					case 0:
-						ScoreMode = PLAYERSCOREMODE_SCOREPERROUND;
-						break;
-					case 1:
-						ScoreMode = PLAYERSCOREMODE_INFECTION;
-						break;
-					case 2:
-						ScoreMode = PLAYERSCOREMODE_INFECTIONPERROUND;
-						break;
-				}
+				ScoreMode = PLAYERSCOREMODE_TIME;
 			}
 			else if((Server()->Tick() - m_GameOverTick) > Server()->TickSpeed() * 4)
 			{
-				ScoreMode = PLAYERSCOREMODE_TIME;
+				ScoreMode = PLAYERSCOREMODE_SCORE;
 			}
 			
 			for(int i = 0; i < MAX_CLIENTS; i++)
@@ -476,8 +459,7 @@ void IGameController::Tick()
 			if(GameServer()->m_apPlayers[i] && GameServer()->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
 			{
 				aT[GameServer()->m_apPlayers[i]->GetTeam()]++;
-				aPScore[i] = GameServer()->m_apPlayers[i]->m_Score*Server()->TickSpeed()*60.0f/
-					(Server()->Tick()-GameServer()->m_apPlayers[i]->m_ScoreStartTick);
+				aPScore[i] = 0.0;
 				aTScore[GameServer()->m_apPlayers[i]->GetTeam()] += aPScore[i];
 			}
 		}
@@ -726,19 +708,6 @@ void IGameController::DoWincheck()
 			// gather some stats
 			int Topscore = 0;
 			int TopscoreCount = 0;
-			for(int i = 0; i < MAX_CLIENTS; i++)
-			{
-				if(GameServer()->m_apPlayers[i])
-				{
-					if(GameServer()->m_apPlayers[i]->m_Score > Topscore)
-					{
-						Topscore = GameServer()->m_apPlayers[i]->m_Score;
-						TopscoreCount = 1;
-					}
-					else if(GameServer()->m_apPlayers[i]->m_Score == Topscore)
-						TopscoreCount++;
-				}
-			}
 
 			// check score win condition
 			if((g_Config.m_SvScorelimit > 0 && Topscore >= g_Config.m_SvScorelimit) ||

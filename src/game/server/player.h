@@ -83,7 +83,6 @@ public:
 
 	int m_RespawnTick;
 	int m_DieTick;
-	int m_Score;
 	int m_ScoreStartTick;
 	bool m_ForceBalanced;
 	int m_LastActionTick;
@@ -121,7 +120,6 @@ private:
 private:
 	int m_class;
 	int m_NbRound;
-	int m_NbInfection;
 	int m_ScoreMode;
 	int m_DefaultScoreMode;
 	int m_Language;
@@ -134,9 +132,7 @@ public:
 	bool m_knownClass[NB_PLAYERCLASS];
 	int m_InfectionTick;
 	
-	void IncreaseScore(int Points);
 	void IncreaseNbRound();
-	void IncreaseNbInfection(int Points);
 	int GetScoreMode();
 	void SetScoreMode(int Mode);
 	

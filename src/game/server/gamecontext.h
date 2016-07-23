@@ -11,6 +11,7 @@
 #include <game/layers.h>
 #include <game/voting.h>
 #include <game/localization.h>
+#include <game/server/classes.h>
 
 #include "eventhandler.h"
 #include "gamecontroller.h"
@@ -241,7 +242,6 @@ private:
 		int m_SnapID;
 	};
 	array<LaserDotState> m_LaserDots;
-
 /* INFECTION MODIFICATION END *****************************************/
 };
 

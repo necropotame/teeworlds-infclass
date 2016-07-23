@@ -8,6 +8,19 @@
 #include <cppconn/exception.h>
 #include <cppconn/statement.h>
 
+enum
+{
+	//Never, never, never, ..., NEVER change these values
+	//otherwise, the statistics in the database will be corrupted
+	SQL_SCORETYPE_ENGINEER_SCORE=0,
+	SQL_SCORETYPE_SOLDIER_SCORE=1,
+	SQL_SCORETYPE_SCIENTIST_SCORE=2,
+	SQL_SCORETYPE_MEDIC_SCORE=3,
+	SQL_SCORETYPE_NINJA_SCORE=4,
+	SQL_SCORETYPE_MERCENARY_SCORE=5,
+	SQL_SCORETYPE_SNIPER_SCORE=6,
+};
+
 class CSqlServer
 {
 public:

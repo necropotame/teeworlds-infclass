@@ -5,6 +5,7 @@
 #include <game/server/player.h>
 #include <engine/shared/config.h>
 #include <engine/server/mapconverter.h>
+#include <engine/server/roundstatistics.h>
 #include <game/mapitems.h>
 #include <time.h>
 #include <iostream>
@@ -372,7 +373,8 @@ void CGameControllerMOD::Tick()
 						
 						if(!pPlayer->IsInfected())
 						{
-							pPlayer->IncreaseScore(5);
+							//TAG_SCORE
+							Server()->RoundStatistics()->OnScoreEvent(i, SCOREEVENT_HUMAN_SURVIVE, pPlayer->GetClass());
 							pPlayer->m_WinAsHuman++;
 							
 							GameServer()->SendChatTarget_Language(i, "You have survived, +5 points");
@@ -493,44 +495,42 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 	if(!pKiller || Weapon == WEAPON_GAME)
 		return 0;
 		
-	if(pKiller == pVictim->GetPlayer())
-	{
-		if(!pVictim->IsInfected())
-		{
-			pVictim->GetPlayer()->IncreaseScore(-1); // suicide
-		}
-	}
-	else if(pKiller->IsInfected())
+	if(pKiller->IsInfected())
 	{
 		CPlayer* pVictimPlayer = pVictim->GetPlayer();
 		if(pVictimPlayer)
 		{
-			if(!pVictim->IsInfected() && Weapon == WEAPON_NINJA)
+			if(!pVictim->IsInfected())
 			{
 				GameServer()->SendChatTarget_Language_s(pKiller->GetCID(), "You have infected %s, +3 points", Server()->ClientName(pVictimPlayer->GetCID()));
-				
-				pKiller->IncreaseScore(3);
-				pKiller->IncreaseNbInfection(1);
+				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_INFECTION, pKiller->GetClass());
 			}
 		}
 	}
-	else if(!pKiller->IsInfected())
+	else
 	{
+		if(pKiller == pVictim->GetPlayer())
+		{
+			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_HUMAN_SUICIDE, pKiller->GetClass());
+		}
 		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
 		{
 			GameServer()->SendChatTarget_Language(pKiller->GetCID(), "You have killed a witch, +5 points");
-			pKiller->IncreaseScore(5);
+			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_WITCH, pKiller->GetClass());
 		}
-		else pKiller->IncreaseScore(1);
-		
-		//Add bonus point for ninja
-		if(pVictim->IsFrozen() && pVictim->m_LastFreezer >= 0)
+		else if(pVictim->IsInfected())
 		{
-			CPlayer* pFreezer = GameServer()->m_apPlayers[pVictim->m_LastFreezer];
-			if(pFreezer)
-			{
-				pFreezer->IncreaseScore(1);
-			}
+			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_INFECTED, pKiller->GetClass());
+		}
+	}
+		
+	//Add bonus point for ninja
+	if(pVictim->IsInfected() && pVictim->IsFrozen() && pVictim->m_LastFreezer >= 0 && pVictim->m_LastFreezer != pKiller->GetCID())
+	{
+		CPlayer* pFreezer = GameServer()->m_apPlayers[pVictim->m_LastFreezer];
+		if(pFreezer)
+		{
+			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_HELP_FREEZE, pKiller->GetClass());
 		}
 	}
 	

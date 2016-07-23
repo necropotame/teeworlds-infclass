@@ -6,6 +6,7 @@
 #include <new>
 #include <engine/shared/config.h>
 #include <engine/server/mapconverter.h>
+#include <engine/server/roundstatistics.h>
 #include <game/server/gamecontext.h>
 #include <game/mapitems.h>
 #include <iostream>
@@ -1874,9 +1875,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		m_pPlayer->StartInfection();
 		
 		GameServer()->SendChatTarget_Language_s(From, "You have infected %s, +3 points", Server()->ClientName(m_pPlayer->GetCID()));
-	
-		GameServer()->m_apPlayers[From]->IncreaseScore(3);
-		GameServer()->m_apPlayers[From]->IncreaseNbInfection(1);
+		Server()->RoundStatistics()->OnScoreEvent(From, SCOREEVENT_INFECTION, GameServer()->m_apPlayers[From]->GetClass());
 	
 		CNetMsg_Sv_KillMsg Msg;
 		Msg.m_Killer = From;

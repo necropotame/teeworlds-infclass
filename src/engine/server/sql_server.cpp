@@ -182,6 +182,19 @@ void CSqlServer::CreateTables()
 			, m_aPrefix);
 		executeSql(aBuf);
 
+		str_format(aBuf, sizeof(aBuf),
+				"CREATE TABLE IF NOT EXISTS %s_infc_RoundScore ("
+					"RoundScoreId INT NOT NULL AUTO_INCREMENT, "
+					"UserId INT NOT NULL, "
+					"ScoreType INT NOT NULL, "
+					"ScoreDate DATETIME NOT NULL, "
+					"Score INT NOT NULL, "
+					"PRIMARY KEY (RoundScoreId),"
+					"FOREIGN KEY (UserId) REFERENCES %s_Users(UserId)"
+				") CHARACTER SET utf8 ;"
+			, m_aPrefix, m_aPrefix);
+		executeSql(aBuf);
+
 		dbg_msg("sql", "Tables were created successfully");
 	}
 	catch (sql::SQLException &e)

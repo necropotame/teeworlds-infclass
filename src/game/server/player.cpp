@@ -4,7 +4,8 @@
 #include <iostream>
 #include <engine/shared/config.h>
 #include "player.h"
-#include "engine/shared/network.h"
+#include <engine/shared/network.h>
+#include <engine/server/roundstatistics.h>
 
 
 MACRO_ALLOC_POOL_ID_IMPL(CPlayer, MAX_CLIENTS)
@@ -26,9 +27,6 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	
 /* INFECTION MODIFICATION START ***************************************/
 	m_Authed = IServer::AUTHED_NO;
-	m_Score = Server()->GetClientScore(ClientID);
-	m_NbRound = Server()->GetClientNbRound(ClientID);
-	m_NbInfection = Server()->GetClientNbInfection(ClientID);
 	m_ScoreRound = 0;
 	m_ScoreMode = PLAYERSCOREMODE_SCORE;
 	m_WinAsHuman = 0;
@@ -64,9 +62,6 @@ void CPlayer::Tick()
 	if(!Server()->ClientIngame(m_ClientID))
 		return;
 
-	Server()->SetClientScore(m_ClientID, m_Score);
-	Server()->SetClientNbRound(m_ClientID, m_NbRound);
-	Server()->SetClientNbInfection(m_ClientID, m_NbInfection);
 	Server()->SetClientLanguage(m_ClientID, m_Language);
 
 	// do latency stuff
@@ -211,16 +206,7 @@ void CPlayer::Snap(int SnappingClient)
 	}
 	else
 	{
-		if(SnapScoreMode == PLAYERSCOREMODE_ROUNDSCORE)
-		{
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%s%i pt", (m_ScoreRound > 0 ? "+" : ""), m_ScoreRound);
-			
-			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
-			
-			PlayerInfoScore = m_ScoreRound;
-		}
-		else if(SnapScoreMode == PLAYERSCOREMODE_TIME)
+		if(SnapScoreMode == PLAYERSCOREMODE_TIME)
 		{
 			float RoundDuration = static_cast<float>(m_HumanTime/((float)Server()->TickSpeed()))/60.0f;
 			int Minutes = static_cast<int>(RoundDuration);
@@ -232,95 +218,55 @@ void CPlayer::Snap(int SnappingClient)
 			
 			PlayerInfoScore = m_HumanTime/Server()->TickSpeed();
 		}
-		//~ else if(SnapScoreMode == PLAYERSCOREMODE_NBROUND)
-		//~ {
-			//~ char aBuf[512];
-			//~ str_format(aBuf, sizeof(aBuf), "%i round%s", m_NbRound, (m_NbRound >1 ? "s" : ""));
-			//~ 
-			//~ StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
-			//~ 
-			//~ PlayerInfoScore = m_NbRound;
-		//~ }
-		else if(SnapScoreMode == PLAYERSCOREMODE_SCOREPERROUND)
-		{
-			float ScorePerRound = static_cast<float>(m_Score)/static_cast<float>(m_NbRound);
-			
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%.2f pt/rnd", ScorePerRound);
-			
-			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
-			
-			PlayerInfoScore = static_cast<int>(ScorePerRound*10);
-		}
-		else if(SnapScoreMode == PLAYERSCOREMODE_INFECTION)
-		{
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%i inf", m_NbInfection);
-			
-			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
-			
-			PlayerInfoScore = m_NbInfection;
-		}
-		else if(SnapScoreMode == PLAYERSCOREMODE_INFECTIONPERROUND)
-		{
-			float InfPerRound = static_cast<float>(m_NbInfection)/static_cast<float>(m_NbRound);
-			
-			char aBuf[512];
-			str_format(aBuf, sizeof(aBuf), "%.2f inf/rnd", InfPerRound);
-			
-			StrToInts(&pClientInfo->m_Clan0, 3, aBuf);
-			
-			PlayerInfoScore = static_cast<int>(InfPerRound*10);
-		}
 		else
 		{
 			char aClanName[12];
 			switch(GetClass())
 			{
 				case PLAYERCLASS_ENGINEER:
-					str_format(aClanName, sizeof(aClanName), "%s%sEngineer", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sEngineer", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SOLDIER:
-					str_format(aClanName, sizeof(aClanName), "%s%sSoldier", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sSoldier", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_MERCENARY:
-					str_format(aClanName, sizeof(aClanName), "%s%sMercenary", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sMercenary", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SNIPER:
-					str_format(aClanName, sizeof(aClanName), "%s%sSniper", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sSniper", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SCIENTIST:
-					str_format(aClanName, sizeof(aClanName), "%s%sScientist", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sScientist", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_MEDIC:
-					str_format(aClanName, sizeof(aClanName), "%s%sMedic", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sMedic", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_NINJA:
-					str_format(aClanName, sizeof(aClanName), "%s%sNinja", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sNinja", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SMOKER:
-					str_format(aClanName, sizeof(aClanName), "%s%sSmoker", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sSmoker", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_BOOMER:
-					str_format(aClanName, sizeof(aClanName), "%s%sBoomer", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sBoomer", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_HUNTER:
-					str_format(aClanName, sizeof(aClanName), "%s%sHunter", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sHunter", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_GHOST:
-					str_format(aClanName, sizeof(aClanName), "%s%sGhost", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sGhost", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_SPIDER:
-					str_format(aClanName, sizeof(aClanName), "%s%sSpider", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sSpider", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_UNDEAD:
-					str_format(aClanName, sizeof(aClanName), "%s%sUndead", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sUndead", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_WITCH:
-					str_format(aClanName, sizeof(aClanName), "%s%sWitch", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%sWitch", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				default:
-					str_format(aClanName, sizeof(aClanName), "%s%s", m_WinAsHuman ? "*" : " ", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_format(aClanName, sizeof(aClanName), "%s?????", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 			}
 			
 			StrToInts(&pClientInfo->m_Clan0, 3, aClanName);
@@ -384,7 +330,7 @@ void CPlayer::Snap(int SnappingClient)
 				}
 			}
 			else
-				PlayerInfoScore = m_Score;
+				PlayerInfoScore = Server()->RoundStatistics()->PlayerScore(m_ClientID);
 		}
 	}
 	
@@ -721,20 +667,9 @@ bool CPlayer::IsKownClass(int c)
 	return m_knownClass[c];
 }
 
-void CPlayer::IncreaseScore(int Points)
-{
-	m_Score += Points;
-	m_ScoreRound += Points;
-}
-
 void CPlayer::IncreaseNbRound()
 {
 	m_NbRound++;
-}
-
-void CPlayer::IncreaseNbInfection(int Points)
-{
-	m_NbInfection++;
 }
 
 int CPlayer::GetScoreMode()

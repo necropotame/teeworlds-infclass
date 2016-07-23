@@ -39,10 +39,6 @@ enum
 {
 	PLAYERSCOREMODE_CLASS = 0,
 	PLAYERSCOREMODE_SCORE,
-	PLAYERSCOREMODE_ROUNDSCORE,
-	PLAYERSCOREMODE_SCOREPERROUND,
-	PLAYERSCOREMODE_INFECTION,
-	PLAYERSCOREMODE_INFECTIONPERROUND,
 	PLAYERSCOREMODE_TIME,
 	NB_PLAYERSCOREMODE,
 };
@@ -119,7 +115,6 @@ public:
 	virtual void SetClientName(int ClientID, char const *pName) = 0;
 	virtual void SetClientClan(int ClientID, char const *pClan) = 0;
 	virtual void SetClientCountry(int ClientID, int Country) = 0;
-	virtual void SetClientScore(int ClientID, int Score) = 0;
 
 	virtual int SnapNewID() = 0;
 	virtual void SnapFreeID(int ID) = 0;
@@ -143,13 +138,8 @@ public:
 	virtual int IsClientInfectedBefore(int ClientID) = 0;
 	virtual void InfecteClient(int ClientID) = 0;
 	
-	virtual int GetClientScore(int ClientID) = 0;
-	
 	virtual int GetClientNbRound(int ClientID) = 0;
 	virtual void SetClientNbRound(int ClientID, int Score) = 0;
-	
-	virtual int GetClientNbInfection(int ClientID) = 0;
-	virtual void SetClientNbInfection(int ClientID, int Score) = 0;
 	
 	virtual int GetClientCustomSkin(int ClientID) = 0;
 	virtual void SetClientCustomSkin(int ClientID, int Value) = 0;
@@ -182,6 +172,11 @@ public:
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail) = 0;
 	
 	virtual void Ban(int i, int Seconds, const char* pReason) = 0;
+
+public:
+	virtual class CRoundStatistics* RoundStatistics() = 0;
+	virtual void OnRoundStart() = 0;
+	virtual void OnRoundEnd() = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

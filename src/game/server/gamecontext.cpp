@@ -6,6 +6,7 @@
 #include <engine/map.h>
 #include <engine/console.h>
 #include <engine/storage.h>
+#include <engine/server/roundstatistics.h>
 #include "gamecontext.h"
 #include <game/version.h>
 #include <game/collision.h>
@@ -793,10 +794,16 @@ void CGameContext::OnTick()
 	//if(world.paused) // make sure that the game object always updates
 	m_pController->Tick();
 
+	int NumActivePlayers = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		if(m_apPlayers[i])
 		{
+			if(m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
+				NumActivePlayers++;
+			
+			Server()->RoundStatistics()->UpdatePlayer(i, m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS);
+			
 			m_apPlayers[i]->Tick();
 			m_apPlayers[i]->PostTick();
 			
@@ -822,6 +829,8 @@ void CGameContext::OnTick()
 			}
 		}
 	}
+	
+	Server()->RoundStatistics()->UpdateNumberOfPlayers(NumActivePlayers);
 	
 /* INFECTION MODIFICATION START ***************************************/
 	//Clean old dots
@@ -984,6 +993,8 @@ void CGameContext::OnClientConnected(int ClientID)
 	{
 		m_apPlayers[ClientID]->IncreaseNbRound();
 	}
+	
+	Server()->RoundStatistics()->ResetPlayer(ClientID);
 /* INFECTION MODIFICATION END *****************************************/	
 
 	// send active vote
@@ -1003,6 +1014,8 @@ void CGameContext::OnClientDrop(int ClientID, int Type, const char *pReason)
 	delete m_apPlayers[ClientID];
 	m_apPlayers[ClientID] = 0;
 
+	Server()->RoundStatistics()->ResetPlayer(ClientID);
+	
 	(void)m_pController->CheckTeamBalance();
 	m_VoteUpdate = true;
 
@@ -1021,7 +1034,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 	
 	//HACK: DDNet Client did something wrong that we can detect
 	//Round and Score conditions are here only to prevent false-positif
-	if(!pPlayer && Server()->GetClientScore(ClientID) == 0 && Server()->GetClientNbRound(ClientID) == 0)
+	if(!pPlayer && Server()->GetClientNbRound(ClientID) <= 1 && Server()->GetClientNbRound(ClientID) == 0)
 	{
 		Server()->Kick(ClientID, "Kicked (is probably a dummy)");
 		return;

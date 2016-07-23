@@ -282,9 +282,7 @@ void CServer::CClient::Reset(bool ResetScore)
 	
 	if(ResetScore)
 	{
-		m_Score = 0;
 		m_NbRound = 0;
-		m_NbInfection = 0;
 		m_Language = LANGUAGE_EN;
 		m_WaitingTime = 0;
 		m_WasInfected = 0;
@@ -411,13 +409,6 @@ void CServer::SetClientCountry(int ClientID, int Country)
 		return;
 
 	m_aClients[ClientID].m_Country = Country;
-}
-
-void CServer::SetClientScore(int ClientID, int Score)
-{
-	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State < CClient::STATE_READY)
-		return;
-	m_aClients[ClientID].m_Score = Score;
 }
 
 void CServer::Kick(int ClientID, const char *pReason)
@@ -1335,7 +1326,7 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token)
 			p.AddString(ClientName(i), MAX_NAME_LENGTH); // client name
 			p.AddString(ClientClan(i), MAX_CLAN_LENGTH); // client clan
 			str_format(aBuf, sizeof(aBuf), "%d", m_aClients[i].m_Country); p.AddString(aBuf, 6); // client country
-			str_format(aBuf, sizeof(aBuf), "%d", m_aClients[i].m_Score); p.AddString(aBuf, 6); // client score
+			str_format(aBuf, sizeof(aBuf), "%d", RoundStatistics()->PlayerScore(i)); p.AddString(aBuf, 6); // client score
 			str_format(aBuf, sizeof(aBuf), "%d", GameServer()->IsClientPlayer(i)?1:0); p.AddString(aBuf, 2); // is player?
 		}
 	}
@@ -2463,18 +2454,6 @@ void CServer::SetClassAvailability(int CID, int n)
 	m_InfClassAvailability[CID] = n;
 }
 
-int CServer::GetClientNbInfection(int ClientID)
-{
-	return m_aClients[ClientID].m_NbInfection;
-}
-
-void CServer::SetClientNbInfection(int ClientID, int Score)
-{
-	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State < CClient::STATE_READY)
-		return;
-	m_aClients[ClientID].m_NbInfection = Score;
-}
-
 int CServer::GetClientNbRound(int ClientID)
 {
 	return m_aClients[ClientID].m_NbRound;
@@ -2485,11 +2464,6 @@ void CServer::SetClientNbRound(int ClientID, int Score)
 	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State < CClient::STATE_READY)
 		return;
 	m_aClients[ClientID].m_NbRound = Score;
-}
-
-int CServer::GetClientScore(int ClientID)
-{
-	return m_aClients[ClientID].m_Score;
 }
 
 int CServer::IsClassChooserEnabled()
@@ -2791,6 +2765,89 @@ void CServer::Register(int ClientID, const char* pUsername, const char* pPasswor
 void CServer::Ban(int ClientID, int Seconds, const char* pReason)
 {
 	m_ServerBan.BanAddr(m_NetServer.ClientAddr(ClientID), Seconds, pReason);
+}
+
+class CSqlJob_Server_SendPlayerStatistics : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	int m_ClientID;
+	int m_UserID;
+	CRoundStatistics::CPlayer m_PlayerStatistics;
+	
+public:
+	CSqlJob_Server_SendPlayerStatistics(CServer* pServer, CRoundStatistics::CPlayer* pPlayerStatistics, int UserID, int ClientID)
+	{
+		m_pServer = pServer;
+		m_ClientID = ClientID;
+		m_UserID = UserID;
+		m_PlayerStatistics = *pPlayerStatistics;
+	}
+	
+	void UpdateScore(CSqlServer* pSqlServer, int ScoreType, int Score)
+	{
+		char aBuf[512];
+		
+		//Get the worst score in the database
+		str_format(aBuf, sizeof(aBuf), 
+			"INSERT INTO %s_infc_BestScore "
+			"(UserId, ScoreType, ScoreDate, Score) "
+			"VALUES ('%s', '%s', UTC_TIMESTAMP(), '%s');"
+			, pSqlServer->GetPrefix(), m_UserID, ScoreType, Score);
+		pSqlServer->executeSql(aBuf);
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{		
+		try
+		{
+			if(m_PlayerStatistics.m_EngineerScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_ENGINEER_SCORE, m_PlayerStatistics.m_EngineerScore);
+			if(m_PlayerStatistics.m_SoldierScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SOLDIER_SCORE, m_PlayerStatistics.m_SoldierScore);
+			if(m_PlayerStatistics.m_ScientistScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SCIENTIST_SCORE, m_PlayerStatistics.m_ScientistScore);
+			if(m_PlayerStatistics.m_MedicScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_MEDIC_SCORE, m_PlayerStatistics.m_MedicScore);
+			if(m_PlayerStatistics.m_NinjaScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_NINJA_SCORE, m_PlayerStatistics.m_NinjaScore);
+			if(m_PlayerStatistics.m_MercenaryScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_MERCENARY_SCORE, m_PlayerStatistics.m_MercenaryScore);
+			if(m_PlayerStatistics.m_SniperScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SNIPER_SCORE, m_PlayerStatistics.m_SniperScore);
+		}
+		catch (sql::SQLException &e)
+		{
+			dbg_msg("sql", "Can't send round statistics (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+	
+	virtual void CleanInstanceRef()
+	{
+		m_pServer->m_aClients[m_ClientID].m_LogInstance = -1;
+	}
+};
+
+void CServer::OnRoundStart()
+{
+	RoundStatistics()->Reset();
+}
+
+void CServer::OnRoundEnd()
+{
+	//Send statistics
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{
+		if(m_aClients[i].m_State == CClient::STATE_INGAME && m_aClients[i].m_UserID >= 0 && RoundStatistics()->IsValidePlayer(i))
+		{
+			CSqlJob* pJob = new CSqlJob_Server_SendPlayerStatistics(this, RoundStatistics()->PlayerStatistics(i), i, m_aClients[i].m_UserID);
+			pJob->Start();
+		}
+	}
 }
 
 /* INFECTION MODIFICATION END *****************************************/
