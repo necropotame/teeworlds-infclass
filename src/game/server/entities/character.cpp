@@ -656,7 +656,7 @@ void CCharacter::FireWeapon()
 							if(pTarget->IsFrozen())
 							{
 								pTarget->Unfreeze();
-								GameServer()->SendBroadcast("", pTarget->GetPlayer()->GetCID());
+								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID());
 							}
 							else
 							{
@@ -1142,7 +1142,7 @@ void CCharacter::Tick()
 		if(m_FrozenTime <= 0)
 		{
 			Unfreeze();
-			GameServer()->SendBroadcast("", m_pPlayer->GetCID(), true);
+			GameServer()->ClearBroadcast(m_pPlayer->GetCID(), true);
 		}
 		else
 		{
@@ -1539,7 +1539,7 @@ void CCharacter::Tick()
 		if(m_pBomb)
 			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Bombs left: %d", m_pBomb->GetNbBombs(), true);
 		else
-			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
 	}
 	else if(GetClass() == PLAYERCLASS_SCIENTIST)
 	{
@@ -1554,28 +1554,28 @@ void CCharacter::Tick()
 		if(NbMines > 0)
 			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Active mines: %d", NbMines, true);
 		else
-			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
 	}
 	else if(GetClass() == PLAYERCLASS_ENGINEER)
 	{
 		if(m_pBarrier)
 			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Laser wall: %d sec", m_pBarrier->GetTick()/Server()->TickSpeed(), true);
 		else
-			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
 	}
 	else if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
 			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Position lock: %d sec", m_PositionLockTick/Server()->TickSpeed(), true);
 		else
-			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
 	}
 	else if(GetClass() == PLAYERCLASS_SPIDER)
 	{
 		if(m_HookMode > 0)
 			GameServer()->SendBroadcast_Language(GetPlayer()->GetCID(), "Web mode enabled", true);
 		else
-			GameServer()->SendBroadcast("", GetPlayer()->GetCID(), true);
+			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
 	}
 /* INFECTION MODIFICATION END *****************************************/
 

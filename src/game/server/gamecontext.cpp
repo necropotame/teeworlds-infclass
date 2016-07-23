@@ -129,7 +129,12 @@ void CGameContext::Clear()
 	m_Tuning = Tuning;
 	
 	for(int i=0; i<MAX_CLIENTS; i++)
-		m_BroadCastHighPriorityTick[i] = 0;
+	{
+		m_BroadcastStates[i].m_NoChangeTick = 0;
+		m_BroadcastStates[i].m_HighPriorityTick = 0;
+		m_BroadcastStates[i].m_PrevMessage[0] = 0;
+		m_BroadcastStates[i].m_NextMessage[0] = 0;
+	}
 }
 
 
@@ -434,27 +439,46 @@ void CGameContext::SendMODT_Language_s(int To, const char* pText, const char* pP
 	}
 }
 
-void CGameContext::SendBroadcast_Language(int To, const char* pText, bool LowPriority)
+void CGameContext::SendBroadcast(const char *pText, int To, bool LowPriority)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
-	
-	CNetMsg_Sv_Broadcast Msg;
 	
 	for(int i = Start; i < End; i++)
 	{
 		if(m_apPlayers[i])
 		{
-			if(!LowPriority || (LowPriority && m_BroadCastHighPriorityTick[i] <= 0))
+			if(!LowPriority || (LowPriority && m_BroadcastStates[i].m_HighPriorityTick <= 0))
+				str_copy(m_BroadcastStates[i].m_NextMessage, pText, sizeof(m_BroadcastStates[i].m_NextMessage));
+			
+			if(!LowPriority)
+				m_BroadcastStates[i].m_HighPriorityTick = Server()->TickSpeed();
+		}
+	}
+}
+
+void CGameContext::ClearBroadcast(int To, bool LowPriority)
+{
+	SendBroadcast("", To, LowPriority);
+}
+
+void CGameContext::SendBroadcast_Language(int To, const char* pText, bool LowPriority)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			if(!LowPriority || (LowPriority && m_BroadcastStates[i].m_HighPriorityTick <= 0))
 			{
-				Msg.m_pMessage = ServerLocalize(pText, m_apPlayers[i]->GetLanguage());
-				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+				const char* pTranslatedText = ServerLocalize(pText, m_apPlayers[i]->GetLanguage());
+				str_copy(m_BroadcastStates[i].m_NextMessage, pTranslatedText, sizeof(m_BroadcastStates[i].m_NextMessage));
 			}
 			
 			if(!LowPriority)
-			{
-				m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
-			}
+				m_BroadcastStates[i].m_HighPriorityTick = Server()->TickSpeed();
 		}
 	}
 }
@@ -464,21 +488,19 @@ void CGameContext::SendBroadcast_Language_s(int To, const char* pText, const cha
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
 	
-	CNetMsg_Sv_Broadcast Msg;
 	char aBuf[512];
-	Msg.m_pMessage = aBuf;
 	
 	for(int i = Start; i < End; i++)
 	{
 		if(m_apPlayers[i])
 		{
 			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), pParam);
-			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+			str_copy(m_BroadcastStates[i].m_NextMessage, aBuf, sizeof(m_BroadcastStates[i].m_NextMessage));
 		}
 		
-		if(m_BroadCastHighPriorityTick[i])
+		if(m_BroadcastStates[i].m_HighPriorityTick)
 		{
-			m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+			m_BroadcastStates[i].m_HighPriorityTick = Server()->TickSpeed();
 		}
 	}
 }
@@ -488,23 +510,21 @@ void CGameContext::SendBroadcast_Language_i(int To, const char* pText, int Param
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
 	
-	CNetMsg_Sv_Broadcast Msg;
 	char aBuf[512];
-	Msg.m_pMessage = aBuf;
 	
 	for(int i = Start; i < End; i++)
 	{
 		if(m_apPlayers[i])
 		{
-			if(!LowPriority || (LowPriority && m_BroadCastHighPriorityTick[i] <= 0))
+			if(!LowPriority || (LowPriority && m_BroadcastStates[i].m_HighPriorityTick <= 0))
 			{
 				str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), Param);
-				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+				str_copy(m_BroadcastStates[i].m_NextMessage, aBuf, sizeof(m_BroadcastStates[i].m_NextMessage));
 			}
 			
 			if(!LowPriority)
 			{
-				m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
+				m_BroadcastStates[i].m_HighPriorityTick = Server()->TickSpeed();
 			}
 		}
 	}
@@ -632,32 +652,6 @@ void CGameContext::SendWeaponPickup(int ClientID, int Weapon)
 	Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
 }
 
-
-void CGameContext::SendBroadcast(const char *pText, int To, bool LowPriority)
-{
-	int Start = (To < 0 ? 0 : To);
-	int End = (To < 0 ? MAX_CLIENTS : To+1);
-	
-	CNetMsg_Sv_Broadcast Msg;
-	
-	for(int i = Start; i < End; i++)
-	{
-		if(m_apPlayers[i])
-		{
-			if(!LowPriority || (LowPriority && m_BroadCastHighPriorityTick[i] <= 0))
-			{
-				Msg.m_pMessage = pText;
-				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
-			}
-			
-			if(!LowPriority)
-			{
-				m_BroadCastHighPriorityTick[i] = Server()->TickSpeed();
-			}
-		}
-	}
-}
-
 //
 void CGameContext::StartVote(const char *pDesc, const char *pCommand, const char *pReason)
 {
@@ -780,8 +774,10 @@ void CGameContext::OnTick()
 {
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
-		if(m_BroadCastHighPriorityTick[i] > 0)
-			m_BroadCastHighPriorityTick[i]--;
+		if(m_BroadcastStates[i].m_HighPriorityTick > 0)
+		{
+			m_BroadcastStates[i].m_HighPriorityTick--;
+		}
 	}
 	
 	// check tuning
@@ -828,6 +824,28 @@ void CGameContext::OnTick()
 				}
 			}
 		}
+	}
+	
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{
+		//Send broadcast only if the message is different, or to fight auto-fading
+		if(
+			str_comp(m_BroadcastStates[i].m_PrevMessage, m_BroadcastStates[i].m_NextMessage) != 0 ||
+			m_BroadcastStates[i].m_NoChangeTick > Server()->TickSpeed()
+		)
+		{
+			CNetMsg_Sv_Broadcast Msg;
+			Msg.m_pMessage = m_BroadcastStates[i].m_NextMessage;
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+			
+			str_copy(m_BroadcastStates[i].m_PrevMessage, m_BroadcastStates[i].m_NextMessage, sizeof(m_BroadcastStates[i].m_PrevMessage));
+			
+			m_BroadcastStates[i].m_NoChangeTick = 0;
+		}
+		else
+			m_BroadcastStates[i].m_NoChangeTick++;
+		
+		m_BroadcastStates[i].m_NextMessage[0] = 0;
 	}
 	
 	Server()->RoundStatistics()->UpdateNumberOfPlayers(NumActivePlayers);

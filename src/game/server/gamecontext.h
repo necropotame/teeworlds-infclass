@@ -215,6 +215,7 @@ public:
 	virtual void SendBroadcast_Language_s(int To, const char* pText, const char* pParam);
 	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, bool LowPriority = false);
 	virtual void SendBroadcast_ClassIntro(int To, int Class);
+	virtual void ClearBroadcast(int To, bool LowPriority = false);
 	
 	virtual void SendChatTarget_Language(int To, const char* pText);
 	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam);
@@ -232,7 +233,16 @@ private:
 	int m_VoteLanguageTick[MAX_CLIENTS];
 	int m_VoteLanguage[MAX_CLIENTS];
 	
-	int m_BroadCastHighPriorityTick[MAX_CLIENTS];
+	class CBroadcastState
+	{
+	public:
+		int m_NoChangeTick;
+		int m_HighPriorityTick;
+		char m_PrevMessage[1024];
+		char m_NextMessage[1024];
+	};
+	
+	CBroadcastState m_BroadcastStates[MAX_CLIENTS];
 	
 	struct LaserDotState
 	{
