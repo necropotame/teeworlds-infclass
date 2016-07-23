@@ -53,6 +53,27 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_SNIPER:
 			m_SniperScore += Points;
 			break;
+		case PLAYERCLASS_SMOKER:
+			m_SmokerScore += Points;
+			break;
+		case PLAYERCLASS_HUNTER:
+			m_HunterScore += Points;
+			break;
+		case PLAYERCLASS_BOOMER:
+			m_BoomerScore += Points;
+			break;
+		case PLAYERCLASS_GHOST:
+			m_GhostScore += Points;
+			break;
+		case PLAYERCLASS_SPIDER:
+			m_SpiderScore += Points;
+			break;
+		case PLAYERCLASS_UNDEAD:
+			m_UndeadScore += Points;
+			break;
+		case PLAYERCLASS_WITCH:
+			m_WitchScore += Points;
+			break;
 	}
 }
 
@@ -108,5 +129,5 @@ bool CRoundStatistics::IsValidePlayer(int ClientID)
 	
 bool CRoundStatistics::IsValideRound()
 {
-	return m_NumPlayersMin >= 6;
+	return m_NumPlayersMin >= 2;
 }

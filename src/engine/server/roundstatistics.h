@@ -29,6 +29,15 @@ public:
 		int m_NinjaScore;
 		int m_MercenaryScore;
 		int m_SniperScore;
+		
+		int m_SmokerScore;
+		int m_HunterScore;
+		int m_BoomerScore;
+		int m_GhostScore;
+		int m_SpiderScore;
+		int m_UndeadScore;
+		int m_WitchScore;
+		
 		bool m_WasSpectator;
 	
 	public:

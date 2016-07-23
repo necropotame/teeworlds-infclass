@@ -2483,6 +2483,25 @@ void CServer::AddGameServerCmd(CGameServerCmd* pCmd)
 	lock_release(m_GameServerCmdLock);
 }
 
+class CGameServerCmd_SendChatTarget : public CServer::CGameServerCmd
+{
+private:
+	int m_ClientID;
+	char m_aText[128];
+	
+public:
+	CGameServerCmd_SendChatTarget(int ClientID, const char* pText)
+	{
+		m_ClientID = ClientID;
+		str_copy(m_aText, pText, sizeof(m_aText));
+	}
+
+	virtual void Execute(IGameServer* pGameServer)
+	{
+		pGameServer->SendChatTarget(m_ClientID, m_aText);
+	}
+};
+
 class CGameServerCmd_SendChatTarget_Language : public CServer::CGameServerCmd
 {
 private:
@@ -2773,52 +2792,112 @@ private:
 	CServer* m_pServer;
 	int m_ClientID;
 	int m_UserID;
+	CSqlString<64> m_sMapName;
 	CRoundStatistics::CPlayer m_PlayerStatistics;
 	
 public:
-	CSqlJob_Server_SendPlayerStatistics(CServer* pServer, CRoundStatistics::CPlayer* pPlayerStatistics, int UserID, int ClientID)
+	CSqlJob_Server_SendPlayerStatistics(CServer* pServer, CRoundStatistics::CPlayer* pPlayerStatistics, const char* pMapName, int UserID, int ClientID)
 	{
 		m_pServer = pServer;
 		m_ClientID = ClientID;
 		m_UserID = UserID;
+		m_sMapName = CSqlString<64>(pMapName);
 		m_PlayerStatistics = *pPlayerStatistics;
 	}
 	
-	void UpdateScore(CSqlServer* pSqlServer, int ScoreType, int Score)
+	void UpdateScore(CSqlServer* pSqlServer, int ScoreType, int Score, const char* pScoreName)
 	{
 		char aBuf[512];
 		
-		//Get the worst score in the database
+		//Get old score
+		int OldScore = 0;
+		str_format(aBuf, sizeof(aBuf), 
+			"SELECT Score FROM %s_infc_RoundScore "
+			"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
+			"ORDER BY Score DESC LIMIT %d"
+			, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), ScoreType, SQL_SCORE_NUMROUND);
+		pSqlServer->executeSqlQuery(aBuf);
+
+		bool ScoreImproved = false;
+		int SmallestScore = 999999999;
+		int ScoreCounter = 0;
+		while(pSqlServer->GetResults()->next())
+		{
+			int ReadedScore = (int)pSqlServer->GetResults()->getInt("Score");
+			OldScore += ReadedScore;
+			ScoreCounter++;
+			
+			if(SmallestScore > ReadedScore)
+			{
+				SmallestScore = ReadedScore;
+				ScoreImproved = true;
+			}
+		}
+		
+		if(ScoreCounter < SQL_SCORE_NUMROUND)
+			ScoreImproved = true;
+		
+		int NewScore = OldScore;
+		if(ScoreImproved)
+		{
+			NewScore = Score-SmallestScore;
+		}
+		
 		str_format(aBuf, sizeof(aBuf), 
 			"INSERT INTO %s_infc_RoundScore "
-			"(UserId, ScoreType, ScoreDate, Score) "
-			"VALUES ('%d', '%d', UTC_TIMESTAMP(), '%d');"
-			, pSqlServer->GetPrefix(), m_UserID, ScoreType, Score);
+			"(UserId, MapName, ScoreType, ScoreDate, Score) "
+			"VALUES ('%d', '%s', '%d', UTC_TIMESTAMP(), '%d');"
+			, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), ScoreType, Score);
 		pSqlServer->executeSql(aBuf);
+		
+		if(OldScore < NewScore)
+		{
+			str_format(aBuf, sizeof(aBuf), "You increased your score as %s in %s: %d (+%d)", pScoreName, m_sMapName.Str(), NewScore, NewScore-OldScore);
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
+			m_pServer->AddGameServerCmd(pCmd);
+		}
 	}
 
 	virtual bool Job(CSqlServer* pSqlServer)
 	{		
 		try
 		{
+			//~ if(m_PlayerStatistics.m_Score > 0)
+				//~ UpdateScore(pSqlServer, SQL_SCORETYPE_ROUND_SCORE, m_PlayerStatistics.m_Score);
+				
 			if(m_PlayerStatistics.m_EngineerScore > 0)
-				UpdateScore(pSqlServer, SQL_SCORETYPE_ENGINEER_SCORE, m_PlayerStatistics.m_EngineerScore);
+				UpdateScore(pSqlServer, SQL_SCORETYPE_ENGINEER_SCORE, m_PlayerStatistics.m_EngineerScore, "Engineer");
 			if(m_PlayerStatistics.m_SoldierScore > 0)
-				UpdateScore(pSqlServer, SQL_SCORETYPE_SOLDIER_SCORE, m_PlayerStatistics.m_SoldierScore);
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SOLDIER_SCORE, m_PlayerStatistics.m_SoldierScore, "Soldier");
 			if(m_PlayerStatistics.m_ScientistScore > 0)
-				UpdateScore(pSqlServer, SQL_SCORETYPE_SCIENTIST_SCORE, m_PlayerStatistics.m_ScientistScore);
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SCIENTIST_SCORE, m_PlayerStatistics.m_ScientistScore, "Scientist");
 			if(m_PlayerStatistics.m_MedicScore > 0)
-				UpdateScore(pSqlServer, SQL_SCORETYPE_MEDIC_SCORE, m_PlayerStatistics.m_MedicScore);
+				UpdateScore(pSqlServer, SQL_SCORETYPE_MEDIC_SCORE, m_PlayerStatistics.m_MedicScore, "Medic");
 			if(m_PlayerStatistics.m_NinjaScore > 0)
-				UpdateScore(pSqlServer, SQL_SCORETYPE_NINJA_SCORE, m_PlayerStatistics.m_NinjaScore);
+				UpdateScore(pSqlServer, SQL_SCORETYPE_NINJA_SCORE, m_PlayerStatistics.m_NinjaScore, "Ninja");
 			if(m_PlayerStatistics.m_MercenaryScore > 0)
-				UpdateScore(pSqlServer, SQL_SCORETYPE_MERCENARY_SCORE, m_PlayerStatistics.m_MercenaryScore);
+				UpdateScore(pSqlServer, SQL_SCORETYPE_MERCENARY_SCORE, m_PlayerStatistics.m_MercenaryScore, "Mercenary");
 			if(m_PlayerStatistics.m_SniperScore > 0)
-				UpdateScore(pSqlServer, SQL_SCORETYPE_SNIPER_SCORE, m_PlayerStatistics.m_SniperScore);
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SNIPER_SCORE, m_PlayerStatistics.m_SniperScore, "Sniper");
+				
+			if(m_PlayerStatistics.m_SmokerScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SMOKER_SCORE, m_PlayerStatistics.m_SmokerScore, "Smoker");
+			if(m_PlayerStatistics.m_HunterScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_HUNTER_SCORE, m_PlayerStatistics.m_HunterScore, "Hunter");
+			if(m_PlayerStatistics.m_BoomerScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_BOOMER_SCORE, m_PlayerStatistics.m_BoomerScore, "Boomer");
+			if(m_PlayerStatistics.m_GhostScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_GHOST_SCORE, m_PlayerStatistics.m_GhostScore, "Ghost");
+			if(m_PlayerStatistics.m_SpiderScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SPIDER_SCORE, m_PlayerStatistics.m_SpiderScore, "Spider");
+			if(m_PlayerStatistics.m_UndeadScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_UNDEAD_SCORE, m_PlayerStatistics.m_UndeadScore, "Undead");
+			if(m_PlayerStatistics.m_WitchScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_WITCH_SCORE, m_PlayerStatistics.m_WitchScore, "Witch");
 		}
 		catch (sql::SQLException &e)
 		{
-			dbg_msg("sql", "Can't send round statistics (MySQL Error: %s)", e.what());
+			dbg_msg("sql", "Can't send statistics (MySQL Error: %s)", e.what());
 			
 			return false;
 		}
@@ -2844,7 +2923,7 @@ void CServer::OnRoundEnd()
 	{
 		if(m_aClients[i].m_State == CClient::STATE_INGAME && m_aClients[i].m_UserID >= 0 && RoundStatistics()->IsValidePlayer(i))
 		{
-			CSqlJob* pJob = new CSqlJob_Server_SendPlayerStatistics(this, RoundStatistics()->PlayerStatistics(i), i, m_aClients[i].m_UserID);
+			CSqlJob* pJob = new CSqlJob_Server_SendPlayerStatistics(this, RoundStatistics()->PlayerStatistics(i), m_aCurrentMap, m_aClients[i].m_UserID, i);
 			pJob->Start();
 		}
 	}

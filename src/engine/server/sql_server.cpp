@@ -186,6 +186,7 @@ void CSqlServer::CreateTables()
 				"CREATE TABLE IF NOT EXISTS %s_infc_RoundScore ("
 					"RoundScoreId INT NOT NULL AUTO_INCREMENT, "
 					"UserId INT NOT NULL, "
+					"MapName VARCHAR(64) BINARY NOT NULL, "
 					"ScoreType INT NOT NULL, "
 					"ScoreDate DATETIME NOT NULL, "
 					"Score INT NOT NULL, "
