@@ -73,6 +73,7 @@ void CBarrier::Tick()
 						)
 						{
 							Server()->RoundStatistics()->OnScoreEvent(pHook->GetPlayer()->GetCID(), SCOREEVENT_HELP_HOOK_BARRIER, pHook->GetClass());
+							GameServer()->SendScoreSound(pHook->GetPlayer()->GetCID());
 						}
 					}
 				}

@@ -228,6 +228,8 @@ public:
 	virtual void SendMODT_Language_s(int To, const char* pText, const char* pParam);
 	
 	void CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan);
+	void SendHitSound(int ClientID) { if(m_HitSoundState[ClientID] < 1) m_HitSoundState[ClientID] = 1; }
+	void SendScoreSound(int ClientID) { m_HitSoundState[ClientID] = 2; }
 	
 private:
 	int m_VoteLanguageTick[MAX_CLIENTS];
@@ -252,6 +254,8 @@ private:
 		int m_SnapID;
 	};
 	array<LaserDotState> m_LaserDots;
+	
+	int m_HitSoundState[MAX_CLIENTS]; //1 for hit, 2 for kill (no sounds must be sent)
 /* INFECTION MODIFICATION END *****************************************/
 };
 

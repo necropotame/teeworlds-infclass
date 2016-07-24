@@ -375,6 +375,7 @@ void CGameControllerMOD::Tick()
 						{
 							//TAG_SCORE
 							Server()->RoundStatistics()->OnScoreEvent(i, SCOREEVENT_HUMAN_SURVIVE, pPlayer->GetClass());
+							GameServer()->SendScoreSound(i);
 							pPlayer->m_WinAsHuman++;
 							
 							GameServer()->SendChatTarget_Language(i, "You have survived, +5 points");
@@ -504,6 +505,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			{
 				GameServer()->SendChatTarget_Language_s(pKiller->GetCID(), "You have infected %s, +3 points", Server()->ClientName(pVictimPlayer->GetCID()));
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_INFECTION, pKiller->GetClass());
+				GameServer()->SendScoreSound(pKiller->GetCID());
 				
 				//Search for hook
 				for(CCharacter *pHook = (CCharacter*) GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER); pHook; pHook = (CCharacter *)pHook->TypeNext())
@@ -515,6 +517,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 					)
 					{
 						Server()->RoundStatistics()->OnScoreEvent(pHook->GetPlayer()->GetCID(), SCOREEVENT_HELP_HOOK_INFECTION, pHook->GetClass());
+						GameServer()->SendScoreSound(pHook->GetPlayer()->GetCID());
 					}
 				}
 			}
@@ -530,10 +533,12 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		{
 			GameServer()->SendChatTarget_Language(pKiller->GetCID(), "You have killed a witch, +5 points");
 			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_WITCH, pKiller->GetClass());
+			GameServer()->SendScoreSound(pKiller->GetCID());
 		}
 		else if(pVictim->IsInfected())
 		{
 			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_INFECTED, pKiller->GetClass());
+			GameServer()->SendScoreSound(pKiller->GetCID());
 		}
 	}
 		
@@ -543,7 +548,8 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		CPlayer* pFreezer = GameServer()->m_apPlayers[pVictim->m_LastFreezer];
 		if(pFreezer)
 		{
-			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_HELP_FREEZE, pKiller->GetClass());
+			Server()->RoundStatistics()->OnScoreEvent(pFreezer->GetCID(), SCOREEVENT_HELP_FREEZE, pFreezer->GetClass());
+			GameServer()->SendScoreSound(pFreezer->GetCID());
 		}
 	}
 	

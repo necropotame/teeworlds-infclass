@@ -774,6 +774,8 @@ void CGameContext::OnTick()
 {
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
+		m_HitSoundState[i] = 0;
+		
 		if(!m_apPlayers[i])
 			continue;
 		
@@ -858,6 +860,24 @@ void CGameContext::OnTick()
 				m_BroadcastStates[i].m_NoChangeTick++;
 			
 			m_BroadcastStates[i].m_NextMessage[0] = 0;
+			
+			//Send score and hit sound
+			int Sound = -1;
+			if(m_HitSoundState[i] == 1)
+				Sound = SOUND_HIT;
+			else if(m_HitSoundState[i] == 2)
+				Sound = SOUND_CTF_GRAB_PL;
+			
+			if(Sound >= 0)
+			{
+				int Mask = CmaskOne(i);
+				for(int j = 0; j < MAX_CLIENTS; j++)
+				{
+					if(m_apPlayers[j] && m_apPlayers[j]->GetTeam() == TEAM_SPECTATORS && m_apPlayers[j]->m_SpectatorID == i)
+						Mask |= CmaskOne(j);
+				}
+				CreateSound(m_apPlayers[i]->m_ViewPos, Sound, Mask);
+			}
 		}
 	}
 	
