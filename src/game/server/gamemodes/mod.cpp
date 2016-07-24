@@ -504,6 +504,19 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			{
 				GameServer()->SendChatTarget_Language_s(pKiller->GetCID(), "You have infected %s, +3 points", Server()->ClientName(pVictimPlayer->GetCID()));
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_INFECTION, pKiller->GetClass());
+				
+				//Search for hook
+				for(CCharacter *pHook = (CCharacter*) GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER); pHook; pHook = (CCharacter *)pHook->TypeNext())
+				{
+					if(
+						pHook->GetPlayer() &&
+						pHook->m_Core.m_HookedPlayer == pVictim->GetPlayer()->GetCID() &&
+						pHook->GetPlayer()->GetCID() != pKiller->GetCID()
+					)
+					{
+						Server()->RoundStatistics()->OnScoreEvent(pHook->GetPlayer()->GetCID(), SCOREEVENT_HELP_HOOK_INFECTION, pHook->GetClass());
+					}
+				}
 			}
 		}
 	}

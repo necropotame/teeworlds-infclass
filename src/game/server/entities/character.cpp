@@ -1877,6 +1877,19 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		GameServer()->SendChatTarget_Language_s(From, "You have infected %s, +3 points", Server()->ClientName(m_pPlayer->GetCID()));
 		Server()->RoundStatistics()->OnScoreEvent(From, SCOREEVENT_INFECTION, GameServer()->m_apPlayers[From]->GetClass());
 	
+		//Search for hook
+		for(CCharacter *pHook = (CCharacter*) GameServer()->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER); pHook; pHook = (CCharacter *)pHook->TypeNext())
+		{
+			if(
+				pHook->GetPlayer() &&
+				pHook->m_Core.m_HookedPlayer == m_pPlayer->GetCID() &&
+				pHook->GetPlayer()->GetCID() != From
+			)
+			{
+				Server()->RoundStatistics()->OnScoreEvent(pHook->GetPlayer()->GetCID(), SCOREEVENT_HELP_HOOK_INFECTION, pHook->GetClass());
+			}
+		}
+		
 		CNetMsg_Sv_KillMsg Msg;
 		Msg.m_Killer = From;
 		Msg.m_Victim = m_pPlayer->GetCID();

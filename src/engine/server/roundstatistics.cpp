@@ -26,6 +26,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case SCOREEVENT_HELP_HOOK_BARRIER:
 			Points = 10;
 			break;
+		case SCOREEVENT_HELP_HOOK_INFECTION:
+			Points = 10;
+			break;
 	}
 	
 	m_Score += Points;
