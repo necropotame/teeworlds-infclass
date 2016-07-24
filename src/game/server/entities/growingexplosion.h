@@ -29,6 +29,8 @@ public:
 		m_StartTick = Server()->Tick();
 		m_Owner = Owner;
 		m_ExplosionEffect = ExplosionEffect;
+		
+		mem_zero(m_Hit, sizeof(m_Hit));
 
 		GameWorld()->InsertEntity(this);	
 		
@@ -214,6 +216,9 @@ public:
 			if(tileX < 0 || tileX >= GROWINGMAP_LENGTH || tileY < 0 || tileY >= GROWINGMAP_LENGTH)
 				continue;
 			
+			if(m_Hit[p->GetPlayer()->GetCID()])
+				continue;
+			
 			int k = tileY*GROWINGMAP_LENGTH+tileX;
 			if(m_GrowingMap[k] >= 0)
 			{
@@ -236,6 +241,8 @@ public:
 							break;
 						}
 					}
+					
+					m_Hit[p->GetPlayer()->GetCID()] = true;
 				}
 			}
 		}
@@ -255,6 +262,7 @@ private:
 	int m_GrowingMap[GROWINGMAP_SIZE];
 	vec2 m_GrowingMapVec[GROWINGMAP_SIZE];
 	int m_ExplosionEffect;
+	bool m_Hit[MAX_CLIENTS];
 };
 
 #endif
