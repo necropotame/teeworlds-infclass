@@ -2852,7 +2852,14 @@ public:
 		
 		if(OldScore < NewScore)
 		{
-			str_format(aBuf, sizeof(aBuf), "You increased your score as %s in %s: %d (+%d)", pScoreName, m_sMapName.Str(), NewScore, NewScore-OldScore);
+			if(pScoreName[0])
+			{
+				str_format(aBuf, sizeof(aBuf), "You increased your score as %s in %s: %d (+%d)", pScoreName, m_sMapName.Str(), NewScore, NewScore-OldScore);
+			}
+			else
+			{
+				str_format(aBuf, sizeof(aBuf), "You increased your score in %s: %d (+%d)", m_sMapName.Str(), NewScore, NewScore-OldScore);
+			}
 			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
 			m_pServer->AddGameServerCmd(pCmd);
 		}
@@ -2862,8 +2869,8 @@ public:
 	{		
 		try
 		{
-			//~ if(m_PlayerStatistics.m_Score > 0)
-				//~ UpdateScore(pSqlServer, SQL_SCORETYPE_ROUND_SCORE, m_PlayerStatistics.m_Score);
+			if(m_PlayerStatistics.m_Score > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_ROUND_SCORE, m_PlayerStatistics.m_Score, "");
 				
 			if(m_PlayerStatistics.m_EngineerScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_ENGINEER_SCORE, m_PlayerStatistics.m_EngineerScore, "Engineer");
