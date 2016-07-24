@@ -401,11 +401,9 @@ void CCharacter::UpdateTuningParam()
 	
 	if(NoActions)
 	{
-		pTuningParams->m_GroundControlSpeed = 0.0f;
 		pTuningParams->m_GroundControlAccel = 0.0f;
 		pTuningParams->m_GroundJumpImpulse = 0.0f;
 		pTuningParams->m_AirJumpImpulse = 0.0f;
-		pTuningParams->m_AirControlSpeed = 0.0f;
 		pTuningParams->m_AirControlAccel = 0.0f;
 		pTuningParams->m_HookLength = 0.0f;
 	}
