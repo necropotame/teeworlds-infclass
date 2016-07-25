@@ -2624,7 +2624,10 @@ public:
 		m_ClientID = ClientID;
 		m_sName = CSqlString<64>(pName);
 		m_sPasswordHash = CSqlString<64>(pPasswordHash);
-		m_sEmail = CSqlString<64>(pEmail);
+		if(pEmail)
+			m_sEmail = CSqlString<64>(pEmail);
+		else
+			m_sEmail = CSqlString<64>("");
 	}
 
 	virtual bool Job(CSqlServer* pSqlServer)

@@ -839,6 +839,11 @@ void CConsole::GenerateUsage(const char* pParam, char* pUsage)
 			str_copy(pUsage, "<int> ", sizeof("<int> "));
 			pUsage += sizeof("<int> ");
 		}
+		else if(ParamType == '?')
+		{
+			*pUsage = '?';
+			pUsage++;
+		}
 	}
 	
 	*pUsage = 0;

@@ -2341,7 +2341,11 @@ bool CGameContext::ConRegister(IConsole::IResult *pResult, void *pUserData)
 	
 	const char *pLogin = pResult->GetString(0);
 	const char *pPassword = pResult->GetString(1);
-	const char *pEmail = pResult->GetString(2);
+	const char *pEmail = 0;
+	
+	if(pResult->NumArguments()>2)
+		pEmail = pResult->GetString(2);
+	
 	pSelf->Server()->Register(ClientID, pLogin, pPassword, pEmail);
 	
 	return true;
@@ -2747,7 +2751,7 @@ void CGameContext::OnConsoleInit()
 	
 	//Chat Command
 	Console()->Register("info", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChatInfo, this, "Display information about the mod");
-	Console()->Register("register", "s<login> s<password> s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
+	Console()->Register("register", "s<login> s<password> ?s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
 	Console()->Register("login", "s<login> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
