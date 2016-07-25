@@ -1295,7 +1295,12 @@ void CCharacter::Tick()
 	
 	if(GetClass() == PLAYERCLASS_SPIDER)
 	{
-		if(m_HookMode == 1 && m_Core.m_HookState == HOOK_GRABBED && distance(m_Core.m_Pos, m_Core.m_HookPos) > 48.0f)
+		if(
+			m_HookMode == 1 &&
+			m_Core.m_HookState == HOOK_GRABBED &&
+			distance(m_Core.m_Pos, m_Core.m_HookPos) > 48.0f &&
+			m_Core.m_HookedPlayer < 0
+		)
 		{
 			// Find other players
 			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
