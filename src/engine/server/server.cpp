@@ -2608,6 +2608,11 @@ void CServer::Login(int ClientID, const char* pUsername, const char* pPassword)
 	pJob->Start();
 }
 
+void CServer::Logout(int ClientID)
+{
+	m_aClients[ClientID].m_UserID = -1;
+}
+
 class CSqlJob_Server_Register : public CSqlJob
 {
 private:
@@ -2646,14 +2651,14 @@ public:
 			//Check for registration flooding
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT UserId FROM %s_Users "
-				"WHERE RegisterIp = '%s' AND TIMESTAMPDIFF(MINUTE, RegisterDate, UTC_TIMESTAMP()) < 60;"
+				"WHERE RegisterIp = '%s' AND TIMESTAMPDIFF(MINUTE, RegisterDate, UTC_TIMESTAMP()) < 5;"
 				, pSqlServer->GetPrefix(), aAddrStr);
 			pSqlServer->executeSqlQuery(aBuf);
 			
 			if(pSqlServer->GetResults()->next())
 			{
 				dbg_msg("infclass", "Registration flooding");
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "Please wait 60 minutes before create an another account");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "Please wait 5 minutes before create an another account");
 				m_pServer->AddGameServerCmd(pCmd);
 				
 				return true;

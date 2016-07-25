@@ -206,6 +206,7 @@ private:
 	static bool ConChatInfo(IConsole::IResult *pResult, void *pUserData);
 	static bool ConRegister(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLogin(IConsole::IResult *pResult, void *pUserData);
+	static bool ConLogout(IConsole::IResult *pResult, void *pUserData);
 	static bool ConHelp(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCustomSkin(IConsole::IResult *pResult, void *pUserData);
 	static bool ConAlwaysRandom(IConsole::IResult *pResult, void *pUserData);
