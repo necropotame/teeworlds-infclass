@@ -40,6 +40,19 @@
 
 */
 
+#define BROADCAST_DURATION_REALTIME (0)
+#define BROADCAST_DURATION_GAMEANNOUNCE (Server()->TickSpeed()*2)
+
+enum
+{
+	BROADCAST_PRIORITY_LOWEST=0,
+	BROADCAST_PRIORITY_WEAPONSTATE,
+	BROADCAST_PRIORITY_EFFECTSTATE,
+	BROADCAST_PRIORITY_GAMEANNOUNCE,
+	BROADCAST_PRIORITY_SERVERANNOUNCE,
+	BROADCAST_PRIORITY_INTERFACE,
+};
+
 class CGameContext : public IGameServer
 {
 	IServer *m_pServer;
@@ -146,7 +159,6 @@ public:
 	void SendChat(int ClientID, int Team, const char *pText);
 	void SendEmoticon(int ClientID, int Emoticon);
 	void SendWeaponPickup(int ClientID, int Weapon);
-	void SendBroadcast(const char *pText, int ClientID, bool LowPriority = false);
 
 
 	//
@@ -211,11 +223,12 @@ public:
 	virtual void OnSetAuthed(int ClientID,int Level);
 	virtual const char* ServerLocalize(const char* pText, int Language);
 	
-	virtual void SendBroadcast_Language(int To, const char* pText, bool LowPriority = false);
-	virtual void SendBroadcast_Language_s(int To, const char* pText, const char* pParam);
-	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, bool LowPriority = false);
+	virtual void SendBroadcast(int To, const char *pText, int Priority, int LifeSpan);
+	virtual void SendBroadcast_Language(int To, const char* pText, int Priority, int LifeSpan);
+	virtual void SendBroadcast_Language_s(int To, const char* pText, const char* pParam, int Priority, int LifeSpan);
+	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, int Priority, int LifeSpan);
 	virtual void SendBroadcast_ClassIntro(int To, int Class);
-	virtual void ClearBroadcast(int To, bool LowPriority = false);
+	virtual void ClearBroadcast(int To, int Priority);
 	
 	virtual void SendChatTarget_Language(int To, const char* pText);
 	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam);
@@ -230,6 +243,7 @@ public:
 	void CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan);
 	void SendHitSound(int ClientID) { if(m_HitSoundState[ClientID] < 1) m_HitSoundState[ClientID] = 1; }
 	void SendScoreSound(int ClientID) { m_HitSoundState[ClientID] = 2; }
+	void AddBroadcast(int ClientID, const char* pText, int Priority, int LifeSpan);
 	
 private:
 	int m_VoteLanguageTick[MAX_CLIENTS];
@@ -239,9 +253,14 @@ private:
 	{
 	public:
 		int m_NoChangeTick;
-		int m_HighPriorityTick;
 		char m_PrevMessage[1024];
+		
+		int m_Priority;
 		char m_NextMessage[1024];
+		
+		int m_LifeSpanTick;
+		int m_TimedPriority;
+		char m_TimedMessage[1024];
 	};
 	
 	CBroadcastState m_BroadcastStates[MAX_CLIENTS];

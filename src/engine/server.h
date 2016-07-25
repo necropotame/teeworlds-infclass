@@ -210,9 +210,9 @@ public:
 	virtual const char *NetVersion() = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
-	virtual void ClearBroadcast(int To, bool LowPriority = false) = 0;
-	virtual void SendBroadcast_Language(int To, const char* pText, bool LowPriority = false) = 0;
-	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, bool LowPriority = false) = 0;
+	virtual void ClearBroadcast(int To, int Priority) = 0;
+	virtual void SendBroadcast_Language(int To, const char* pText, int Priority, int LifeSpan) = 0;
+	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, int Priority, int LifeSpan) = 0;
 	virtual void SendChatTarget(int To, const char* pText) = 0;
 	virtual void SendChatTarget_Language(int To, const char* pText) = 0;
 	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam) = 0;

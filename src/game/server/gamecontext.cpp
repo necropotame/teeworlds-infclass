@@ -131,7 +131,8 @@ void CGameContext::Clear()
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
 		m_BroadcastStates[i].m_NoChangeTick = 0;
-		m_BroadcastStates[i].m_HighPriorityTick = 0;
+		m_BroadcastStates[i].m_LifeSpanTick = 0;
+		m_BroadcastStates[i].m_Priority = BROADCAST_PRIORITY_LOWEST;
 		m_BroadcastStates[i].m_PrevMessage[0] = 0;
 		m_BroadcastStates[i].m_NextMessage[0] = 0;
 	}
@@ -439,7 +440,47 @@ void CGameContext::SendMODT_Language_s(int To, const char* pText, const char* pP
 	}
 }
 
-void CGameContext::SendBroadcast(const char *pText, int To, bool LowPriority)
+void CGameContext::AddBroadcast(int ClientID, const char* pText, int Priority, int LifeSpan)
+{
+	dbg_msg("InfClass", "AddBroadcast(%d, '%s', %d, %d)", ClientID, pText, Priority, LifeSpan);
+	
+	if(LifeSpan > 0)
+	{
+		if(m_BroadcastStates[ClientID].m_TimedPriority > Priority)
+			return;
+			
+		str_copy(m_BroadcastStates[ClientID].m_TimedMessage, pText, sizeof(m_BroadcastStates[ClientID].m_TimedMessage));
+		m_BroadcastStates[ClientID].m_LifeSpanTick = LifeSpan;
+		m_BroadcastStates[ClientID].m_TimedPriority = Priority;
+	}
+	else
+	{
+		if(m_BroadcastStates[ClientID].m_Priority > Priority)
+			return;
+			
+		str_copy(m_BroadcastStates[ClientID].m_NextMessage, pText, sizeof(m_BroadcastStates[ClientID].m_NextMessage));
+		m_BroadcastStates[ClientID].m_Priority = Priority;
+	}
+}
+
+void CGameContext::SendBroadcast(int To, const char *pText, int Priority, int LifeSpan)
+{
+	int Start = (To < 0 ? 0 : To);
+	int End = (To < 0 ? MAX_CLIENTS : To+1);
+	
+	for(int i = Start; i < End; i++)
+	{
+		if(m_apPlayers[i])
+			AddBroadcast(i, pText, Priority, LifeSpan);
+	}
+}
+
+void CGameContext::ClearBroadcast(int To, int Priority)
+{
+	SendBroadcast(To, "", Priority, BROADCAST_DURATION_REALTIME);
+}
+
+void CGameContext::SendBroadcast_Language(int To, const char* pText, int Priority, int LifeSpan)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -448,42 +489,13 @@ void CGameContext::SendBroadcast(const char *pText, int To, bool LowPriority)
 	{
 		if(m_apPlayers[i])
 		{
-			if(!LowPriority || (LowPriority && m_BroadcastStates[i].m_HighPriorityTick <= 0))
-				str_copy(m_BroadcastStates[i].m_NextMessage, pText, sizeof(m_BroadcastStates[i].m_NextMessage));
-			
-			if(!LowPriority)
-				m_BroadcastStates[i].m_HighPriorityTick = Server()->TickSpeed();
+			const char* pTranslatedText = ServerLocalize(pText, m_apPlayers[i]->GetLanguage());
+			AddBroadcast(i, pTranslatedText, Priority, LifeSpan);
 		}
 	}
 }
 
-void CGameContext::ClearBroadcast(int To, bool LowPriority)
-{
-	SendBroadcast("", To, LowPriority);
-}
-
-void CGameContext::SendBroadcast_Language(int To, const char* pText, bool LowPriority)
-{
-	int Start = (To < 0 ? 0 : To);
-	int End = (To < 0 ? MAX_CLIENTS : To+1);
-	
-	for(int i = Start; i < End; i++)
-	{
-		if(m_apPlayers[i])
-		{
-			if(!LowPriority || (LowPriority && m_BroadcastStates[i].m_HighPriorityTick <= 0))
-			{
-				const char* pTranslatedText = ServerLocalize(pText, m_apPlayers[i]->GetLanguage());
-				str_copy(m_BroadcastStates[i].m_NextMessage, pTranslatedText, sizeof(m_BroadcastStates[i].m_NextMessage));
-			}
-			
-			if(!LowPriority)
-				m_BroadcastStates[i].m_HighPriorityTick = Server()->TickSpeed();
-		}
-	}
-}
-
-void CGameContext::SendBroadcast_Language_s(int To, const char* pText, const char* pParam)
+void CGameContext::SendBroadcast_Language_s(int To, const char* pText, const char* pParam, int Priority, int LifeSpan)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -495,17 +507,12 @@ void CGameContext::SendBroadcast_Language_s(int To, const char* pText, const cha
 		if(m_apPlayers[i])
 		{
 			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), pParam);
-			str_copy(m_BroadcastStates[i].m_NextMessage, aBuf, sizeof(m_BroadcastStates[i].m_NextMessage));
-		}
-		
-		if(m_BroadcastStates[i].m_HighPriorityTick)
-		{
-			m_BroadcastStates[i].m_HighPriorityTick = Server()->TickSpeed();
+			AddBroadcast(i, aBuf, Priority, LifeSpan);
 		}
 	}
 }
 
-void CGameContext::SendBroadcast_Language_i(int To, const char* pText, int Param, bool LowPriority)
+void CGameContext::SendBroadcast_Language_i(int To, const char* pText, int Param, int Priority, int LifeSpan)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -516,16 +523,8 @@ void CGameContext::SendBroadcast_Language_i(int To, const char* pText, int Param
 	{
 		if(m_apPlayers[i])
 		{
-			if(!LowPriority || (LowPriority && m_BroadcastStates[i].m_HighPriorityTick <= 0))
-			{
-				str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), Param);
-				str_copy(m_BroadcastStates[i].m_NextMessage, aBuf, sizeof(m_BroadcastStates[i].m_NextMessage));
-			}
-			
-			if(!LowPriority)
-			{
-				m_BroadcastStates[i].m_HighPriorityTick = Server()->TickSpeed();
-			}
+			str_format(aBuf, sizeof(aBuf), ServerLocalize(pText, m_apPlayers[i]->GetLanguage()), Param);
+			AddBroadcast(i, aBuf, Priority, LifeSpan);
 		}
 	}
 }
@@ -584,9 +583,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 	}
 	
 	if(Class < END_HUMANCLASS)
-		SendBroadcast_Language_s(ClientID, "You are a human: %s", pClassName);
+		SendBroadcast_Language_s(ClientID, "You are a human: %s", pClassName, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 	else
-		SendBroadcast_Language_s(ClientID, "You are an infected: %s", pClassName);
+		SendBroadcast_Language_s(ClientID, "You are an infected: %s", pClassName, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 }
 
 /* INFECTION MODIFICATION END *****************************************/
@@ -775,14 +774,6 @@ void CGameContext::OnTick()
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
 		m_HitSoundState[i] = 0;
-		
-		if(!m_apPlayers[i])
-			continue;
-		
-		if(m_BroadcastStates[i].m_HighPriorityTick > 0)
-		{
-			m_BroadcastStates[i].m_HighPriorityTick--;
-		}
 	}
 	
 	// check tuning
@@ -836,12 +827,20 @@ void CGameContext::OnTick()
 		if(!m_apPlayers[i])
 		{
 			m_BroadcastStates[i].m_NoChangeTick = 0;
-			m_BroadcastStates[i].m_HighPriorityTick = 0;
+			m_BroadcastStates[i].m_LifeSpanTick = 0;
+			m_BroadcastStates[i].m_Priority = BROADCAST_PRIORITY_LOWEST;
+			m_BroadcastStates[i].m_TimedPriority = BROADCAST_PRIORITY_LOWEST;
 			m_BroadcastStates[i].m_PrevMessage[0] = 0;
 			m_BroadcastStates[i].m_NextMessage[0] = 0;
+			m_BroadcastStates[i].m_TimedMessage[0] = 0;
 		}
 		else
 		{
+			if(m_BroadcastStates[i].m_LifeSpanTick > 0 && m_BroadcastStates[i].m_TimedPriority > m_BroadcastStates[i].m_Priority)
+			{
+				str_copy(m_BroadcastStates[i].m_NextMessage, m_BroadcastStates[i].m_TimedMessage, sizeof(m_BroadcastStates[i].m_NextMessage));
+			}
+			
 			//Send broadcast only if the message is different, or to fight auto-fading
 			if(
 				str_comp(m_BroadcastStates[i].m_PrevMessage, m_BroadcastStates[i].m_NextMessage) != 0 ||
@@ -859,7 +858,19 @@ void CGameContext::OnTick()
 			else
 				m_BroadcastStates[i].m_NoChangeTick++;
 			
+			dbg_msg("InfClass", "Broadcast: %s", m_BroadcastStates[i].m_NextMessage);
+			
+			//Update broadcast state
+			if(m_BroadcastStates[i].m_LifeSpanTick > 0)
+				m_BroadcastStates[i].m_LifeSpanTick--;
+			
+			if(m_BroadcastStates[i].m_LifeSpanTick <= 0)
+			{
+				m_BroadcastStates[i].m_TimedMessage[0] = 0;
+				m_BroadcastStates[i].m_TimedPriority = BROADCAST_PRIORITY_LOWEST;
+			}
 			m_BroadcastStates[i].m_NextMessage[0] = 0;
+			m_BroadcastStates[i].m_Priority = BROADCAST_PRIORITY_LOWEST;
 			
 			//Send score and hit sound
 			int Sound = -1;
@@ -1058,7 +1069,8 @@ void CGameContext::OnClientConnected(int ClientID)
 	Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
 	
 	m_BroadcastStates[ClientID].m_NoChangeTick = 0;
-	m_BroadcastStates[ClientID].m_HighPriorityTick = 0;
+	m_BroadcastStates[ClientID].m_LifeSpanTick = 0;
+	m_BroadcastStates[ClientID].m_Priority = BROADCAST_PRIORITY_LOWEST;
 	m_BroadcastStates[ClientID].m_PrevMessage[0] = 0;
 	m_BroadcastStates[ClientID].m_NextMessage[0] = 0;
 }
@@ -1424,7 +1436,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			if(pMsg->m_Team != TEAM_SPECTATORS && m_LockTeams)
 			{
 				pPlayer->m_LastSetTeam = Server()->Tick();
-				SendBroadcast("Teams are locked", ClientID);
+				SendBroadcast(ClientID, "Teams are locked", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 				return;
 			}
 
@@ -1434,7 +1446,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				int TimeLeft = (pPlayer->m_TeamChangeTick - Server()->Tick())/Server()->TickSpeed();
 				char aBuf[128];
 				str_format(aBuf, sizeof(aBuf), "Time to wait before changing team: %02d:%02d", TimeLeft/60, TimeLeft%60);
-				SendBroadcast(aBuf, ClientID);
+				SendBroadcast(ClientID, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 				return;
 			}
 			
@@ -1450,7 +1462,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 
 				if(InfectedCount <= 2)
 				{
-					 SendBroadcast_Language(ClientID, "You can't join the spectators right now");
+					 SendBroadcast_Language(ClientID, "You can't join the spectators right now", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 					 return;
 				}
 			}
@@ -1469,13 +1481,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					pPlayer->m_TeamChangeTick = Server()->Tick();
 				}
 				else
-					SendBroadcast("Teams must be balanced, please join other team", ClientID);
+					SendBroadcast(ClientID, "Teams must be balanced, please join other team", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 			}
 			else
 			{
 				char aBuf[128];
 				str_format(aBuf, sizeof(aBuf), "Only %d active players are allowed", Server()->MaxClients()-g_Config.m_SvSpectatorSlots);
-				SendBroadcast(aBuf, ClientID);
+				SendBroadcast(ClientID, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 			}
 		}
 		else if (MsgID == NETMSGTYPE_CL_SETSPECTATORMODE && !m_World.m_Paused)
@@ -1886,7 +1898,7 @@ bool CGameContext::ConRestart(IConsole::IResult *pResult, void *pUserData)
 bool CGameContext::ConBroadcast(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
-	pSelf->SendBroadcast(pResult->GetString(0), -1);
+	pSelf->SendBroadcast(-1, pResult->GetString(0), BROADCAST_PRIORITY_SERVERANNOUNCE, pSelf->Server()->TickSpeed()*3);
 	
 	return true;
 }

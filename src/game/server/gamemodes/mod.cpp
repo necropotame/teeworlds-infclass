@@ -875,7 +875,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		random -= m_ClassProbability[PLAYERCLASS_UNDEAD];
 		if(random < 0.0f)
 		{
-			GameServer()->SendBroadcast_Language(-1, "The undead is coming!");
+			GameServer()->SendBroadcast_Language(-1, "The undead is coming!", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 			return PLAYERCLASS_UNDEAD;
 		}
@@ -886,7 +886,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		random -= m_ClassProbability[PLAYERCLASS_WITCH];
 		if(random < 0.0f)
 		{
-			GameServer()->SendBroadcast_Language(-1, "The witch is coming!");
+			GameServer()->SendBroadcast_Language(-1, "The witch is coming!", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 			return PLAYERCLASS_WITCH;
 		}

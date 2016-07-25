@@ -654,7 +654,7 @@ void CCharacter::FireWeapon()
 							if(pTarget->IsFrozen())
 							{
 								pTarget->Unfreeze();
-								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID());
+								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
 							}
 							else
 							{
@@ -1140,12 +1140,11 @@ void CCharacter::Tick()
 		if(m_FrozenTime <= 0)
 		{
 			Unfreeze();
-			GameServer()->ClearBroadcast(m_pPlayer->GetCID(), true);
 		}
 		else
 		{
 			int FreezeSec = 1+(m_FrozenTime/Server()->TickSpeed());
-			GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), "You are frozen: %d sec", FreezeSec, true);
+			GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), "You are frozen: %d sec", FreezeSec, BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME);
 		}
 	}
 	
@@ -1426,53 +1425,53 @@ void CCharacter::Tick()
 					case CMapConverter::MENUCLASS_MEDIC:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Medic");
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Medic", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_NINJA:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_NINJA))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Ninja");
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Ninja", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_MERCENARY:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MERCENARY))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Mercenary");
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Mercenary", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_SNIPER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SNIPER))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Sniper");
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Sniper", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_RANDOM:
-						GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Random choice");
+						GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Random choice", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 						Broadcast = true;
 						break;
 					case CMapConverter::MENUCLASS_ENGINEER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Engineer");
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Engineer", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_SOLDIER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Soldier");
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Soldier", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_SCIENTIST:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Scientist");
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Scientist", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 							Broadcast = true;
 						}
 						break;
@@ -1482,7 +1481,7 @@ void CCharacter::Tick()
 			if(!Broadcast)
 			{
 				m_pPlayer->m_MenuClassChooserItem = -1;
-				GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Choose your class");
+				GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Choose your class", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 			}
 			
 			if(m_Input.m_Fire&1 && m_pPlayer->m_MenuClassChooserItem >= 0)
@@ -1535,9 +1534,7 @@ void CCharacter::Tick()
 	if(GetClass() == PLAYERCLASS_SOLDIER)
 	{
 		if(m_pBomb)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Bombs left: %d", m_pBomb->GetNbBombs(), true);
-		else
-			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Bombs left: %d", m_pBomb->GetNbBombs(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
 	else if(GetClass() == PLAYERCLASS_SCIENTIST)
 	{
@@ -1550,30 +1547,22 @@ void CCharacter::Tick()
 			p = (CMine *)p->TypeNext();
 		}
 		if(NbMines > 0)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Active mines: %d", NbMines, true);
-		else
-			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Active mines: %d", NbMines, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
 	else if(GetClass() == PLAYERCLASS_ENGINEER)
 	{
 		if(m_pBarrier)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Laser wall: %d sec", m_pBarrier->GetTick()/Server()->TickSpeed(), true);
-		else
-			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Laser wall: %d sec", m_pBarrier->GetTick()/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
 	else if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Position lock: %d sec", m_PositionLockTick/Server()->TickSpeed(), true);
-		else
-			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Position lock: %d sec", m_PositionLockTick/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
 	else if(GetClass() == PLAYERCLASS_SPIDER)
 	{
 		if(m_HookMode > 0)
-			GameServer()->SendBroadcast_Language(GetPlayer()->GetCID(), "Web mode enabled", true);
-		else
-			GameServer()->ClearBroadcast(GetPlayer()->GetCID(), true);
+			GameServer()->SendBroadcast_Language(GetPlayer()->GetCID(), "Web mode enabled", BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -1772,13 +1761,13 @@ void CCharacter::Die(int Killer, int Weapon)
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
 		m_pPlayer->StartInfection(true);
-		GameServer()->SendBroadcast_Language(-1, "The witch is dead");
+		GameServer()->SendBroadcast_Language(-1, "The witch is dead", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else if(GetClass() == PLAYERCLASS_UNDEAD)
 	{
 		m_pPlayer->StartInfection(true);
-		GameServer()->SendBroadcast_Language(-1, "The undead is finally dead");
+		GameServer()->SendBroadcast_Language(-1, "The undead is finally dead", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else
