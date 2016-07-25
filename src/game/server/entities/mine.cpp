@@ -103,6 +103,7 @@ void CMine::Tick()
 	for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 	{
 		if(!p->IsInfected()) continue;
+		if(p->GetClass() == PLAYERCLASS_UNDEAD && p->IsFrozen()) continue;
 
 		float Len = distance(p->m_Pos, m_Pos);
 		if(Len < p->m_ProximityRadius+g_Config.m_InfMineRadius)
