@@ -69,7 +69,8 @@ void CBarrier::Tick()
 							pHook->GetPlayer() &&
 							pHook->m_Core.m_HookedPlayer == p->GetPlayer()->GetCID() &&
 							pHook->GetPlayer()->GetCID() != m_Owner && //The engineer will get the point when the infected dies
-							p->m_LastFreezer != pHook->GetPlayer()->GetCID() //The ninja will get the point when the infected dies
+							p->m_LastFreezer != pHook->GetPlayer()->GetCID() && //The ninja will get the point when the infected dies
+							p->GetClass() != PLAYERCLASS_UNDEAD //Or exploit with score
 						)
 						{
 							Server()->RoundStatistics()->OnScoreEvent(pHook->GetPlayer()->GetCID(), SCOREEVENT_HELP_HOOK_BARRIER, pHook->GetClass());
