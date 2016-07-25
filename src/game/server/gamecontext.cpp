@@ -1593,7 +1593,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 740: //Suriname
 					case 56: //Belgique
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_NL);
-						m_VoteLanguage[ClientID] = LANGUAGE_NL;										
+						m_VoteLanguage[ClientID] = LANGUAGE_NL;				
+						break;									
 					case 204: //Benin
 					case 854: //Burkina Faso
 					case 178: //Republic of the Congo
