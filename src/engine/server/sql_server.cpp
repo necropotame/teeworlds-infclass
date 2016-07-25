@@ -183,17 +183,33 @@ void CSqlServer::CreateTables()
 		executeSql(aBuf);
 
 		str_format(aBuf, sizeof(aBuf),
+				"CREATE TABLE IF NOT EXISTS %s_infc_Rounds ("
+					"RoundId INT NOT NULL AUTO_INCREMENT, "
+					"MapName VARCHAR(64) BINARY NOT NULL, "
+					"NumPlayersMin INT NOT NULL, "
+					"NumPlayersMax INT NOT NULL, "
+					"NumWinners INT NOT NULL, "
+					"RoundDate DATETIME NOT NULL, "
+					"RoundDuration INT NOT NULL, "
+					"PRIMARY KEY (RoundId)"
+				") CHARACTER SET utf8 ;"
+			, m_aPrefix, m_aPrefix);
+		executeSql(aBuf);
+
+		str_format(aBuf, sizeof(aBuf),
 				"CREATE TABLE IF NOT EXISTS %s_infc_RoundScore ("
 					"RoundScoreId INT NOT NULL AUTO_INCREMENT, "
 					"UserId INT NOT NULL, "
+					"RoundId INT NOT NULL, "
 					"MapName VARCHAR(64) BINARY NOT NULL, "
 					"ScoreType INT NOT NULL, "
 					"ScoreDate DATETIME NOT NULL, "
 					"Score INT NOT NULL, "
-					"PRIMARY KEY (RoundScoreId),"
-					"FOREIGN KEY (UserId) REFERENCES %s_Users(UserId)"
+					"PRIMARY KEY (RoundScoreId), "
+					"FOREIGN KEY (UserId) REFERENCES %s_Users(UserId), "
+					"FOREIGN KEY (RoundId) REFERENCES %s_infc_Rounds(RoundId)"
 				") CHARACTER SET utf8 ;"
-			, m_aPrefix, m_aPrefix);
+			, m_aPrefix, m_aPrefix, m_aPrefix);
 		executeSql(aBuf);
 
 		dbg_msg("sql", "Tables were created successfully");

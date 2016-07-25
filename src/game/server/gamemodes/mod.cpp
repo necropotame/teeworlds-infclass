@@ -375,6 +375,7 @@ void CGameControllerMOD::Tick()
 						{
 							//TAG_SCORE
 							Server()->RoundStatistics()->OnScoreEvent(i, SCOREEVENT_HUMAN_SURVIVE, pPlayer->GetClass());
+							Server()->RoundStatistics()->SetPlayerAsWinner(i);
 							GameServer()->SendScoreSound(i);
 							pPlayer->m_WinAsHuman++;
 							

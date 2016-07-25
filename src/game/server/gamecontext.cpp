@@ -442,8 +442,6 @@ void CGameContext::SendMODT_Language_s(int To, const char* pText, const char* pP
 
 void CGameContext::AddBroadcast(int ClientID, const char* pText, int Priority, int LifeSpan)
 {
-	dbg_msg("InfClass", "AddBroadcast(%d, '%s', %d, %d)", ClientID, pText, Priority, LifeSpan);
-	
 	if(LifeSpan > 0)
 	{
 		if(m_BroadcastStates[ClientID].m_TimedPriority > Priority)
@@ -857,8 +855,6 @@ void CGameContext::OnTick()
 			}
 			else
 				m_BroadcastStates[i].m_NoChangeTick++;
-			
-			dbg_msg("InfClass", "Broadcast: %s", m_BroadcastStates[i].m_NextMessage);
 			
 			//Update broadcast state
 			if(m_BroadcastStates[i].m_LifeSpanTick > 0)

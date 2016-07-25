@@ -2794,23 +2794,96 @@ void CServer::Ban(int ClientID, int Seconds, const char* pReason)
 	m_ServerBan.BanAddr(m_NetServer.ClientAddr(ClientID), Seconds, pReason);
 }
 
+class CSqlJob_Server_SendRoundStatistics : public CSqlJob
+{
+private:
+	CSqlString<64> m_sMapName;
+	int m_NumPlayersMin;
+	int m_NumPlayersMax;
+	int m_RoundDuration;
+	int m_NumWinners;
+	
+	int m_RoundId;
+	
+public:
+	CSqlJob_Server_SendRoundStatistics(CServer* pServer, const CRoundStatistics* pRoundStatistics, const char* pMapName)
+	{
+		m_sMapName = CSqlString<64>(pMapName);
+		m_NumPlayersMin = pRoundStatistics->m_NumPlayersMin;
+		m_NumPlayersMax = pRoundStatistics->m_NumPlayersMax;
+		m_NumWinners = pRoundStatistics->NumWinners();
+		m_RoundDuration = pRoundStatistics->m_PlayedTicks/pServer->TickSpeed();
+		m_RoundId = -1;
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[512];
+		
+		try
+		{
+			str_format(aBuf, sizeof(aBuf), 
+				"INSERT INTO %s_infc_Rounds "
+				"(MapName, NumPlayersMin, NumPlayersMax, NumWinners, RoundDate, RoundDuration) "
+				"VALUES "
+				"('%s', '%d', '%d', '%d', UTC_TIMESTAMP(), '%d')"
+				, pSqlServer->GetPrefix(), m_sMapName.ClrStr(), m_NumPlayersMin, m_NumPlayersMax, m_NumWinners, m_RoundDuration);
+			pSqlServer->executeSql(aBuf);
+			
+			//Get old score
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT RoundId FROM %s_infc_Rounds "
+				"WHERE RoundDuration = '%d' AND NumPlayersMin = '%d' AND NumPlayersMax = '%d'"
+				"ORDER BY RoundId DESC LIMIT 1"
+				, pSqlServer->GetPrefix(), m_RoundDuration, m_NumPlayersMin, m_NumPlayersMax);
+			pSqlServer->executeSqlQuery(aBuf);
+			
+			if(pSqlServer->GetResults()->next())
+			{
+				m_RoundId = (int)pSqlServer->GetResults()->getInt("RoundId");
+			}
+		}
+		catch (sql::SQLException &e)
+		{
+			dbg_msg("sql", "Can't send round statistics (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+	
+	virtual void* GenerateChildData()
+	{
+		return &m_RoundId;
+	}
+};
+
 class CSqlJob_Server_SendPlayerStatistics : public CSqlJob
 {
 private:
 	CServer* m_pServer;
 	int m_ClientID;
 	int m_UserID;
+	int m_RoundId;
 	CSqlString<64> m_sMapName;
 	CRoundStatistics::CPlayer m_PlayerStatistics;
 	
 public:
-	CSqlJob_Server_SendPlayerStatistics(CServer* pServer, CRoundStatistics::CPlayer* pPlayerStatistics, const char* pMapName, int UserID, int ClientID)
+	CSqlJob_Server_SendPlayerStatistics(CServer* pServer, const CRoundStatistics::CPlayer* pPlayerStatistics, const char* pMapName, int UserID, int ClientID)
 	{
+		m_RoundId = -1;
 		m_pServer = pServer;
 		m_ClientID = ClientID;
 		m_UserID = UserID;
 		m_sMapName = CSqlString<64>(pMapName);
 		m_PlayerStatistics = *pPlayerStatistics;
+	}
+	
+	virtual void ProcessParentData(void* pData)
+	{
+		int* pRoundId = (int*) pData;
+		m_RoundId = *pRoundId;
 	}
 	
 	void UpdateScore(CSqlServer* pSqlServer, int ScoreType, int Score, const char* pScoreName)
@@ -2853,9 +2926,9 @@ public:
 		
 		str_format(aBuf, sizeof(aBuf), 
 			"INSERT INTO %s_infc_RoundScore "
-			"(UserId, MapName, ScoreType, ScoreDate, Score) "
-			"VALUES ('%d', '%s', '%d', UTC_TIMESTAMP(), '%d');"
-			, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), ScoreType, Score);
+			"(UserId, RoundId, MapName, ScoreType, ScoreDate, Score) "
+			"VALUES ('%d', '%d', '%s', '%d', UTC_TIMESTAMP(), '%d');"
+			, pSqlServer->GetPrefix(), m_UserID, m_RoundId, m_sMapName.ClrStr(), ScoreType, Score);
 		pSqlServer->executeSql(aBuf);
 		
 		if(OldScore < NewScore)
@@ -2874,7 +2947,10 @@ public:
 	}
 
 	virtual bool Job(CSqlServer* pSqlServer)
-	{		
+	{
+		if(m_RoundId < 0)
+			return false;
+		
 		try
 		{
 			if(m_PlayerStatistics.m_Score > 0)
@@ -2912,36 +2988,35 @@ public:
 		}
 		catch (sql::SQLException &e)
 		{
-			dbg_msg("sql", "Can't send statistics (MySQL Error: %s)", e.what());
+			dbg_msg("sql", "Can't send player statistics (MySQL Error: %s)", e.what());
 			
 			return false;
 		}
 		
 		return true;
 	}
-	
-	virtual void CleanInstanceRef()
-	{
-		m_pServer->m_aClients[m_ClientID].m_LogInstance = -1;
-	}
 };
-
-void CServer::OnRoundStart()
-{
-	RoundStatistics()->Reset();
-}
 
 void CServer::OnRoundEnd()
 {
-	//Send statistics
+	//Send round statistics
+	CSqlJob* pRoundJob = new CSqlJob_Server_SendRoundStatistics(this, RoundStatistics(), m_aCurrentMap);
+	pRoundJob->Start();
+	
+	//Send player statistics
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
 		if(m_aClients[i].m_State == CClient::STATE_INGAME && m_aClients[i].m_UserID >= 0 && RoundStatistics()->IsValidePlayer(i))
 		{
 			CSqlJob* pJob = new CSqlJob_Server_SendPlayerStatistics(this, RoundStatistics()->PlayerStatistics(i), m_aCurrentMap, m_aClients[i].m_UserID, i);
-			pJob->Start();
+			pRoundJob->AddQueuedJob(pJob);
 		}
 	}
+}
+
+void CServer::OnRoundStart()
+{
+	RoundStatistics()->Reset();
 }
 
 /* INFECTION MODIFICATION END *****************************************/

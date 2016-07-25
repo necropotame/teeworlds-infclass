@@ -92,6 +92,12 @@ void CRoundStatistics::OnScoreEvent(int ClientID, int EventType, int Class)
 		m_aPlayers[ClientID].OnScoreEvent(EventType, Class);
 }
 
+void CRoundStatistics::SetPlayerAsWinner(int ClientID)
+{
+	if(ClientID >= 0 && ClientID < MAX_CLIENTS)
+		m_aPlayers[ClientID].m_Won = true;
+}
+
 CRoundStatistics::CPlayer* CRoundStatistics::PlayerStatistics(int ClientID)
 {
 	if(ClientID >= 0 && ClientID < MAX_CLIENTS)
@@ -105,6 +111,17 @@ int CRoundStatistics::PlayerScore(int ClientID)
 	if(ClientID >= 0 && ClientID < MAX_CLIENTS)
 		return m_aPlayers[ClientID].m_Score/10;
 	else return 0;
+}
+	
+int CRoundStatistics::NumWinners() const
+{
+	int NumWinner = 0;
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{
+		if(m_aPlayers[i].m_Won)
+			NumWinner++;
+	}
+	return NumWinner;
 }
 
 void CRoundStatistics::UpdatePlayer(int ClientID, bool IsSpectator)
@@ -120,6 +137,9 @@ void CRoundStatistics::UpdateNumberOfPlayers(int Num)
 	
 	if(m_NumPlayersMax < Num)
 		m_NumPlayersMax = Num;
+	
+	if(Num > 1)
+		m_PlayedTicks++;
 }
 	
 bool CRoundStatistics::IsValidePlayer(int ClientID)
@@ -128,9 +148,4 @@ bool CRoundStatistics::IsValidePlayer(int ClientID)
 		return !m_aPlayers[ClientID].m_WasSpectator;
 	else
 		return false;
-}
-	
-bool CRoundStatistics::IsValideRound()
-{
-	return m_NumPlayersMin >= 6;
 }

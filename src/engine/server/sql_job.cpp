@@ -17,10 +17,15 @@ void CSqlJob::Start(bool ReadOnly)
 	void *registerThread = thread_init(CSqlJob::Exec, this);
 	thread_detach(registerThread);
 }
-	
-void CSqlJob::Exec(void* pData)
+
+void CSqlJob::AddQueuedJob(CSqlJob* pJob)
 {
-	CSqlJob* pSelf = (CSqlJob*) pData;
+	m_QueuedJobs.add(pJob);
+}
+	
+void CSqlJob::Exec(void* pDataSelf)
+{
+	CSqlJob* pSelf = (CSqlJob*) pDataSelf;
 	
 	CSqlConnector connector;
 
@@ -37,6 +42,12 @@ void CSqlJob::Exec(void* pData)
 	}
 	
 	pSelf->CleanInstanceRef();
+	
+	for(int i=0; i<pSelf->m_QueuedJobs.size(); i++)
+	{
+		pSelf->m_QueuedJobs[i]->ProcessParentData(pSelf->GenerateChildData());
+		pSelf->m_QueuedJobs[i]->Start();
+	}
 
 	delete pSelf;
 }

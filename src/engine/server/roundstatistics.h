@@ -40,6 +40,7 @@ public:
 		int m_WitchScore;
 		
 		bool m_WasSpectator;
+		bool m_Won;
 	
 	public:
 		CPlayer() { Reset(); }
@@ -51,21 +52,24 @@ public:
 	CPlayer m_aPlayers[MAX_CLIENTS];
 	int m_NumPlayersMin;
 	int m_NumPlayersMax;
+	int m_PlayedTicks;
 	
 public:
 	CRoundStatistics() { Reset(); }
 	void Reset() { mem_zero(this, sizeof(CRoundStatistics)); }
 	void ResetPlayer(int ClientID);
 	void OnScoreEvent(int ClientID, int EventType, int Class);
+	void SetPlayerAsWinner(int ClientID);
 	
 	CRoundStatistics::CPlayer* PlayerStatistics(int ClientID);
 	int PlayerScore(int ClientID);
+	
+	int NumWinners() const;
 	
 	void UpdatePlayer(int ClientID, bool IsSpectator);
 	void UpdateNumberOfPlayers(int Num);
 	
 	bool IsValidePlayer(int ClientID);
-	bool IsValideRound();
 };
 
 #endif
