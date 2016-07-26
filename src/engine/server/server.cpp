@@ -2467,13 +2467,6 @@ int CServer::GetClientNbRound(int ClientID)
 	return m_aClients[ClientID].m_NbRound;
 }
 
-void CServer::SetClientNbRound(int ClientID, int Score)
-{
-	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State < CClient::STATE_READY)
-		return;
-	m_aClients[ClientID].m_NbRound = Score;
-}
-
 int CServer::IsClassChooserEnabled()
 {
 	return m_InfClassChooser;
@@ -3022,10 +3015,14 @@ void CServer::OnRoundEnd()
 	//Send player statistics
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
-		if(m_aClients[i].m_State == CClient::STATE_INGAME && m_aClients[i].m_UserID >= 0 && RoundStatistics()->IsValidePlayer(i))
+		if(m_aClients[i].m_State == CClient::STATE_INGAME)
 		{
-			CSqlJob* pJob = new CSqlJob_Server_SendPlayerStatistics(this, RoundStatistics()->PlayerStatistics(i), m_aCurrentMap, m_aClients[i].m_UserID, i);
-			pRoundJob->AddQueuedJob(pJob);
+			m_aClients[i].m_NbRound++;
+			if(m_aClients[i].m_UserID >= 0 && RoundStatistics()->IsValidePlayer(i))
+			{
+				CSqlJob* pJob = new CSqlJob_Server_SendPlayerStatistics(this, RoundStatistics()->PlayerStatistics(i), m_aCurrentMap, m_aClients[i].m_UserID, i);
+				pRoundJob->AddQueuedJob(pJob);
+			}
 		}
 	}
 #endif

@@ -1046,12 +1046,7 @@ void CGameContext::OnClientConnected(int ClientID)
 	}
 #endif
 
-/* INFECTION MODIFICATION START ***************************************/
-	if(!m_pController->IsGameOver())
-	{
-		m_apPlayers[ClientID]->IncreaseNbRound();
-	}
-	
+/* INFECTION MODIFICATION START ***************************************/	
 	Server()->RoundStatistics()->ResetPlayer(ClientID);
 /* INFECTION MODIFICATION END *****************************************/	
 

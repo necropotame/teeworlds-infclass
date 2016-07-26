@@ -313,7 +313,6 @@ public:
 	virtual void SetClassAvailability(int CID, int n);
 	
 	virtual int GetClientNbRound(int ClientID);
-	virtual void SetClientNbRound(int ClientID, int Score);
 	
 	virtual int IsClassChooserEnabled();
 	virtual bool IsClientLogged(int ClientID);

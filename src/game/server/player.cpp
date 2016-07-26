@@ -667,11 +667,6 @@ bool CPlayer::IsKownClass(int c)
 	return m_knownClass[c];
 }
 
-void CPlayer::IncreaseNbRound()
-{
-	m_NbRound++;
-}
-
 int CPlayer::GetScoreMode()
 {
 	return m_ScoreMode;

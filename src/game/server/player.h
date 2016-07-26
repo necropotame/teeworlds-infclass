@@ -119,7 +119,6 @@ private:
 /* INFECTION MODIFICATION START ***************************************/
 private:
 	int m_class;
-	int m_NbRound;
 	int m_ScoreMode;
 	int m_DefaultScoreMode;
 	int m_Language;
@@ -132,7 +131,6 @@ public:
 	bool m_knownClass[NB_PLAYERCLASS];
 	int m_InfectionTick;
 	
-	void IncreaseNbRound();
 	int GetScoreMode();
 	void SetScoreMode(int Mode);
 	

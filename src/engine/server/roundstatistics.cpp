@@ -145,7 +145,7 @@ void CRoundStatistics::UpdateNumberOfPlayers(int Num)
 bool CRoundStatistics::IsValidePlayer(int ClientID)
 {
 	if(ClientID >= 0 && ClientID < MAX_CLIENTS)
-		return !m_aPlayers[ClientID].m_WasSpectator;
+		return true;
 	else
 		return false;
 }

@@ -139,7 +139,6 @@ public:
 	virtual void InfecteClient(int ClientID) = 0;
 	
 	virtual int GetClientNbRound(int ClientID) = 0;
-	virtual void SetClientNbRound(int ClientID, int Score) = 0;
 	
 	virtual int GetClientCustomSkin(int ClientID) = 0;
 	virtual void SetClientCustomSkin(int ClientID, int Value) = 0;
