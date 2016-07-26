@@ -1,3 +1,4 @@
+#ifdef CONF_SQL
 #include <cmath>
 #include <cstring>
 #include <ctime>
@@ -143,3 +144,5 @@ void sqlstr::getTimeStamp(char* dest, unsigned int size)
 
 	str_timestamp_ex(rawtime, dest, size, "%Y-%m-%d %H:%M:%S");
 }
+
+#endif

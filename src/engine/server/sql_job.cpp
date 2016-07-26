@@ -1,3 +1,4 @@
+#ifdef CONF_SQL
 #include "sql_job.h"
 
 CSqlJob::~CSqlJob()
@@ -51,3 +52,5 @@ void CSqlJob::Exec(void* pDataSelf)
 
 	delete pSelf;
 }
+
+#endif

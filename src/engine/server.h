@@ -168,10 +168,11 @@ public:
 	virtual int IsClassChooserEnabled() = 0;
 	
 	virtual bool IsClientLogged(int ClientID) = 0;
+#ifdef CONF_SQL
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword) = 0;
 	virtual void Logout(int ClientID) = 0;
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail) = 0;
-	
+#endif
 	virtual void Ban(int i, int Seconds, const char* pReason) = 0;
 
 public:

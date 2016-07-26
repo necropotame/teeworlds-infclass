@@ -2343,6 +2343,8 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+#ifdef CONF_SQL
+
 bool CGameContext::ConRegister(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
@@ -2381,6 +2383,8 @@ bool CGameContext::ConLogout(IConsole::IResult *pResult, void *pUserData)
 	
 	return true;
 }
+
+#endif
 
 bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 {
@@ -2700,8 +2704,12 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	int ClientID = pResult->GetClientID();
 	int Language = pSelf->m_apPlayers[ClientID]->GetLanguage();
 	
-	const char* pLine1 = pSelf->ServerLocalize("List of commands", Language); 
-	const char* pLine2 = "/ar, /alwaysrandom, /customskin, /fa, /help, /info, /language, /login, /register"; 
+	const char* pLine1 = pSelf->ServerLocalize("List of commands", Language);
+#ifdef CONF_SQL
+	const char* pLine2 = "/ar, /alwaysrandom, /customskin, /fa, /help, /info, /language, /register, /login, /logout"; 
+#else
+	const char* pLine2 = "/ar, /alwaysrandom, /customskin, /fa, /help, /info, /language"; 
+#endif
 	const char* pLine3 = pSelf->ServerLocalize("Press <F3> or <F4> to enable or disable hook protection", Language);
 	const char* pLine4 = pSelf->ServerLocalize("Press <F3> or <F4> while holding <TAB> to switch the score system", Language);
 	
@@ -2770,9 +2778,11 @@ void CGameContext::OnConsoleInit()
 	
 	//Chat Command
 	Console()->Register("info", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChatInfo, this, "Display information about the mod");
+#ifdef CONF_SQL
 	Console()->Register("register", "s<login> s<password> ?s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
 	Console()->Register("login", "s<login> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
+#endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
 	Console()->Register("alwaysrandom", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAlwaysRandom, this, "Display information about the mod");

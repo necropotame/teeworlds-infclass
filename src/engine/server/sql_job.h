@@ -1,3 +1,4 @@
+#ifdef CONF_SQL
 #ifndef ENGINE_SERVER_SQL_JOB_H
 #define ENGINE_SERVER_SQL_JOB_H
 
@@ -32,4 +33,4 @@ public:
 };
 
 #endif
-
+#endif

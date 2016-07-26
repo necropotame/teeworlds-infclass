@@ -1,3 +1,4 @@
+#ifdef CONF_SQL
 #include <base/system.h>
 #include <engine/shared/protocol.h>
 #include <engine/shared/config.h>
@@ -236,3 +237,5 @@ void CSqlServer::executeSqlQuery(const char *pQuery)
 	m_pResults = 0;
 	m_pResults = m_pStatement->executeQuery(pQuery);
 }
+
+#endif

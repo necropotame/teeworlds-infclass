@@ -1,3 +1,4 @@
+#ifdef CONF_SQL
 #ifndef ENGINE_SERVER_SQL_CONNECTOR_H
 #define ENGINE_SERVER_SQL_CONNECTOR_H
 
@@ -44,4 +45,5 @@ private:
 	int m_NumWriteRetries;
 };
 
+#endif
 #endif

@@ -1,3 +1,4 @@
+#ifdef CONF_SQL
 #include <base/system.h>
 
 #include "sql_connector.h"
@@ -35,3 +36,5 @@ bool CSqlConnector::ConnectSqlServer(bool ReadOnly)
 	m_pSqlServer = 0;
 	return false;
 }
+
+#endif

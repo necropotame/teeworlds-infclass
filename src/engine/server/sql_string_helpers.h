@@ -1,3 +1,4 @@
+#ifdef CONF_SQL
 #ifndef ENGINE_SERVER_SQL_STRING_HELPERS_H
 #define ENGINE_SERVER_SQL_STRING_HELPERS_H
 
@@ -44,4 +45,5 @@ private:
 	char m_aClearString[size * 2 - 1];
 };
 
+#endif
 #endif

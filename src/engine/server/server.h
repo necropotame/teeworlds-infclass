@@ -72,8 +72,10 @@ class CServer : public IServer
 	class IStorage *m_pStorage;
 
 /* DDNET MODIFICATION START *******************************************/
+#ifdef CONF_SQL
 	CSqlServer* m_apSqlReadServers[MAX_SQLSERVERS];
 	CSqlServer* m_apSqlWriteServers[MAX_SQLSERVERS];
+#endif
 /* DDNET MODIFICATION END *********************************************/
 public:
 	class IGameServer *GameServer() { return m_pGameServer; }
@@ -315,10 +317,11 @@ public:
 	
 	virtual int IsClassChooserEnabled();
 	virtual bool IsClientLogged(int ClientID);
+#ifdef CONF_SQL
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
 	virtual void Logout(int ClientID);
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail);
-
+#endif
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
 	bool InitCaptcha();

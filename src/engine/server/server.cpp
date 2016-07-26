@@ -308,6 +308,7 @@ CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 	m_RconAuthLevel = AUTHED_ADMIN;
 
 /* DDNET MODIFICATION START *******************************************/
+#ifdef CONF_SQL
 	for (int i = 0; i < MAX_SQLSERVERS; i++)
 	{
 		m_apSqlReadServers[i] = 0;
@@ -316,6 +317,7 @@ CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 
 	CSqlConnector::SetReadServers(m_apSqlReadServers);
 	CSqlConnector::SetWriteServers(m_apSqlWriteServers);
+#endif
 /* DDNET MODIFICATION END *********************************************/
 	
 	m_GameServerCmdLock = lock_create();
@@ -1870,6 +1872,7 @@ int CServer::Run()
 		mem_free(m_pCurrentMapData);
 		
 /* DDNET MODIFICATION START *******************************************/
+#ifdef CONF_SQL
 	for (int i = 0; i < MAX_SQLSERVERS; i++)
 	{
 		if (m_apSqlReadServers[i])
@@ -1878,6 +1881,7 @@ int CServer::Run()
 		if (m_apSqlWriteServers[i])
 			delete m_apSqlWriteServers[i];
 	}
+#endif
 /* DDNET MODIFICATION END *********************************************/
 		
 	return 0;
@@ -2124,7 +2128,7 @@ bool CServer::ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void 
 }
 
 /* DDNET MODIFICATION START *******************************************/
-
+#ifdef CONF_SQL
 bool CServer::ConAddSqlServer(IConsole::IResult *pResult, void *pUserData)
 {
 	CServer *pSelf = (CServer *)pUserData;
@@ -2202,6 +2206,8 @@ void CServer::CreateTablesThread(void *pData)
 {
 	((CSqlServer *)pData)->CreateTables();
 }
+#endif
+
 /* DDNET MODIFICATION END *********************************************/
 
 void CServer::RegisterCommands()
@@ -2230,8 +2236,10 @@ void CServer::RegisterCommands()
 	Console()->Chain("console_output_level", ConchainConsoleOutputLevelUpdate, this);
 
 /* INFECTION MODIFICATION START ***************************************/
+#ifdef CONF_SQL
 	Console()->Register("inf_add_sqlserver", "ssssssi?i", CFGFLAG_SERVER, ConAddSqlServer, this, "add a sqlserver");
 	Console()->Register("inf_list_sqlservers", "s", CFGFLAG_SERVER, ConDumpSqlServers, this, "list all sqlservers readservers = r, writeservers = w");
+#endif
 /* INFECTION MODIFICATION END *****************************************/
 
 	// register console commands in sub parts
@@ -2521,6 +2529,8 @@ public:
 	}
 };
 
+#ifdef CONF_SQL
+
 class CSqlJob_Server_Login : public CSqlJob
 {
 private:
@@ -2789,10 +2799,14 @@ void CServer::Register(int ClientID, const char* pUsername, const char* pPasswor
 	pJob->Start();
 }
 
+#endif
+
 void CServer::Ban(int ClientID, int Seconds, const char* pReason)
 {
 	m_ServerBan.BanAddr(m_NetServer.ClientAddr(ClientID), Seconds, pReason);
 }
+
+#ifdef CONF_SQL
 
 class CSqlJob_Server_SendRoundStatistics : public CSqlJob
 {
@@ -2996,9 +3010,11 @@ public:
 		return true;
 	}
 };
+#endif
 
 void CServer::OnRoundEnd()
 {
+#ifdef CONF_SQL
 	//Send round statistics
 	CSqlJob* pRoundJob = new CSqlJob_Server_SendRoundStatistics(this, RoundStatistics(), m_aCurrentMap);
 	pRoundJob->Start();
@@ -3012,6 +3028,7 @@ void CServer::OnRoundEnd()
 			pRoundJob->AddQueuedJob(pJob);
 		}
 	}
+#endif
 }
 
 void CServer::OnRoundStart()
