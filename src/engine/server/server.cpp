@@ -2792,6 +2792,94 @@ void CServer::Register(int ClientID, const char* pUsername, const char* pPasswor
 	pJob->Start();
 }
 
+class CSqlJob_Server_ShowTop10 : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	CSqlString<64> m_sMapName;
+	int m_ClientID;
+	int m_ScoreType;
+	
+public:
+	CSqlJob_Server_ShowTop10(CServer* pServer, const char* pMapName, int ClientID, int ScoreType)
+	{
+		m_pServer = pServer;
+		m_sMapName = CSqlString<64>(pMapName);
+		m_ClientID = ClientID;
+		m_ScoreType = ScoreType;
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[1024];
+		
+		try
+		{
+			//Get the top 10 with this very simple, intuitive and optimized SQL fuction >_<
+			pSqlServer->executeSql("SET @VarRowNum := 0, @VarType := -1");
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT "
+					"TableUsers.Username, "
+					"SUM(y.Score) AS AccumulatedScore, "
+					"COUNT(y.Score) AS NbRounds "
+				"FROM ("
+					"SELECT "
+						"x.UserId AS UserId, "
+						"x.Score AS Score, "
+						"@VarRowNum := IF(@VarType = x.UserId, @VarRowNum + 1, 1) as RowNumber, "
+						"@VarType := x.UserId AS dummy "
+					"FROM ("
+						"SELECT "
+							"TableRoundScore.UserId, "
+							"TableRoundScore.Score "
+						"FROM %s_infc_RoundScore AS TableRoundScore "
+						"WHERE ScoreType = '%d' AND MapName = '%s' "
+						"ORDER BY TableRoundScore.UserId ASC, TableRoundScore.Score DESC "
+					") AS x "
+				") AS y "
+				"INNER JOIN %s_Users AS TableUsers ON y.UserId = TableUsers.UserId "
+				"WHERE y.RowNumber <= %d "
+				"GROUP BY y.UserId "
+				"ORDER BY AccumulatedScore DESC, y.UserId ASC "
+				"LIMIT 10"
+				, pSqlServer->GetPrefix()
+				, m_ScoreType
+				, m_sMapName.ClrStr()
+				, pSqlServer->GetPrefix()
+				, SQL_SCORE_NUMROUND
+			);
+			pSqlServer->executeSqlQuery(aBuf);
+			
+			str_format(aBuf, sizeof(aBuf), "Top 10 players in %s:", m_sMapName.Str());
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
+			m_pServer->AddGameServerCmd(pCmd);
+				
+			int Rank = 0;
+			while(pSqlServer->GetResults()->next())
+			{
+				Rank++;
+				str_format(aBuf, sizeof(aBuf), "%d. %s : %d pts", Rank, pSqlServer->GetResults()->getString("Username").c_str(), pSqlServer->GetResults()->getInt("AccumulatedScore"));
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
+				m_pServer->AddGameServerCmd(pCmd);
+			}
+		}
+		catch (sql::SQLException &e)
+		{
+			dbg_msg("sql", "Can't get top10 (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+};
+
+void CServer::ShowTop10(int ClientID, int ScoreType)
+{
+	CSqlJob* pJob = new CSqlJob_Server_ShowTop10(this, m_aCurrentMap, ClientID, ScoreType);
+	pJob->Start();
+}
+
 #endif
 
 void CServer::Ban(int ClientID, int Seconds, const char* pReason)
@@ -2898,37 +2986,17 @@ public:
 		char aBuf[512];
 		
 		//Get old score
-		int OldScore = 0;
 		str_format(aBuf, sizeof(aBuf), 
-			"SELECT Score FROM %s_infc_RoundScore "
+			"SELECT SUM(Score) AS AccumulatedScore FROM %s_infc_RoundScore "
 			"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
 			"ORDER BY Score DESC LIMIT %d"
 			, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), ScoreType, SQL_SCORE_NUMROUND);
 		pSqlServer->executeSqlQuery(aBuf);
 
-		bool ScoreImproved = false;
-		int SmallestScore = 999999999;
-		int ScoreCounter = 0;
-		while(pSqlServer->GetResults()->next())
+		int OldScore = 0;
+		if(pSqlServer->GetResults()->next())
 		{
-			int ReadedScore = (int)pSqlServer->GetResults()->getInt("Score");
-			OldScore += ReadedScore;
-			ScoreCounter++;
-			
-			if(SmallestScore > ReadedScore)
-			{
-				SmallestScore = ReadedScore;
-				ScoreImproved = true;
-			}
-		}
-		
-		if(ScoreCounter < SQL_SCORE_NUMROUND)
-			ScoreImproved = true;
-		
-		int NewScore = OldScore;
-		if(ScoreImproved)
-		{
-			NewScore = Score-SmallestScore;
+			OldScore = (int)pSqlServer->GetResults()->getInt("AccumulatedScore");
 		}
 		
 		str_format(aBuf, sizeof(aBuf), 
@@ -2938,15 +3006,29 @@ public:
 			, pSqlServer->GetPrefix(), m_UserID, m_RoundId, m_sMapName.ClrStr(), ScoreType, Score);
 		pSqlServer->executeSql(aBuf);
 		
+		//Get new score
+		str_format(aBuf, sizeof(aBuf), 
+			"SELECT SUM(Score) AS AccumulatedScore FROM %s_infc_RoundScore "
+			"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
+			"ORDER BY Score DESC LIMIT %d"
+			, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), ScoreType, SQL_SCORE_NUMROUND);
+		pSqlServer->executeSqlQuery(aBuf);
+
+		int NewScore = OldScore;
+		if(pSqlServer->GetResults()->next())
+		{
+			NewScore = (int)pSqlServer->GetResults()->getInt("AccumulatedScore");
+		}
+		
 		if(OldScore < NewScore)
 		{
 			if(pScoreName[0])
 			{
-				str_format(aBuf, sizeof(aBuf), "You increased your score as %s in %s: %d (+%d)", pScoreName, m_sMapName.Str(), NewScore, NewScore-OldScore);
+				str_format(aBuf, sizeof(aBuf), "You increased your score as %s in %s: %d (+%d)", pScoreName, m_sMapName.Str(), NewScore/10, (NewScore-OldScore)/10);
 			}
 			else
 			{
-				str_format(aBuf, sizeof(aBuf), "You increased your score in %s: %d (+%d)", m_sMapName.Str(), NewScore, NewScore-OldScore);
+				str_format(aBuf, sizeof(aBuf), "You increased your score in %s: %d (+%d)", m_sMapName.Str(), NewScore/10, (NewScore-OldScore)/10);
 			}
 			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
 			m_pServer->AddGameServerCmd(pCmd);
@@ -3032,6 +3114,5 @@ void CServer::OnRoundStart()
 {
 	RoundStatistics()->Reset();
 }
-
 /* INFECTION MODIFICATION END *****************************************/
 

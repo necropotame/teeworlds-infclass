@@ -208,6 +208,7 @@ private:
 	static bool ConRegister(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLogin(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLogout(IConsole::IResult *pResult, void *pUserData);
+	static bool ConTop10(IConsole::IResult *pResult, void *pUserData);
 #endif
 	static bool ConHelp(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCustomSkin(IConsole::IResult *pResult, void *pUserData);

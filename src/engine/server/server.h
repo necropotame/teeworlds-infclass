@@ -320,6 +320,7 @@ public:
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
 	virtual void Logout(int ClientID);
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail);
+	virtual void ShowTop10(int ClientID, int ScoreType);
 #endif
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
@@ -344,6 +345,7 @@ public:
 	virtual CRoundStatistics* RoundStatistics() { return &m_RoundStatistics; }
 	virtual void OnRoundStart();
 	virtual void OnRoundEnd();
+	
 /* INFECTION MODIFICATION END *****************************************/
 };
 

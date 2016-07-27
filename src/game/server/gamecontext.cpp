@@ -7,6 +7,7 @@
 #include <engine/console.h>
 #include <engine/storage.h>
 #include <engine/server/roundstatistics.h>
+#include <engine/server/sql_server.h>
 #include "gamecontext.h"
 #include <game/version.h>
 #include <game/collision.h>
@@ -2379,6 +2380,16 @@ bool CGameContext::ConLogout(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	
+	pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_ROUND_SCORE);
+	
+	return true;
+}
+
 #endif
 
 bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
@@ -2700,16 +2711,19 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	int Language = pSelf->m_apPlayers[ClientID]->GetLanguage();
 	
 	const char* pLine1 = pSelf->ServerLocalize("List of commands", Language);
-#ifdef CONF_SQL
-	const char* pLine2 = "/ar, /alwaysrandom, /customskin, /fa, /help, /info, /language, /register, /login, /logout"; 
-#else
 	const char* pLine2 = "/ar, /alwaysrandom, /customskin, /fa, /help, /info, /language"; 
+#ifdef CONF_SQL
+	const char* pLineSql = "/register, /login, /logout, /top10"; 
 #endif
 	const char* pLine3 = pSelf->ServerLocalize("Press <F3> or <F4> to enable or disable hook protection", Language);
 	const char* pLine4 = pSelf->ServerLocalize("Press <F3> or <F4> while holding <TAB> to switch the score system", Language);
-	
+
+#ifdef CONF_SQL
+	str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLineSql, pLine3, pLine4);
+#else
 	str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
-		
+#endif
+
 	pSelf->SendMODT(ClientID, aBuf);
 	
 	return true;
@@ -2777,6 +2791,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("register", "s<login> s<password> ?s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
 	Console()->Register("login", "s<login> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
+	Console()->Register("top10", "", CFGFLAG_CHAT|CFGFLAG_USER, ConTop10, this, "Show the top 10 on the current map");
 #endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
