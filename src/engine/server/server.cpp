@@ -286,6 +286,7 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_Language = LANGUAGE_EN;
 		m_WaitingTime = 0;
 		m_WasInfected = 0;
+		mem_zero(m_Memory, sizeof(m_Memory));
 	}
 }
 /* INFECTION MODIFICATION END *****************************************/
@@ -1741,6 +1742,7 @@ int CServer::Run()
 						m_aClients[c].Reset(false);
 /* INFECTION MODIFICATION END *****************************************/
 						m_aClients[c].m_State = CClient::STATE_CONNECTING;
+						SetClientMemory(c, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE, true);
 					}
 
 					m_GameStartTime = time_get();
@@ -2484,6 +2486,25 @@ void CServer::AddGameServerCmd(CGameServerCmd* pCmd)
 	lock_release(m_GameServerCmdLock);
 }
 
+class CGameServerCmd_SendChatMOTD : public CServer::CGameServerCmd
+{
+private:
+	int m_ClientID;
+	char m_aText[512];
+	
+public:
+	CGameServerCmd_SendChatMOTD(int ClientID, const char* pText)
+	{
+		m_ClientID = ClientID;
+		str_copy(m_aText, pText, sizeof(m_aText));
+	}
+
+	virtual void Execute(IGameServer* pGameServer)
+	{
+		pGameServer->SendMOTD(m_ClientID, m_aText);
+	}
+};
+
 class CGameServerCmd_SendChatTarget : public CServer::CGameServerCmd
 {
 private:
@@ -2850,18 +2871,25 @@ public:
 			);
 			pSqlServer->executeSqlQuery(aBuf);
 			
-			str_format(aBuf, sizeof(aBuf), "Top 10 players in %s:", m_sMapName.Str());
-			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
-			m_pServer->AddGameServerCmd(pCmd);
+			str_format(aBuf, sizeof(aBuf), "== %s top 10 ==\n\n", m_sMapName.Str());
+			char* pMOTD = aBuf + str_length(aBuf);
 				
 			int Rank = 0;
 			while(pSqlServer->GetResults()->next())
 			{
 				Rank++;
-				str_format(aBuf, sizeof(aBuf), "%d. %s : %d pts", Rank, pSqlServer->GetResults()->getString("Username").c_str(), pSqlServer->GetResults()->getInt("AccumulatedScore"));
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
-				m_pServer->AddGameServerCmd(pCmd);
+				str_format(pMOTD, sizeof(aBuf)-(pMOTD-aBuf), "%d. %s: %d pts\n",
+					Rank,
+					pSqlServer->GetResults()->getString("Username").c_str(),
+					pSqlServer->GetResults()->getInt("AccumulatedScore"),
+					pSqlServer->GetResults()->getInt("NbRounds")
+				);
+				pMOTD += str_length(pMOTD);
 			}
+			str_copy(pMOTD, "\nCreate an account with /register and try to beat them!", sizeof(aBuf)-(pMOTD-aBuf));
+			
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatMOTD(m_ClientID, aBuf);
+			m_pServer->AddGameServerCmd(pCmd);
 		}
 		catch (sql::SQLException &e)
 		{
@@ -3114,5 +3142,30 @@ void CServer::OnRoundStart()
 {
 	RoundStatistics()->Reset();
 }
+	
+void CServer::SetClientMemory(int ClientID, int Memory, bool Value)
+{
+	if(ClientID < 0 || ClientID >= MAX_CLIENTS || Memory < 0 || Memory >= NUM_CLIENTMEMORIES)
+		return;
+	
+	m_aClients[ClientID].m_Memory[Memory] = Value;
+}
+
+bool CServer::GetClientMemory(int ClientID, int Memory)
+{
+	if(ClientID < 0 || ClientID >= MAX_CLIENTS || Memory < 0 || Memory >= NUM_CLIENTMEMORIES)
+		return false;
+	
+	return m_aClients[ClientID].m_Memory[Memory];
+}
+
+void CServer::ResetClientMemoryAboutGame(int ClientID)
+{
+	if(ClientID < 0 || ClientID >= MAX_CLIENTS)
+		return;
+	
+	m_aClients[ClientID].m_Memory[CLIENTMEMORY_TOP10] = false;
+}
+
 /* INFECTION MODIFICATION END *****************************************/
 

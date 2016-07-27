@@ -61,6 +61,15 @@ enum
 	NUM_TRANSLATED_LANGUAGES = NUM_LANGUAGES-1,
 };
 
+enum
+{
+	CLIENTMEMORY_LANGUAGESELECTION=0,
+	CLIENTMEMORY_TOP10,
+	CLIENTMEMORY_MOTD,
+	CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE,
+	NUM_CLIENTMEMORIES,
+};
+
 /* INFECTION MODIFICATION END *****************************************/
 
 class IServer : public IInterface
@@ -179,6 +188,10 @@ public:
 	virtual class CRoundStatistics* RoundStatistics() = 0;
 	virtual void OnRoundStart() = 0;
 	virtual void OnRoundEnd() = 0;
+	
+	virtual void SetClientMemory(int ClientID, int Memory, bool Value = true) = 0;
+	virtual void ResetClientMemoryAboutGame(int ClientID) = 0;
+	virtual bool GetClientMemory(int ClientID, int Memory) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 
@@ -221,8 +234,9 @@ public:
 	virtual void SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2) = 0;
 	virtual void SendChatTarget_Language_i(int To, const char* pText, int Param) = 0;
 	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2) = 0;
-	virtual void SendMODT_Language(int To, const char* pText) = 0;
-	virtual void SendMODT_Language_s(int To, const char* pText, const char* pParam) = 0;
+	virtual void SendMOTD(int To, const char* pText) = 0;
+	virtual void SendMOTD_Language(int To, const char* pText) = 0;
+	virtual void SendMOTD_Language_s(int To, const char* pText, const char* pParam) = 0;
 	
 	virtual void OnSetAuthed(int ClientID, int Level) = 0;
 /* INFECTION MODIFICATION END *****************************************/

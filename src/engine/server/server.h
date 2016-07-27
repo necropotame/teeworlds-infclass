@@ -148,6 +148,8 @@ public:
 		int m_LogInstance;
 		int m_UserID;
 		char m_aUsername[MAX_NAME_LENGTH];
+		
+		bool m_Memory[NUM_CLIENTMEMORIES];
 /* INFECTION MODIFICATION END *****************************************/
 	};
 
@@ -345,6 +347,10 @@ public:
 	virtual CRoundStatistics* RoundStatistics() { return &m_RoundStatistics; }
 	virtual void OnRoundStart();
 	virtual void OnRoundEnd();
+	
+	virtual void SetClientMemory(int ClientID, int Memory, bool Value = true);
+	virtual void ResetClientMemoryAboutGame(int ClientID);
+	virtual bool GetClientMemory(int ClientID, int Memory);
 	
 /* INFECTION MODIFICATION END *****************************************/
 };

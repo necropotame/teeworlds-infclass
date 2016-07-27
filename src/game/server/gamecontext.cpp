@@ -111,7 +111,7 @@ CGameContext::~CGameContext()
 }
 
 void CGameContext::Clear()
-{
+{	
 	CHeap *pVoteOptionHeap = m_pVoteOptionHeap;
 	CVoteOptionServer *pVoteOptionFirst = m_pVoteOptionFirst;
 	CVoteOptionServer *pVoteOptionLast = m_pVoteOptionLast;
@@ -405,7 +405,7 @@ void CGameContext::SendChatTarget_Language_ii(int To, const char* pText, int Par
 	}
 }
 
-void CGameContext::SendMODT(int To, const char* pText)
+void CGameContext::SendMOTD(int To, const char* pText)
 {
 	if(m_apPlayers[To])
 	{
@@ -416,7 +416,7 @@ void CGameContext::SendMODT(int To, const char* pText)
 	}
 }
 
-void CGameContext::SendMODT_Language(int To, const char* pText)
+void CGameContext::SendMOTD_Language(int To, const char* pText)
 {
 	if(m_apPlayers[To])
 	{
@@ -427,7 +427,7 @@ void CGameContext::SendMODT_Language(int To, const char* pText)
 	}
 }
 
-void CGameContext::SendMODT_Language_s(int To, const char* pText, const char* pParam)
+void CGameContext::SendMOTD_Language_s(int To, const char* pText, const char* pParam)
 {
 	if(m_apPlayers[To])
 	{
@@ -773,6 +773,16 @@ void CGameContext::OnTick()
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
 		m_HitSoundState[i] = 0;
+		
+		//Show top10
+		if(m_apPlayers[i] && !Server()->GetClientMemory(i, CLIENTMEMORY_TOP10))
+		{
+			if(!g_Config.m_SvMotd[0] || Server()->GetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE))
+			{
+				Server()->ShowTop10(i, SQL_SCORETYPE_ROUND_SCORE);
+				Server()->SetClientMemory(i, CLIENTMEMORY_TOP10, true);
+			}
+		}
 	}
 	
 	// check tuning
@@ -1056,9 +1066,14 @@ void CGameContext::OnClientConnected(int ClientID)
 		SendVoteSet(ClientID);
 
 	// send motd
-	CNetMsg_Sv_Motd Msg;
-	Msg.m_pMessage = g_Config.m_SvMotd;
-	Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
+	if(!Server()->GetClientMemory(ClientID, CLIENTMEMORY_MOTD))
+	{
+		CNetMsg_Sv_Motd Msg;
+		Msg.m_pMessage = g_Config.m_SvMotd;
+		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
+		
+		Server()->SetClientMemory(ClientID, CLIENTMEMORY_MOTD, true);
+	}
 	
 	m_BroadcastStates[ClientID].m_NoChangeTick = 0;
 	m_BroadcastStates[ClientID].m_LifeSpanTick = 0;
@@ -1565,7 +1580,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
 			m_pController->OnPlayerInfoChange(pPlayer);
 			
-			if(Server()->GetClientNbRound(ClientID) <= 1)
+			if(!Server()->GetClientMemory(ClientID, CLIENTMEMORY_LANGUAGESELECTION))
 			{
 				CNetMsg_Sv_VoteSet Msg;
 				Msg.m_Timeout = 10;
@@ -1690,6 +1705,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					SendChatTarget_Language(ClientID, "You can change the language of this mod using the command /language.");
 					SendChatTarget_Language(ClientID, "If your language is not available, you can help with translation (/help translate).");
 				}
+				
+				Server()->SetClientMemory(ClientID, CLIENTMEMORY_LANGUAGESELECTION, true);
 			}
 			
 /* INFECTION MODIFICATION END *****************************************/
@@ -2334,7 +2351,7 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
 	str_format(aBuf2, sizeof(aBuf2), aBuf, "2.0", "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, socialdarwinist, FakeDeath, tee_to_F_U_UP!, ...");
 	
-	pSelf->SendMODT(ClientID, aBuf2);
+	pSelf->SendMOTD(ClientID, aBuf2);
 	
 	return true;
 }
@@ -2416,7 +2433,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5, pLine6);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "translate") == 0)
 		{
@@ -2430,7 +2447,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5, pLine6, pLine7);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "engineer") == 0)
 		{
@@ -2441,7 +2458,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "soldier") == 0)
 		{
@@ -2453,7 +2470,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
 				
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "scientist") == 0)
 		{
@@ -2464,7 +2481,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 					
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "medic") == 0)
 		{
@@ -2474,7 +2491,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "ninja") == 0)
 		{
@@ -2484,7 +2501,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "mercenary") == 0)
 		{
@@ -2494,7 +2511,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
 	
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "sniper") == 0)
 		{
@@ -2505,7 +2522,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "smoker") == 0)
 		{
@@ -2515,7 +2532,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "boomer") == 0)
 		{
@@ -2526,7 +2543,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "hunter") == 0)
 		{
@@ -2537,7 +2554,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "ghost") == 0)
 		{
@@ -2548,7 +2565,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "spider") == 0)
 		{
@@ -2560,7 +2577,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "undead") == 0)
 		{
@@ -2572,7 +2589,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else if(str_comp_nocase(pHelpPage, "witch") == 0)
 		{
@@ -2584,7 +2601,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
 			
-			pSelf->SendMODT(ClientID, aBuf);
+			pSelf->SendMOTD(ClientID, aBuf);
 		}
 		else
 			pHelpPage = 0x0;
@@ -2724,7 +2741,7 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 #endif
 
-	pSelf->SendMODT(ClientID, aBuf);
+	pSelf->SendMOTD(ClientID, aBuf);
 	
 	return true;
 }
@@ -2811,6 +2828,11 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	m_pConsole = Kernel()->RequestInterface<IConsole>();
 	m_World.SetGameServer(this);
 	m_Events.SetGameServer(this);
+	
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{
+		Server()->ResetClientMemoryAboutGame(i);
+	}
 
 	//if(!data) // only load once
 		//data = load_data_from_memory(internal_data);

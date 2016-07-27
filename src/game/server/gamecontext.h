@@ -240,9 +240,9 @@ public:
 	virtual void SendChatTarget_Language_i(int To, const char* pText, int Param);
 	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2);
 	
-	virtual void SendMODT(int To, const char* pParam);
-	virtual void SendMODT_Language(int To, const char* pParam);
-	virtual void SendMODT_Language_s(int To, const char* pText, const char* pParam);
+	virtual void SendMOTD(int To, const char* pParam);
+	virtual void SendMOTD_Language(int To, const char* pParam);
+	virtual void SendMOTD_Language_s(int To, const char* pText, const char* pParam);
 	
 	void CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan);
 	void SendHitSound(int ClientID) { if(m_HitSoundState[ClientID] < 1) m_HitSoundState[ClientID] = 1; }
