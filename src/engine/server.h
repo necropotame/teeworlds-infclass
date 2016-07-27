@@ -181,6 +181,7 @@ public:
 	virtual void Logout(int ClientID) = 0;
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail) = 0;
 	virtual void ShowTop10(int ClientID, int ScoreType) = 0;
+	virtual void ShowRank(int ClientID, int ScoreType) = 0;
 #endif
 	virtual void Ban(int i, int Seconds, const char* pReason) = 0;
 

@@ -2881,7 +2881,7 @@ public:
 				str_format(pMOTD, sizeof(aBuf)-(pMOTD-aBuf), "%d. %s: %d pts\n",
 					Rank,
 					pSqlServer->GetResults()->getString("Username").c_str(),
-					pSqlServer->GetResults()->getInt("AccumulatedScore"),
+					pSqlServer->GetResults()->getInt("AccumulatedScore")/10,
 					pSqlServer->GetResults()->getInt("NbRounds")
 				);
 				pMOTD += str_length(pMOTD);
@@ -2906,6 +2906,101 @@ void CServer::ShowTop10(int ClientID, int ScoreType)
 {
 	CSqlJob* pJob = new CSqlJob_Server_ShowTop10(this, m_aCurrentMap, ClientID, ScoreType);
 	pJob->Start();
+}
+
+class CSqlJob_Server_ShowRank : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	CSqlString<64> m_sMapName;
+	int m_ClientID;
+	int m_UserID;
+	int m_ScoreType;
+	
+public:
+	CSqlJob_Server_ShowRank(CServer* pServer, const char* pMapName, int ClientID, int UserID, int ScoreType)
+	{
+		m_pServer = pServer;
+		m_sMapName = CSqlString<64>(pMapName);
+		m_ClientID = ClientID;
+		m_UserID = UserID;
+		m_ScoreType = ScoreType;
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[1024];
+		
+		try
+		{
+			//Get the top 10 with this very simple, intuitive and optimized SQL fuction >_<
+			pSqlServer->executeSql("SET @VarRowNum := 0, @VarType := -1");
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT "
+					"y.UserId, "
+					"SUM(y.Score) AS AccumulatedScore, "
+					"COUNT(y.Score) AS NbRounds "
+				"FROM ("
+					"SELECT "
+						"x.UserId AS UserId, "
+						"x.Score AS Score, "
+						"@VarRowNum := IF(@VarType = x.UserId, @VarRowNum + 1, 1) as RowNumber, "
+						"@VarType := x.UserId AS dummy "
+					"FROM ("
+						"SELECT "
+							"TableRoundScore.UserId, "
+							"TableRoundScore.Score "
+						"FROM %s_infc_RoundScore AS TableRoundScore "
+						"WHERE ScoreType = '%d' AND MapName = '%s' "
+						"ORDER BY TableRoundScore.UserId ASC, TableRoundScore.Score DESC "
+					") AS x "
+				") AS y "
+				"WHERE y.RowNumber <= %d "
+				"GROUP BY y.UserId "
+				"ORDER BY AccumulatedScore DESC, y.UserId ASC "
+				, pSqlServer->GetPrefix()
+				, m_ScoreType
+				, m_sMapName.ClrStr()
+				, pSqlServer->GetPrefix()
+				, SQL_SCORE_NUMROUND
+				, m_UserID
+			);
+			pSqlServer->executeSqlQuery(aBuf);
+			
+			int Rank = 0;
+			while(pSqlServer->GetResults()->next())
+			{
+				Rank++;
+				if(pSqlServer->GetResults()->getInt("UserId") == m_UserID)
+				{
+					int Score = pSqlServer->GetResults()->getInt("AccumulatedScore")/10;
+					int Rounds = pSqlServer->GetResults()->getInt("NbRounds");
+					str_format(aBuf, sizeof(aBuf), "You are rank %d in %s (%d pts in %d rounds)", Rank, m_sMapName.Str(), Score, Rounds);
+					CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
+					m_pServer->AddGameServerCmd(pCmd);
+					
+					break;
+				}
+			}
+		}
+		catch (sql::SQLException &e)
+		{
+			dbg_msg("sql", "Can't get rank (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+};
+
+void CServer::ShowRank(int ClientID, int ScoreType)
+{
+	if(m_aClients[ClientID].m_UserID >= 0)
+	{
+		CSqlJob* pJob = new CSqlJob_Server_ShowRank(this, m_aCurrentMap, ClientID, m_aClients[ClientID].m_UserID, ScoreType);
+		pJob->Start();
+	}
 }
 
 #endif

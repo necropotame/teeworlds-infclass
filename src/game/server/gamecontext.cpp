@@ -2407,6 +2407,16 @@ bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	
+	pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_ROUND_SCORE);
+	
+	return true;
+}
+
 #endif
 
 bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
@@ -2730,7 +2740,7 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	const char* pLine1 = pSelf->ServerLocalize("List of commands", Language);
 	const char* pLine2 = "/ar, /alwaysrandom, /customskin, /fa, /help, /info, /language"; 
 #ifdef CONF_SQL
-	const char* pLineSql = "/register, /login, /logout, /top10"; 
+	const char* pLineSql = "/register, /login, /logout, /top10, /rank"; 
 #endif
 	const char* pLine3 = pSelf->ServerLocalize("Press <F3> or <F4> to enable or disable hook protection", Language);
 	const char* pLine4 = pSelf->ServerLocalize("Press <F3> or <F4> while holding <TAB> to switch the score system", Language);
@@ -2809,6 +2819,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("login", "s<login> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
 	Console()->Register("top10", "", CFGFLAG_CHAT|CFGFLAG_USER, ConTop10, this, "Show the top 10 on the current map");
+	Console()->Register("rank", "", CFGFLAG_CHAT|CFGFLAG_USER, ConRank, this, "Show your rank");
 #endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
