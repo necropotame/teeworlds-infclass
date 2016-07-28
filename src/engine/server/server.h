@@ -146,6 +146,7 @@ public:
 		
 		bool m_Memory[NUM_CLIENTMEMORIES];
 		IServer::CClientSession m_Session;
+		IServer::CClientAccusation m_Accusation;
 		
 		//Login
 		int m_LogInstance;
@@ -342,6 +343,7 @@ private:
 	array<CGameServerCmd*> m_lGameServerCmds;
 	CRoundStatistics m_RoundStatistics;
 	CNetSession<IServer::CClientSession> m_NetSession;
+	CNetSession<IServer::CClientAccusation> m_NetAccusation;
 
 public:
 	void AddGameServerCmd(CGameServerCmd* pCmd);
@@ -356,6 +358,9 @@ public:
 	
 	virtual IServer::CClientSession* GetClientSession(int ClientID);
 	
+	virtual void AddAccusation(int From, int To, const char* pReason);
+	virtual bool ClientShouldBeBanned(int ClientID);
+	virtual void RemoveAccusations(int ClientID);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

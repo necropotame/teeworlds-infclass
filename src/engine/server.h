@@ -71,6 +71,11 @@ enum
 	NUM_CLIENTMEMORIES,
 };
 
+enum
+{
+	MAX_ACCUSATIONS = 8,
+};
+
 /* INFECTION MODIFICATION END *****************************************/
 
 class IServer : public IInterface
@@ -102,6 +107,12 @@ public:
 	{
 		int m_RoundId;
 		int m_Class;
+	};
+	
+	struct CClientAccusation
+	{
+		int m_Num;
+		NETADDR m_Addresses[MAX_ACCUSATIONS];
 	};
 	
 	virtual ~IServer() {};
@@ -201,6 +212,9 @@ public:
 	virtual void ResetClientMemoryAboutGame(int ClientID) = 0;
 	virtual bool GetClientMemory(int ClientID, int Memory) = 0;
 	virtual IServer::CClientSession* GetClientSession(int ClientID) = 0;
+	virtual void AddAccusation(int From, int To, const char* pReason) = 0;
+	virtual bool ClientShouldBeBanned(int ClientID) = 0;
+	virtual void RemoveAccusations(int ClientID) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 
@@ -241,6 +255,7 @@ public:
 	virtual void SendChatTarget_Language(int To, const char* pText) = 0;
 	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam) = 0;
 	virtual void SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2) = 0;
+	virtual void SendChatTarget_Language_sss(int To, const char* pText, const char* pParam1, const char* pParam2, const char* pParam3) = 0;
 	virtual void SendChatTarget_Language_i(int To, const char* pText, int Param) = 0;
 	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2) = 0;
 	virtual void SendMOTD(int To, const char* pText) = 0;

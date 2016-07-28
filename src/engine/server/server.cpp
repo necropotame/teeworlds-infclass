@@ -257,7 +257,9 @@ bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 		if(ClientID < 0 || ClientID >= MAX_CLIENTS || pThis->Server()->m_aClients[ClientID].m_State == CServer::CClient::STATE_EMPTY)
 			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", "ban error (invalid client id)");
 		else
+		{
 			pThis->BanAddr(pThis->Server()->m_NetServer.ClientAddr(ClientID), Minutes*60, pReason);
+		}
 	}
 	else
 		ConBan(pResult, pUser);
@@ -298,6 +300,8 @@ void CServer::CClient::Reset(bool ResetScore)
 		
 		m_Session.m_RoundId = -1;
 		m_Session.m_Class = PLAYERCLASS_NONE;
+		
+		m_Accusation.m_Num = 0;
 	}
 }
 /* INFECTION MODIFICATION END *****************************************/
@@ -822,7 +826,7 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 	
 	pThis->m_aClients[ClientID].Reset();
 	
-	//Getback information about the client
+	//Getback session about the client
 	IServer::CClientSession* pSession = pThis->m_NetSession.GetData(pThis->m_NetServer.ClientAddr(ClientID));
 	if(pSession)
 	{
@@ -830,8 +834,15 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 		pThis->m_aClients[ClientID].m_Session = *pSession;
 		pThis->m_NetSession.RemoveSession(pThis->m_NetServer.ClientAddr(ClientID));
 	}
-	else
-		dbg_msg("infclass", "no session found for the client %d", ClientID);
+	
+	//Getback accusation about the client
+	IServer::CClientAccusation* pAccusation = pThis->m_NetAccusation.GetData(pThis->m_NetServer.ClientAddr(ClientID));
+	if(pAccusation)
+	{
+		dbg_msg("infclass", "%d accusation(s) found for the client %d", pAccusation->m_Num, ClientID);
+		pThis->m_aClients[ClientID].m_Accusation = *pAccusation;
+		pThis->m_NetAccusation.RemoveSession(pThis->m_NetServer.ClientAddr(ClientID));
+	}
 	
 	return 0;
 }
@@ -865,6 +876,10 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 	//Keep information about client for 10 minutes
 	pThis->m_NetSession.AddSession(pThis->m_NetServer.ClientAddr(ClientID), 10*60, &pThis->m_aClients[ClientID].m_Session);
 	dbg_msg("infclass", "session created for the client %d", ClientID);
+	
+	//Keep accusation for 30 minutes
+	pThis->m_NetAccusation.AddSession(pThis->m_NetServer.ClientAddr(ClientID), 30*60, &pThis->m_aClients[ClientID].m_Accusation);
+	dbg_msg("infclass", "accusation created for the client %d", ClientID);
 	
 	return 0;
 }
@@ -1444,6 +1459,7 @@ void CServer::PumpNetwork()
 
 	m_ServerBan.Update();
 	m_NetSession.Update();
+	m_NetAccusation.Update();
 	m_Econ.Update();
 }
 
@@ -2266,6 +2282,7 @@ void CServer::RegisterCommands()
 	// register console commands in sub parts
 	m_ServerBan.InitServerBan(Console(), Storage(), this);
 	m_NetSession.Init();
+	m_NetAccusation.Init();
 	m_pGameServer->OnConsoleInit();
 }
 
@@ -3288,6 +3305,52 @@ IServer::CClientSession* CServer::GetClientSession(int ClientID)
 		return 0;
 	
 	return &m_aClients[ClientID].m_Session;
+}
+
+void CServer::AddAccusation(int From, int To, const char* pReason)
+{
+	if(From < 0 || From >= MAX_CLIENTS || To < 0 || To >= MAX_CLIENTS)
+		return;
+	
+	//Check if "From" already accusate "To"
+	NETADDR FromAddr = *m_NetServer.ClientAddr(From);
+	FromAddr.port = 0;
+	for(int i=0; i<m_aClients[To].m_Accusation.m_Num; i++)
+	{
+		if(net_addr_comp(&m_aClients[To].m_Accusation.m_Addresses[i], &FromAddr))
+		{
+			if(m_pGameServer)
+				m_pGameServer->SendChatTarget_Language_ss(From, "You already notify that %s must be banned", ClientName(From), ClientName(To));
+			return;
+		}
+	}
+	
+	//Check the number of accusation against "To"
+	if(m_aClients[To].m_Accusation.m_Num < MAX_ACCUSATIONS)
+	{
+		//Add the accusation
+		m_aClients[To].m_Accusation.m_Addresses[m_aClients[To].m_Accusation.m_Num] = FromAddr;
+		m_aClients[To].m_Accusation.m_Num++;
+	}
+		
+	if(m_pGameServer)
+		m_pGameServer->SendChatTarget_Language_sss(-1, "%s wants %s to be banned (%s)", ClientName(From), ClientName(To), pReason);
+}
+
+bool CServer::ClientShouldBeBanned(int ClientID)
+{
+	if(ClientID < 0 || ClientID >= MAX_CLIENTS)
+		return false;
+	
+	return (m_aClients[ClientID].m_Accusation.m_Num >= g_Config.m_InfAccusationThreshold);
+}
+
+void CServer::RemoveAccusations(int ClientID)
+{
+	if(ClientID < 0 || ClientID >= MAX_CLIENTS)
+		return;
+	
+	m_aClients[ClientID].m_Accusation.m_Num = 0;
 }
 
 /* INFECTION MODIFICATION END *****************************************/

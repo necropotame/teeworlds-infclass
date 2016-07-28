@@ -238,6 +238,7 @@ public:
 	virtual void SendChatTarget_Language(int To, const char* pText);
 	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam);
 	virtual void SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2);
+	virtual void SendChatTarget_Language_sss(int To, const char* pText, const char* pParam1, const char* pParam2, const char* pParam3);
 	virtual void SendChatTarget_Language_i(int To, const char* pText, int Param);
 	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2);
 	
