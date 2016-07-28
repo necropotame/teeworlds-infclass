@@ -798,27 +798,51 @@ void CConsole::GenerateUsage(const char* pParam, char* pUsage)
 
 		if (*pParam == '<')
 		{
-			// skip bracket contents
-			for (; *pParam != '>'; pParam++)
+			if(ParamType == 'i')
 			{
-				if (*pParam)
+				pParam++;
+				
+				for (; *pParam != '>'; pParam++)
 				{
-					*pUsage = *pParam;
-					pUsage++;
+					if (*pParam)
+					{
+						*pUsage = *pParam;
+						pUsage++;
+					}
+					else
+						return;
 				}
-				else
-				{
-					*pUsage = '>';
-					return;
-				}
-			}
 
-			// skip '>'
-			pParam++;
-			*pUsage = '>';
-			pUsage++;
-			*pUsage = ' ';
-			pUsage++;
+				pParam++;
+				*pUsage = ' ';
+				pUsage++;
+			}
+			else
+			{
+				*pUsage = '"';
+				pUsage++;
+				pParam++;
+				
+				for (; *pParam != '>'; pParam++)
+				{
+					if (*pParam)
+					{
+						*pUsage = *pParam;
+						pUsage++;
+					}
+					else
+					{
+						*pUsage = '"';
+						return;
+					}
+				}
+
+				pParam++;
+				*pUsage = '"';
+				pUsage++;
+				*pUsage = ' ';
+				pUsage++;
+			}
 
 			// skip space if there is one
 			if (*pParam == ' ')
@@ -826,18 +850,18 @@ void CConsole::GenerateUsage(const char* pParam, char* pUsage)
 		}
 		else if(ParamType == 's')
 		{
-			str_copy(pUsage, "<string> ", sizeof("<string> "));
-			pUsage += sizeof("<string> ");
+			str_copy(pUsage, "\"text\" ", sizeof("\"text\" "));
+			pUsage += sizeof("\"text\" ");
 		}
 		else if(ParamType == 'r')
 		{
-			str_copy(pUsage, "<strings...> ", sizeof("<strings...> "));
-			pUsage += sizeof("<strings...> ");
+			str_copy(pUsage, "\"text...\" ", sizeof("\"text...\" "));
+			pUsage += sizeof("\"text...\" ");
 		}
 		else if(ParamType == 'i')
 		{
-			str_copy(pUsage, "<int> ", sizeof("<int> "));
-			pUsage += sizeof("<int> ");
+			str_copy(pUsage, "number ", sizeof("number "));
+			pUsage += sizeof("number ");
 		}
 		else if(ParamType == '?')
 		{
