@@ -6,242 +6,8 @@
 
 #include "netban.h"
 
-
-bool CNetBan::StrAllnum(const char *pStr)
-{
-	while(*pStr)
-	{
-		if(!(*pStr >= '0' && *pStr <= '9'))
-			return false;
-		pStr++;
-	}
-	return true;
-}
-
-
-CNetBan::CNetHash::CNetHash(const NETADDR *pAddr)
-{
-	if(pAddr->type==NETTYPE_IPV4)
-		m_Hash = (pAddr->ip[0]+pAddr->ip[1]+pAddr->ip[2]+pAddr->ip[3])&0xFF;
-	else
-		m_Hash = (pAddr->ip[0]+pAddr->ip[1]+pAddr->ip[2]+pAddr->ip[3]+pAddr->ip[4]+pAddr->ip[5]+pAddr->ip[6]+pAddr->ip[7]+
-			pAddr->ip[8]+pAddr->ip[9]+pAddr->ip[10]+pAddr->ip[11]+pAddr->ip[12]+pAddr->ip[13]+pAddr->ip[14]+pAddr->ip[15])&0xFF;
-	m_HashIndex = 0;
-}
-
-CNetBan::CNetHash::CNetHash(const CNetRange *pRange)
-{
-	m_Hash = 0;
-	m_HashIndex = 0;
-	for(int i = 0; pRange->m_LB.ip[i] == pRange->m_UB.ip[i]; ++i)
-	{
-		m_Hash += pRange->m_LB.ip[i];
-		++m_HashIndex;
-	}
-	m_Hash &= 0xFF;
-}
-
-int CNetBan::CNetHash::MakeHashArray(const NETADDR *pAddr, CNetHash aHash[17])
-{
-	int Length = pAddr->type==NETTYPE_IPV4 ? 4 : 16;
-	aHash[0].m_Hash = 0;
-	aHash[0].m_HashIndex = 0;
-	for(int i = 1, Sum = 0; i <= Length; ++i)
-	{
-		Sum += pAddr->ip[i-1];
-		aHash[i].m_Hash = Sum&0xFF;
-		aHash[i].m_HashIndex = i%Length;
-	}
-	return Length;
-}
-
-
-template<class T, int HashCount>
-typename CNetBan::CBan<T> *CNetBan::CBanPool<T, HashCount>::Add(const T *pData, const CBanInfo *pInfo,  const CNetHash *pNetHash)
-{
-	if(!m_pFirstFree)
-		return 0;
-
-	// create new ban
-	CBan<T> *pBan = m_pFirstFree;
-	pBan->m_Data = *pData;
-	pBan->m_Info = *pInfo;
-	pBan->m_NetHash = *pNetHash;
-	if(pBan->m_pNext)
-		pBan->m_pNext->m_pPrev = pBan->m_pPrev;
-	if(pBan->m_pPrev)
-		pBan->m_pPrev->m_pNext = pBan->m_pNext;
-	else
-		m_pFirstFree = pBan->m_pNext;
-
-	// add it to the hash list
-	if(m_paaHashList[pNetHash->m_HashIndex][pNetHash->m_Hash])
-		m_paaHashList[pNetHash->m_HashIndex][pNetHash->m_Hash]->m_pHashPrev = pBan;
-	pBan->m_pHashPrev = 0;
-	pBan->m_pHashNext = m_paaHashList[pNetHash->m_HashIndex][pNetHash->m_Hash];
-	m_paaHashList[pNetHash->m_HashIndex][pNetHash->m_Hash] = pBan;
-
-	// insert it into the used list
-	if(m_pFirstUsed)
-	{
-		for(CBan<T> *p = m_pFirstUsed; ; p = p->m_pNext)
-		{
-			if(p->m_Info.m_Expires == CBanInfo::EXPIRES_NEVER || (pInfo->m_Expires != CBanInfo::EXPIRES_NEVER && pInfo->m_Expires <= p->m_Info.m_Expires))
-			{
-				// insert before
-				pBan->m_pNext = p;
-				pBan->m_pPrev = p->m_pPrev;
-				if(p->m_pPrev)
-					p->m_pPrev->m_pNext = pBan;
-				else
-					m_pFirstUsed = pBan;
-				p->m_pPrev = pBan;
-				break;
-			}
-
-			if(!p->m_pNext)
-			{
-				// last entry
-				p->m_pNext = pBan;
-				pBan->m_pPrev = p;
-				pBan->m_pNext = 0;
-				break;
-			}
-		}
-	}
-	else
-	{
-		m_pFirstUsed = pBan;
-		pBan->m_pNext = pBan->m_pPrev = 0;
-	}
-
-	// update ban count
-	++m_CountUsed;
-
-	return pBan;
-}
-
-template<class T, int HashCount>
-int CNetBan::CBanPool<T, HashCount>::Remove(CBan<T> *pBan)
-{
-	if(pBan == 0)
-		return -1;
-
-	// remove from hash list
-	if(pBan->m_pHashNext)
-		pBan->m_pHashNext->m_pHashPrev = pBan->m_pHashPrev;
-	if(pBan->m_pHashPrev)
-		pBan->m_pHashPrev->m_pHashNext = pBan->m_pHashNext;
-	else
-		m_paaHashList[pBan->m_NetHash.m_HashIndex][pBan->m_NetHash.m_Hash] = pBan->m_pHashNext;
-	pBan->m_pHashNext = pBan->m_pHashPrev = 0;
-
-	// remove from used list
-	if(pBan->m_pNext)
-		pBan->m_pNext->m_pPrev = pBan->m_pPrev;
-	if(pBan->m_pPrev)
-		pBan->m_pPrev->m_pNext = pBan->m_pNext;
-	else
-		m_pFirstUsed = pBan->m_pNext;
-
-	// add to recycle list
-	if(m_pFirstFree)
-		m_pFirstFree->m_pPrev = pBan;
-	pBan->m_pPrev = 0;
-	pBan->m_pNext = m_pFirstFree;
-	m_pFirstFree = pBan;
-
-	// update ban count
-	--m_CountUsed;
-
-	return 0;
-}
-
-template<class T, int HashCount>
-void CNetBan::CBanPool<T, HashCount>::Update(CBan<CDataType> *pBan, const CBanInfo *pInfo)
-{
-	pBan->m_Info = *pInfo;
-
-	// remove from used list
-	if(pBan->m_pNext)
-		pBan->m_pNext->m_pPrev = pBan->m_pPrev;
-	if(pBan->m_pPrev)
-		pBan->m_pPrev->m_pNext = pBan->m_pNext;
-	else
-		m_pFirstUsed = pBan->m_pNext;
-
-	// insert it into the used list
-	if(m_pFirstUsed)
-	{
-		for(CBan<T> *p = m_pFirstUsed; ; p = p->m_pNext)
-		{
-			if(p->m_Info.m_Expires == CBanInfo::EXPIRES_NEVER || (pInfo->m_Expires != CBanInfo::EXPIRES_NEVER && pInfo->m_Expires <= p->m_Info.m_Expires))
-			{
-				// insert before
-				pBan->m_pNext = p;
-				pBan->m_pPrev = p->m_pPrev;
-				if(p->m_pPrev)
-					p->m_pPrev->m_pNext = pBan;
-				else
-					m_pFirstUsed = pBan;
-				p->m_pPrev = pBan;
-				break;
-			}
-
-			if(!p->m_pNext)
-			{
-				// last entry
-				p->m_pNext = pBan;
-				pBan->m_pPrev = p;
-				pBan->m_pNext = 0;
-				break;
-			}
-		}
-	}
-	else
-	{
-		m_pFirstUsed = pBan;
-		pBan->m_pNext = pBan->m_pPrev = 0;
-	}
-}
-
-template<class T, int HashCount>
-void CNetBan::CBanPool<T, HashCount>::Reset()
-{
-	mem_zero(m_paaHashList, sizeof(m_paaHashList));
-	mem_zero(m_aBans, sizeof(m_aBans));
-	m_pFirstUsed = 0;
-	m_CountUsed = 0;
-
-	for(int i = 1; i < MAX_BANS-1; ++i)
-	{
-		m_aBans[i].m_pNext = &m_aBans[i+1];
-		m_aBans[i].m_pPrev = &m_aBans[i-1];
-	}
-
-	m_aBans[0].m_pNext = &m_aBans[1];
-	m_aBans[MAX_BANS-1].m_pPrev = &m_aBans[MAX_BANS-2];
-	m_pFirstFree = &m_aBans[0];
-}
-
-template<class T, int HashCount>
-typename CNetBan::CBan<T> *CNetBan::CBanPool<T, HashCount>::Get(int Index) const
-{
-	if(Index < 0 || Index >= Num())
-		return 0;
-
-	for(CNetBan::CBan<T> *pBan = m_pFirstUsed; pBan; pBan = pBan->m_pNext, --Index)
-	{
-		if(Index == 0)
-			return pBan;
-	}
-
-	return 0;
-}
-
-
-template<class T>
-void CNetBan::MakeBanInfo(const CBan<T> *pBan, char *pBuf, unsigned BuffSize, int Type) const
+template<class DATATYPE>
+void CNetBan::MakeBanInfo(const CNode<DATATYPE, CBanInfo> *pBan, char *pBuf, unsigned BuffSize, int Type) const
 {
 	if(pBan == 0 || pBuf == 0)
 	{
@@ -283,8 +49,8 @@ void CNetBan::MakeBanInfo(const CBan<T> *pBan, char *pBuf, unsigned BuffSize, in
 		str_format(pBuf, BuffSize, "%s for life (%s)", aBuf, pBan->m_Info.m_aReason);
 }
 
-template<class T>
-int CNetBan::Ban(T *pBanPool, const typename T::CDataType *pData, int Seconds, const char *pReason)
+template<class POOL>
+int CNetBan::Ban(POOL *pBanPool, const typename POOL::CDataType *pData, int Seconds, const char *pReason)
 {
 	// do not ban localhost
 	if(NetMatch(pData, &m_LocalhostIPV4) || NetMatch(pData, &m_LocalhostIPV6))
@@ -302,7 +68,7 @@ int CNetBan::Ban(T *pBanPool, const typename T::CDataType *pData, int Seconds, c
 
 	// check if it already exists
 	CNetHash NetHash(pData);
-	CBan<typename T::CDataType> *pBan = pBanPool->Find(pData, &NetHash);
+	CNode<typename POOL::CDataType, CBanInfo> *pBan = pBanPool->Find(pData, &NetHash);
 	if(pBan)
 	{
 		// adjust the ban
@@ -327,11 +93,11 @@ int CNetBan::Ban(T *pBanPool, const typename T::CDataType *pData, int Seconds, c
 	return -1;
 }
 
-template<class T>
-int CNetBan::Unban(T *pBanPool, const typename T::CDataType *pData)
+template<class POOL>
+int CNetBan::Unban(POOL *pBanPool, const typename POOL::CDataType *pData)
 {
 	CNetHash NetHash(pData);
-	CBan<typename T::CDataType> *pBan = pBanPool->Find(pData, &NetHash);
+	CNode<typename POOL::CDataType, CBanInfo> *pBan = pBanPool->Find(pData, &NetHash);
 	if(pBan)
 	{
 		char aBuf[256];

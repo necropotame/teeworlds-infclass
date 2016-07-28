@@ -4,6 +4,7 @@
 #define ENGINE_SERVER_SERVER_H
 
 #include <engine/server.h>
+#include <engine/server/netsession.h>
 #include <engine/server/roundstatistics.h>
 #include <game/server/classes.h>
 
@@ -131,8 +132,7 @@ public:
 		int m_AuthTries;
 
 		const IConsole::CCommandInfo *m_pRconCmdToSend;
-
-/* INFECTION MODIFICATION START ***************************************/
+		
 		void Reset(bool ResetScore=true);
 		
 		int m_NbRound;
@@ -144,13 +144,13 @@ public:
 		int m_WaitingTime;
 		int m_WasInfected;
 		
+		bool m_Memory[NUM_CLIENTMEMORIES];
+		IServer::CClientSession m_Session;
+		
 		//Login
 		int m_LogInstance;
 		int m_UserID;
 		char m_aUsername[MAX_NAME_LENGTH];
-		
-		bool m_Memory[NUM_CLIENTMEMORIES];
-/* INFECTION MODIFICATION END *****************************************/
 	};
 
 	CClient m_aClients[MAX_CLIENTS];
@@ -341,6 +341,7 @@ private:
 	LOCK m_GameServerCmdLock;
 	array<CGameServerCmd*> m_lGameServerCmds;
 	CRoundStatistics m_RoundStatistics;
+	CNetSession<IServer::CClientSession> m_NetSession;
 
 public:
 	void AddGameServerCmd(CGameServerCmd* pCmd);
@@ -352,6 +353,8 @@ public:
 	virtual void SetClientMemory(int ClientID, int Memory, bool Value = true);
 	virtual void ResetClientMemoryAboutGame(int ClientID);
 	virtual bool GetClientMemory(int ClientID, int Memory);
+	
+	virtual IServer::CClientSession* GetClientSession(int ClientID);
 	
 /* INFECTION MODIFICATION END *****************************************/
 };

@@ -32,6 +32,8 @@ IGameController::IGameController(class CGameContext *pGameServer)
 
 	m_aNumSpawnPoints[0] = 0;
 	m_aNumSpawnPoints[1] = 0;
+	
+	m_RoundId = -1;
 }
 
 IGameController::~IGameController()
@@ -171,7 +173,7 @@ const char *IGameController::GetTeamName(int Team)
 static bool IsSeparator(char c) { return c == ';' || c == ' ' || c == ',' || c == '\t'; }
 
 void IGameController::StartRound()
-{	
+{
 	ResetGame();
 	
 	Server()->OnRoundStart();
@@ -189,6 +191,7 @@ void IGameController::StartRound()
 	}	
 /* INFECTION MODIFICATION END *****************************************/
 
+	m_RoundId = rand();
 	m_RoundStartTick = Server()->Tick();
 	m_SuddenDeath = 0;
 	m_GameOverTick = -1;
@@ -198,7 +201,7 @@ void IGameController::StartRound()
 	m_ForceBalanced = false;
 	Server()->DemoRecorder_HandleAutoStart();
 	char aBuf[256];
-	str_format(aBuf, sizeof(aBuf), "start round type='%s' teamplay='%d'", m_pGameType, m_GameFlags&GAMEFLAG_TEAMS);
+	str_format(aBuf, sizeof(aBuf), "start round type='%s' teamplay='%d' id='%d'", m_pGameType, m_GameFlags&GAMEFLAG_TEAMS, m_RoundId);
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 }
 

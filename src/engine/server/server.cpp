@@ -156,7 +156,6 @@ void CSnapIDPool::FreeID(int ID)
 	}
 }
 
-
 void CServerBan::InitServerBan(IConsole *pConsole, IStorage *pStorage, CServer* pServer)
 {
 	CNetBan::Init(pConsole, pStorage);
@@ -267,6 +266,7 @@ bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 }
 
 /* INFECTION MODIFICATION START ***************************************/
+
 void CServer::CClient::Reset(bool ResetScore)
 {
 	// reset input
@@ -283,10 +283,21 @@ void CServer::CClient::Reset(bool ResetScore)
 	if(ResetScore)
 	{
 		m_NbRound = 0;
-		m_Language = LANGUAGE_EN;
 		m_WaitingTime = 0;
 		m_WasInfected = 0;
+		
+		m_UserID = -1;
+		m_LogInstance = -1;
+		
+		m_CustomSkin = 0;
+		m_AlwaysRandom = 0;
+		m_DefaultScoreMode = PLAYERSCOREMODE_SCORE;
+		m_Language = LANGUAGE_EN;
+		
 		mem_zero(m_Memory, sizeof(m_Memory));
+		
+		m_Session.m_RoundId = -1;
+		m_Session.m_Class = PLAYERCLASS_NONE;
 	}
 }
 /* INFECTION MODIFICATION END *****************************************/
@@ -809,17 +820,19 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 	pThis->m_aClients[ClientID].m_AuthTries = 0;
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
 	
-/* INFECTION MODIFICATION START ***************************************/
-	pThis->m_aClients[ClientID].m_UserID = -1;
-	pThis->m_aClients[ClientID].m_LogInstance = -1;
-	
-	pThis->m_aClients[ClientID].m_CustomSkin = 0;
-	pThis->m_aClients[ClientID].m_AlwaysRandom = 0;
-	pThis->m_aClients[ClientID].m_DefaultScoreMode = PLAYERSCOREMODE_SCORE;
-	pThis->m_aClients[ClientID].m_Language = LANGUAGE_EN;
-/* INFECTION MODIFICATION END *****************************************/
-	
 	pThis->m_aClients[ClientID].Reset();
+	
+	//Getback information about the client
+	IServer::CClientSession* pSession = pThis->m_NetSession.GetData(pThis->m_NetServer.ClientAddr(ClientID));
+	if(pSession)
+	{
+		dbg_msg("infclass", "session found for the client %d. Round id = %d, class id = %d", ClientID, pSession->m_RoundId, pSession->m_Class);
+		pThis->m_aClients[ClientID].m_Session = *pSession;
+		pThis->m_NetSession.RemoveSession(pThis->m_NetServer.ClientAddr(ClientID));
+	}
+	else
+		dbg_msg("infclass", "no session found for the client %d", ClientID);
+	
 	return 0;
 }
 
@@ -848,6 +861,11 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 	pThis->m_aClients[ClientID].m_WaitingTime = 0;
 	pThis->m_aClients[ClientID].m_UserID = -1;
 	pThis->m_aClients[ClientID].m_LogInstance = -1;
+	
+	//Keep information about client for 10 minutes
+	pThis->m_NetSession.AddSession(pThis->m_NetServer.ClientAddr(ClientID), 10*60, &pThis->m_aClients[ClientID].m_Session);
+	dbg_msg("infclass", "session created for the client %d", ClientID);
+	
 	return 0;
 }
 
@@ -1425,6 +1443,7 @@ void CServer::PumpNetwork()
 	}
 
 	m_ServerBan.Update();
+	m_NetSession.Update();
 	m_Econ.Update();
 }
 
@@ -2246,6 +2265,7 @@ void CServer::RegisterCommands()
 
 	// register console commands in sub parts
 	m_ServerBan.InitServerBan(Console(), Storage(), this);
+	m_NetSession.Init();
 	m_pGameServer->OnConsoleInit();
 }
 
@@ -3260,6 +3280,14 @@ void CServer::ResetClientMemoryAboutGame(int ClientID)
 		return;
 	
 	m_aClients[ClientID].m_Memory[CLIENTMEMORY_TOP10] = false;
+}
+
+IServer::CClientSession* CServer::GetClientSession(int ClientID)
+{
+	if(ClientID < 0 || ClientID >= MAX_CLIENTS)
+		return 0;
+	
+	return &m_aClients[ClientID].m_Session;
 }
 
 /* INFECTION MODIFICATION END *****************************************/

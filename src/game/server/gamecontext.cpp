@@ -774,13 +774,16 @@ void CGameContext::OnTick()
 	{
 		m_HitSoundState[i] = 0;
 		
-		//Show top10
-		if(m_apPlayers[i] && !Server()->GetClientMemory(i, CLIENTMEMORY_TOP10))
-		{
-			if(!g_Config.m_SvMotd[0] || Server()->GetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE))
+		if(m_apPlayers[i])
+		{			
+			//Show top10
+			if(Server()->GetClientMemory(i, CLIENTMEMORY_TOP10))
 			{
-				Server()->ShowTop10(i, SQL_SCORETYPE_ROUND_SCORE);
-				Server()->SetClientMemory(i, CLIENTMEMORY_TOP10, true);
+				if(!g_Config.m_SvMotd[0] || Server()->GetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE))
+				{
+					Server()->ShowTop10(i, SQL_SCORETYPE_ROUND_SCORE);
+					Server()->SetClientMemory(i, CLIENTMEMORY_TOP10, true);
+				}
 			}
 		}
 	}

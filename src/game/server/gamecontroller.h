@@ -22,6 +22,7 @@ protected:
 /* INFECTION MODIFICATION START ***************************************/
 	vec2 m_aaSpawnPoints[2][64];
 	int m_aNumSpawnPoints[2];
+	int m_RoundId;
 /* INFECTION MODIFICATION START ***************************************/
 
 public:
@@ -144,6 +145,8 @@ public:
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
 	virtual bool IsChoosableClass(int PlayerClass);
 	virtual bool IsSpawnable(vec2 Position);
+	
+	int GetRoundId() { return m_RoundId; }
 /* INFECTION MODIFICATION END *****************************************/
 
 	/*

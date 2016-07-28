@@ -140,6 +140,35 @@ void CGameControllerMOD::Tick()
 {
 	IGameController::Tick();
 	
+	//Check session
+	for(int i = 0; i < MAX_CLIENTS; i ++)
+	{
+		//Update session
+		IServer::CClientSession* pSession = Server()->GetClientSession(i);
+		if(pSession && GameServer()->m_apPlayers[i])
+		{
+			if(!Server()->GetClientMemory(i, CLIENTMEMORY_SESSION_PROCESSED))
+			{
+				//The client already participated to this round,
+				//and he exit the game as infected.
+				//To avoid cheating, we assign to him the same class again.
+				if(
+					m_InfectedStarted &&
+					pSession->m_RoundId == m_RoundId &&
+					pSession->m_Class > END_HUMANCLASS
+				)
+				{
+					GameServer()->m_apPlayers[i]->SetClass(pSession->m_Class);
+				}
+				
+				Server()->SetClientMemory(i, CLIENTMEMORY_SESSION_PROCESSED, true);
+			}
+			
+			pSession->m_Class = GameServer()->m_apPlayers[i]->GetClass();
+			pSession->m_RoundId = GameServer()->m_pController->GetRoundId();
+		}
+	}
+	
 	m_HumanCounter = 0;
 	m_InfectedCounter = 0;
 	

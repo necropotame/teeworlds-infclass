@@ -67,6 +67,7 @@ enum
 	CLIENTMEMORY_TOP10,
 	CLIENTMEMORY_MOTD,
 	CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE,
+	CLIENTMEMORY_SESSION_PROCESSED,
 	NUM_CLIENTMEMORIES,
 };
 
@@ -95,6 +96,12 @@ public:
 	{
 		const char *m_pName;
 		int m_Latency;
+	};
+	
+	struct CClientSession
+	{
+		int m_RoundId;
+		int m_Class;
 	};
 	
 	virtual ~IServer() {};
@@ -193,6 +200,7 @@ public:
 	virtual void SetClientMemory(int ClientID, int Memory, bool Value = true) = 0;
 	virtual void ResetClientMemoryAboutGame(int ClientID) = 0;
 	virtual bool GetClientMemory(int ClientID, int Memory) = 0;
+	virtual IServer::CClientSession* GetClientSession(int ClientID) = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 
