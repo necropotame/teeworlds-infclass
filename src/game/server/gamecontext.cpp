@@ -2764,12 +2764,23 @@ bool CGameContext::ConFriendlyBan(IConsole::IResult *pResult, void *pUserData)
 	int Minutes = pResult->NumArguments()>1 ? clamp(pResult->GetInteger(1), 0, 44640) : 30;
 	const char *pReason = pResult->NumArguments()>2 ? pResult->GetString(2) : "No reason given";
 	
+	bool PlayerBanned = false;
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
 		if(pSelf->m_apPlayers[i] && str_comp(pSelf->Server()->ClientName(i), pPlayername) == 0)
 		{
 			pSelf->Server()->Ban(i, Minutes*60, pReason);
+			PlayerBanned = true;
 		}
+	}
+	
+	if(!PlayerBanned)
+	{
+		int ClientID = pResult->GetClientID();
+		int Language = pSelf->m_apPlayers[ClientID]->GetLanguage();
+		
+		const char* pTxt = pSelf->ServerLocalize("No player was found with this name", Language);
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "fban", pTxt);
 	}
 	
 	return true;
@@ -2827,7 +2838,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("language", "s<fr|de|uk|ru|it|es|ar|hu|pl|nl|la>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
 	
-	Console()->Register("fban", "r<playername>", CFGFLAG_CHAT, ConFriendlyBan, this, "Friendly version of ban cmd");
+	Console()->Register("fban", "s<playername> ?i<minutes> ?r<reason>", CFGFLAG_CHAT, ConFriendlyBan, this, "Friendly version of ban cmd");
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);
