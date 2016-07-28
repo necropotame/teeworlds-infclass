@@ -1022,7 +1022,7 @@ void CGameContext::OnTick()
 			if(m_VoteEnforce == VOTE_ENFORCE_YES)
 			{
 				//Remove accusation if needed
-				if(str_comp_num(m_aVoteCommand, "ban ", 4))
+				if(str_comp_num(m_aVoteCommand, "ban ", 4) == 0)
 				{
 					int AccusedClient = atoi(m_aVoteCommand+4);
 					Server()->RemoveAccusations(AccusedClient);

@@ -3317,7 +3317,7 @@ void CServer::AddAccusation(int From, int To, const char* pReason)
 	FromAddr.port = 0;
 	for(int i=0; i<m_aClients[To].m_Accusation.m_Num; i++)
 	{
-		if(net_addr_comp(&m_aClients[To].m_Accusation.m_Addresses[i], &FromAddr))
+		if(net_addr_comp(&m_aClients[To].m_Accusation.m_Addresses[i], &FromAddr) == 0)
 		{
 			if(m_pGameServer)
 				m_pGameServer->SendChatTarget_Language_ss(From, "You already notify that %s must be banned", ClientName(From), ClientName(To));
