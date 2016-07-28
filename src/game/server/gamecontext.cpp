@@ -815,19 +815,19 @@ void CGameContext::OnTick()
 	{
 		for(int i=0; i<MAX_CLIENTS; i++)
 		{
-			if(!m_apPlayers[i])
-				continue;
-				
-			if(Server()->ClientShouldBeBanned(i))
+			if(m_apPlayers[i] && m_apPlayers[i]->IsInfected())
 			{
-				char aDesc[VOTE_DESC_LENGTH] = {0};
-				char aCmd[VOTE_CMD_LENGTH] = {0};
-				char aAddrStr[NETADDR_MAXSTRSIZE] = {0};
-				Server()->GetClientAddr(i, aAddrStr, sizeof(aAddrStr));
-				str_format(aCmd, sizeof(aCmd), "ban %s %d Banned by vote", aAddrStr, g_Config.m_SvVoteKickBantime);
-				str_format(aDesc, sizeof(aDesc), "Ban \"%s\"", Server()->ClientName(i));
-				StartVote(aDesc, aCmd, "");
-				continue;
+				if(Server()->ClientShouldBeBanned(i))
+				{
+					char aDesc[VOTE_DESC_LENGTH] = {0};
+					char aCmd[VOTE_CMD_LENGTH] = {0};
+					char aAddrStr[NETADDR_MAXSTRSIZE] = {0};
+					Server()->GetClientAddr(i, aAddrStr, sizeof(aAddrStr));
+					str_format(aCmd, sizeof(aCmd), "ban %s %d Banned by vote", aAddrStr, g_Config.m_SvVoteKickBantime);
+					str_format(aDesc, sizeof(aDesc), "Ban \"%s\"", Server()->ClientName(i));
+					StartVote(aDesc, aCmd, "");
+					continue;
+				}
 			}
 		}
 	}
