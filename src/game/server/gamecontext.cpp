@@ -74,7 +74,10 @@ void CGameContext::Construct(int Resetting)
 	m_pServer = 0;
 
 	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
 		m_apPlayers[i] = 0;
+		m_aHitSoundState[i] = 0;
+	}
 
 	m_pController = 0;
 	m_VoteCloseTime = 0;
@@ -790,12 +793,23 @@ void CGameContext::SwapTeams()
 	(void)m_pController->CheckTeamBalance();
 }
 
+void CGameContext::SendHitSound(int ClientID)
+{
+	if(m_aHitSoundState[ClientID] < 1)
+	{
+		m_aHitSoundState[ClientID] = 1;
+	}
+}
+
+void CGameContext::SendScoreSound(int ClientID)
+{
+	m_aHitSoundState[ClientID] = 2;
+}
+
 void CGameContext::OnTick()
 {
 	for(int i=0; i<MAX_CLIENTS; i++)
-	{
-		m_HitSoundState[i] = 0;
-		
+	{		
 		if(m_apPlayers[i])
 		{			
 			//Show top10
@@ -878,19 +892,10 @@ void CGameContext::OnTick()
 		}
 	}
 	
+	//Check for new broadcast
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
-		if(!m_apPlayers[i])
-		{
-			m_BroadcastStates[i].m_NoChangeTick = 0;
-			m_BroadcastStates[i].m_LifeSpanTick = 0;
-			m_BroadcastStates[i].m_Priority = BROADCAST_PRIORITY_LOWEST;
-			m_BroadcastStates[i].m_TimedPriority = BROADCAST_PRIORITY_LOWEST;
-			m_BroadcastStates[i].m_PrevMessage[0] = 0;
-			m_BroadcastStates[i].m_NextMessage[0] = 0;
-			m_BroadcastStates[i].m_TimedMessage[0] = 0;
-		}
-		else
+		if(m_apPlayers[i])
 		{
 			if(m_BroadcastStates[i].m_LifeSpanTick > 0 && m_BroadcastStates[i].m_TimedPriority > m_BroadcastStates[i].m_Priority)
 			{
@@ -925,12 +930,28 @@ void CGameContext::OnTick()
 			}
 			m_BroadcastStates[i].m_NextMessage[0] = 0;
 			m_BroadcastStates[i].m_Priority = BROADCAST_PRIORITY_LOWEST;
-			
-			//Send score and hit sound
+		}
+		else
+		{
+			m_BroadcastStates[i].m_NoChangeTick = 0;
+			m_BroadcastStates[i].m_LifeSpanTick = 0;
+			m_BroadcastStates[i].m_Priority = BROADCAST_PRIORITY_LOWEST;
+			m_BroadcastStates[i].m_TimedPriority = BROADCAST_PRIORITY_LOWEST;
+			m_BroadcastStates[i].m_PrevMessage[0] = 0;
+			m_BroadcastStates[i].m_NextMessage[0] = 0;
+			m_BroadcastStates[i].m_TimedMessage[0] = 0;
+		}
+	}
+	
+	//Send score and hit sound
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{		
+		if(m_apPlayers[i])
+		{
 			int Sound = -1;
-			if(m_HitSoundState[i] == 1)
+			if(m_aHitSoundState[i] == 1)
 				Sound = SOUND_HIT;
-			else if(m_HitSoundState[i] == 2)
+			else if(m_aHitSoundState[i] == 2)
 				Sound = SOUND_CTF_GRAB_PL;
 			
 			if(Sound >= 0)
@@ -944,6 +965,8 @@ void CGameContext::OnTick()
 				CreateSound(m_apPlayers[i]->m_ViewPos, Sound, Mask);
 			}
 		}
+		
+		m_aHitSoundState[i] = 0;
 	}
 	
 	Server()->RoundStatistics()->UpdateNumberOfPlayers(NumActivePlayers);
