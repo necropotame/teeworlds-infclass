@@ -325,6 +325,7 @@ public:
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail);
 	virtual void ShowTop10(int ClientID, int ScoreType);
 	virtual void ShowRank(int ClientID, int ScoreType);
+	virtual void ShowGoal(int ClientID, int ScoreType);
 #endif
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:

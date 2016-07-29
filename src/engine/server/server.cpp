@@ -3002,7 +3002,8 @@ public:
 			pSqlServer->executeSqlQuery(aBuf);
 			
 			int Rank = 0;
-			while(pSqlServer->GetResults()->next())
+			bool RankFound = false;
+			while(pSqlServer->GetResults()->next() && !RankFound)
 			{
 				Rank++;
 				if(pSqlServer->GetResults()->getInt("UserId") == m_UserID)
@@ -3013,8 +3014,14 @@ public:
 					CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
 					m_pServer->AddGameServerCmd(pCmd);
 					
-					break;
+					RankFound = true;
 				}
+			}
+			
+			if(!RankFound)
+			{
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, "You must gain at least one point to see your rank");
+				m_pServer->AddGameServerCmd(pCmd);
 			}
 		}
 		catch (sql::SQLException &e)
@@ -3034,6 +3041,94 @@ void CServer::ShowRank(int ClientID, int ScoreType)
 	{
 		CSqlJob* pJob = new CSqlJob_Server_ShowRank(this, m_aCurrentMap, ClientID, m_aClients[ClientID].m_UserID, ScoreType);
 		pJob->Start();
+	}
+	else if(m_pGameServer)
+	{
+		m_pGameServer->SendChatTarget_Language(ClientID, "You must be logged to see your rank");
+	}
+}
+
+class CSqlJob_Server_ShowGoal : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	CSqlString<64> m_sMapName;
+	int m_ClientID;
+	int m_UserID;
+	int m_ScoreType;
+	
+public:
+	CSqlJob_Server_ShowGoal(CServer* pServer, const char* pMapName, int ClientID, int UserID, int ScoreType)
+	{
+		m_pServer = pServer;
+		m_sMapName = CSqlString<64>(pMapName);
+		m_ClientID = ClientID;
+		m_UserID = UserID;
+		m_ScoreType = ScoreType;
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[1024];
+		
+		try
+		{
+			//Get the list of best rounds
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT Score "
+				"FROM %s_infc_RoundScore "
+				"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d' "
+				"ORDER BY Score DESC "
+				"LIMIT %d "
+				, pSqlServer->GetPrefix()
+				, m_UserID
+				, m_sMapName.ClrStr()
+				, m_ScoreType
+				, SQL_SCORE_NUMROUND
+			);
+			pSqlServer->executeSqlQuery(aBuf);
+			
+			int RoundCounter = 0;
+			int Score = 0;
+			while(pSqlServer->GetResults()->next())
+			{
+				Score = pSqlServer->GetResults()->getInt("Score");
+				RoundCounter++;
+			}
+			
+			if(RoundCounter == SQL_SCORE_NUMROUND)
+			{
+				str_format(aBuf, sizeof(aBuf), "You must gain at least %d points to increase your score", (Score+1)); 
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
+				m_pServer->AddGameServerCmd(pCmd);
+			}
+			else
+			{
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, "Gain at least one point to increase your score");
+				m_pServer->AddGameServerCmd(pCmd);
+			}
+		}
+		catch (sql::SQLException &e)
+		{
+			dbg_msg("sql", "Can't get rank (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+};
+
+void CServer::ShowGoal(int ClientID, int ScoreType)
+{
+	if(m_aClients[ClientID].m_UserID >= 0)
+	{
+		CSqlJob* pJob = new CSqlJob_Server_ShowGoal(this, m_aCurrentMap, ClientID, m_aClients[ClientID].m_UserID, ScoreType);
+		pJob->Start();
+	}
+	else if(m_pGameServer)
+	{
+		m_pGameServer->SendChatTarget_Language(ClientID, "You must be logged to see your goal");
 	}
 }
 
@@ -3141,64 +3236,38 @@ public:
 	void UpdateScore(CSqlServer* pSqlServer, int ScoreType, int Score, const char* pScoreName)
 	{
 		char aBuf[512];
-		
-		//Get old score
-		str_format(aBuf, sizeof(aBuf), 
-			"SELECT SUM(Score) AS AccumulatedScore FROM %s_infc_RoundScore "
-			"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
-			"ORDER BY Score DESC LIMIT %d"
-			, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), ScoreType, SQL_SCORE_NUMROUND);
-		pSqlServer->executeSqlQuery(aBuf);
-
-		int OldScore = 0;
-		if(pSqlServer->GetResults()->next())
-		{
-			OldScore = (int)pSqlServer->GetResults()->getInt("AccumulatedScore");
-		}
-		
+				
 		str_format(aBuf, sizeof(aBuf), 
 			"INSERT INTO %s_infc_RoundScore "
 			"(UserId, RoundId, MapName, ScoreType, ScoreDate, Score) "
 			"VALUES ('%d', '%d', '%s', '%d', UTC_TIMESTAMP(), '%d');"
 			, pSqlServer->GetPrefix(), m_UserID, m_RoundId, m_sMapName.ClrStr(), ScoreType, Score);
 		pSqlServer->executeSql(aBuf);
-		
-		//Get new score
-		str_format(aBuf, sizeof(aBuf), 
-			"SELECT SUM(Score) AS AccumulatedScore FROM %s_infc_RoundScore "
-			"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
-			"ORDER BY Score DESC LIMIT %d"
-			, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), ScoreType, SQL_SCORE_NUMROUND);
-		pSqlServer->executeSqlQuery(aBuf);
-
-		int NewScore = OldScore;
-		if(pSqlServer->GetResults()->next())
-		{
-			NewScore = (int)pSqlServer->GetResults()->getInt("AccumulatedScore");
-		}
-		
-		if(OldScore < NewScore)
-		{
-			if(pScoreName[0])
-			{
-				str_format(aBuf, sizeof(aBuf), "You increased your score as %s in %s: %d (+%d)", pScoreName, m_sMapName.Str(), NewScore/10, (NewScore-OldScore)/10);
-			}
-			else
-			{
-				str_format(aBuf, sizeof(aBuf), "You increased your score in %s: %d (+%d)", m_sMapName.Str(), NewScore/10, (NewScore-OldScore)/10);
-			}
-			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
-			m_pServer->AddGameServerCmd(pCmd);
-		}
 	}
 
 	virtual bool Job(CSqlServer* pSqlServer)
 	{
+		char aBuf[512];
+		
 		if(m_RoundId < 0)
 			return false;
 		
 		try
 		{
+			//Get old score
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT Score FROM %s_infc_RoundScore "
+				"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
+				"ORDER BY Score DESC"
+				, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), 0, SQL_SCORE_NUMROUND);
+			pSqlServer->executeSqlQuery(aBuf);
+
+			int OldScore = 0;
+			while(pSqlServer->GetResults()->next())
+			{
+				OldScore += (int)pSqlServer->GetResults()->getInt("Score");
+			}
+			
 			if(m_PlayerStatistics.m_Score > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_ROUND_SCORE, m_PlayerStatistics.m_Score, "");
 				
@@ -3231,6 +3300,27 @@ public:
 				UpdateScore(pSqlServer, SQL_SCORETYPE_UNDEAD_SCORE, m_PlayerStatistics.m_UndeadScore, "Undead");
 			if(m_PlayerStatistics.m_WitchScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_WITCH_SCORE, m_PlayerStatistics.m_WitchScore, "Witch");
+		
+			//Get new score
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT Score FROM %s_infc_RoundScore "
+				"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
+				"ORDER BY Score DESC"
+				, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), 0, SQL_SCORE_NUMROUND);
+			pSqlServer->executeSqlQuery(aBuf);
+
+			int NewScore = 0;
+			if(pSqlServer->GetResults()->next())
+			{
+				NewScore += (int)pSqlServer->GetResults()->getInt("Score");
+			}
+			
+			if(OldScore < NewScore)
+			{
+				str_format(aBuf, sizeof(aBuf), "You increased your score: +%d", (NewScore-OldScore)/10);
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
+				m_pServer->AddGameServerCmd(pCmd);
+			}
 		}
 		catch (sql::SQLException &e)
 		{

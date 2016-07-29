@@ -2482,6 +2482,16 @@ bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	
+	pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_ROUND_SCORE);
+	
+	return true;
+}
+
 #endif
 
 bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
@@ -2896,6 +2906,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
 	Console()->Register("top10", "", CFGFLAG_CHAT|CFGFLAG_USER, ConTop10, this, "Show the top 10 on the current map");
 	Console()->Register("rank", "", CFGFLAG_CHAT|CFGFLAG_USER, ConRank, this, "Show your rank");
+	Console()->Register("goal", "", CFGFLAG_CHAT|CFGFLAG_USER, ConGoal, this, "Show your goal");
 #endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
