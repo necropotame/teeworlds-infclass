@@ -3092,7 +3092,7 @@ public:
 			int Score = 0;
 			while(pSqlServer->GetResults()->next())
 			{
-				Score = pSqlServer->GetResults()->getInt("Score");
+				Score = pSqlServer->GetResults()->getInt("Score")/10;
 				RoundCounter++;
 			}
 			
