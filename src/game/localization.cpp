@@ -44,7 +44,7 @@ void CLocalizationDatabase::AddString(const char *pOrgStr, const char *pNewStr)
 	m_Strings.add(s);
 }
 
-bool CLocalizationDatabase::Load(const char *pFilename, IStorage *pStorage, IConsole *pConsole)
+bool CLocalizationDatabase::Load(const char *pFilename, IStorage *pStorage, IConsole *pConsole, const char* pLanguageCode)
 {
 	// empty string means unload
 	if(pFilename[0] == 0)
@@ -62,6 +62,10 @@ bool CLocalizationDatabase::Load(const char *pFilename, IStorage *pStorage, ICon
 	str_format(aBuf, sizeof(aBuf), "loaded '%s'", pFilename);
 	pConsole->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "localization", aBuf);
 	m_Strings.clear();
+
+	int LanguageCodeSize = 0;
+	if(pLanguageCode)
+		LanguageCodeSize = str_length(pLanguageCode);
 
 	char aOrigin[512];
 	CLineReader LineReader;
@@ -83,14 +87,50 @@ bool CLocalizationDatabase::Load(const char *pFilename, IStorage *pStorage, ICon
 			break;
 		}
 
-		if(pReplacement[0] != '=' || pReplacement[1] != '=' || pReplacement[2] != ' ')
+		if(pLanguageCode)
 		{
-			str_format(aBuf, sizeof(aBuf), "malform replacement line for '%s'", aOrigin);
-			pConsole->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "localization", aBuf);
-			continue;
-		}
+			int LanguageCodeSize = str_length(pLanguageCode);
+			if(pReplacement[0] != '=' || pReplacement[1] != '=')
+			{
+				str_format(aBuf, sizeof(aBuf), "malform replacement line for '%s'", aOrigin);
+				pConsole->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "localization", aBuf);
+				continue;
+			}
+			
+			//Normal line
+			if(pReplacement[2] == ' ')
+			{
+				pReplacement += 3;
+			}
+			else
+			{
+				//Skip this line if the language is no the requested one
+				if(str_comp_nocase_num(pReplacement+2, pLanguageCode, LanguageCodeSize) != 0)
+					continue;
+				
+				if(pReplacement[LanguageCodeSize+2] != '=' || pReplacement[LanguageCodeSize+3] != '=' || pReplacement[LanguageCodeSize+4] != '=')
+				{
+					str_format(aBuf, sizeof(aBuf), "malform replacement line for '%s'", aOrigin);
+					pConsole->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "localization", aBuf);
+					continue;
+				}
+				
+			}
 
-		pReplacement += 3;
+			pReplacement += LanguageCodeSize+5;
+		}
+		else
+		{
+			if(pReplacement[0] != '=' || pReplacement[1] != '=' || pReplacement[2] != ' ')
+			{
+				str_format(aBuf, sizeof(aBuf), "malform replacement line for '%s'", aOrigin);
+				pConsole->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "localization", aBuf);
+				continue;
+			}
+
+			pReplacement += 3;
+		}
+		
 		AddString(aOrigin, pReplacement);
 	}
 	io_close(IoHandle);

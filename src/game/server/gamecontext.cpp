@@ -813,7 +813,7 @@ void CGameContext::OnTick()
 		if(m_apPlayers[i])
 		{			
 			//Show top10
-			if(Server()->GetClientMemory(i, CLIENTMEMORY_TOP10))
+			if(!Server()->GetClientMemory(i, CLIENTMEMORY_TOP10))
 			{
 				if(!g_Config.m_SvMotd[0] || Server()->GetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE))
 				{
