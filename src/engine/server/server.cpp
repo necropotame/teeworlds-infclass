@@ -2915,7 +2915,7 @@ public:
 			while(pSqlServer->GetResults()->next())
 			{
 				Rank++;
-				str_format(pMOTD, sizeof(aBuf)-(pMOTD-aBuf), "%d. %s: %d pts\n",
+				str_format(pMOTD, sizeof(aBuf)-(pMOTD-aBuf), "%d. %s: %d pts (%d rnd)\n",
 					Rank,
 					pSqlServer->GetResults()->getString("Username").c_str(),
 					pSqlServer->GetResults()->getInt("AccumulatedScore")/10,
@@ -2998,9 +2998,7 @@ public:
 				, pSqlServer->GetPrefix()
 				, m_ScoreType
 				, m_sMapName.ClrStr()
-				, pSqlServer->GetPrefix()
 				, SQL_SCORE_NUMROUND
-				, m_UserID
 			);
 			pSqlServer->executeSqlQuery(aBuf);
 			
