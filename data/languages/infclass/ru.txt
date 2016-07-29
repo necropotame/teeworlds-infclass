@@ -1,6 +1,5 @@
 ##### SERVER ###########################################################
 
-### NOT TRANSLATED
 Switch language to english ?
 == Switch language to russian ?
 
@@ -78,33 +77,27 @@ Type "/help %s" for more information about your class
 ##### STATE ############################################################
 
 You are frozen: %d sec
-== Ты заморожён: %d секунд
+== Ты заморожён: %d сек.
 
-### NOT TRANSLATED
-#Bombs left: %d
-#== 
+Bombs left: %d
+== Оставшиеся бомбы: %d
 
-### NOT TRANSLATED
-#Laser wall: %d sec
-#== 
+Laser wall: %d sec
+== Стена: %d сек.
 
-### NOT TRANSLATED
-#Position lock: %d sec
-#== 
+Position lock: %d sec
+== Удерживание: %d сек.
 
-### NOT TRANSLATED
-#Active mines: %d
-#== 
+Active mines: %d
+== Действенные мины: %d
 
-### NOT TRANSLATED
-#Web mode enabled
-#== 
+Web mode enabled
+== Сетевое состояние включено
 
 ##### CLASSCHOOSER #####################################################
 
-### NOT TRANSLATED
-#Choose your class
-#== Wähle deine Klasse
+Choose your class
+== Выбирай класс
 
 Random choice
 == Случайный выбор
@@ -137,22 +130,19 @@ List of commands
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1>: Всегда выбирать случайный класс, когда начинается раунд
 
-### NOT TRANSLATED
-#/lowresmap and /highresmap: Switch between simplified and classical maps
-#== 
+/lowresmap and /highresmap: Switch between simplified and classical maps
+== Обменить карту высшего и низкого разрешения
 
-### NOT TRANSLATED
-#Press <F3> or <F4> to enable or disable hook protection
-#== 
+Press <F3> or <F4> to enable or disable hook protection
+== Нажми <F3> или <F4>, чтобы включить или выключить защиту против зацепки
 
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == Нажми <F3> или <F4> пока зажимаешь <TAB>, чтобы сменить систему очков
 
 ##### Language ##### 
 
-### NOT TRANSLATED
-#Unknown language
-#== 
+Unknown language
+== Неизвестный язык
 
 ##### Always Random ##### 
 
@@ -195,13 +185,11 @@ The goal for infected is to infect all humans.
 
 ##### Hook protection ##### 
 
-### NOT TRANSLATED
-#Hook protection enabled
-#== 
+Hook protection enabled
+== Защита против зацепки включена
 
-### NOT TRANSLATED
-#Hook protection disabled
-#== 
+Hook protection disabled
+== Защита против зацепки выключена
 
 ##### CLASSES ##########################################################
 
@@ -250,17 +238,14 @@ Scientist
 Scientist:
 == Учёный:
 
-### NOT TRANSLATED
-#The Scientist can pose floating mines with his hammer.
-#== 
+The Scientist can pose floating mines with his hammer.
+== Учёный может помещать плавучие мины молотом.
 
-### NOT TRANSLATED
-#He has also grenades that teleport him.
-#== 
+He has also grenades that teleport him.
+== Притом он имеет гранаты, которые телепортируют его.
 
-### NOT TRANSLATED
-#Mines are limited to two per player at the same time.
-#== 
+Mines are limited to two per player at the same time.
+== Мины ограничены на две для каждого игрока за раз.
 
 ##### Medic ##### 
 
@@ -292,39 +277,31 @@ His hammer is replaced by a katana, allowing him to jump two times before touchi
 
 ##### Mercenary ##### 
 
-### NOT TRANSLATED
-#Mercenary
-#== 
+Mercenary
+== Наёмник
 
-### NOT TRANSLATED
-#Mercenary:
-#== 
+Mercenary:
+== Наёмник:
 
-### NOT TRANSLATED
-#The Mercenary fly in air using his machine gun.
-#== 
+The Mercenary fly in air using his machine gun.
+== Наёмник может летать в воздухе используя свой пулемёт.
 
-### NOT TRANSLATED
-#He can also throw poison grenades that deals 8 damage points.
-#== 
+He can also throw poison grenades that deals 8 damage points.
+== Притом он может кидать ядовитые гранаты, которые причиняют 8 пунктов урона.
 
 ##### Sniper ##### 
 
-### NOT TRANSLATED
-#Sniper
-#== 
+Sniper
+== Снайпер
 
-### NOT TRANSLATED
-#Sniper:
-#== 
+Sniper:
+== Снайпер:
 
-### NOT TRANSLATED
-#The Sniper can lock his position in air for 15 seconds with his hammer.
-#== 
+The Sniper can lock his position in air for 15 seconds with his hammer.
+== Снайпер способен установлять своё местоположение на 15 секунд с помощью своего молота.
 
-### NOT TRANSLATED
-#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-#== 
+He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+== Притом он имеет могучую винтовку, которая причиняет 20 урона в установленном состояние, от 9 до 10 в других случаях.
 
 ##### Smoker ##### 
 
@@ -338,7 +315,7 @@ The Smoker can infect humans and heal infected with his hammer.
 == Курильщик может заражать людей и лечить заражённых с помощью своего молота.
 
 He can also inflict 4 damage points per seconds by hooking humans.
-== Также он наносит 4 урона в секунду человеку, к которому прицеплен цепочкой(хуком).
+== Также он наносит 4 урона в секунду человеку, к которому прицеплен цепочкой (хуком).
 
 ##### Boomer ##### 
 
@@ -355,7 +332,7 @@ All humans affected by the explosion become infected.
 == Все люди, задетые взрывом, заражаются.
 
 He can also inflict 1 damage point per seconds by hooking humans.
-== Ещё он наносит 1 урон в секунду человеку, к которому прицеплен цепочкой(хуком).
+== Ещё он наносит 1 урон в секунду человеку, к которому прицеплен цепочкой (хуком).
 
 ##### Hunter ##### 
 
@@ -373,47 +350,37 @@ He can jump two times in air.
 
 ##### Spider ##### 
 
-### NOT TRANSLATED
-#Spider
-#== 
+Spider
+== Паук
 
-### NOT TRANSLATED
-#Spider:
-#== 
+Spider:
+== Паук:
 
-### NOT TRANSLATED
-#The Spider can infect humans and heal infected with his hammer.
-#== 
+The Spider can infect humans and heal infected with his hammer.
+== Паук может заражать людей и лечить заражённых с помощью своего молота.
 
-### NOT TRANSLATED
-#When selecting any gun, his hook enter in web mode.
-#== 
+When selecting any gun, his hook enter in web mode.
+== Выбирай любое оружие, его зацепка переходит к сетевому состоянию.
 
-### NOT TRANSLATED
-#Any human that touch a hook in web mode is automatically grabbed.
-#== 
+Any human that touch a hook in web mode is automatically grabbed.
+== Любой человек прикоснувшийся цепочкой безотлагательно к ней прицепляется.
 
-### NOT TRANSLATED
-#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
-#== 
+The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+== Зацепка пауком (в обоих состояниях) причиняет 1 пункт урона в секунду и прицепляет человека на два секунды.
 
 ##### Ghost #####
 
-### NOT TRANSLATED
-#Ghost
-#== 
+Ghost
+== Призрак
 
-### NOT TRANSLATED
-#Ghost:
-#== 
+Ghost:
+== Призрак:
 
-### NOT TRANSLATED
-#The Ghost can infect humans and heal infected with his hammer.
-#== 
+The Ghost can infect humans and heal infected with his hammer.
+== Призрак может заражать людей и лечить заражённых с помощью своего молота.
 
-### NOT TRANSLATED
-#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
-#== 
+He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+== Он невидим, за изключением случаев, когда человек находится в его окрестности, ему наносен урон, или он пользуется молотом.
 
 ##### Undead ##### 
 
@@ -450,4 +417,4 @@ If the Witch dies, she disappear and is replaced by an another class of infected
 == Когда она помирает, то игрок получает другой класс.
 
 She can also inflict 1 damage point per seconds by hooking humans.
-== А также она наносит 1 урона в секунду человеку, к которому прицеплен цепочкой(хуком).
+== А также она наносит 1 урона в секунду человеку, к которому прицеплена цепочкой (хуком).
