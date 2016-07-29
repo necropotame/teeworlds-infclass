@@ -2915,11 +2915,10 @@ public:
 			while(pSqlServer->GetResults()->next())
 			{
 				Rank++;
-				str_format(pMOTD, sizeof(aBuf)-(pMOTD-aBuf), "%d. %s: %d pts (%d rnd)\n",
+				str_format(pMOTD, sizeof(aBuf)-(pMOTD-aBuf), "%d. %s: %d pts\n",
 					Rank,
 					pSqlServer->GetResults()->getString("Username").c_str(),
-					pSqlServer->GetResults()->getInt("AccumulatedScore")/10,
-					pSqlServer->GetResults()->getInt("NbRounds")
+					pSqlServer->GetResults()->getInt("AccumulatedScore")/10
 				);
 				pMOTD += str_length(pMOTD);
 			}
