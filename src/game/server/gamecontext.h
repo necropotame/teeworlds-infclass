@@ -254,6 +254,7 @@ public:
 private:
 	int m_VoteLanguageTick[MAX_CLIENTS];
 	int m_VoteLanguage[MAX_CLIENTS];
+	int m_VoteBanClientID;
 	
 	class CBroadcastState
 	{

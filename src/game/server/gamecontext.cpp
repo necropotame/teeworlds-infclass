@@ -744,6 +744,12 @@ void CGameContext::AbortVoteKickOnDisconnect(int ClientID)
 	if(m_VoteCloseTime && ((!str_comp_num(m_aVoteCommand, "kick ", 5) && str_toint(&m_aVoteCommand[5]) == ClientID) ||
 		(!str_comp_num(m_aVoteCommand, "set_team ", 9) && str_toint(&m_aVoteCommand[9]) == ClientID)))
 		m_VoteCloseTime = -1;
+	
+	if(m_VoteBanClientID == ClientID)
+	{
+		m_VoteCloseTime = -1;
+		m_VoteBanClientID = -1;
+	}
 }
 
 
@@ -839,6 +845,7 @@ void CGameContext::OnTick()
 					Server()->GetClientAddr(i, aAddrStr, sizeof(aAddrStr));
 					str_format(aCmd, sizeof(aCmd), "ban %s %d Banned by vote", aAddrStr, g_Config.m_SvVoteKickBantime);
 					str_format(aDesc, sizeof(aDesc), "Ban \"%s\"", Server()->ClientName(i));
+					m_VoteBanClientID = i;
 					StartVote(aDesc, aCmd, "");
 					continue;
 				}
@@ -1044,11 +1051,10 @@ void CGameContext::OnTick()
 
 			if(m_VoteEnforce == VOTE_ENFORCE_YES)
 			{
-				//Remove accusation if needed
-				if(str_comp_num(m_aVoteCommand, "ban ", 4) == 0)
+				if(m_VoteBanClientID >= 0)
 				{
-					int AccusedClient = atoi(m_aVoteCommand+4);
-					Server()->RemoveAccusations(AccusedClient);
+					Server()->RemoveAccusations(m_VoteBanClientID);
+					m_VoteBanClientID = -1;
 				}
 				
 				Server()->SetRconCID(IServer::RCON_CID_VOTE);
@@ -1066,10 +1072,10 @@ void CGameContext::OnTick()
 				SendChat(-1, CGameContext::CHAT_ALL, "Vote failed");
 				
 				//Remove accusation if needed
-				if(str_comp_num(m_aVoteCommand, "ban ", 4))
+				if(m_VoteBanClientID >= 0)
 				{
-					int AccusedClient = atoi(m_aVoteCommand+4);
-					Server()->RemoveAccusations(AccusedClient);
+					Server()->RemoveAccusations(m_VoteBanClientID);
+					m_VoteBanClientID = -1;
 				}
 			}
 			else if(m_VoteUpdate)
