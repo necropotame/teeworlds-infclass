@@ -745,7 +745,7 @@ void CGameContext::AbortVoteKickOnDisconnect(int ClientID)
 		(!str_comp_num(m_aVoteCommand, "set_team ", 9) && str_toint(&m_aVoteCommand[9]) == ClientID)))
 		m_VoteCloseTime = -1;
 	
-	if(m_VoteBanClientID == ClientID)
+	if(m_VoteCloseTime && m_VoteBanClientID == ClientID)
 	{
 		m_VoteCloseTime = -1;
 		m_VoteBanClientID = -1;
