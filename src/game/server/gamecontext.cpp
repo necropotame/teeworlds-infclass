@@ -2467,7 +2467,41 @@ bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 	CGameContext *pSelf = (CGameContext *)pUserData;
 	int ClientID = pResult->GetClientID();
 	
-	pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_ROUND_SCORE);
+	if(pResult->NumArguments()>0)
+	{
+		const char* pArg = pResult->GetString(0);
+		
+		if(str_comp_nocase(pArg, "engineer") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_ENGINEER_SCORE);
+		else if(str_comp_nocase(pArg, "soldier") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
+		else if(str_comp_nocase(pArg, "scientist") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
+		else if(str_comp_nocase(pArg, "medic") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
+		else if(str_comp_nocase(pArg, "ninja") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_NINJA_SCORE);
+		else if(str_comp_nocase(pArg, "mercenary") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_MERCENARY_SCORE);
+		else if(str_comp_nocase(pArg, "sniper") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SNIPER_SCORE);
+		else if(str_comp_nocase(pArg, "smoker") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SMOKER_SCORE);
+		else if(str_comp_nocase(pArg, "hunter") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_HUNTER_SCORE);
+		else if(str_comp_nocase(pArg, "boomer") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_BOOMER_SCORE);
+		else if(str_comp_nocase(pArg, "ghost") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_GHOST_SCORE);
+		else if(str_comp_nocase(pArg, "spider") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
+		else if(str_comp_nocase(pArg, "undead") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
+		else if(str_comp_nocase(pArg, "witch") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_WITCH_SCORE);
+	}
+	else
+		pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_ROUND_SCORE);
 	
 	return true;
 }
@@ -2477,7 +2511,41 @@ bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
 	CGameContext *pSelf = (CGameContext *)pUserData;
 	int ClientID = pResult->GetClientID();
 	
-	pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_ROUND_SCORE);
+	if(pResult->NumArguments()>0)
+	{
+		const char* pArg = pResult->GetString(0);
+		
+		if(str_comp_nocase(pArg, "engineer") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_ENGINEER_SCORE);
+		else if(str_comp_nocase(pArg, "soldier") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
+		else if(str_comp_nocase(pArg, "scientist") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
+		else if(str_comp_nocase(pArg, "medic") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
+		else if(str_comp_nocase(pArg, "ninja") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_NINJA_SCORE);
+		else if(str_comp_nocase(pArg, "mercenary") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_MERCENARY_SCORE);
+		else if(str_comp_nocase(pArg, "sniper") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SNIPER_SCORE);
+		else if(str_comp_nocase(pArg, "smoker") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SMOKER_SCORE);
+		else if(str_comp_nocase(pArg, "hunter") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_HUNTER_SCORE);
+		else if(str_comp_nocase(pArg, "boomer") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_BOOMER_SCORE);
+		else if(str_comp_nocase(pArg, "ghost") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_GHOST_SCORE);
+		else if(str_comp_nocase(pArg, "spider") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
+		else if(str_comp_nocase(pArg, "undead") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
+		else if(str_comp_nocase(pArg, "witch") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_WITCH_SCORE);
+	}
+	else
+		pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_ROUND_SCORE);
 	
 	return true;
 }
@@ -2487,7 +2555,41 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 	CGameContext *pSelf = (CGameContext *)pUserData;
 	int ClientID = pResult->GetClientID();
 	
-	pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_ROUND_SCORE);
+	if(pResult->NumArguments()>0)
+	{
+		const char* pArg = pResult->GetString(0);
+		
+		if(str_comp_nocase(pArg, "engineer") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_ENGINEER_SCORE);
+		else if(str_comp_nocase(pArg, "soldier") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
+		else if(str_comp_nocase(pArg, "scientist") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
+		else if(str_comp_nocase(pArg, "medic") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
+		else if(str_comp_nocase(pArg, "ninja") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_NINJA_SCORE);
+		else if(str_comp_nocase(pArg, "mercenary") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_MERCENARY_SCORE);
+		else if(str_comp_nocase(pArg, "sniper") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SNIPER_SCORE);
+		else if(str_comp_nocase(pArg, "smoker") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SMOKER_SCORE);
+		else if(str_comp_nocase(pArg, "hunter") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_HUNTER_SCORE);
+		else if(str_comp_nocase(pArg, "boomer") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_BOOMER_SCORE);
+		else if(str_comp_nocase(pArg, "ghost") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_GHOST_SCORE);
+		else if(str_comp_nocase(pArg, "spider") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
+		else if(str_comp_nocase(pArg, "undead") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
+		else if(str_comp_nocase(pArg, "witch") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_WITCH_SCORE);
+	}
+	else
+		pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_ROUND_SCORE);
 	
 	return true;
 }
@@ -2904,9 +3006,9 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("register", "s<username> s<password> ?s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
 	Console()->Register("login", "s<username> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
-	Console()->Register("top10", "", CFGFLAG_CHAT|CFGFLAG_USER, ConTop10, this, "Show the top 10 on the current map");
-	Console()->Register("rank", "", CFGFLAG_CHAT|CFGFLAG_USER, ConRank, this, "Show your rank");
-	Console()->Register("goal", "", CFGFLAG_CHAT|CFGFLAG_USER, ConGoal, this, "Show your goal");
+	Console()->Register("top10", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConTop10, this, "Show the top 10 on the current map");
+	Console()->Register("rank", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConRank, this, "Show your rank");
+	Console()->Register("goal", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConGoal, this, "Show your goal");
 #endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");

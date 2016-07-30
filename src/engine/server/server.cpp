@@ -2908,9 +2908,73 @@ public:
 			);
 			pSqlServer->executeSqlQuery(aBuf);
 			
-			str_format(aBuf, sizeof(aBuf), "== %s top 10 ==\n\n", m_sMapName.Str());
+			str_format(aBuf, sizeof(aBuf), "== %s ==\n\n", m_sMapName.Str());
 			char* pMOTD = aBuf + str_length(aBuf);
-				
+			
+			switch(m_ScoreType)
+			{
+				case SQL_SCORETYPE_ENGINEER_SCORE:
+					str_copy(pMOTD, "Best Engineer\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_SOLDIER_SCORE:
+					str_copy(pMOTD, "Best Soldier\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_SCIENTIST_SCORE:
+					str_copy(pMOTD, "Best Scientist\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_MEDIC_SCORE:
+					str_copy(pMOTD, "Best Medic\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_NINJA_SCORE:
+					str_copy(pMOTD, "Best Ninja\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_MERCENARY_SCORE:
+					str_copy(pMOTD, "Best Mercenary\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_SNIPER_SCORE:
+					str_copy(pMOTD, "Best Sniper\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_SMOKER_SCORE:
+					str_copy(pMOTD, "Best Smoker\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_HUNTER_SCORE:
+					str_copy(pMOTD, "Best Hunter\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_BOOMER_SCORE:
+					str_copy(pMOTD, "Best Boomer\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_GHOST_SCORE:
+					str_copy(pMOTD, "Best Ghost\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_SPIDER_SCORE:
+					str_copy(pMOTD, "Best Spider\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_UNDEAD_SCORE:
+					str_copy(pMOTD, "Best Undead\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_WITCH_SCORE:
+					str_copy(pMOTD, "Best Witch\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_ROUND_SCORE:
+					str_copy(pMOTD, "Best Player\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+			}
+			
 			int Rank = 0;
 			while(pSqlServer->GetResults()->next())
 			{
@@ -3258,7 +3322,8 @@ public:
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT Score FROM %s_infc_RoundScore "
 				"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
-				"ORDER BY Score DESC"
+				"ORDER BY Score DESC "
+				"LIMIT %d "
 				, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), 0, SQL_SCORE_NUMROUND);
 			pSqlServer->executeSqlQuery(aBuf);
 
@@ -3305,7 +3370,8 @@ public:
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT Score FROM %s_infc_RoundScore "
 				"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d'"
-				"ORDER BY Score DESC"
+				"ORDER BY Score DESC "
+				"LIMIT %d "
 				, pSqlServer->GetPrefix(), m_UserID, m_sMapName.ClrStr(), 0, SQL_SCORE_NUMROUND);
 			pSqlServer->executeSqlQuery(aBuf);
 
