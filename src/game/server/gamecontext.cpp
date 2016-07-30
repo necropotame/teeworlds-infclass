@@ -2917,7 +2917,7 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	const char* pLine1 = pSelf->ServerLocalize("List of commands", Language);
 	const char* pLine2 = "/ar, /alwaysrandom, /customskin, /fa, /help, /info, /language"; 
 #ifdef CONF_SQL
-	const char* pLineSql = "/register, /login, /logout, /top10, /rank"; 
+	const char* pLineSql = "/register, /login, /logout, /top10, /rank, /goal"; 
 #endif
 	const char* pLine3 = pSelf->ServerLocalize("Press <F3> or <F4> to enable or disable hook protection", Language);
 	const char* pLine4 = pSelf->ServerLocalize("Press <F3> or <F4> while holding <TAB> to switch the score system", Language);
