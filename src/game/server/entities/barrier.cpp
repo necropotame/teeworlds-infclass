@@ -67,6 +67,7 @@ void CBarrier::Tick()
 					{
 						if(
 							pHook->GetPlayer() &&
+							!pHook->IsInfected() &&
 							pHook->m_Core.m_HookedPlayer == p->GetPlayer()->GetCID() &&
 							pHook->GetPlayer()->GetCID() != m_Owner && //The engineer will get the point when the infected dies
 							p->m_LastFreezer != pHook->GetPlayer()->GetCID() && //The ninja will get the point when the infected dies
