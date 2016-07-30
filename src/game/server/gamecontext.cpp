@@ -2589,7 +2589,7 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_WITCH_SCORE);
 	}
 	else
-		pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_ROUND_SCORE);
+		pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_ROUND_SCORE);
 	
 	return true;
 }
