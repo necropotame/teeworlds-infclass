@@ -76,9 +76,11 @@ void CBarrier::Tick()
 						{
 							Server()->RoundStatistics()->OnScoreEvent(pHook->GetPlayer()->GetCID(), SCOREEVENT_HELP_HOOK_BARRIER, pHook->GetClass());
 							GameServer()->SendScoreSound(pHook->GetPlayer()->GetCID());
-							m_LifeSpan -= Server()->TickSpeed()*g_Config.m_InfBarrierTimeReduce;
 						}
 					}
+					
+					if(p->GetClass() != PLAYERCLASS_UNDEAD)
+						m_LifeSpan -= ((Server()->TickSpeed()*g_Config.m_InfBarrierTimeReduce)/100);
 				}
 				
 				p->Die(m_Owner, WEAPON_HAMMER);
