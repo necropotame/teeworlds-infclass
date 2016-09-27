@@ -823,7 +823,9 @@ void CGameContext::OnTick()
 			{
 				if(!g_Config.m_SvMotd[0] || Server()->GetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE))
 				{
+#ifdef CONF_SQL
 					Server()->ShowTop10(i, SQL_SCORETYPE_ROUND_SCORE);
+#endif
 					Server()->SetClientMemory(i, CLIENTMEMORY_TOP10, true);
 				}
 			}

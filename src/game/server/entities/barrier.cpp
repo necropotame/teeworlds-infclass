@@ -5,9 +5,9 @@
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include <engine/server/roundstatistics.h>
+#include <engine/shared/config.h>
 #include "barrier.h"
 
-const float g_BarrierLifeSpan = 30.0;
 const float g_BarrierMaxLength = 300.0;
 const float g_BarrierRadius = 0.0;
 
@@ -21,7 +21,7 @@ CBarrier::CBarrier(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner)
 	}
 	else m_Pos2 = Pos2;
 	m_Owner = Owner;
-	m_LifeSpan = Server()->TickSpeed()*g_BarrierLifeSpan;
+	m_LifeSpan = Server()->TickSpeed()*g_Config.m_InfBarrierLifeSpan;
 	GameWorld()->InsertEntity(this);
 	m_EndPointID = Server()->SnapNewID();
 }
@@ -76,6 +76,7 @@ void CBarrier::Tick()
 						{
 							Server()->RoundStatistics()->OnScoreEvent(pHook->GetPlayer()->GetCID(), SCOREEVENT_HELP_HOOK_BARRIER, pHook->GetClass());
 							GameServer()->SendScoreSound(pHook->GetPlayer()->GetCID());
+							m_LifeSpan -= Server()->TickSpeed()*g_Config.m_InfBarrierTimeReduce;
 						}
 					}
 				}
