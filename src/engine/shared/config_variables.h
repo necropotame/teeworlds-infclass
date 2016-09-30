@@ -119,7 +119,7 @@ MACRO_CONFIG_INT(InfDefenderLimit, inf_defender_limit, 12, 0, 16, CFGFLAG_SERVER
 MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 6, 0, 16, CFGFLAG_SERVER, "Maximum number of medics in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 6, 0, 16, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfBarrierLifeSpan, inf_barrier_lifespan, 30, 0, 100, CFGFLAG_SERVER, "Barrier lifespan")
-MACRO_CONFIG_INT(InfBarrierTimeReduce, inf_barrier_timereduce, 200, 0, 10000, CFGFLAG_SERVER, "Time to remove from a barrier lifespan when an infected die (millisec)")
+MACRO_CONFIG_INT(InfBarrierTimeReduce, inf_barrier_timereduce, 100, 0, 10000, CFGFLAG_SERVER, "Time to remove from a barrier lifespan when an infected die (millisec)")
 MACRO_CONFIG_INT(InfMineRadius, inf_mine_radius, 46, 0, 1024, CFGFLAG_SERVER, "Radius of mines")
 MACRO_CONFIG_INT(InfMineLimit, inf_mine_limit, 2, 0, 1024, CFGFLAG_SERVER, "Maximum number of mines per player")
 
