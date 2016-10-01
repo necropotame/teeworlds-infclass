@@ -79,25 +79,20 @@ Type "/help %s" for more information about your class
 You are frozen: %d sec
 == Sei congelato per %d secondi
 
-### NOT TRANSLATED
-#Bombs left: %d
-#== 
+Bombs left: %d
+== Bombe rimaste: %d
 
-### NOT TRANSLATED
-#Laser wall: %d sec
-#== 
+Laser wall: %d sec
+== Muro laser: %d sec
 
-### NOT TRANSLATED
-#Position lock: %d sec
-#== 
+Position lock: %d sec
+== Posizione bloccata: %d sec
 
-### NOT TRANSLATED
-#Active mines: %d
-#== 
+Active mines: %d
+== Mine attive: %d
 
-### NOT TRANSLATED
-#Web mode enabled
-#== 
+Web mode enabled
+== Modalità ragnatela attivata
 
 ##### CLASSCHOOSER #####################################################
 
@@ -135,22 +130,19 @@ List of commands
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1> : Sceglie automaticamente una classe casuale durante l'inizio dell'incontro
 
-### NOT TRANSLATED
-#/lowresmap and /highresmap: Switch between simplified and classical maps
-#== 
+/lowresmap and /highresmap: Switch between simplified and classical maps
+== /lowresmap e /highresmap: Passa da una mappa semplificata a una classica
 
-### NOT TRANSLATED
-#Press <F3> or <F4> to enable or disable hook protection
-#== 
+Press <F3> or <F4> to enable or disable hook protection
+== Premi <F3> o <F4> per abilitare o disabilitare la protezione dalla corda 
 
 Press <F3> or <F4> while holding <TAB> to switch the score system
 == Premi <F3> o <F4> mentre tieni premuto <TAB> per cambiare il sistema di punteggio
 
 ##### Language ##### 
 
-### NOT TRANSLATED
 #Unknown language
-#== 
+== Lingua sconosciuta
 
 ##### Always Random ##### 
 
@@ -193,13 +185,11 @@ The goal for infected is to infect all humans.
 
 ##### Hook protection ##### 
 
-### NOT TRANSLATED
-#Hook protection enabled
-#== 
+Hook protection enabled
+== Protezione dalla corda abilitata
 
-### NOT TRANSLATED
-#Hook protection disabled
-#== 
+Hook protection disabled
+== Protezione dalla corda disabilitata 
 
 ##### CLASSES ##########################################################
 
@@ -248,17 +238,14 @@ Scientist
 Scientist:
 == Scienziato:
 
-### NOT TRANSLATED
-#The Scientist can pose floating mines with his hammer.
-#== 
+The Scientist can pose floating mines with his hammer.
+== Lo scienziato può piazzare mine volanti con il suo martello.
 
-### NOT TRANSLATED
-#He has also grenades that teleport him.
-#== 
+He has also grenades that teleport him.
+== Ha anche un lancia granate che lo può teletrasportare.
 
-### NOT TRANSLATED
-#Mines are limited to two per player at the same time.
-#== 
+Mines are limited to two per player at the same time.
+== Le mine sono limitate a due per giocatore nello stesso tempo. 
 
 ##### Medic ##### 
 
@@ -290,39 +277,33 @@ His hammer is replaced by a katana, allowing him to jump two times before touchi
 
 ##### Mercenary ##### 
 
-### NOT TRANSLATED
-#Mercenary
-#== 
+Mercenary
+== Mercenario 
 
-### NOT TRANSLATED
-#Mercenary:
-#== 
+Mercenary:
+== Mercenario: 
 
-### NOT TRANSLATED
-#The Mercenary fly in air using his machine gun.
-#== 
 
-### NOT TRANSLATED
-#He can also throw poison grenades that deals 8 damage points.
-#== 
+The Mercenary fly in air using his machine gun.
+== Il Mercenario vola nell'aria usando la sua pistola.
+
+He can also throw poison grenades that deals 8 damage points.
+== Lui può anche lanciare granate velenose che infliggono 8 punti danno. 
 
 ##### Sniper ##### 
 
-### NOT TRANSLATED
-#Sniper
-#== 
+Sniper
+== Cecchino 
 
-### NOT TRANSLATED
-#Sniper:
-#== 
+Sniper:
+== Cecchino: 
 
-### NOT TRANSLATED
-#The Sniper can lock his position in air for 15 seconds with his hammer.
-#== 
 
-### NOT TRANSLATED
-#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-#== 
+The Sniper can lock his position in air for 15 seconds with his hammer.
+== Il Cecchino può bloccare la sua posizione in aria per 15 secondi con il suo martello. 
+
+He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+== Lui ha anche un potente laser che infligge 19-20 punti danno se è in posizione bloccata, e 9-10 normalmente. 
 
 ##### Smoker ##### 
 
@@ -371,47 +352,37 @@ He can jump two times in air.
 
 ##### Spider ##### 
 
-### NOT TRANSLATED
-#Spider
-#== 
+Spider
+== Ragno
 
-### NOT TRANSLATED
-#Spider:
-#== 
+Spider:
+== Ragno: 
 
-### NOT TRANSLATED
-#The Spider can infect humans and heal infected with his hammer.
-#== 
+The Spider can infect humans and heal infected with his hammer.
+== Il Ragno può infettare umani e curare infetti con il suo martello.
 
-### NOT TRANSLATED
-#When selecting any gun, his hook enter in web mode.
-#== 
+When selecting any gun, his hook enter in web mode.
+== Quando si seleziona qualunque pistola, la sua corda entrerà in modalità ragnatela.
 
-### NOT TRANSLATED
-#Any human that touch a hook in web mode is automatically grabbed.
-#== 
+Any human that touch a hook in web mode is automatically grabbed.
+== Qualsiasi umano che tocca la corda in modalità ragnatela sarà automaticamente afferrato.
 
-### NOT TRANSLATED
-#The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
-#== 
+The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
+== La corda del ragno (in entrambi i modi) infligge 1 punto danno per secondo e può afferrare un umano per 2 secondi. 
 
 ##### Ghost #####
 
-### NOT TRANSLATED
-#Ghost
-#== 
+Ghost
+== Fantasma 
 
-### NOT TRANSLATED
-#Ghost:
-#== 
+Ghost:
+== Fantasma: 
 
-### NOT TRANSLATED
-#The Ghost can infect humans and heal infected with his hammer.
-#== 
+The Ghost can infect humans and heal infected with his hammer.
+== Il Fantasma può infettare umani e curare infetti con il suo martello. 
 
-### NOT TRANSLATED
-#He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
-#== 
+He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
+== Lui è invisibile, eccetto se un umano è vicino a lui, se prende danno o se usa il suo martello. 
 
 ##### Undead ##### 
 
