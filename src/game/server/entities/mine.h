@@ -25,7 +25,7 @@ public:
 	void Tick();
 
 	int GetOwner() const;
-	void Explode();
+	void Explode(int DetonatedBy);
 
 private:
 	int m_IDs[NUM_IDS];
