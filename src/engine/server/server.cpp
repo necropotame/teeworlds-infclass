@@ -304,6 +304,7 @@ void CServer::CClient::Reset(bool ResetScore)
 	m_Snapshots.PurgeAll();
 	m_LastAckedSnapshot = -1;
 	m_LastInputTick = -1;
+	m_Quitting = false;
 	m_SnapRate = CClient::SNAPRATE_INIT;
 	
 	if(ResetScore)
@@ -857,6 +858,7 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 	pThis->m_aClients[ClientID].m_Authed = AUTHED_NO;
 	pThis->m_aClients[ClientID].m_AuthTries = 0;
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
+	pThis->m_aClients[ClientID].m_Quitting = false;
 	
 	pThis->m_aClients[ClientID].Reset();
 	
@@ -884,6 +886,11 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void *pUser)
 {
 	CServer *pThis = (CServer *)pUser;
+	
+	if(pThis->m_aClients[ClientID].m_Quitting)
+		return 0;
+	
+	pThis->m_aClients[ClientID].m_Quitting = true;
 
 	char aAddrStr[NETADDR_MAXSTRSIZE];
 	net_addr_str(pThis->m_NetServer.ClientAddr(ClientID), aAddrStr, sizeof(aAddrStr), true);
@@ -906,6 +913,7 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 	pThis->m_aClients[ClientID].m_WaitingTime = 0;
 	pThis->m_aClients[ClientID].m_UserID = -1;
 	pThis->m_aClients[ClientID].m_LogInstance = -1;
+	pThis->m_aClients[ClientID].m_Quitting = false;
 	
 	//Keep information about client for 10 minutes
 	pThis->m_NetSession.AddSession(pThis->m_NetServer.ClientAddr(ClientID), 10*60, &pThis->m_aClients[ClientID].m_Session);

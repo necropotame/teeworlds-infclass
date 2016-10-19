@@ -675,7 +675,7 @@ void CCharacter::FireWeapon()
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
 					{
-						pTarget->IncreaseArmor(4)
+						pTarget->IncreaseArmor(4);
 						if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
 						{
 							Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());

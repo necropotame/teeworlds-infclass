@@ -116,6 +116,7 @@ public:
 		int m_State;
 		int m_Latency;
 		int m_SnapRate;
+		bool m_Quitting;
 
 		int m_LastAckedSnapshot;
 		int m_LastInputTick;
