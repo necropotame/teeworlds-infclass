@@ -675,13 +675,11 @@ void CCharacter::FireWeapon()
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
 					{
-						int OldArmor = pTarget->m_Armor;
-						pTarget->IncreaseArmor(4);
-						int NewArmor = pTarget->m_Armor;
-						if(OldArmor < 10 && NewArmor >= 10)
+						if(pTarget->IncreaseArmor(4) && pTarget->m_NeedFullHeal)
 						{
-							//~ Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
-							//~ GameServer()->SendScoreSound(GetPlayer()->GetCID());
+							Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
+							GameServer()->SendScoreSound(GetPlayer()->GetCID());
+							pTarget->m_NeedFullHeal = false;
 						}
 						pTarget->m_EmoteType = EMOTE_HAPPY;
 						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
@@ -1172,6 +1170,10 @@ void CCharacter::Tick()
 			m_PoisonTick--;
 		}
 	}
+	
+	//NeedHeal
+	if(m_Armor >= 10)
+		m_NeedFullHeal = false;
 	
 	if(!m_InWater && !IsGrounded() && (m_Core.m_HookState != HOOK_GRABBED || m_Core.m_HookedPlayer != -1))
 	{
@@ -1793,12 +1795,22 @@ void CCharacter::Die(int Killer, int Weapon)
 bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 {
 /* INFECTION MODIFICATION START ***************************************/
+	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
+	
+	//Heal and unfreeze
+	if(pKillerPlayer && pKillerPlayer->GetClass() == PLAYERCLASS_BOOMER && IsInfected() && Weapon == WEAPON_HAMMER)
+	{
+		IncreaseHealth(4+rand()%6);
+		IncreaseArmor(4+rand()%6);
+		Unfreeze();
+		return false;
+	}
+	
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
 	{
 		m_Core.m_Vel += Force;
 	}
 
-	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
 	
 	if(From != m_pPlayer->GetCID() && pKillerPlayer)
 	{
@@ -1853,6 +1865,9 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		}
 
 		m_Health -= Dmg;
+	
+		if(From != m_pPlayer->GetCID())
+			m_NeedFullHeal = true;
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -2365,6 +2380,7 @@ void CCharacter::SetClass(int ClassChoosed)
 	DestroyChildEntities();
 	
 	m_QueuedWeapon = -1;
+	m_NeedFullHeal = false;
 	
 	GameServer()->CreatePlayerSpawn(m_Pos);
 }

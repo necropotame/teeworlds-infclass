@@ -112,6 +112,7 @@ private:
 	int m_ReloadTimer;
 	int m_AttackTick;
 
+	bool m_NeedFullHeal;
 	int m_DamageTaken;
 
 	int m_EmoteType;
