@@ -50,11 +50,11 @@ void CMine::Explode(int DetonatedBy)
 	{
 		float Dist = distance(m_Pos, OwnerChar->m_Pos);
 		if(Dist < OwnerChar->m_ProximityRadius+g_Config.m_InfMineRadius)
-			OwnerChar->TakeDamage(vec2(0.0f, 0.0f), 6, DetonatedBy, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+			OwnerChar->TakeDamage(vec2(0.0f, 0.0f), 4, DetonatedBy, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 		else if(Dist < OwnerChar->m_ProximityRadius+2*g_Config.m_InfMineRadius)
 		{
 			float Alpha = (Dist - g_Config.m_InfMineRadius-OwnerChar->m_ProximityRadius)/g_Config.m_InfMineRadius;
-			OwnerChar->TakeDamage(vec2(0.0f, 0.0f), 6*Alpha, DetonatedBy, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+			OwnerChar->TakeDamage(vec2(0.0f, 0.0f), 4*Alpha, DetonatedBy, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 		}
 	}
 }

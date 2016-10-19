@@ -209,6 +209,8 @@ public:
 	int m_HookTick;
 	int m_HookState;
 	int m_HookedPlayer;
+	bool m_HookProtected;
+	bool m_Infected;
 
 	int m_Jumped;
 

@@ -817,7 +817,7 @@ void CGameContext::OnTick()
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{		
 		if(m_apPlayers[i])
-		{			
+		{
 			//Show top10
 			if(!Server()->GetClientMemory(i, CLIENTMEMORY_TOP10))
 			{
@@ -857,7 +857,17 @@ void CGameContext::OnTick()
 	
 	// check tuning
 	CheckPureTuning();
-
+	
+	//update hook protection in core
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(m_apPlayers[i] && m_apPlayers[i]->GetCharacter())
+		{
+			m_apPlayers[i]->GetCharacter()->m_Core.m_Infected = m_apPlayers[i]->IsInfected();
+			m_apPlayers[i]->GetCharacter()->m_Core.m_HookProtected = m_apPlayers[i]->HookProtectionEnabled();
+		}
+	}
+	
 	// copy tuning
 	m_World.m_Core.m_Tuning = m_Tuning;
 	m_World.Tick();
@@ -1183,7 +1193,7 @@ void CGameContext::OnClientDrop(int ClientID, int Type, const char *pReason)
 		for(int i = 0; i < MAX_CLIENTS; i ++)
 		{
 			if(i == ClientID) continue;
-			CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+			CPlayer *pPlayer = m_apPlayers[i];
 			if(!pPlayer) continue;
 			if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
 			if(pPlayer->IsInfected()) InfectedCounter++;

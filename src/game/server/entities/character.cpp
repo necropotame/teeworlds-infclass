@@ -660,9 +660,11 @@ void CCharacter::FireWeapon()
 							{
 								pTarget->IncreaseHealth(2);
 								pTarget->IncreaseArmor(2);
-								pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
 								pTarget->m_EmoteType = EMOTE_HAPPY;
 								pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+								
+								if(!pTarget->GetPlayer()->HookProtectionEnabled())
+									pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
 							}
 						}
 						else
@@ -673,8 +675,14 @@ void CCharacter::FireWeapon()
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
 					{
+						int OldArmor = pTarget->m_Armor;
 						pTarget->IncreaseArmor(4);
-						//pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
+						int NewArmor = pTarget->m_Armor;
+						if(OldArmor < 10 && NewArmor >= 10)
+						{
+							Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
+							GameServer()->SendScoreSound(GetPlayer()->GetCID());
+						}
 						pTarget->m_EmoteType = EMOTE_HAPPY;
 						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 					}
@@ -875,7 +883,7 @@ void CCharacter::FireWeapon()
 				if(m_PositionLocked)
 					Damage = 20;
 				else
-					Damage = 9 + rand()%2;
+					Damage = min(10, 9 + rand()%4);
 			}
 			
 			new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);

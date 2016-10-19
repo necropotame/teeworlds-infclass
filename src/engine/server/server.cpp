@@ -538,7 +538,7 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_RIFLE, 0);
 	SetAmmoRegenTime(INFWEAPON_NINJA, 0);
 	SetAmmoRegenTime(INFWEAPON_ENGINEER_RIFLE, 6000);
-	SetAmmoRegenTime(INFWEAPON_SNIPER_RIFLE, 4000);
+	SetAmmoRegenTime(INFWEAPON_SNIPER_RIFLE, 2000);
 	SetAmmoRegenTime(INFWEAPON_SOLDIER_GRENADE, 7000);
 	SetAmmoRegenTime(INFWEAPON_SCIENTIST_GRENADE, 10000);
 	SetAmmoRegenTime(INFWEAPON_MEDIC_SHOTGUN, 750);
@@ -3312,7 +3312,6 @@ public:
 			lock_wait(m_pServer->m_ChallengeLock);
 			m_pServer->m_ChallengeType = ChallengeType;
 			str_copy(m_pServer->m_aChallengeWinner, aWinner, sizeof(m_pServer->m_aChallengeWinner));
-			dbg_msg("TEST", "Winner:%s (%d)", aWinner, ChallengeType);
 			lock_release(m_pServer->m_ChallengeLock);
 		}
 		catch (sql::SQLException &e)
