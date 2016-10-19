@@ -824,7 +824,7 @@ void CGameContext::OnTick()
 				if(!g_Config.m_SvMotd[0] || Server()->GetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE))
 				{
 #ifdef CONF_SQL
-					Server()->ShowTop10(i, SQL_SCORETYPE_ROUND_SCORE);
+					Server()->ShowChallenge(i);
 #endif
 					Server()->SetClientMemory(i, CLIENTMEMORY_TOP10, true);
 				}
@@ -2464,6 +2464,16 @@ bool CGameContext::ConLogout(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+bool CGameContext::ConChallenge(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	
+	pSelf->Server()->ShowChallenge(ClientID);
+	
+	return true;
+}
+
 bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
@@ -2919,7 +2929,7 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	const char* pLine1 = pSelf->ServerLocalize("List of commands", Language);
 	const char* pLine2 = "/ar, /alwaysrandom, /customskin, /fa, /help, /info, /language"; 
 #ifdef CONF_SQL
-	const char* pLineSql = "/register, /login, /logout, /top10, /rank, /goal"; 
+	const char* pLineSql = "/register, /login, /logout, /challenge, /top10, /rank, /goal"; 
 #endif
 	const char* pLine3 = pSelf->ServerLocalize("Press <F3> or <F4> to enable or disable hook protection", Language);
 	const char* pLine4 = pSelf->ServerLocalize("Press <F3> or <F4> while holding <TAB> to switch the score system", Language);
@@ -3009,6 +3019,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("login", "s<username> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
 	Console()->Register("top10", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConTop10, this, "Show the top 10 on the current map");
+	Console()->Register("challenge", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChallenge, this, "Show the current winner of the challenge");
 	Console()->Register("rank", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConRank, this, "Show your rank");
 	Console()->Register("goal", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConGoal, this, "Show your goal");
 #endif

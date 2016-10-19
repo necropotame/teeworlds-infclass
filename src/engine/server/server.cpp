@@ -67,6 +67,30 @@ static void StrRtrim(char *pStr)
 	}
 }
 
+#ifdef CONF_SQL
+static inline int ChallengeTypeToScoreType(int ChallengeType)
+{
+	switch(ChallengeType)
+	{
+		case 0:
+			return SQL_SCORETYPE_ENGINEER_SCORE;
+		case 1:
+			return SQL_SCORETYPE_MERCENARY_SCORE;
+		case 2:
+			return SQL_SCORETYPE_SCIENTIST_SCORE;
+		case 3:
+			return SQL_SCORETYPE_NINJA_SCORE;
+		case 4:
+			return SQL_SCORETYPE_SOLDIER_SCORE;
+		case 5:
+			return SQL_SCORETYPE_SNIPER_SCORE;
+		case 6:
+			return SQL_SCORETYPE_MEDIC_SCORE;
+	}
+	
+	return SQL_SCORETYPE_ROUND_SCORE;
+}
+#endif
 
 CSnapIDPool::CSnapIDPool()
 {
@@ -323,8 +347,8 @@ CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 	m_RconClientID = IServer::RCON_CID_SERV;
 	m_RconAuthLevel = AUTHED_ADMIN;
 
-/* DDNET MODIFICATION START *******************************************/
 #ifdef CONF_SQL
+/* DDNET MODIFICATION START *******************************************/
 	for (int i = 0; i < MAX_SQLSERVERS; i++)
 	{
 		m_apSqlReadServers[i] = 0;
@@ -333,17 +357,21 @@ CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 
 	CSqlConnector::SetReadServers(m_apSqlReadServers);
 	CSqlConnector::SetWriteServers(m_apSqlWriteServers);
-#endif
 /* DDNET MODIFICATION END *********************************************/
 	
 	m_GameServerCmdLock = lock_create();
+	m_ChallengeLock = lock_create();
+#endif
 	
 	Init();
 }
 
 CServer::~CServer()
 {
+#ifdef CONF_SQL
 	lock_destroy(m_GameServerCmdLock);
+	lock_destroy(m_ChallengeLock);
+#endif
 }
 
 int CServer::TrySetClientName(int ClientID, const char *pName)
@@ -477,6 +505,12 @@ int CServer::Init()
 	}
 
 	m_CurrentGameTick = 0;
+	
+#ifdef CONF_SQL
+	m_ChallengeType = 0;
+	m_ChallengeRefreshTick = 0;
+	m_aChallengeWinner[0] = 0;
+#endif
 		
 /* INFECTION MODIFICATION START ***************************************/
 	SetFireDelay(INFWEAPON_NONE, 0);
@@ -1336,8 +1370,45 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token)
 	}
 	else
 	{
+#ifdef CONF_SQL
+		if(g_Config.m_InfChallenge)
+		{
+			lock_wait(m_ChallengeLock);
+			int ScoreType = ChallengeTypeToScoreType(m_ChallengeType);
+			switch(ScoreType)
+			{
+				case SQL_SCORETYPE_ENGINEER_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "EngineerOfTheDay", m_aChallengeWinner);
+					break;
+				case SQL_SCORETYPE_MERCENARY_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "MercenaryOfTheDay", m_aChallengeWinner);
+					break;
+				case SQL_SCORETYPE_SCIENTIST_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "ScientistOfTheDay", m_aChallengeWinner);
+					break;
+				case SQL_SCORETYPE_NINJA_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "NinjaOfTheDay", m_aChallengeWinner);
+					break;
+				case SQL_SCORETYPE_SOLDIER_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "SoldierOfTheDay", m_aChallengeWinner);
+					break;
+				case SQL_SCORETYPE_SNIPER_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "SniperOfTheDay", m_aChallengeWinner);
+					break;
+				case SQL_SCORETYPE_MEDIC_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "MedicOfTheDay", m_aChallengeWinner);
+					break;
+			}
+			lock_release(m_ChallengeLock);
+			p.AddString(aBuf, 64);
+		}
+		else
+			p.AddString(g_Config.m_SvName, 64);
+#else
 		p.AddString(g_Config.m_SvName, 64);
+#endif
 	}
+	
 	p.AddString(GetMapName(), 32);
 
 	// gametype
@@ -1755,6 +1826,15 @@ int CServer::Run()
 		{
 			int64 t = time_get();
 			int NewTicks = 0;
+			
+#ifdef CONF_SQL
+			//Update informations each 10 seconds
+			if(t - m_ChallengeRefreshTick >= time_freq()*10)
+			{
+				RefreshChallenge();
+				m_ChallengeRefreshTick = t;
+			}
+#endif
 
 			// load new map TODO: don't poll this
 			if(str_comp(g_Config.m_SvMap, m_aCurrentMap) != 0 || m_MapReload)
@@ -1837,6 +1917,7 @@ int CServer::Run()
 
 				GameServer()->OnTick();
 				
+#ifdef CONF_SQL
 				if(m_lGameServerCmds.size())
 				{
 					lock_wait(m_GameServerCmdLock);
@@ -1848,6 +1929,7 @@ int CServer::Run()
 					m_lGameServerCmds.clear();
 					lock_release(m_GameServerCmdLock);
 				} 
+#endif
 			}
 
 			// snap game
@@ -2516,6 +2598,7 @@ bool CServer::IsClientLogged(int ClientID)
 	return m_aClients[ClientID].m_UserID >= 0;
 }
 
+#ifdef CONF_SQL
 void CServer::AddGameServerCmd(CGameServerCmd* pCmd)
 {
 	lock_wait(m_GameServerCmdLock);
@@ -2579,8 +2662,6 @@ public:
 		pGameServer->SendChatTarget_Language(m_ClientID, m_aText);
 	}
 };
-
-#ifdef CONF_SQL
 
 class CSqlJob_Server_Login : public CSqlJob
 {
@@ -2873,7 +2954,7 @@ public:
 		
 		try
 		{
-			//Get the top 10 with this very simple, intuitive and optimized SQL fuction >_<
+			//Get the top 10 with this very simple, intuitive and optimized SQL function >_<
 			pSqlServer->executeSql("SET @VarRowNum := 0, @VarType := -1");
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT "
@@ -2908,69 +2989,68 @@ public:
 			);
 			pSqlServer->executeSqlQuery(aBuf);
 			
-			str_format(aBuf, sizeof(aBuf), "== %s ==\n\n", m_sMapName.Str());
-			char* pMOTD = aBuf + str_length(aBuf);
+			char* pMOTD = aBuf;
 			
 			switch(m_ScoreType)
 			{
 				case SQL_SCORETYPE_ENGINEER_SCORE:
-					str_copy(pMOTD, "Best Engineer\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Engineer ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_SOLDIER_SCORE:
-					str_copy(pMOTD, "Best Soldier\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Soldier ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_SCIENTIST_SCORE:
-					str_copy(pMOTD, "Best Scientist\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Scientist ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_MEDIC_SCORE:
-					str_copy(pMOTD, "Best Medic\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Medic ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_NINJA_SCORE:
-					str_copy(pMOTD, "Best Ninja\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Ninja ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_MERCENARY_SCORE:
-					str_copy(pMOTD, "Best Mercenary\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Mercenary ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_SNIPER_SCORE:
-					str_copy(pMOTD, "Best Sniper\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Sniper ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_SMOKER_SCORE:
-					str_copy(pMOTD, "Best Smoker\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Smoker ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_HUNTER_SCORE:
-					str_copy(pMOTD, "Best Hunter\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Hunter ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_BOOMER_SCORE:
-					str_copy(pMOTD, "Best Boomer\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Boomer ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_GHOST_SCORE:
-					str_copy(pMOTD, "Best Ghost\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Ghost ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_SPIDER_SCORE:
-					str_copy(pMOTD, "Best Spider\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Spider ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_UNDEAD_SCORE:
-					str_copy(pMOTD, "Best Undead\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Undead ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_WITCH_SCORE:
-					str_copy(pMOTD, "Best Witch\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Witch ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_ROUND_SCORE:
-					str_copy(pMOTD, "Best Player\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					str_copy(pMOTD, "== Best Player ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 			}
@@ -3006,6 +3086,253 @@ void CServer::ShowTop10(int ClientID, int ScoreType)
 {
 	CSqlJob* pJob = new CSqlJob_Server_ShowTop10(this, m_aCurrentMap, ClientID, ScoreType);
 	pJob->Start();
+}
+
+class CSqlJob_Server_ShowChallenge : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	CSqlString<64> m_sMapName;
+	int m_ClientID;
+	int m_ScoreType;
+	
+public:
+	CSqlJob_Server_ShowChallenge(CServer* pServer, const char* pMapName, int ClientID, int ChallengeType)
+	{
+		m_pServer = pServer;
+		m_ScoreType = ChallengeTypeToScoreType(ChallengeType);
+		m_ClientID = ClientID;
+		m_sMapName = CSqlString<64>(pMapName);
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aMotdBuf[1024];
+		char aBuf[1024];
+		
+		try
+		{
+			char* pMOTD = aMotdBuf;
+			
+			if(m_ScoreType >= 0)
+			{
+				str_format(aBuf, sizeof(aBuf), 
+					"SELECT "
+						"TableUsers.Username, "
+						"TableScore.Score "
+					"FROM %s_infc_RoundScore AS TableScore "
+					"INNER JOIN %s_Users AS TableUsers ON TableScore.UserId = TableUsers.UserId "
+					"WHERE DATE(TableScore.ScoreDate) = DATE(UTC_TIMESTAMP()) AND TableScore.ScoreType = %d "
+					"ORDER BY TableScore.Score DESC "
+					"LIMIT 5"
+					, pSqlServer->GetPrefix()
+					, pSqlServer->GetPrefix()
+					, m_ScoreType
+				);
+				pSqlServer->executeSqlQuery(aBuf);
+				
+				switch(m_ScoreType)
+				{
+					case SQL_SCORETYPE_ROUND_SCORE:
+						str_copy(pMOTD, "== Player of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_ENGINEER_SCORE:
+						str_copy(pMOTD, "== Engineer of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_SOLDIER_SCORE:
+						str_copy(pMOTD, "== Soldier of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_SCIENTIST_SCORE:
+						str_copy(pMOTD, "== Scientist of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_MEDIC_SCORE:
+						str_copy(pMOTD, "== Medic of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_NINJA_SCORE:
+						str_copy(pMOTD, "== Ninja of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_SNIPER_SCORE:
+						str_copy(pMOTD, "== Sniper of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_MERCENARY_SCORE:
+						str_copy(pMOTD, "== Mercenary of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+				}
+				pMOTD += str_length(pMOTD);
+				
+				int Rank = 0;
+				while(pSqlServer->GetResults()->next())
+				{
+					Rank++;
+					str_format(pMOTD, sizeof(aMotdBuf)-(pMOTD-aMotdBuf), "%d. %s: %d pts\n",
+						Rank,
+						pSqlServer->GetResults()->getString("Username").c_str(),
+						pSqlServer->GetResults()->getInt("Score")/10
+					);
+					pMOTD += str_length(pMOTD);
+				}
+			}
+			
+			{
+				//Get the top 5 with this very simple, intuitive and optimized SQL function >_<
+				pSqlServer->executeSql("SET @VarRowNum := 0, @VarType := -1");
+				str_format(aBuf, sizeof(aBuf), 
+					"SELECT "
+						"TableUsers.Username, "
+						"SUM(y.Score) AS AccumulatedScore, "
+						"COUNT(y.Score) AS NbRounds "
+					"FROM ("
+						"SELECT "
+							"x.UserId AS UserId, "
+							"x.Score AS Score, "
+							"@VarRowNum := IF(@VarType = x.UserId, @VarRowNum + 1, 1) as RowNumber, "
+							"@VarType := x.UserId AS dummy "
+						"FROM ("
+							"SELECT "
+								"TableRoundScore.UserId, "
+								"TableRoundScore.Score "
+							"FROM %s_infc_RoundScore AS TableRoundScore "
+							"WHERE ScoreType = '%d' AND MapName = '%s' "
+							"ORDER BY TableRoundScore.UserId ASC, TableRoundScore.Score DESC "
+						") AS x "
+					") AS y "
+					"INNER JOIN %s_Users AS TableUsers ON y.UserId = TableUsers.UserId "
+					"WHERE y.RowNumber <= %d "
+					"GROUP BY y.UserId "
+					"ORDER BY AccumulatedScore DESC, y.UserId ASC "
+					"LIMIT 5"
+					, pSqlServer->GetPrefix()
+					, SQL_SCORETYPE_ROUND_SCORE
+					, m_sMapName.ClrStr()
+					, pSqlServer->GetPrefix()
+					, SQL_SCORE_NUMROUND
+				);
+				pSqlServer->executeSqlQuery(aBuf);
+				
+				str_copy(pMOTD, "\n== Best Players ==\n32 best scores on this map\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+				pMOTD += str_length(pMOTD);
+				
+				int Rank = 0;
+				while(pSqlServer->GetResults()->next())
+				{
+					Rank++;
+					str_format(pMOTD, sizeof(aMotdBuf)-(pMOTD-aMotdBuf), "%d. %s: %d pts\n",
+						Rank,
+						pSqlServer->GetResults()->getString("Username").c_str(),
+						pSqlServer->GetResults()->getInt("AccumulatedScore")/10
+					);
+					pMOTD += str_length(pMOTD);
+				}
+			}
+			
+			str_copy(pMOTD, "\n\nCreate an account with /register and try to beat them!", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+			
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatMOTD(m_ClientID, aMotdBuf);
+			m_pServer->AddGameServerCmd(pCmd);
+		}
+		catch (sql::SQLException &e)
+		{
+			dbg_msg("sql", "Can't get challenge (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+};
+
+void CServer::ShowChallenge(int ClientID)
+{
+	if(g_Config.m_InfChallenge)
+	{
+		int ChallengeType;
+		lock_wait(m_ChallengeLock);
+		ChallengeType = m_ChallengeType;
+		lock_release(m_ChallengeLock);
+		
+		CSqlJob* pJob = new CSqlJob_Server_ShowChallenge(this, m_aCurrentMap, ClientID, ChallengeType);
+		pJob->Start();
+	}
+}
+
+class CSqlJob_Server_RefreshChallenge : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	
+public:
+	CSqlJob_Server_RefreshChallenge(CServer* pServer)
+	{
+		m_pServer = pServer;
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[1024];
+		char aWinner[32];
+		int ChallengeType = m_pServer->m_ChallengeType;
+		int ScoreType;
+		
+		aWinner[0] = 0;
+		
+		try
+		{
+			//Get the day
+			str_format(aBuf, sizeof(aBuf), "SELECT WEEKDAY(UTC_TIMESTAMP()) AS WeekDay, WEEK(UTC_TIMESTAMP()) AS Week");
+			pSqlServer->executeSqlQuery(aBuf);
+			
+			if(pSqlServer->GetResults()->next())
+			{
+				int CurrentDay = pSqlServer->GetResults()->getInt("WeekDay");
+				int CurrentWeek = pSqlServer->GetResults()->getInt("Week");
+				ChallengeType = (CurrentWeek + CurrentDay)%7;
+			}
+			
+			ScoreType = ChallengeTypeToScoreType(ChallengeType);
+			
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT "
+					"TableUsers.Username "
+				"FROM %s_infc_RoundScore AS TableScore "
+				"INNER JOIN %s_Users AS TableUsers ON TableScore.UserId = TableUsers.UserId "
+				"WHERE DATE(TableScore.ScoreDate) = DATE(UTC_TIMESTAMP()) AND TableScore.ScoreType = %d "
+				"ORDER BY TableScore.Score DESC "
+				"LIMIT 1"
+				, pSqlServer->GetPrefix()
+				, pSqlServer->GetPrefix()
+				, ScoreType
+			);
+			pSqlServer->executeSqlQuery(aBuf);
+			
+			if(pSqlServer->GetResults()->next())
+			{
+				str_copy(aWinner, pSqlServer->GetResults()->getString("Username").c_str(), sizeof(aWinner));
+			}
+			
+			lock_wait(m_pServer->m_ChallengeLock);
+			m_pServer->m_ChallengeType = ChallengeType;
+			str_copy(m_pServer->m_aChallengeWinner, aWinner, sizeof(m_pServer->m_aChallengeWinner));
+			dbg_msg("TEST", "Winner:%s (%d)", aWinner, ChallengeType);
+			lock_release(m_pServer->m_ChallengeLock);
+		}
+		catch (sql::SQLException &e)
+		{
+			dbg_msg("sql", "Can't refresh challenge (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+};
+
+void CServer::RefreshChallenge()
+{
+	if(g_Config.m_InfChallenge)
+	{
+		CSqlJob* pJob = new CSqlJob_Server_RefreshChallenge(this);
+		pJob->Start();
+	}
 }
 
 class CSqlJob_Server_ShowRank : public CSqlJob

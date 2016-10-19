@@ -323,9 +323,11 @@ public:
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
 	virtual void Logout(int ClientID);
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail);
+	virtual void ShowChallenge(int ClientID);
 	virtual void ShowTop10(int ClientID, int ScoreType);
 	virtual void ShowRank(int ClientID, int ScoreType);
 	virtual void ShowGoal(int ClientID, int ScoreType);
+	virtual void RefreshChallenge();
 #endif
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
@@ -340,11 +342,19 @@ public:
 	};
 
 private:
-	LOCK m_GameServerCmdLock;
-	array<CGameServerCmd*> m_lGameServerCmds;
 	CRoundStatistics m_RoundStatistics;
 	CNetSession<IServer::CClientSession> m_NetSession;
 	CNetSession<IServer::CClientAccusation> m_NetAccusation;
+	
+#ifdef CONF_SQL
+public:
+	array<CGameServerCmd*> m_lGameServerCmds;
+	LOCK m_GameServerCmdLock;
+	LOCK m_ChallengeLock;
+	char m_aChallengeWinner[16];
+	int64 m_ChallengeRefreshTick;
+	int m_ChallengeType;
+#endif
 
 public:
 	void AddGameServerCmd(CGameServerCmd* pCmd);
