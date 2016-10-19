@@ -1814,7 +1814,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 				{
 					IncreaseHealth(4+rand()%6);
 					IncreaseArmor(4+rand()%6);
-					if(IsFrozen)
+					if(IsFrozen())
 						Unfreeze();
 				}
 				return false;
