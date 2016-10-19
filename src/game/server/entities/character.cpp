@@ -680,8 +680,8 @@ void CCharacter::FireWeapon()
 						int NewArmor = pTarget->m_Armor;
 						if(OldArmor < 10 && NewArmor >= 10)
 						{
-							Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
-							GameServer()->SendScoreSound(GetPlayer()->GetCID());
+							//~ Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
+							//~ GameServer()->SendScoreSound(GetPlayer()->GetCID());
 						}
 						pTarget->m_EmoteType = EMOTE_HAPPY;
 						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
