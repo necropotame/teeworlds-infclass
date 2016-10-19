@@ -249,6 +249,7 @@ public:
 	virtual void SendMOTD_Language_s(int To, const char* pText, const char* pParam);
 	
 	void CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan);
+	void CreateHammerDotEvent(vec2 Pos, int LifeSpan);
 	void SendHitSound(int ClientID);
 	void SendScoreSound(int ClientID);
 	void AddBroadcast(int ClientID, const char* pText, int Priority, int LifeSpan);
@@ -282,6 +283,14 @@ private:
 		int m_SnapID;
 	};
 	array<LaserDotState> m_LaserDots;
+	
+	struct HammerDotState
+	{
+		vec2 m_Pos;
+		int m_LifeSpan;
+		int m_SnapID;
+	};
+	array<HammerDotState> m_HammerDots;
 	
 	int m_aHitSoundState[MAX_CLIENTS]; //1 for hit, 2 for kill (no sounds must be sent)
 /* INFECTION MODIFICATION END *****************************************/

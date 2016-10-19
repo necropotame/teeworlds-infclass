@@ -13,6 +13,7 @@
 
 #include "character.h"
 #include "laser.h"
+#include "scientist-laser.h"
 #include "projectile.h"
 #include "mine.h"
 #include "mercenarybomb.h"
@@ -839,6 +840,38 @@ void CCharacter::FireWeapon()
 					m_aWeapons[m_ActiveWeapon].m_Ammo++;
 				}
 			}
+			else if(GetClass() == PLAYERCLASS_SCIENTIST)
+			{
+				vec2 PortalShift = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
+				vec2 PortalDir = normalize(PortalShift);
+				if(length(PortalShift) > 500.0f)
+					PortalShift = PortalDir * 500.0f;
+				
+				float Iterator = length(PortalShift);
+				while(Iterator > 0.0f)
+				{
+					PortalShift = PortalDir * Iterator;
+					vec2 PortalPos = m_Pos + PortalShift;
+				
+					if(GameServer()->m_pController->IsSpawnable(PortalPos))
+					{
+						vec2 OldPos = m_Core.m_Pos;
+						
+						m_Core.m_Pos = PortalPos;
+						m_Core.m_HookedPlayer = -1;
+						m_Core.m_HookState = HOOK_RETRACTED;
+						m_Core.m_HookPos = m_Core.m_Pos;
+						
+						GameServer()->CreateDeath(OldPos, GetPlayer()->GetCID());
+						GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
+						GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
+						
+						break;
+					}
+					
+					Iterator -= 0.02f;
+				}
+			}
 			else
 			{
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GRENADE,
@@ -885,8 +918,16 @@ void CCharacter::FireWeapon()
 					Damage = min(10, 9 + rand()%4);
 			}
 			
-			new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
-			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+			if(GetClass() == PLAYERCLASS_SCIENTIST)
+			{
+				new CScientistLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.6f, m_pPlayer->GetCID(), Damage);
+				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+			}
+			else
+			{
+				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
+				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+			}
 		} break;
 	}
 
@@ -2185,6 +2226,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, 10);
+			GiveWeapon(WEAPON_RIFLE, 10);
 			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(INFWEAPON_SCIENTIST_GRENADE));
 			m_ActiveWeapon = WEAPON_GRENADE;
 			
@@ -2487,6 +2529,8 @@ int CCharacter::GetInfWeaponID(int WID)
 		{
 			case PLAYERCLASS_ENGINEER:
 				return INFWEAPON_ENGINEER_RIFLE;
+			case PLAYERCLASS_SCIENTIST:
+				return INFWEAPON_SCIENTIST_RIFLE;
 			case PLAYERCLASS_SNIPER:
 				return INFWEAPON_SNIPER_RIFLE;
 			default:

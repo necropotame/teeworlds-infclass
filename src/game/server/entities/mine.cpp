@@ -80,19 +80,20 @@ void CMine::Snap(int SnappingClient)
 	}
 	for(int i=0; i<CMine::NUM_PARTICLES; i++)
 	{
-		float RandomRadius = sqrt((float)frandom())*(Radius-8.0f);
+		float RandomRadius = frandom()*(Radius-4.0f);
 		float RandomAngle = 2.0f * pi * frandom();
 		vec2 ParticlePos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
 		
-		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[CMine::NUM_SIDE+i], sizeof(CNetObj_Laser)));
-		if(!pObj)
-			return;
-
-		pObj->m_X = (int)ParticlePos.x;
-		pObj->m_Y = (int)ParticlePos.y;
-		pObj->m_FromX = (int)ParticlePos.x;
-		pObj->m_FromY = (int)ParticlePos.y;
-		pObj->m_StartTick = Server()->Tick();
+		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[CMine::NUM_SIDE+i], sizeof(CNetObj_Projectile)));
+		if(pObj)
+		{
+			pObj->m_X = (int)ParticlePos.x;
+			pObj->m_Y = (int)ParticlePos.y;
+			pObj->m_VelX = 0;
+			pObj->m_VelY = 0;
+			pObj->m_StartTick = Server()->Tick();
+			pObj->m_Type = WEAPON_HAMMER;
+		}
 	}
 }
 
