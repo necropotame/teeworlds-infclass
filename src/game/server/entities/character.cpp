@@ -675,7 +675,8 @@ void CCharacter::FireWeapon()
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
 					{
-						if(pTarget->IncreaseArmor(4) && pTarget->m_NeedFullHeal)
+						pTarget->IncreaseArmor(4)
+						if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
 						{
 							Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
 							GameServer()->SendScoreSound(GetPlayer()->GetCID());
@@ -1797,26 +1798,27 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 /* INFECTION MODIFICATION START ***************************************/
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
 	
-	//Heal and unfreeze
-	if(pKillerPlayer && pKillerPlayer->GetClass() == PLAYERCLASS_BOOMER && IsInfected() && Weapon == WEAPON_HAMMER)
-	{
-		IncreaseHealth(4+rand()%6);
-		IncreaseArmor(4+rand()%6);
-		Unfreeze();
-		return false;
-	}
-	
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
 	{
 		m_Core.m_Vel += Force;
 	}
 
-	
 	if(From != m_pPlayer->GetCID() && pKillerPlayer)
 	{
 		if(IsInfected())
 		{
-			if(pKillerPlayer->IsInfected()) return false;
+			if(pKillerPlayer->IsInfected())
+			{
+				//Heal and unfreeze
+				if(pKillerPlayer->GetClass() == PLAYERCLASS_BOOMER && Weapon == WEAPON_HAMMER)
+				{
+					IncreaseHealth(4+rand()%6);
+					IncreaseArmor(4+rand()%6);
+					if(IsFrozen)
+						Unfreeze();
+				}
+				return false;
+			}
 		}
 		else
 		{
