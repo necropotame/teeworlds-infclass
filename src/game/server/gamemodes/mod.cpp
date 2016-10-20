@@ -613,26 +613,29 @@ void CGameControllerMOD::DoWincheck()
 
 bool CGameControllerMOD::IsSpawnable(vec2 Pos)
 {
-	// check if the position is occupado
+	//First check if there is a tee too close
 	CCharacter *aEnts[MAX_CLIENTS];
 	int Num = GameServer()->m_World.FindEntities(Pos, 64, (CEntity**)aEnts, MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
-	vec2 Positions[5] = { vec2(0.0f, 0.0f), vec2(-32.0f, 0.0f), vec2(0.0f, -32.0f), vec2(32.0f, 0.0f), vec2(0.0f, 32.0f) };	// start, left, up, right, down
-	for(int Index = 0; Index < 5; ++Index)
+	
+	for(int c = 0; c < Num; ++c)
 	{
-		if(GameServer()->Collision()->CheckPoint(Pos+Positions[Index]))
+		if(distance(aEnts[c]->m_Pos, Pos) <= 60)
 			return false;
-		
-		for(int c = 0; c < Num; ++c)
-		{
-			if(
-				GameServer()->Collision()->CheckZoneFlag(Pos+Positions[Index], CCollision::ZONEFLAG_NOSPAWN) ||
-				distance(aEnts[c]->m_Pos, Pos+Positions[Index]) <= aEnts[c]->m_ProximityRadius
-			)
-			{
-				return false;
-			}
-		}
 	}
+	
+	//Check the center
+	if(GameServer()->Collision()->CheckPoint(Pos) || GameServer()->Collision()->CheckZoneFlag(Pos, CCollision::ZONEFLAG_NOSPAWN))
+		return false;
+	
+	//Check the border of the tee. Kind of extrem, but more precise
+	for(int i=0; i<16; i++)
+	{
+		float Angle = i * (2.0f * pi / 16.0f);
+		vec2 CheckPos = Pos + vec2(cos(Angle), sin(Angle)) * 30.0f;
+		if(GameServer()->Collision()->CheckPoint(CheckPos) || GameServer()->Collision()->CheckZoneFlag(CheckPos, CCollision::ZONEFLAG_NOSPAWN))
+			return false;
+	}
+	
 	return true;
 }
 
@@ -665,32 +668,11 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 			if(pWitch->GetClass() != PLAYERCLASS_WITCH) continue;
 			if(!pWitch->GetCharacter()) continue;
 			
-			vec2 spawnTile = vec2(16.0f, 16.0f) + vec2(
-				static_cast<float>(static_cast<int>(round(pWitch->GetCharacter()->m_Pos.x))/32)*32.0,
-				static_cast<float>(static_cast<int>(round(pWitch->GetCharacter()->m_Pos.y))/32)*32.0);
-			
-			for(int j=-1; j<=1; j++)
+			vec2 SpawnPos;
+			if(pWitch->GetCharacter()->FindWitchSpawnPosition(SpawnPos))
 			{
-				if(IsSpawnable(vec2(spawnTile.x + j*32.0, spawnTile.y-64.0)))
-				{
-					*pOutPos = spawnTile + vec2(j*32.0, -64.0);
-					return true;
-				}
-				if(IsSpawnable(vec2(spawnTile.x + j*32.0, spawnTile.y+64.0)))
-				{
-					*pOutPos = spawnTile + vec2(j*32.0, 64.0);
-					return true;
-				}
-				if(IsSpawnable(vec2(spawnTile.x-64.0, spawnTile.y + j*32.0)))
-				{
-					*pOutPos = spawnTile + vec2(-64.0, j*32.0);
-					return true;
-				}
-				if(IsSpawnable(vec2(spawnTile.x+64.0, spawnTile.y + j*32.0)))
-				{
-					*pOutPos = spawnTile + vec2(64.0, j*32.0);
-					return true;
-				}
+				*pOutPos = SpawnPos;
+				return true;
 			}
 		}
 	}

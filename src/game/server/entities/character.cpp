@@ -63,6 +63,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_pBomb = 0;
 	m_FlagID = Server()->SnapNewID();
 	m_HeartID = Server()->SnapNewID();
+	m_CursorID = Server()->SnapNewID();
 	m_BarrierHintID = Server()->SnapNewID();
 	m_AntiFireTick = 0;
 	m_IsFrozen = false;
@@ -78,6 +79,55 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_InWater = 0;
 	m_WaterJumpLifeSpan = 0;
 /* INFECTION MODIFICATION END *****************************************/
+}
+
+bool CCharacter::FindWitchSpawnPosition(vec2& Pos)
+{
+	float Angle = atan2(m_Input.m_TargetY, m_Input.m_TargetX);
+	
+	for(int i=0; i<32; i++)
+	{
+		float TestAngle;
+		
+		TestAngle = Angle + i * (pi / 32.0f);
+		Pos = m_Pos + vec2(cos(TestAngle), sin(TestAngle)) * 84.0f;
+		
+		if(GameServer()->m_pController->IsSpawnable(Pos))
+			return true;
+		
+		TestAngle = Angle - i * (pi / 32.0f);
+		Pos = m_Pos + vec2(cos(TestAngle), sin(TestAngle)) * 84.0f;
+		
+		if(GameServer()->m_pController->IsSpawnable(Pos))
+			return true;
+	}
+	
+	return false;
+}
+
+bool CCharacter::FindPortalPosition(vec2 Pos, vec2& Res)
+{
+	vec2 PortalShift = Pos - m_Pos;
+	vec2 PortalDir = normalize(PortalShift);
+	if(length(PortalShift) > 500.0f)
+		PortalShift = PortalDir * 500.0f;
+	
+	float Iterator = length(PortalShift);
+	while(Iterator > 0.0f)
+	{
+		PortalShift = PortalDir * Iterator;
+		vec2 PortalPos = m_Pos + PortalShift;
+	
+		if(GameServer()->m_pController->IsSpawnable(PortalPos))
+		{
+			Res = PortalPos;
+			return true;
+		}
+		
+		Iterator -= 4.0f;
+	}
+	
+	return false;
 }
 
 void CCharacter::Reset()
@@ -144,6 +194,11 @@ void CCharacter::Destroy()
 	{
 		Server()->SnapFreeID(m_HeartID);
 		m_HeartID = -1;
+	}
+	if(m_CursorID >= 0)
+	{
+		Server()->SnapFreeID(m_CursorID);
+		m_CursorID = -1;
 	}
 	if(m_BarrierHintID >= 0)
 	{
@@ -846,30 +901,19 @@ void CCharacter::FireWeapon()
 				vec2 PortalDir = normalize(PortalShift);
 				if(length(PortalShift) > 500.0f)
 					PortalShift = PortalDir * 500.0f;
+				vec2 PortalPos;
 				
-				float Iterator = length(PortalShift);
-				while(Iterator > 0.0f)
+				if(FindPortalPosition(m_Pos + PortalShift, PortalPos))
 				{
-					PortalShift = PortalDir * Iterator;
-					vec2 PortalPos = m_Pos + PortalShift;
-				
-					if(GameServer()->m_pController->IsSpawnable(PortalPos))
-					{
-						vec2 OldPos = m_Core.m_Pos;
-						
-						m_Core.m_Pos = PortalPos;
-						m_Core.m_HookedPlayer = -1;
-						m_Core.m_HookState = HOOK_RETRACTED;
-						m_Core.m_HookPos = m_Core.m_Pos;
-						
-						GameServer()->CreateDeath(OldPos, GetPlayer()->GetCID());
-						GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
-						GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
-						
-						break;
-					}
+					vec2 OldPos = m_Core.m_Pos;
+					m_Core.m_Pos = PortalPos;
+					m_Core.m_HookedPlayer = -1;
+					m_Core.m_HookState = HOOK_RETRACTED;
+					m_Core.m_HookPos = m_Core.m_Pos;
 					
-					Iterator -= 0.02f;
+					GameServer()->CreateDeath(OldPos, GetPlayer()->GetCID());
+					GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
+					GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
 				}
 			}
 			else
@@ -885,10 +929,6 @@ void CCharacter::FireWeapon()
 				if(GetClass() == PLAYERCLASS_NINJA)
 				{
 					pProj->FlashGrenade();
-				}
-				else if(GetClass() == PLAYERCLASS_SCIENTIST)
-				{
-					pProj->Portal();
 				}
 	/* INFECTION MODIFICATION END *****************************************/
 
@@ -1990,10 +2030,11 @@ void CCharacter::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient))
 		return;
 	
+	CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+	
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_GHOST)
 	{
-		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
 		if(!pClient->IsInfected() && m_IsInvisible) return;
 	}
 	else if(GetClass() == PLAYERCLASS_WITCH)
@@ -2009,7 +2050,6 @@ void CCharacter::Snap(int SnappingClient)
 	
 	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
 	{
-		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
 		
 		if(pClient && pClient->GetClass() == PLAYERCLASS_MEDIC)
 		{
@@ -2029,8 +2069,6 @@ void CCharacter::Snap(int SnappingClient)
 	
 	if(GetClass() == PLAYERCLASS_ENGINEER && !m_pBarrier && !m_FirstShot)
 	{
-		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
-		
 		if(pClient && !pClient->IsInfected())
 		{
 			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_BarrierHintID, sizeof(CNetObj_Laser)));
@@ -2042,6 +2080,49 @@ void CCharacter::Snap(int SnappingClient)
 			pObj->m_FromX = (int)m_FirstShotCoord.x;
 			pObj->m_FromY = (int)m_FirstShotCoord.y;
 			pObj->m_StartTick = Server()->Tick();
+		}
+	}
+	
+	if(SnappingClient == m_pPlayer->GetCID())
+	{
+		if(GetClass() == PLAYERCLASS_SCIENTIST && m_ActiveWeapon == WEAPON_GRENADE)
+		{
+			vec2 PortalShift = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
+			vec2 PortalDir = normalize(PortalShift);
+			if(length(PortalShift) > 500.0f)
+				PortalShift = PortalDir * 500.0f;
+			vec2 PortalPos;
+			
+			if(FindPortalPosition(m_Pos + PortalShift, PortalPos))
+			{
+				CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_CursorID, sizeof(CNetObj_Projectile)));
+				if(!pObj)
+					return;
+
+				pObj->m_X = (int)PortalPos.x;
+				pObj->m_Y = (int)PortalPos.y;
+				pObj->m_VelX = 0;
+				pObj->m_VelY = 0;
+				pObj->m_StartTick = Server()->Tick();
+				pObj->m_Type = WEAPON_HAMMER;
+			}
+		}
+		else if(GetClass() == PLAYERCLASS_WITCH)
+		{
+			vec2 SpawnPos;
+			if(FindWitchSpawnPosition(SpawnPos))
+			{
+				CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_CursorID, sizeof(CNetObj_Projectile)));
+				if(!pObj)
+					return;
+
+				pObj->m_X = (int)SpawnPos.x;
+				pObj->m_Y = (int)SpawnPos.y;
+				pObj->m_VelX = 0;
+				pObj->m_VelY = 0;
+				pObj->m_StartTick = Server()->Tick();
+				pObj->m_Type = WEAPON_HAMMER;
+			}
 		}
 	}
 /* INFECTION MODIFICATION END ***************************************/

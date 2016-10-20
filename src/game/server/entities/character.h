@@ -171,6 +171,7 @@ private:
 	int m_FlagID;
 	int m_HeartID;
 	int m_BarrierHintID;
+	int m_CursorID;
 	int m_AntiFireTick;
 	
 	bool m_IsFrozen;
@@ -210,7 +211,8 @@ public:
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);
 	void UpdateTuningParam();
-	
+	bool FindPortalPosition(vec2 Pos, vec2& Res);
+	bool FindWitchSpawnPosition(vec2& Res);
 	void SaturateVelocity(vec2 Force, float MaxSpeed);
 /* INFECTION MODIFICATION END *****************************************/
 };
