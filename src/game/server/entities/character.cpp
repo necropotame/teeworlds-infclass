@@ -1918,7 +1918,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
 	
 	if(pKillerPlayer->IsInfected() && Mode == TAKEDAMAGEMODE_INFECTION && GetClass() == PLAYERCLASS_HERO)
-		Dmg = 8;
+		Dmg = 12;
 	
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
 	{
