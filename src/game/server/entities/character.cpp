@@ -821,6 +821,10 @@ void CCharacter::FireWeapon()
 			CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
 			Msg.AddInt(ShotSpread*2+1);
 
+			int Damage = 1;
+			if(GetClass() == PLAYERCLASS_HERO)
+				Damage = 0;
+
 			for(int i = -ShotSpread; i <= ShotSpread; ++i)
 			{
 				float Spreading[] = {-0.21f, -0.14f, -0.070f, 0, 0.070f, 0.14f, 0.21f};
@@ -836,7 +840,7 @@ void CCharacter::FireWeapon()
 					ProjStartPos,
 					vec2(cosf(a), sinf(a))*Speed,
 					(int)(Server()->TickSpeed()*LifeTime),
-					1, 0, 10.0f, -1, WEAPON_SHOTGUN);
+					Damage, 0, 10.0f, -1, WEAPON_SHOTGUN);
 
 				// pack the Projectile and send it to the client Directly
 				CNetObj_Projectile p;
@@ -1887,7 +1891,11 @@ void CCharacter::Die(int Killer, int Weapon)
 bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 {
 /* INFECTION MODIFICATION START ***************************************/
+
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
+	
+	if(pKillerPlayer->IsInfected() && Mode == TAKEDAMAGEMODE_INFECTION && GetClass() == PLAYERCLASS_HERO)
+		Dmg = 12;
 	
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
 	{
