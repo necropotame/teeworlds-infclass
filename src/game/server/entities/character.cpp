@@ -1918,7 +1918,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
 	
 	if(pKillerPlayer->IsInfected() && Mode == TAKEDAMAGEMODE_INFECTION && GetClass() == PLAYERCLASS_HERO)
-		Dmg = 12;
+		Dmg = 8;
 	
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
 	{
@@ -2386,6 +2386,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
+			m_Armor = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = false;
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_SHOTGUN, 10);
