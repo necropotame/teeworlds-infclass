@@ -822,10 +822,10 @@ void CCharacter::FireWeapon()
 			CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
 			Msg.AddInt(ShotSpread*2+1);
 
-			int Damage = 1;
-			if(GetClass() == PLAYERCLASS_HERO)
-				Damage = 0;
-
+			float Force = 5.0f;
+			if(GetClass() == PLAYERCLASS_MEDIC)
+				Force = 10.0f;
+				
 			for(int i = -ShotSpread; i <= ShotSpread; ++i)
 			{
 				float Spreading[] = {-0.21f, -0.14f, -0.070f, 0, 0.070f, 0.14f, 0.21f};
@@ -841,7 +841,7 @@ void CCharacter::FireWeapon()
 					ProjStartPos,
 					vec2(cosf(a), sinf(a))*Speed,
 					(int)(Server()->TickSpeed()*LifeTime),
-					Damage, 0, 10.0f, -1, WEAPON_SHOTGUN);
+					1, 0, Force, -1, WEAPON_SHOTGUN);
 
 				// pack the Projectile and send it to the client Directly
 				CNetObj_Projectile p;
@@ -1998,6 +1998,9 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	
 		if(From != m_pPlayer->GetCID())
 			m_NeedFullHeal = true;
+			
+		if(From >= 0 && From != m_pPlayer->GetCID() && GameServer()->m_apPlayers[From])
+			GameServer()->SendHitSound(From);
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -2005,10 +2008,6 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	m_InvisibleTick = Server()->Tick();
 
 	// do damage Hit sound
-	if(Dmg && From >= 0 && From != m_pPlayer->GetCID() && GameServer()->m_apPlayers[From])
-	{
-		GameServer()->SendHitSound(From);
-	}
 	
 /* INFECTION MODIFICATION START ***************************************/
 	if(Mode == TAKEDAMAGEMODE_INFECTION && GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected() && GetClass() != PLAYERCLASS_HERO)

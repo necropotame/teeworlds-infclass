@@ -1,6 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <game/server/gamecontext.h>
+#include <engine/server/roundstatistics.h>
 #include "hero-flag.h"
 
 CHeroFlag::CHeroFlag(CGameWorld *pGameWorld)
@@ -108,6 +109,9 @@ void CHeroFlag::Tick()
 			{
 				FindPosition();
 				GiveGift(p);
+				
+				Server()->RoundStatistics()->OnScoreEvent(p->GetPlayer()->GetCID(), SCOREEVENT_HERO_FLAG, p->GetClass());
+				GameServer()->SendScoreSound(p->GetPlayer()->GetCID());
 				break;
 			}
 		}
