@@ -58,7 +58,7 @@ void CHeroFlag::GiveGift(CCharacter* pHero)
 		else
 		{
 			p->IncreaseHealth(1);
-			p->IncreaseArmor(2);
+			p->IncreaseArmor(4);
 			
 			//Special gift
 			switch(p->GetClass())
