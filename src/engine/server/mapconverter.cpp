@@ -458,6 +458,7 @@ void CMapConverter::Finalize()
 	int SoldierImageID = AddExternalImage("../skins/brownbear", 256, 128);
 	int ScientistImageID = AddExternalImage("../skins/toptri", 256, 128);
 	int MedicImageID = AddExternalImage("../skins/twinbop", 256, 128);
+	int HeroImageID = AddExternalImage("../skins/pinky", 256, 128);
 	int NinjaImageID = AddExternalImage("../skins/x_ninja", 256, 128);
 	int MercenaryImageID = AddExternalImage("../skins/bluestripe", 256, 128);
 	int SniperImageID = AddExternalImage("../skins/warpaint", 256, 128);
@@ -466,7 +467,7 @@ void CMapConverter::Finalize()
 	
 	const float MenuRadius = 196.0f;
 	const float MenuAngleStart = -pi/2.0f;
-	const float MenuAngleStep = 2.0f*pi/8.0f;
+	const float MenuAngleStep = 2.0f*pi/static_cast<float>(NUM_MENUCLASS);
 	
 		//Menu Group
 	{
@@ -477,7 +478,7 @@ void CMapConverter::Finalize()
 		Item.m_OffsetX = 0;
 		Item.m_OffsetY = 0;
 		Item.m_StartLayer = m_NumLayers;
-		Item.m_NumLayers = 9;
+		Item.m_NumLayers = 10;
 		Item.m_UseClipping = 0;
 		Item.m_ClipX = 0;
 		Item.m_ClipY = 0;
@@ -532,9 +533,9 @@ void CMapConverter::Finalize()
 			{
 				int ClassMask = 0;
 				if(i == MENUCLASS_RANDOM) ClassMask = -1;
-				else if(i == MENUCLASS_MEDIC) ClassMask = MASK_MEDIC;
-				else if(i < MENUCLASS_RANDOM) ClassMask = MASK_SUPPORT;
-				else ClassMask = MASK_DEFENDER;
+				else if(i <= MENUCLASS_SCIENTIST) ClassMask = MASK_DEFENDER;
+				else if(i <= MENUCLASS_HERO) ClassMask = MASK_HEALER;
+				else ClassMask = MASK_SUPPORT;
 				
 				//Create Animation for enable/disable simulation
 				{
@@ -565,7 +566,7 @@ void CMapConverter::Finalize()
 					}
 					
 					//Iterate over all combinaisons of class availabilities
-					for(int j=0; j<8; j++)
+					for(int j=0; j<NUM_MENUCLASS; j++)
 					{
 						if(pass == 0 && ((ClassMask & j) || (ClassMask == -1))) //Highlight
 						{
@@ -661,18 +662,6 @@ void CMapConverter::Finalize()
 					vec2 Pos = m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i);
 					switch(i)
 					{
-						case MENUCLASS_MEDIC:
-							AddTeeLayer("Medic", MedicImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_NINJA:
-							AddTeeLayer("Ninja", NinjaImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_MERCENARY:
-							AddTeeLayer("Mercenary", MercenaryImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_SNIPER:
-							AddTeeLayer("Sniper", SniperImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
 						case MENUCLASS_RANDOM:
 							AddTeeLayer("Random", SniperImageID, Pos, 64.0f, m_NumEnvs-1, true);
 							break;
@@ -684,6 +673,21 @@ void CMapConverter::Finalize()
 							break;
 						case MENUCLASS_SCIENTIST:
 							AddTeeLayer("Scientist", ScientistImageID, Pos, 64.0f, m_NumEnvs-1);
+							break;
+						case MENUCLASS_MEDIC:
+							AddTeeLayer("Medic", MedicImageID, Pos, 64.0f, m_NumEnvs-1);
+							break;
+						case MENUCLASS_HERO:
+							AddTeeLayer("Hero", HeroImageID, Pos, 64.0f, m_NumEnvs-1);
+							break;
+						case MENUCLASS_NINJA:
+							AddTeeLayer("Ninja", NinjaImageID, Pos, 64.0f, m_NumEnvs-1);
+							break;
+						case MENUCLASS_MERCENARY:
+							AddTeeLayer("Mercenary", MercenaryImageID, Pos, 64.0f, m_NumEnvs-1);
+							break;
+						case MENUCLASS_SNIPER:
+							AddTeeLayer("Sniper", SniperImageID, Pos, 64.0f, m_NumEnvs-1);
 							break;
 					}
 				}

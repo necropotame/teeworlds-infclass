@@ -86,6 +86,8 @@ static inline int ChallengeTypeToScoreType(int ChallengeType)
 			return SQL_SCORETYPE_SNIPER_SCORE;
 		case 6:
 			return SQL_SCORETYPE_MEDIC_SCORE;
+		case 7:
+			return SQL_SCORETYPE_HERO_SCORE;
 	}
 	
 	return SQL_SCORETYPE_ROUND_SCORE;
@@ -522,11 +524,14 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_RIFLE, 800);
 	SetFireDelay(INFWEAPON_NINJA, 800);
 	SetFireDelay(INFWEAPON_ENGINEER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
-	SetFireDelay(INFWEAPON_SCIENTIST_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
-	SetFireDelay(INFWEAPON_SNIPER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_SOLDIER_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
+	SetFireDelay(INFWEAPON_SCIENTIST_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_SCIENTIST_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_MEDIC_SHOTGUN, 250);
+	SetFireDelay(INFWEAPON_HERO_SHOTGUN, 250);
+	SetFireDelay(INFWEAPON_HERO_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
+	SetFireDelay(INFWEAPON_HERO_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
+	SetFireDelay(INFWEAPON_SNIPER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_NINJA_HAMMER, GetFireDelay(INFWEAPON_NINJA));
 	SetFireDelay(INFWEAPON_NINJA_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_MERCENARY_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
@@ -539,16 +544,20 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_GRENADE, 0);
 	SetAmmoRegenTime(INFWEAPON_RIFLE, 0);
 	SetAmmoRegenTime(INFWEAPON_NINJA, 0);
+	
 	SetAmmoRegenTime(INFWEAPON_ENGINEER_RIFLE, 6000);
-	SetAmmoRegenTime(INFWEAPON_SCIENTIST_RIFLE, 6000);
-	SetAmmoRegenTime(INFWEAPON_SNIPER_RIFLE, 2000);
 	SetAmmoRegenTime(INFWEAPON_SOLDIER_GRENADE, 7000);
+	SetAmmoRegenTime(INFWEAPON_SCIENTIST_RIFLE, 6000);
 	SetAmmoRegenTime(INFWEAPON_SCIENTIST_GRENADE, 10000);
 	SetAmmoRegenTime(INFWEAPON_MEDIC_SHOTGUN, 750);
-	SetAmmoRegenTime(INFWEAPON_NINJA_HAMMER, 0);
-	SetAmmoRegenTime(INFWEAPON_NINJA_GRENADE, 15000);
+	SetAmmoRegenTime(INFWEAPON_HERO_SHOTGUN, 750);
+	SetAmmoRegenTime(INFWEAPON_HERO_RIFLE, 6000);
+	SetAmmoRegenTime(INFWEAPON_HERO_GRENADE, 7000);
+	SetAmmoRegenTime(INFWEAPON_SNIPER_RIFLE, 2000);
 	SetAmmoRegenTime(INFWEAPON_MERCENARY_GRENADE, 5000);
 	SetAmmoRegenTime(INFWEAPON_MERCENARY_GUN, 125);
+	SetAmmoRegenTime(INFWEAPON_NINJA_HAMMER, 0);
+	SetAmmoRegenTime(INFWEAPON_NINJA_GRENADE, 15000);
 	
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
@@ -559,10 +568,13 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_NINJA, 10);
 	SetMaxAmmo(INFWEAPON_ENGINEER_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_SCIENTIST_RIFLE, 10);
-	SetMaxAmmo(INFWEAPON_SNIPER_RIFLE, 10);
-	SetMaxAmmo(INFWEAPON_SOLDIER_GRENADE, 10);
 	SetMaxAmmo(INFWEAPON_SCIENTIST_GRENADE, 3);
+	SetMaxAmmo(INFWEAPON_SOLDIER_GRENADE, 10);
 	SetMaxAmmo(INFWEAPON_MEDIC_SHOTGUN, 10);
+	SetMaxAmmo(INFWEAPON_HERO_SHOTGUN, 10);
+	SetMaxAmmo(INFWEAPON_HERO_RIFLE, 10);
+	SetMaxAmmo(INFWEAPON_HERO_GRENADE, 10);
+	SetMaxAmmo(INFWEAPON_SNIPER_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_NINJA_HAMMER, -1);
 	SetMaxAmmo(INFWEAPON_NINJA_GRENADE, 5);
 	SetMaxAmmo(INFWEAPON_MERCENARY_GRENADE, 8);
@@ -574,6 +586,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_SNIPER, 2);
 	SetClassAvailability(PLAYERCLASS_NINJA, 2);
 	SetClassAvailability(PLAYERCLASS_MEDIC, 2);
+	SetClassAvailability(PLAYERCLASS_HERO, 2);
 	SetClassAvailability(PLAYERCLASS_SCIENTIST, 2);
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
@@ -1408,6 +1421,9 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token)
 					break;
 				case SQL_SCORETYPE_MEDIC_SCORE:
 					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "MedicOfTheDay", m_aChallengeWinner);
+					break;
+				case SQL_SCORETYPE_HERO_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "HeroOfTheDay", m_aChallengeWinner);
 					break;
 			}
 			lock_release(m_ChallengeLock);
@@ -3020,6 +3036,10 @@ public:
 					str_copy(pMOTD, "== Best Medic ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
+				case SQL_SCORETYPE_HERO_SCORE:
+					str_copy(pMOTD, "== Best Hero ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
 				case SQL_SCORETYPE_NINJA_SCORE:
 					str_copy(pMOTD, "== Best Ninja ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
@@ -3158,6 +3178,9 @@ public:
 						break;
 					case SQL_SCORETYPE_MEDIC_SCORE:
 						str_copy(pMOTD, "== Medic of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_HERO_SCORE:
+						str_copy(pMOTD, "== Hero of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
 						break;
 					case SQL_SCORETYPE_NINJA_SCORE:
 						str_copy(pMOTD, "== Ninja of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
@@ -3681,6 +3704,8 @@ public:
 				UpdateScore(pSqlServer, SQL_SCORETYPE_SCIENTIST_SCORE, m_PlayerStatistics.m_ScientistScore, "Scientist");
 			if(m_PlayerStatistics.m_MedicScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_MEDIC_SCORE, m_PlayerStatistics.m_MedicScore, "Medic");
+			if(m_PlayerStatistics.m_HeroScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_HERO_SCORE, m_PlayerStatistics.m_HeroScore, "Hero");
 			if(m_PlayerStatistics.m_NinjaScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_NINJA_SCORE, m_PlayerStatistics.m_NinjaScore, "Ninja");
 			if(m_PlayerStatistics.m_MercenaryScore > 0)

@@ -50,6 +50,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_MEDIC:
 			m_MedicScore += Points;
 			break;
+		case PLAYERCLASS_HERO:
+			m_HeroScore += Points;
+			break;
 		case PLAYERCLASS_NINJA:
 			m_NinjaScore += Points;
 			break;

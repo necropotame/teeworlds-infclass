@@ -241,6 +241,9 @@ void CPlayer::Snap(int SnappingClient)
 				case PLAYERCLASS_MEDIC:
 					str_format(aClanName, sizeof(aClanName), "%sMedic", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
+				case PLAYERCLASS_HERO:
+					str_format(aClanName, sizeof(aClanName), "%sHero", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					break;
 				case PLAYERCLASS_NINJA:
 					str_format(aClanName, sizeof(aClanName), "%sNinja", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
@@ -277,6 +280,9 @@ void CPlayer::Snap(int SnappingClient)
 				{
 					case PLAYERCLASS_MEDIC:
 						PlayerInfoScore = 700 + GetCID();
+						break;
+					case PLAYERCLASS_HERO:
+						PlayerInfoScore = 800 + GetCID();
 						break;
 						
 					case PLAYERCLASS_ENGINEER:
@@ -565,6 +571,10 @@ void CPlayer::SetClassSkin(int newClass)
 		case PLAYERCLASS_MEDIC:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_HERO:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
 			break;
 		case PLAYERCLASS_NINJA:
 			m_TeeInfos.m_UseCustomColor = 1;

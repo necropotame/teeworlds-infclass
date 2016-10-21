@@ -1514,39 +1514,11 @@ void CCharacter::Tick()
 			if(length(CursorPos) > 100.0f)
 			{
 				float Angle = 2.0f*pi+atan2(CursorPos.x, -CursorPos.y);
-				float AngleStep = 2.0f*pi/8.0f;
-				m_pPlayer->m_MenuClassChooserItem = ((int)((Angle+AngleStep/2.0f)/AngleStep))%8;
-
+				float AngleStep = 2.0f*pi/static_cast<float>(CMapConverter::NUM_MENUCLASS);
+				m_pPlayer->m_MenuClassChooserItem = ((int)((Angle+AngleStep/2.0f)/AngleStep))%CMapConverter::NUM_MENUCLASS;
+				
 				switch(m_pPlayer->m_MenuClassChooserItem)
 				{
-					case CMapConverter::MENUCLASS_MEDIC:
-						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
-						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Medic", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
-							Broadcast = true;
-						}
-						break;
-					case CMapConverter::MENUCLASS_NINJA:
-						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_NINJA))
-						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Ninja", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
-							Broadcast = true;
-						}
-						break;
-					case CMapConverter::MENUCLASS_MERCENARY:
-						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MERCENARY))
-						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Mercenary", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
-							Broadcast = true;
-						}
-						break;
-					case CMapConverter::MENUCLASS_SNIPER:
-						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SNIPER))
-						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Sniper", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
-							Broadcast = true;
-						}
-						break;
 					case CMapConverter::MENUCLASS_RANDOM:
 						GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Random choice", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
 						Broadcast = true;
@@ -1572,6 +1544,41 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_MEDIC:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Medic", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUCLASS_HERO:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_HERO))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Hero", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUCLASS_NINJA:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_NINJA))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Ninja", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUCLASS_MERCENARY:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MERCENARY))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Mercenary", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							Broadcast = true;
+						}
+						break;
+					case CMapConverter::MENUCLASS_SNIPER:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SNIPER))
+						{
+							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Sniper", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							Broadcast = true;
+						}
+						break;
 				}
 			}
 			
@@ -1590,6 +1597,9 @@ void CCharacter::Tick()
 				{
 					case CMapConverter::MENUCLASS_MEDIC:
 						NewClass = PLAYERCLASS_MEDIC;
+						break;
+					case CMapConverter::MENUCLASS_HERO:
+						NewClass = PLAYERCLASS_HERO;
 						break;
 					case CMapConverter::MENUCLASS_NINJA:
 						NewClass = PLAYERCLASS_NINJA;
@@ -1897,6 +1907,9 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 					IncreaseArmor(4+rand()%6);
 					if(IsFrozen())
 						Unfreeze();
+						
+					m_EmoteType = EMOTE_HAPPY;
+					m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 				}
 				return false;
 			}
@@ -1913,7 +1926,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	// m_pPlayer only inflicts half damage on self
 	if(From == m_pPlayer->GetCID())
 	{
-		Dmg = max(1, Dmg/2);
+		if(GetClass() == PLAYERCLASS_HERO)
+			return false;
+		else
+			Dmg = max(1, Dmg/2);
 	}
 
 	m_DamageTaken++;
@@ -1964,7 +1980,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	}
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(Mode == TAKEDAMAGEMODE_INFECTION && GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected())
+	if(Mode == TAKEDAMAGEMODE_INFECTION && GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected() && GetClass() != PLAYERCLASS_HERO)
 	{
 		m_pPlayer->StartInfection();
 		
@@ -2335,6 +2351,25 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
 			}
 			break;
+		case PLAYERCLASS_HERO:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, 10);
+			GiveWeapon(WEAPON_SHOTGUN, 10);
+			GiveWeapon(WEAPON_RIFLE, 10);
+			GiveWeapon(WEAPON_GRENADE, 10);
+			m_ActiveWeapon = WEAPON_GRENADE;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_HERO);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_HERO))
+			{
+				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "hero");
+				m_pPlayer->m_knownClass[PLAYERCLASS_HERO] = true;
+			}
+			break;
 		case PLAYERCLASS_NINJA:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
@@ -2584,6 +2619,8 @@ int CCharacter::GetInfWeaponID(int WID)
 		{
 			case PLAYERCLASS_MEDIC:
 				return INFWEAPON_MEDIC_SHOTGUN;
+			case PLAYERCLASS_HERO:
+				return INFWEAPON_HERO_SHOTGUN;
 			default:
 				return INFWEAPON_SHOTGUN;
 		}
@@ -2600,6 +2637,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_NINJA_GRENADE;
 			case PLAYERCLASS_SCIENTIST:
 				return INFWEAPON_SCIENTIST_GRENADE;
+			case PLAYERCLASS_HERO:
+				return INFWEAPON_HERO_GRENADE;
 			default:
 				return INFWEAPON_GRENADE;
 		}
@@ -2614,6 +2653,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_SCIENTIST_RIFLE;
 			case PLAYERCLASS_SNIPER:
 				return INFWEAPON_SNIPER_RIFLE;
+			case PLAYERCLASS_HERO:
+				return INFWEAPON_HERO_RIFLE;
 			default:
 				return INFWEAPON_RIFLE;
 		}

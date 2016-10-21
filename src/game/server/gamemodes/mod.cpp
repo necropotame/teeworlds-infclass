@@ -62,6 +62,9 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_MEDIC] = 0.5f;
 	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_MEDIC];
 	
+	m_ClassProbability[PLAYERCLASS_HERO] = 0.5f;
+	m_TotalProbHumanClass += m_ClassProbability[PLAYERCLASS_HERO];
+	
 	m_GrowingMap = 0;
 	
 	m_ExplosionStarted = false;
@@ -88,6 +91,8 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 			}
 		}
 	}
+	
+	m_pHeroFlag = 0;
 }
 
 CGameControllerMOD::~CGameControllerMOD()
@@ -108,6 +113,14 @@ bool CGameControllerMOD::OnEntity(int Index, vec2 Pos)
 		{
 			m_GrowingMap[SpawnY*m_MapWidth+SpawnX] = 6;
 		}
+	}
+	else if(Index == TILE_ENTITY_FLAGSTAND_BLUE)
+	{
+		//Add hero flag
+		if(!m_pHeroFlag)
+			m_pHeroFlag = new CHeroFlag(&GameServer()->m_World);
+		
+		m_HeroFlagPositions.add(Pos);
 	}
 
 	return res;
@@ -130,7 +143,7 @@ void CGameControllerMOD::ResetFinalExplosion()
 }
 
 void CGameControllerMOD::EndRound()
-{
+{	
 	m_InfectedStarted = false;
 	ResetFinalExplosion();
 	IGameController::EndRound();
@@ -191,7 +204,10 @@ void CGameControllerMOD::Tick()
 	{
 		//If the infection started
 		if(m_RoundStartTick + Server()->TickSpeed()*10 < Server()->Tick())
-		{	
+		{
+			if(m_pHeroFlag)
+				m_pHeroFlag->Show();	
+			
 			m_InfectedStarted = true;
 	
 			for(int i = 0; i < MAX_CLIENTS; i ++)
@@ -278,6 +294,9 @@ void CGameControllerMOD::Tick()
 		}
 		else
 		{
+			if(m_pHeroFlag)
+				m_pHeroFlag->Show();
+			
 			for(int i = 0; i < MAX_CLIENTS; i ++)
 			{
 				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
@@ -423,6 +442,9 @@ void CGameControllerMOD::Tick()
 	}
 	else
 	{
+		if(m_pHeroFlag)
+			m_pHeroFlag->Show();
+		
 		m_RoundStartTick = Server()->Tick();
 	}
 }
@@ -454,7 +476,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 	int ClassMask = 0;
 	{
 		int Defender = 0;
-		int Medic = 0;
+		int Healer = 0;
 		int Support = 0;
 		
 		for(int i = 0; i < MAX_CLIENTS; i ++)
@@ -477,7 +499,8 @@ void CGameControllerMOD::Snap(int SnappingClient)
 					Defender++;
 					break;
 				case PLAYERCLASS_MEDIC:
-					Medic++;
+				case PLAYERCLASS_HERO:
+					Healer++;
 					break;
 					
 			}
@@ -485,8 +508,8 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		
 		if(Defender < g_Config.m_InfDefenderLimit)
 			ClassMask |= CMapConverter::MASK_DEFENDER;
-		if(Medic < g_Config.m_InfMedicLimit)
-			ClassMask |= CMapConverter::MASK_MEDIC;
+		if(Healer < g_Config.m_InfHealerLimit)
+			ClassMask |= CMapConverter::MASK_HEALER;
 		if(Support < g_Config.m_InfSupportLimit)
 			ClassMask |= CMapConverter::MASK_SUPPORT;
 	}
@@ -704,7 +727,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	
 	//Get information about existing infected
 	int nbSupport = 0;
-	int nbMedic = 0;
+	int nbHealer = 0;
 	int nbDefender = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
@@ -721,7 +744,8 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
-				nbMedic++;
+			case PLAYERCLASS_HERO:
+				nbHealer++;
 				break;
 			case PLAYERCLASS_ENGINEER:
 			case PLAYERCLASS_SOLDIER:
@@ -749,11 +773,12 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		supportEnabled = false;
 	}
 	
-	bool medicEnabled = true;
-	if(nbMedic >= g_Config.m_InfMedicLimit)
+	bool healerEnabled = true;
+	if(nbHealer >= g_Config.m_InfHealerLimit)
 	{
 		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MEDIC];
-		medicEnabled = false;
+		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_HERO];
+		healerEnabled = false;
 	}
 	
 	if(defenderEnabled)
@@ -777,12 +802,18 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		}
 	}
 	
-	if(medicEnabled)
+	if(healerEnabled)
 	{
 		random -= m_ClassProbability[PLAYERCLASS_MEDIC]/TotalProbHumanClass;
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_MEDIC;
+		}
+		
+		random -= m_ClassProbability[PLAYERCLASS_HERO]/TotalProbHumanClass;
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_HERO;
 		}
 	}
 	
@@ -946,7 +977,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 {
 	int nbDefender = 0;
-	int nbMedic = 0;
+	int nbHealer = 0;
 	int nbSupport = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
@@ -963,7 +994,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
-				nbMedic++;
+			case PLAYERCLASS_HERO:
+				nbHealer++;
 				break;
 			case PLAYERCLASS_ENGINEER:
 			case PLAYERCLASS_SOLDIER:
@@ -980,7 +1012,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_SCIENTIST:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
 		case PLAYERCLASS_MEDIC:
-			return (nbMedic < g_Config.m_InfMedicLimit);
+		case PLAYERCLASS_HERO:
+			return (nbHealer < g_Config.m_InfHealerLimit);
 		case PLAYERCLASS_NINJA:
 		case PLAYERCLASS_MERCENARY:
 		case PLAYERCLASS_SNIPER:

@@ -580,6 +580,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 		case PLAYERCLASS_MEDIC:
 			pClassName = ServerLocalize("Medic", m_apPlayers[ClientID]->GetLanguage());
 			break;
+		case PLAYERCLASS_HERO:
+			pClassName = ServerLocalize("Hero", m_apPlayers[ClientID]->GetLanguage());
+			break;
 		case PLAYERCLASS_NINJA:
 			pClassName = ServerLocalize("Ninja", m_apPlayers[ClientID]->GetLanguage());
 			break;
@@ -2435,6 +2438,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "soldier") == 0) pPlayer->SetClass(PLAYERCLASS_SOLDIER);
 	else if(str_comp(pClassName, "scientist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIENTIST);
 	else if(str_comp(pClassName, "medic") == 0) pPlayer->SetClass(PLAYERCLASS_MEDIC);
+	else if(str_comp(pClassName, "hero") == 0) pPlayer->SetClass(PLAYERCLASS_HERO);
 	else if(str_comp(pClassName, "ninja") == 0) pPlayer->SetClass(PLAYERCLASS_NINJA);
 	else if(str_comp(pClassName, "mercenary") == 0) pPlayer->SetClass(PLAYERCLASS_MERCENARY);
 	else if(str_comp(pClassName, "sniper") == 0) pPlayer->SetClass(PLAYERCLASS_SNIPER);
@@ -2557,6 +2561,8 @@ bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
 		else if(str_comp_nocase(pArg, "medic") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
+		else if(str_comp_nocase(pArg, "hero") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_HERO_SCORE);
 		else if(str_comp_nocase(pArg, "ninja") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_NINJA_SCORE);
 		else if(str_comp_nocase(pArg, "mercenary") == 0)
@@ -2601,6 +2607,8 @@ bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
 		else if(str_comp_nocase(pArg, "medic") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
+		else if(str_comp_nocase(pArg, "hero") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_HERO_SCORE);
 		else if(str_comp_nocase(pArg, "ninja") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_NINJA_SCORE);
 		else if(str_comp_nocase(pArg, "mercenary") == 0)
@@ -2645,6 +2653,8 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
 		else if(str_comp_nocase(pArg, "medic") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
+		else if(str_comp_nocase(pArg, "hero") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_HERO_SCORE);
 		else if(str_comp_nocase(pArg, "ninja") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_NINJA_SCORE);
 		else if(str_comp_nocase(pArg, "mercenary") == 0)
@@ -2753,6 +2763,16 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			const char* pLine1 = pSelf->ServerLocalize("Medic:", Language); 
 			const char* pLine2 = pSelf->ServerLocalize("The Medic can protect humans with his hammer by giving them armor.", Language); 
 			const char* pLine3 = pSelf->ServerLocalize("He has also a powerful shotgun that can pullback infected.", Language);
+			
+			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
+			
+			pSelf->SendMOTD(ClientID, aBuf);
+		}
+		else if(str_comp_nocase(pHelpPage, "hero") == 0)
+		{
+			const char* pLine1 = pSelf->ServerLocalize("Hero:", Language); 
+			const char* pLine2 = pSelf->ServerLocalize("The Hero has all weapons, 80 health points and 20 armors.", Language); 
+			const char* pLine3 = pSelf->ServerLocalize("He can give full armor and full ammo to all humans by finding the blue flag on hte map.", Language);
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
 			

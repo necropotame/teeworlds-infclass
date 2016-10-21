@@ -4,6 +4,7 @@
 #define GAME_SERVER_GAMECONTROLLER_H
 
 #include <base/vmath.h>
+#include <base/tl/array.h>
 
 /*
 	Class: Game Controller
@@ -20,9 +21,13 @@ protected:
 	IServer *Server() const { return m_pServer; }
 
 /* INFECTION MODIFICATION START ***************************************/
+	array<vec2> m_HeroFlagPositions;
 	vec2 m_aaSpawnPoints[2][64];
 	int m_aNumSpawnPoints[2];
 	int m_RoundId;
+	
+public:
+	inline const array<vec2>& HeroFlagPositions() const { return m_HeroFlagPositions; }
 /* INFECTION MODIFICATION START ***************************************/
 
 public:

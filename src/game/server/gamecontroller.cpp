@@ -130,7 +130,7 @@ bool IGameController::OnEntity(int Index, vec2 Pos)
 		m_aaSpawnPoints[0][m_aNumSpawnPoints[0]++] = Pos;
 	else if(Index == TILE_ENTITY_SPAWN_BLUE)
 		m_aaSpawnPoints[1][m_aNumSpawnPoints[1]++] = Pos;
-
+	
 	return false;
 }
 
