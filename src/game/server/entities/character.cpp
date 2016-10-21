@@ -17,6 +17,7 @@
 #include "projectile.h"
 #include "mine.h"
 #include "mercenarybomb.h"
+#include "hero-flag.h"
 
 //input count
 struct CInputCount
@@ -1660,15 +1661,37 @@ void CCharacter::Tick()
 		if(NbMines > 0)
 			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Active mines: %d", NbMines, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
+	else if(GetClass() == PLAYERCLASS_HERO)
+	{
+		//Search for flag
+		int CoolDown = 999999999;
+		CHeroFlag* p = (CHeroFlag*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_HEROFLAG);
+		while(p)
+		{
+			if(p->GetCoolDown() <= 0)
+			{
+				CoolDown = 0;
+				break;
+			}
+			else
+			{
+				if(p->GetCoolDown() < CoolDown)
+					CoolDown = p->GetCoolDown();
+			}
+			p = (CHeroFlag *)p->TypeNext();
+		}
+		if(CoolDown > 0)
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Next flag in: %d sec", 1+CoolDown/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+	}
 	else if(GetClass() == PLAYERCLASS_ENGINEER)
 	{
 		if(m_pBarrier)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Laser wall: %d sec", m_pBarrier->GetTick()/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Laser wall: %d sec", 1+m_pBarrier->GetTick()/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
 	else if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Position lock: %d sec", m_PositionLockTick/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Position lock: %d sec", 1+m_PositionLockTick/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
 	else if(GetClass() == PLAYERCLASS_SPIDER)
 	{
@@ -1982,7 +2005,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	m_InvisibleTick = Server()->Tick();
 
 	// do damage Hit sound
-	if(From >= 0 && From != m_pPlayer->GetCID() && GameServer()->m_apPlayers[From])
+	if(Dmg && From >= 0 && From != m_pPlayer->GetCID() && GameServer()->m_apPlayers[From])
 	{
 		GameServer()->SendHitSound(From);
 	}
@@ -2363,8 +2386,7 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
-			m_aWeapons[WEAPON_HAMMER].m_Got = true;
-			GiveWeapon(WEAPON_HAMMER, -1);
+			m_aWeapons[WEAPON_HAMMER].m_Got = false;
 			GiveWeapon(WEAPON_GUN, 10);
 			GiveWeapon(WEAPON_SHOTGUN, 10);
 			GiveWeapon(WEAPON_RIFLE, 10);

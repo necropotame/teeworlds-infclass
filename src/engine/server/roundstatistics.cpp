@@ -32,6 +32,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case SCOREEVENT_HUMAN_HEALING:
 			Points = 10;
 			break;
+		case SCOREEVENT_HERO_FLAG:
+			Points = 10;
+			break;
 	}
 	
 	m_Score += Points;

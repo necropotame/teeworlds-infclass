@@ -16,6 +16,8 @@ public:
 
 	CHeroFlag(CGameWorld *pGameWorld);
 
+	inline int GetCoolDown() { return m_CoolDownTick; }
+
 	virtual void Hide();
 	virtual void Show();
 	virtual void Tick();
