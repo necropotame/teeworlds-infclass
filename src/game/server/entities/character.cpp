@@ -732,15 +732,18 @@ void CCharacter::FireWeapon()
 					}
 					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
 					{
-						pTarget->IncreaseArmor(4);
-						if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
+						if(pTarget->GetClass() != PLAYERCLASS_HERO)
 						{
-							Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
-							GameServer()->SendScoreSound(GetPlayer()->GetCID());
-							pTarget->m_NeedFullHeal = false;
+							pTarget->IncreaseArmor(4);
+							if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
+							{
+								Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
+								GameServer()->SendScoreSound(GetPlayer()->GetCID());
+								pTarget->m_NeedFullHeal = false;
+							}
+							pTarget->m_EmoteType = EMOTE_HAPPY;
+							pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 						}
-						pTarget->m_EmoteType = EMOTE_HAPPY;
-						pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 					}
 					else
 					{
@@ -822,7 +825,7 @@ void CCharacter::FireWeapon()
 			CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
 			Msg.AddInt(ShotSpread*2+1);
 
-			float Force = 5.0f;
+			float Force = 2.0f;
 			if(GetClass() == PLAYERCLASS_MEDIC)
 				Force = 10.0f;
 				

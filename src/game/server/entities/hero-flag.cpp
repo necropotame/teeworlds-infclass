@@ -99,6 +99,12 @@ void CHeroFlag::Tick()
 	if(m_CoolDownTick <= 0)
 	{
 		// Find other players
+		int NbPlayer = 0;
+		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+		{
+			NbPlayer++;
+		}
+		
 		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 		{
 			if(p->GetClass() != PLAYERCLASS_HERO)
@@ -110,8 +116,11 @@ void CHeroFlag::Tick()
 				FindPosition();
 				GiveGift(p);
 				
-				Server()->RoundStatistics()->OnScoreEvent(p->GetPlayer()->GetCID(), SCOREEVENT_HERO_FLAG, p->GetClass());
-				GameServer()->SendScoreSound(p->GetPlayer()->GetCID());
+				if(NbPlayer > 3)
+				{
+					Server()->RoundStatistics()->OnScoreEvent(p->GetPlayer()->GetCID(), SCOREEVENT_HERO_FLAG, p->GetClass());
+					GameServer()->SendScoreSound(p->GetPlayer()->GetCID());
+				}
 				break;
 			}
 		}
