@@ -2097,9 +2097,8 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Team = TEAM_RED;
 	}
 	
-	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && !IsInfected())
+	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && !IsInfected() && GetClass() != PLAYERCLASS_HERO)
 	{
-		
 		if(pClient && pClient->GetClass() == PLAYERCLASS_MEDIC)
 		{
 			CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));

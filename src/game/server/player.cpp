@@ -574,7 +574,7 @@ void CPlayer::SetClassSkin(int newClass)
 			break;
 		case PLAYERCLASS_HERO:
 			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
+			str_copy(m_TeeInfos.m_SkinName, "redstripe", sizeof(m_TeeInfos.m_SkinName));
 			break;
 		case PLAYERCLASS_NINJA:
 			m_TeeInfos.m_UseCustomColor = 1;

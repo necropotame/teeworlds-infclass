@@ -458,7 +458,7 @@ void CMapConverter::Finalize()
 	int SoldierImageID = AddExternalImage("../skins/brownbear", 256, 128);
 	int ScientistImageID = AddExternalImage("../skins/toptri", 256, 128);
 	int MedicImageID = AddExternalImage("../skins/twinbop", 256, 128);
-	int HeroImageID = AddExternalImage("../skins/pinky", 256, 128);
+	int HeroImageID = AddExternalImage("../skins/redstripe", 256, 128);
 	int NinjaImageID = AddExternalImage("../skins/x_ninja", 256, 128);
 	int MercenaryImageID = AddExternalImage("../skins/bluestripe", 256, 128);
 	int SniperImageID = AddExternalImage("../skins/warpaint", 256, 128);
@@ -534,7 +534,8 @@ void CMapConverter::Finalize()
 				int ClassMask = 0;
 				if(i == MENUCLASS_RANDOM) ClassMask = -1;
 				else if(i <= MENUCLASS_SCIENTIST) ClassMask = MASK_DEFENDER;
-				else if(i <= MENUCLASS_HERO) ClassMask = MASK_HEALER;
+				else if(i == MENUCLASS_MEDIC) ClassMask = MASK_MEDIC;
+				else if(i == MENUCLASS_HERO) ClassMask = MASK_HERO;
 				else ClassMask = MASK_SUPPORT;
 				
 				//Create Animation for enable/disable simulation
@@ -566,7 +567,7 @@ void CMapConverter::Finalize()
 					}
 					
 					//Iterate over all combinaisons of class availabilities
-					for(int j=0; j<NUM_MENUCLASS; j++)
+					for(int j=0; j<=MASK_ALL; j++)
 					{
 						if(pass == 0 && ((ClassMask & j) || (ClassMask == -1))) //Highlight
 						{
