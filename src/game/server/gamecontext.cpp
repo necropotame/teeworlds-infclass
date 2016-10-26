@@ -42,6 +42,9 @@ void CGameContext::InitializeServerLocatization()
 		s_ServerLocalization[LANGUAGE_PL].Load("languages/infclass/pl.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_NL].Load("languages/infclass/nl.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_LA].Load("languages/infclass/la.txt", Storage(), Console());
+		s_ServerLocalization[LANGUAGE_PT_BR].Load("languages/infclass/pt-br.txt", Storage(), Console());
+		//Until the classical portugese is done, use the brazilian one
+		s_ServerLocalization[LANGUAGE_PT].Load("languages/infclass/pt-br.txt", Storage(), Console());
 		
 		s_ServerLocalizationInitialized = true;
 	}
@@ -1805,6 +1808,20 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_ES);
 						m_VoteLanguage[ClientID] = LANGUAGE_ES;				
 						break;
+					case 76: //Brazil
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_PT_BR);
+						m_VoteLanguage[ClientID] = LANGUAGE_PT_BR;				
+						break;
+					case 24: //Angola
+					case 132: //Cape Verde
+					//case 226: //Equatorial Guinea: official language, but not national language
+					//case 446: //Macao: official language, but spoken by less than 1% of the population
+					case 508: //Mozambique
+					case 626: //Timor-Leste
+					case 678: //Sao Tome and Principe
+						Msg.m_pDescription = ServerLocalize("Switch language to english ?", LANGUAGE_PT);
+						m_VoteLanguage[ClientID] = LANGUAGE_PT;				
+						break;
 					case 12: //Algeria
 					case 48: //Bahrain
 					case 262: //Djibouti
@@ -2771,10 +2788,12 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		else if(str_comp_nocase(pHelpPage, "hero") == 0)
 		{
 			const char* pLine1 = pSelf->ServerLocalize("Hero:", Language); 
-			const char* pLine2 = pSelf->ServerLocalize("The Hero has all weapons, 80 health points and 20 armors.", Language); 
-			const char* pLine3 = pSelf->ServerLocalize("He can give full armor and full ammo to all humans by finding the blue flag on hte map.", Language);
+			const char* pLine2 = pSelf->ServerLocalize("The Hero has a shotgun, a laser rifle and grenades.", Language); 
+			const char* pLine3 = pSelf->ServerLocalize("The Hero must find a flag hidden in the map.", Language);
+			const char* pLine4 = pSelf->ServerLocalize("Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.", Language);
+			const char* pLine5 = pSelf->ServerLocalize("The hero can't be healed by a medic or infected without dying.", Language);
 			
-			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s", pLine1, pLine2, pLine3);
+			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
 			
 			pSelf->SendMOTD(ClientID, aBuf);
 		}
@@ -2984,6 +3003,10 @@ bool CGameContext::ConLanguage(IConsole::IResult *pResult, void *pUserData)
 			Language = LANGUAGE_NL;
 		else if(str_comp_nocase(pLanguageCode, "la") == 0)
 			Language = LANGUAGE_LA;
+		else if(str_comp_nocase(pLanguageCode, "pt") == 0)
+			Language = LANGUAGE_PT;
+		else if(str_comp_nocase(pLanguageCode, "pt-br") == 0)
+			Language = LANGUAGE_PT_BR;
 		else if(str_comp_nocase(pLanguageCode, "en") == 0)
 			Language = LANGUAGE_EN;
 	}

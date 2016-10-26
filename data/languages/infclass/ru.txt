@@ -418,3 +418,35 @@ If the Witch dies, she disappear and is replaced by an another class of infected
 
 She can also inflict 1 damage point per seconds by hooking humans.
 == А также она наносит 1 урона в секунду человеку, к которому прицеплена цепочкой (хуком).
+
+##### Hero ##### 
+
+Hero
+== Храбрец
+
+Hero:
+== Храбрец:
+
+### NOT TRANSLATED
+#The Hero has a shotgun, a laser rifle and grenades.
+#== 
+
+### NOT TRANSLATED
+#The Hero must find a flag hidden in the map.
+#== 
+
+### NOT TRANSLATED
+#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
+#== 
+
+### NOT TRANSLATED
+#The hero can't be healed by a medic or infected without dying.
+#== 
+
+Next flag in: %d sec
+== Следущее синее знамя через %d сек
+
+### NOT TRANSLATED
+#The Hero found the flag!
+#== 
+

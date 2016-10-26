@@ -4,7 +4,7 @@ Switch language to english ?
 == Passer la langue en français ?
 
 %s entered and joined the game
-== %s est arrivé(e) et a rejoint la partie
+== %s est arrivé-e et a rejoint la partie
 
 %s joined the game
 == %s a rejoint la partie
@@ -36,40 +36,40 @@ You have infected %s, +3 points
 == Vous avez infecté %s, +3 points
 
 You have killed a witch, +5 points
-== Vous avez tué une sorcière, +5 points
+== Vous avez tué une sorcière ou un sorcier, +5 points
 
 You have survived, +5 points
 == Vous avez survécu, +5 points
 
 %s has been infected
-== %s a été infecté(e)
+== %s a été infecté-e
 
 The witch is coming!
-== La Sorcière arrive !
+== La Sorcière/le sorcier arrive !
 
 The witch is dead
-== La Sorcière est morte
+== La Sorcière/le sorcier a disparu
 
 The undead is coming!
-== Le Mort-vivant arrive !
+== Le Mort-vivant/la Morte-vivante arrive !
 
 The undead is finally dead
-== Le Mort-vivant est finalement mort
+== Le Mort-vivant/la Morte-vivante a disparu
 
 Infected won the round in %i:%02i minutes
-== Les infectés ont gagné la manche en %i:%02i minutes
+== Les infectés-ées ont gagné la manche en %i:%02i minutes
 
 One human won the round
-== Un humain a gagné la manche
+== Un humain ou une humaine a gagné la manche
 
 %i humans won the round
-== %i humains ont gagné la manche
+== %i humains et les humaines ont gagné la manche
 
 You are a human: %s
-== Vous êtes un humain : %s
+== Vous êtes un-e humain-e : %s
 
 You are an infected: %s
-== Vous êtes un infecté : %s
+== Vous êtes un-e infecté-e : %s
 
 Type "/help %s" for more information about your class
 == Tapez "/help %s" pour plus d'information sur votre classe
@@ -77,7 +77,7 @@ Type "/help %s" for more information about your class
 ##### STATE ############################################################
 
 You are frozen: %d sec
-== Vous êtes gelées : %d sec
+== Vous êtes gelés-ées : %d sec
 
 Bombs left: %d
 == Bombes restantes : %d
@@ -125,7 +125,7 @@ List of commands
 == /language <lang> : Change la langue du mod
 
 /customskin <none|me|all>: Show player skin instead of class-based skin for, respectively nobody, me or all humans
-== /customskin <none|me|all> : Montre le skin du joueur plutôt que celui basé sur la classe pour, respectivement personne, soi-même ou tout les humains
+== /customskin <none|me|all> : Montre le skin du joueur ou de la joueuse plutôt que celui basé sur la classe pour, respectivement personne, soi-même ou tout les humains et les humaines
 
 /alwaysrandom <0|1>: Choose automatically random class when the round start
 == /alwaysrandom <0|1> : Choisir automatiquement le choix aléatoire en début de manche
@@ -137,7 +137,7 @@ Press <F3> or <F4> to enable or disable hook protection
 == Appuyer sur <F3> or <F4> pour activer ou désactiver la protection contre le grapin
 
 Press <F3> or <F4> while holding <TAB> to switch the score system
-== Appuyer sur <F3> or <F4> en maintenant <TAB> permet de changer the système de score
+== Appuyer sur <F3> or <F4> en maintenant <TAB> permet de changer le système de score
 
 ##### Language ##### 
 
@@ -177,19 +177,19 @@ Rules of the game:
 == Règles du jeu :
 
 InfectionClass is a team game between humans and infected.
-== InfectionClass est un jeu d'équipe entre humains et infectés.
+== InfectionClass est un jeu d'équipe entre humains-nes et infectés-ées.
 
 All players start as human.
-== Tous les joueurs commencent comme humains.
+== Toutes les joueuses et tous les joueurs commencent comme humain ou humaine.
 
 10 seconds later, two players become infected.
-== 10 secondes plus tard, deux joueurs deviennent infectés.
+== 10 secondes plus tard, deux joueuses-eurs deviennent infectées-és.
 
 The goal for humans is to survive until the army clean the map.
-== Le but des humains est de survivre jusqu'à ce que l'armée nettoie la zone.
+== Le but des humaines et des humains est de survivre jusqu'à ce que l'armée nettoie la zone.
 
 The goal for infected is to infect all humans.
-== Le but des infectés est d'infecter tous les humains.
+== Le but des infectées-és est d'infecter toutes les humaines et les humains.
 
 ##### Hook protection ##### 
 
@@ -209,30 +209,30 @@ This user name is already taken by an existing account
 ##### Engineer ##### 
 
 Engineer
-== Ingénieur
+== Ingénieur-e
 
 Engineer:
-== Ingénieur :
+== Ingénieur-e :
 
 The Engineer can build walls with his hammer to block infected.
-== L'Ingénieur peut créer avec son marteau des barrières pour bloquer les infectés.
+== Les Ingénieur et les Ingénieure peuvent créer avec leur marteau des barrières pour bloquer les infectés.
 
 When an infected touch the wall, he dies.
 == Lorsque qu'un infecté touche la barrière, il meurt.
 
 The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
-== La durée de vie d'une barrière est de 30 secondes, et il ne peut y avoir qu'une barrière par joueur au même moment.
+== La durée de vie d'une barrière est de 30 secondes, et il ne peut y avoir qu'une barrière par Ingénieur-e au même moment.
 
 ##### Soldier ##### 
 
 Soldier
-== Soldat
+== Soldat-e
 
 Soldier:
-== Soldat :
+== Soldat-e :
 
 The Soldier can pose floating bombs with his hammer.
-== Le Soldat peut créer des bombes flottantes avec son marteau.
+== Les Soldates et les Soldats peuvent créer des bombes flottantes avec leur marteau.
 
 Each bomb can explode three times.
 == Chaque bombe peut exploser trois fois.
@@ -241,7 +241,7 @@ Use the hammer to place the bomb and explode it multiple times.
 == Utiliser le marteau pour placer une bombe et la faire exploser plusieurs fois.
 
 Bombs are limited to one per player at the same time.
-== Il ne peut y avoir qu'une bombe par joueur au même moment.
+== Il ne peut y avoir qu'une bombe par Soldat-e au même moment.
 
 ##### Scientist ##### 
 
@@ -252,13 +252,13 @@ Scientist:
 == Scientifique :
 
 The Scientist can pose floating mines with his hammer.
-== Le scientifique peut créer des mines avec son marteau.
+== Les Scientifiques peuvent créer des mines avec leur marteau.
 
 He has also grenades that teleport him.
-== Il dispose également de grenades qui peuvent le téléporter.
+== Ils et elles disposent également de grenades qui peuvent les téléporter.
 
 Mines are limited to two per player at the same time.
-== Il ne peut y avoir que deux minies par joueur au même moment.
+== Il ne peut y avoir que deux mines par Scientifique au même moment.
 
 ##### Medic ##### 
 
@@ -269,10 +269,10 @@ Medic:
 == Médecin :
 
 The Medic can protect humans with his hammer by giving them armor.
-== Le Médecin peut protéger les humains à l'aide de son marteau en leur donnant une armure.
+== Les Médecins peuvent protéger les humains à l'aide de leur marteau en leur donnant une armure.
 
 He has also a powerful shotgun that can pullback infected.
-== Il dispose aussi d'un puissant fusil à pompe qui peut repousser les infectés.
+== Elles et ils disposent aussi d'un puissant fusil à pompe qui peut repousser les infectés.
 
 ##### Ninja ##### 
 
@@ -283,10 +283,10 @@ Ninja:
 == Ninja :
 
 The Ninja can throw flash grenades that can freeze infected during three seconds.
-== Le Ninja peut lancer des grenades flash qui immobilisent les infectés pendant trois secondes.
+== Les Ninja peuvent lancer des grenades flash qui immobilisent les infectés pendant trois secondes.
 
 His hammer is replaced by a katana, allowing him to jump two times before touching the ground.
-== Son marteau est remplacé par un katana qui lui permet de sauter deux fois avant de toucher terre.
+== Leur marteau est remplacé par un katana qui leur permettent de bondir deux fois avant de toucher terre.
 
 ##### Mercenary ##### 
 
@@ -297,10 +297,10 @@ Mercenary:
 == Mercenaire :
 
 The Mercenary fly in air using his machine gun.
-== Le Mercenaire peut voler dans l'air à l'aide de sa mitrailleuse.
+== Les Mercenaires peuvent voler dans l'air à l'aide de leur mitrailleuse.
 
 He can also throw poison grenades that deals 8 damage points.
-== Il peut aussi lancer des grenades empoisonnées qui infligent 8 ponits de dégat.
+== Elles et ils peuvent aussi lancer des grenades empoisonnées qui infligent 8 points de dégât.
 
 ##### Sniper ##### 
 
@@ -311,10 +311,10 @@ Sniper:
 == Sniper :
 
 The Sniper can lock his position in air for 15 seconds with his hammer.
-== Le Sniper peut verrouiller sa position dans l'air pendant 15 secondes avec son marteau.
+== Les Sniper peuvent verrouiller leur position dans l'air pendant 15 secondes avec leur marteau.
 
 He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-== Il dispose également d'un puissant fusil qui inflige 19-20 points de dégat en position verrouillée, et 9-10 en situation normale
+== Ils et elles disposent également d'un puissant fusil qui inflige 19-20 points de dégât en position verrouillée, et 9-10 en situation normale
 
 ##### Smoker ##### 
 
@@ -325,10 +325,10 @@ Smoker:
 == Smoker :
 
 The Smoker can infect humans and heal infected with his hammer.
-== Le Smoker peut infecter les humains et soigner les infectés à l'aide de son marteau.
+== Les Smokers peuvent infecter les humains et soigner les infectés à l'aide de leur marteau.
 
 He can also inflict 4 damage points per seconds by hooking humans.
-== Il peut aussi infliger 4 points de dégât par seconde quand il agrippe un humain.
+== Elles et ils peut aussi infliger 4 points de dégât par seconde quand elles et ils agrippent une humaine ou un humain.
 
 ##### Boomer ##### 
 
@@ -339,27 +339,27 @@ Boomer:
 == Boomer :
 
 The Boomer explodes when he attack.
-== Le Boomer explose quand il attaque.
+== Les Boomers explosent quand ils et elles attaquent.
 
 All humans affected by the explosion become infected.
-== Tous les humains touchés par l'explosion sont infectés.
+== Tous les humains et les humaines touchés par l'explosion sont infectés.
 
 He can also inflict 1 damage point per seconds by hooking humans.
-== Il peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.
+== Ils et elles peuvent aussi infliger 1 point de dégât par seconde en agrippant un humain ou une humaine.
 
 ##### Hunter ##### 
 
 Hunter
-== Hunter
+== Chasseuse-eur
 
 Hunter:
-== Hunter :
+== Chasseuse-eur :
 
 The Hunter can infect humans and heal infected with his hammer.
-== Le Hunter peut infecter les humains et soigner les infectés à l'aide de son marteau.
+== Les Chasseuses et les Chasseurs peuvent infecter les humains et soigner les infectés à l'aide de leur marteau.
 
 He can jump two times in air.
-== Il est capable de sauter deux fois dans l'air.
+== Elles et ils sont capables de sauter deux fois dans l'air.
 
 ##### Spider ##### 
 
@@ -370,16 +370,16 @@ Spider:
 == Araignée :
 
 The Spider can infect humans and heal infected with his hammer.
-== L'Araignée peut infecter un humain et soigner les infectés à l'aide de son marteau.
+== Les Araignées peuvent infecter les humains et soigner les infectés à l'aide de leur marteau.
 
 When selecting any gun, his hook enter in web mode.
-== Quand elle selectionne une arme, son grappin entre en mode toile.
+== Quand ils ou elles sélectionnent une arme, leur grappin entre en mode "toile".
 
 Any human that touch a hook in web mode is automatically grabbed.
-== Lorsqu'un humain touche un grappin en mode toile, il est automatiquement attrapé par l'Araignée.
+== Lorsqu'un humain ou une humaine touche un grappin en mode toile, il ou elle est automatiquement attrapé par l'Araignée.
 
 The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.
-== Le grappin de l'araignée (dans les deux modes) inflige un point de dégat par seconde et peut tirer un humain pendant 2 secondes.
+== Le grappin de l'Araignée (dans les deux modes) inflige 1 point de dégât par seconde et peut tirer un humain ou une humaine pendant 2 secondes.
 
 ##### Ghost #####
 
@@ -390,44 +390,71 @@ Ghost:
 == Fantôme :
 
 The Ghost can infect humans and heal infected with his hammer.
-== Le phantôme peut infecter un humain et soigner les infectés à l'aide de son marteau.
+== Les Fantôme peuvent infecter les humains et soigner les infectés à l'aide de leur marteau.
 
 He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.
-== Il est invisible, sauf si un humain est proche de lui, si il prend un dégat, ou si il utilise son marteau.
+== Elles et ils sont invisibles, sauf si une humaine ou un humain est proche d'eux, si elles ou ils prennent un dégât, ou si elle ou ils utilisent leur marteau.
 
 ##### Undead ##### 
 
 Undead
-== Mort-vivant
+== Mort-e vivant-e
 
 Undead:
-== Mort-vivant :
+== Mort-e vivant-e :
 
 The Undead can infect humans and heal infected with his hammer.
-== Le Mort-vivant peut infecter les humains et soigner les infectés à l'aide de son marteau.
+== Les Mort-vivants et les Mortes-vivantes peuvent infecter les humains et soigner les infectés à l'aide de leur marteau.
 
 Instead of dying, he freezes during 10 seconds.
-== À la place de mourir, il est gelé pendant 10 secondes.
+== À la place de mourir, ils et elles sont gelés pendant 10 secondes.
 
 If an infected heals him, the freeze effect disappear.
-== Si un infecté le soigne, l'effet de gèle est enlevé.
+== Si un infecté les soignent, l'effet de gèle est supprimé.
 
 ##### Witch ##### 
 
 Witch
-== Sorcière
+== Sorcière-er
 
 Witch:
-== Sorcière :
+== Sorcière-er :
 
 The Witch can infect humans and heal infected with his hammer.
-== La Sorcière peut infecter les humains et soigner les infectés à l'aide de son marteau.
+== Les Sorcières et les Sorciers peuvent infecter les humains et soigner les infectés à l'aide de leur marteau.
 
 When an infected dies, he may re-spawn near her.
-== Quand un infecté meurt, il a une chance de ré-apparaître à coté d'elle.
+== Quand un infecté meurt, il a une chance de ré-apparaître à coté d'eux.
 
 If the Witch dies, she disappear and is replaced by an another class of infected.
-== Si la Sorcière meurt, elle disparaît et est remplacée par une autre classe d'infecté.
+== Si une Sorcière ou un Sorcier meurt, elle ou il disparaissent et sont remplacée par une autre classe d'infecté.
 
 She can also inflict 1 damage point per seconds by hooking humans.
-== Elle peut aussi infliger 1 point de dégât par seconde quand il agrippe un humain.
+== Elles et ils peuvent aussi infliger 1 point de dégât par seconde en agrippant un humain.
+
+##### Hero ##### 
+
+Hero
+== Héro-ïne
+
+Hero:
+== Héro-ïne:
+
+The Hero has a shotgun, a laser rifle and grenades.
+== Les Héros et les Héroïnes ont un fusil à pompe, un fusil laser et des grenades.
+
+The Hero must find a flag hidden in the map.
+== Les Héros et les Héroïnes doivent trouver un drapeau caché dans la carte.
+
+Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
+== Lorsqu'ils ou elles le trouve, le drapeau donne 1 point de vie, 4 points d'armure et toutes les munitions à chaque humain ou humaine
+
+The hero can't be healed by a medic or infected without dying.
+== Les Héros et les Héroïnes ne peuvent pas être soigné par les médecins ou infecté sans mourir.
+
+Next flag in: %d sec
+== Prochain drapeau dans: %d sec
+
+The Hero found the flag!
+== Le Héro ou l'Héroïne à trouvé le drapeau!
+

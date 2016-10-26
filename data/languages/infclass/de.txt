@@ -418,3 +418,35 @@ If the Witch dies, she disappear and is replaced by an another class of infected
 
 She can also inflict 1 damage point per seconds by hooking humans.
 == Außerdem kann sie einem Überlebenden einen Schadenspunkt für jede Sekunde, in der sie sich an ihn klammert, zufügen.
+
+##### Hero ##### 
+
+Hero
+== Recke
+
+Hero:
+== Recke:
+
+### NOT TRANSLATED
+#The Hero has a shotgun, a laser rifle and grenades.
+#== 
+
+### NOT TRANSLATED
+#The Hero must find a flag hidden in the map.
+#== 
+
+### NOT TRANSLATED
+#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
+#== 
+
+### NOT TRANSLATED
+#The hero can't be healed by a medic or infected without dying.
+#== 
+
+Next flag in: %d sec
+== Nächste blaue Flagge in %d sec.
+
+### NOT TRANSLATED
+#The Hero found the flag!
+#== 
+

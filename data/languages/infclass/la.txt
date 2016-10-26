@@ -337,13 +337,13 @@ He can also inflict 1 damage point per seconds by hooking humans.
 ##### Hunter ##### 
 
 Hunter
-== Hunter
+== Venator
 
 Hunter:
-== Hunter:
+== Venator:
 
 The Hunter can infect humans and heal infected with his hammer.
-== Hunter malleo homines inficere infectosque sanare potest.
+== Venator malleo homines inficere infectosque sanare potest.
 
 He can jump two times in air.
 == Bis in aere exsilere potest.
@@ -418,3 +418,35 @@ If the Witch dies, she disappear and is replaced by an another class of infected
 
 She can also inflict 1 damage point per seconds by hooking humans.
 == Plagam quoque per secundam unam unco infligere potest.
+
+##### Hero ##### 
+
+Hero
+== Heros
+
+Hero:
+== Heros:
+
+### NOT TRANSLATED
+#The Hero has a shotgun, a laser rifle and grenades.
+#== 
+
+### NOT TRANSLATED
+#The Hero must find a flag hidden in the map.
+#== 
+
+### NOT TRANSLATED
+#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
+#== 
+
+### NOT TRANSLATED
+#The hero can't be healed by a medic or infected without dying.
+#== 
+
+Next flag in: %d sec
+== Vexillum lividum sequens post %d sec.
+
+### NOT TRANSLATED
+#The Hero found the flag!
+#== 
+
