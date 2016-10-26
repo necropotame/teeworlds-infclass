@@ -27,10 +27,8 @@ enum
 bool CGameContext::s_ServerLocalizationInitialized = false;
 CLocalizationDatabase CGameContext::s_ServerLocalization[NUM_TRANSLATED_LANGUAGES];
 
-void CGameContext::InitializeServerLocatization()
+void CGameContext::LoadServerLocatization()
 {
-	if(!s_ServerLocalizationInitialized)
-	{
 		s_ServerLocalization[LANGUAGE_FR].Load("languages/infclass/fr.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_DE].Load("languages/infclass/de.txt", Storage(), Console());
 		s_ServerLocalization[LANGUAGE_UK].Load("languages/infclass/uk.txt", Storage(), Console());
@@ -45,9 +43,25 @@ void CGameContext::InitializeServerLocatization()
 		s_ServerLocalization[LANGUAGE_PT_BR].Load("languages/infclass/pt-br.txt", Storage(), Console());
 		//Until the classical portugese is done, use the brazilian one
 		s_ServerLocalization[LANGUAGE_PT].Load("languages/infclass/pt-br.txt", Storage(), Console());
+}
+
+void CGameContext::InitializeServerLocatization()
+{
+	if(!s_ServerLocalizationInitialized)
+	{
+		LoadServerLocatization();
 		
 		s_ServerLocalizationInitialized = true;
 	}
+}
+
+bool CGameContext::ConReloadLocalization(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	
+	pSelf->LoadServerLocatization();
+	
+	return true;	
 }
 
 const char* CGameContext::ServerLocalize(const char *pStr, int Language)
@@ -2790,8 +2804,8 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			const char* pLine1 = pSelf->ServerLocalize("Hero:", Language); 
 			const char* pLine2 = pSelf->ServerLocalize("The Hero has a shotgun, a laser rifle and grenades.", Language); 
 			const char* pLine3 = pSelf->ServerLocalize("The Hero must find a flag hidden in the map.", Language);
-			const char* pLine4 = pSelf->ServerLocalize("Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.", Language);
-			const char* pLine5 = pSelf->ServerLocalize("The hero can't be healed by a medic or infected without dying.", Language);
+			const char* pLine4 = pSelf->ServerLocalize("Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.", Language);
+			const char* pLine5 = pSelf->ServerLocalize("The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.", Language);
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4, pLine5);
 			
@@ -2822,7 +2836,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			const char* pLine1 = pSelf->ServerLocalize("Sniper:", Language); 
 			const char* pLine2 = pSelf->ServerLocalize("The Sniper can lock his position in air for 15 seconds with his hammer.", Language); 
 			const char* pLine3 = pSelf->ServerLocalize("He can jump two times in air.", Language); 
-			const char* pLine4 = pSelf->ServerLocalize("He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.", Language);
+			const char* pLine4 = pSelf->ServerLocalize("He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.", Language);
 			
 			str_format(aBuf, sizeof(aBuf), "%s\n\n%s\n\n%s\n\n%s", pLine1, pLine2, pLine3, pLine4);
 
@@ -3120,6 +3134,7 @@ void CGameContext::OnConsoleInit()
 	
 /* INFECTION MODIFICATION START ***************************************/
 	Console()->Register("inf_set_class", "is", CFGFLAG_SERVER, ConSetClass, this, "Set the class of a player");
+	Console()->Register("reload_localization", "", CFGFLAG_SERVER, ConReloadLocalization, this, "Reload the localization files");
 	
 	//Chat Command
 	Console()->Register("info", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChatInfo, this, "Display information about the mod");

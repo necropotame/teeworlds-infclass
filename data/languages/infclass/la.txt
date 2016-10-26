@@ -300,8 +300,8 @@ Sniper:
 The Sniper can lock his position in air for 15 seconds with his hammer.
 == Sniper malleo positionem 15 secundas claudere in aere potest.
 
-He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-== Sclopetum striatum habet quod nocet 19–20 in claustro, 9–10 alias.
+He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.
+== Sclopetum striatum habet quod nocet 20 in claustro, 9–10 alias.
 
 ##### Smoker ##### 
 
@@ -427,26 +427,20 @@ Hero
 Hero:
 == Heros:
 
-### NOT TRANSLATED
-#The Hero has a shotgun, a laser rifle and grenades.
-#== 
+The Hero has a shotgun, a laser rifle and grenades.
+== Heros sclopetum dispergens, sclopetum lasericum granatasque habet.
 
-### NOT TRANSLATED
-#The Hero must find a flag hidden in the map.
-#== 
+The Hero must find a flag hidden in the map.
+== Heroi vexillum in mappa reconditum inveniendum est. 
 
-### NOT TRANSLATED
-#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
-#== 
+Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.
+== Heroe vexillum indepto punctum unum integritatis valetudinis uniquoique gregis humani redditur, puncta quatuor tegumentorum suppletur et arma replentur, integritas herois penitus. 
 
-### NOT TRANSLATED
-#The hero can't be healed by a medic or infected without dying.
-#== 
+The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.
+== Heros a medico sanari non ideoneus est, sed plagae infecti resistere, quin pereat, si integritas sua huic sufficit.
 
-Next flag in: %d sec
-== Vexillum lividum sequens post %d sec.
+Next flag in %d sec
+== Vexillum sequens post %d sec
 
-### NOT TRANSLATED
-#The Hero found the flag!
-#== 
-
+The Hero found the flag!
+== Heros vexillum invenit!

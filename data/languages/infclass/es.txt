@@ -1,7 +1,7 @@
 ##### SERVER ###########################################################
 
 Switch language to english ?
-== Poner el idioma en español ?	
+== ¿Poner el idioma en español?	
 
 %s entered and joined the game
 == %s ha entrado y se ha unido a la partida
@@ -45,13 +45,13 @@ You have survived, +5 points
 == %s ha sido infectado
 
 The witch is coming!
-== Que viene la bruja !
+== ¡Que viene la bruja!
 
 The witch is dead
 == La bruja ha muerto
 
 The undead is coming!
-== Que viene el muerto viviente !
+== ¡Que viene el muerto viviente!
 
 The undead is finally dead
 == El muerto viviente ha muerto finalmente
@@ -300,8 +300,8 @@ Sniper:
 The Sniper can lock his position in air for 15 seconds with his hammer.
 == El francotirador puede bloquear su posición en el aire por 15 segundos con su martillo.
 
-He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-== El tiene también un rifle potente que inflinge 19-20 puntos de daño cuando está bloqueado en una posicion y 9-10 en otros casos.
+He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.
+== El tiene también un rifle potente que inflinge 20 puntos de daño cuando está bloqueado en una posicion y 9-10 en otros casos.
 
 ##### Smoker ##### 
 
@@ -421,35 +421,51 @@ She can also inflict 1 damage point per seconds by hooking humans.
 
 ##### Hero ##### 
 
-### NOT TRANSLATED
-#Hero
-#== 
+Hero
+== 
 
-### NOT TRANSLATED
-#Hero:
-#== 
+Hero:
+== 
 
-### NOT TRANSLATED
-#The Hero has a shotgun, a laser rifle and grenades.
-#== 
+The Hero has a shotgun, a laser rifle and grenades.
+== El Héroe tiene una escopeta, un fúsil laser y granadas.
 
-### NOT TRANSLATED
-#The Hero must find a flag hidden in the map.
-#== 
+The Hero must find a flag hidden in the map.
+== El Héroe tiene que invenir la bandera escondida en el mapa.
 
-### NOT TRANSLATED
-#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
-#== 
+Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.
+== A la vez que recoge la bandera, ella distribue un punto de salud y cuatro puntos de armadura a cado uno de los humanos, les rellena la munición, y el Héroe es sanado completamente.
 
-### NOT TRANSLATED
-#The hero can't be healed by a medic or infected without dying.
-#== 
+The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.
+== El Héroe no puede ser sanado por un médico, mas es capaz de resistir un trompazo de un infectado, si su vida y armadura bastan.
 
-### NOT TRANSLATED
-#Next flag in: %d sec
-#== 
+Next flag in %d sec
+== Bandera siguiente en: %d seg
 
-### NOT TRANSLATED
-#The Hero found the flag!
-#== 
+The Hero found the flag!
+== ¡El héroe ha encontrado la bandera!
 
+
+
+
+
+
+##### Hero ##### 
+
+Hero
+== Héroe
+
+Hero:
+== Héroe:
+
+The Hero has a shotgun, a laser rifle and grenades.
+
+The Hero must find a flag hidden in the map.
+
+Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
+
+The hero can't be healed by a medic or infected without dying.
+
+Next flag in: %d sec
+
+The Hero found the flag!

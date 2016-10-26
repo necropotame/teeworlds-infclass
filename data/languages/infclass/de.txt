@@ -300,8 +300,8 @@ Sniper:
 The Sniper can lock his position in air for 15 seconds with his hammer.
 == Der Scharfschütze hat die Fähigkeit, mittels des Hammers für 15 Sekunden an einem beliebigen Orte, auch in der Luft, einzurasten.
 
-He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
-== Hat er eine feste Stellung eingenommen, so verstärkt dies sein Gewehr: 19–20 Schadenspunkte durch dessen Schüsse sind gangbar. Ist der Scharfschütze einer festen Stellung ledig, so fügt er Erkrankten immerhin 9–10 Schadenspunkte zu.
+He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.
+== Hat er eine feste Stellung eingenommen, so verstärkt dies sein Gewehr: 20 Schadenspunkte werden durch dessen Schüsse zugefügt. Ist der Scharfschütze einer festen Stellung ledig, so fügt er Erkrankten immerhin 9–10 Schadenspunkte zu.
 
 ##### Smoker ##### 
 
@@ -427,26 +427,20 @@ Hero
 Hero:
 == Recke:
 
-### NOT TRANSLATED
-#The Hero has a shotgun, a laser rifle and grenades.
-#== 
+The Hero has a shotgun, a laser rifle and grenades.
+== Der Recke ist vermittels einer Flinte, eines Lasergewehrs und Granaten bewaffnet.
 
-### NOT TRANSLATED
-#The Hero must find a flag hidden in the map.
-#== 
+The Hero must find a flag hidden in the map.
+== Dem Recken ist aufgetragen, eine auf der Karte verborgene Flagge zu bergen.
 
-### NOT TRANSLATED
-#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
-#== 
+Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.
+== Erringt er die Flagge, so gebühren Jeglichem, der sich noch unter den Menschen befindet, ein Gesundheitspunkt, vier Schilde, und volles Feuerwerk, ihm selbst wird völlige Heilung zuteil.
 
-### NOT TRANSLATED
-#The hero can't be healed by a medic or infected without dying.
-#== 
+The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.
+== Der Recke kann nicht von einem Arzte geheilt werden. Doch er kann einem Streiche eines Erkrankten standhalten, dafern seine Gesundheit hinreicht.
 
-Next flag in: %d sec
-== Nächste blaue Flagge in %d sec.
+Next flag in %d sec
+== Nächste Flagge in %d Sek
 
-### NOT TRANSLATED
-#The Hero found the flag!
-#== 
-
+The Hero found the flag!
+== Der Recke hat die Flagge gefunden!

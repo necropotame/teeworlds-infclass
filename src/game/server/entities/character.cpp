@@ -1684,7 +1684,7 @@ void CCharacter::Tick()
 			p = (CHeroFlag *)p->TypeNext();
 		}
 		if(CoolDown > 0)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Next flag in: %d sec", 1+CoolDown/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Next flag in %d sec", 1+CoolDown/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
 	}
 	else if(GetClass() == PLAYERCLASS_ENGINEER)
 	{

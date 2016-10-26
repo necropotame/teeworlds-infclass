@@ -63,6 +63,7 @@ class CGameContext : public IGameServer
 	CNetObjHandler m_NetObjHandler;
 	CTuningParams m_Tuning;
 
+	static bool ConReloadLocalization(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneParam(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneReset(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneDump(IConsole::IResult *pResult, void *pUserData);
@@ -224,6 +225,7 @@ private:
 	static bool s_ServerLocalizationInitialized;
 	static CLocalizationDatabase s_ServerLocalization[NUM_TRANSLATED_LANGUAGES];
 	
+	void LoadServerLocatization();
 	void InitializeServerLocatization();
 	
 public:

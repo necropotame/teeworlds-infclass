@@ -300,7 +300,7 @@ Sniper:
 The Sniper can lock his position in air for 15 seconds with his hammer.
 == Снайпер способен установлять своё местоположение на 15 секунд с помощью своего молота.
 
-He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.
 == Притом он имеет могучую винтовку, которая причиняет 20 урона в установленном состояние, от 9 до 10 в других случаях.
 
 ##### Smoker ##### 
@@ -427,26 +427,20 @@ Hero
 Hero:
 == Храбрец:
 
-### NOT TRANSLATED
-#The Hero has a shotgun, a laser rifle and grenades.
-#== 
+The Hero has a shotgun, a laser rifle and grenades.
+== Храбрец имеет дробовик, лазерную винтовку и гранаты.
 
-### NOT TRANSLATED
-#The Hero must find a flag hidden in the map.
-#== 
+The Hero must find a flag hidden in the map.
+== Храбрец должен находить знамя упрятанное на карте.
 
-### NOT TRANSLATED
-#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
-#== 
+Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.
+== Когда он взымает знамя, оно распределяет каждому человеку одно очко здоровья и четыре очка брони и его самого жизнь укрепляется вполне.
 
-### NOT TRANSLATED
-#The hero can't be healed by a medic or infected without dying.
-#== 
+The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.
+== Храбрец не может лечиться врачом, но он может выдержать один побой заражённого, если броня крепка.
 
-Next flag in: %d sec
-== Следущее синее знамя через %d сек
+Next flag in %d sec
+== Следущее знамя через %d сек
 
-### NOT TRANSLATED
-#The Hero found the flag!
-#== 
-
+The Hero found the flag!
+== Храбрец нашёл знамя!

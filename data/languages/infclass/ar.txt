@@ -316,7 +316,7 @@ The Sniper can lock his position in air for 15 seconds with his hammer.
 == ﺔﻴﻧﺎﺛ 15 ﺓﺪﻤﻟ ءﺍﻮﻬﻟﺍ ﻲﻓ ﻪﺘﻛﺮﺣ ﻑﻗﻮﻳ ﻥﺃ ﺹﺎﻨﻘﻠﻟ ﻦﻛﻤﻳ
 
 ### TO CORRECT
-#He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+#He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.
 #== يحدث سلاحه عشرين نقطة خسارة للمصابين عندما يوقف حركته 
 
 ##### Smoker ##### 
@@ -465,15 +465,15 @@ She can also inflict 1 damage point per seconds by hooking humans.
 #== 
 
 ### NOT TRANSLATED
-#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
+#Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.
 #== 
 
 ### NOT TRANSLATED
-#The hero can't be healed by a medic or infected without dying.
+#The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.
 #== 
 
 ### NOT TRANSLATED
-#Next flag in: %d sec
+#Next flag in %d sec
 #== 
 
 ### NOT TRANSLATED

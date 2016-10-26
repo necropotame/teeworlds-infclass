@@ -302,7 +302,7 @@ Sniper:
 The Sniper can lock his position in air for 15 seconds with his hammer.
 == O Sniper pode travar sua posição no ar por 15 segundos usando seu martelo. 
 
-He has also a powerful rifle that deals 19-20 damage points in locked position, and 9-10 otherwise.
+He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.
 == Ele também têm um rifle poderoso que causa 19-20 de dano na posição travada, e 9-10 caso contrário. 
 
 ##### Smoker ##### 
@@ -438,15 +438,15 @@ Herói:
 #== 
 
 ### NOT TRANSLATED
-#Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
+#Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.
 #== 
 
 ### NOT TRANSLATED
-#The hero can't be healed by a medic or infected without dying.
+#The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.
 #== 
 
 ### NOT TRANSLATED
-#Next flag in: %d sec
+#Next flag in %d sec
 #== 
 
 The Hero found the flag!
