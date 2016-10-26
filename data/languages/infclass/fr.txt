@@ -470,5 +470,5 @@ Next flag in %d sec
 == Prochain drapeau dans: %d sec
 
 The Hero found the flag!
-== Le drapeau a été trouvé par un·e Héro·ïne·s!
+== Le drapeau a été trouvé par un·e Héro·ïne!
 
