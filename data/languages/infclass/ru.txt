@@ -72,12 +72,12 @@ You are an infected: %s
 == Ты заражённый в роли: %s
 
 Type "/help %s" for more information about your class
-== Напиши \"/help %s\", чтобы больше узнать о своём классе
+== Напиши «/help %s», чтобы больше узнать о своём классе
 
 ##### STATE ############################################################
 
 You are frozen: %d sec
-== Ты заморожён: %d сек.
+== Ты заморожен: %d сек.
 
 Bombs left: %d
 == Оставшиеся бомбы: %d
@@ -158,7 +158,7 @@ InfectionClass, by necropotame (version %s)
 == InfectionClass, от necropotame (version %s)
 
 Based on Infection mod by Gravity
-== Основан на Infection режиме от Gravity
+== Режим игры основан на Infection от Gravity
 
 Thanks to %s
 == Благодарю %s

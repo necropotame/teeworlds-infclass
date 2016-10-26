@@ -72,7 +72,7 @@ You are an infected: %s
 == Infectus es: %s
 
 Type "/help %s" for more information about your class
-== Scribe "/help %s" pro informationibus pluribus
+== Scribe »/help %s« pro informationibus pluribus
 
 ##### STATE ############################################################
 

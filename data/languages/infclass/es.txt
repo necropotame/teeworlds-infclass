@@ -72,7 +72,7 @@ You are an infected: %s
 == Eres un infectado : %s
 
 Type "/help %s" for more information about your class
-== Escribe "/help %s" para mas información sobre tu clase
+== Escribe «/help %s» para más información sobre tu clase
 
 ##### STATE ############################################################
 
@@ -83,16 +83,16 @@ Bombs left: %d
 == Bombas restantes: %d 
 
 Laser wall: %d sec
-== Barrera: %d sec
+== Barrera: %d seg
 
 Position lock: %d sec
-== Posición bloqueada: %d sec 
+== Posición bloqueada: %d seg
 
 Active mines: %d
 == Minas activadas: %d
 
 Web mode enabled
-== Modo web activado 
+== Modo telaraña activado
 
 ##### CLASSCHOOSER #####################################################
 
@@ -131,7 +131,7 @@ List of commands
 == /alwaysrandom <0|1> : Elegir automáticamente una clase aleatoria al comenzar la ronda
 
 /lowresmap and /highresmap: Switch between simplified and classical maps
-== /lowresmap y /highresmap: Cambia entre mapas simplicados y clasicos
+== /lowresmap y /highresmap: Cambia entre mapas simplicados y clásicos
 
 Press <F3> or <F4> to enable or disable hook protection
 == Pulsa <F3> o <F4> para activar o desactivar la predicción de gancho
@@ -208,7 +208,7 @@ When an infected touch the wall, he dies.
 == Cuando un infectado toca la barrera, este muere.
 
 The lifespan of a wall is 30 seconds, and walls are limited to one per player at the same time.
-== La duración de una barrera es de 30 segundos, y solo puede haber una barrera por jugador al mismo tiempo.
+== La duración de una barrera es de 30 segundos, y sólo puede haber una barrera por jugador al mismo tiempo.
 
 ##### Soldier ##### 
 
@@ -422,10 +422,10 @@ She can also inflict 1 damage point per seconds by hooking humans.
 ##### Hero ##### 
 
 Hero
-== 
+== Héroe
 
 Hero:
-== 
+== Héroe:
 
 The Hero has a shotgun, a laser rifle and grenades.
 == El Héroe tiene una escopeta, un fúsil laser y granadas.
@@ -444,28 +444,3 @@ Next flag in %d sec
 
 The Hero found the flag!
 == ¡El héroe ha encontrado la bandera!
-
-
-
-
-
-
-##### Hero ##### 
-
-Hero
-== Héroe
-
-Hero:
-== Héroe:
-
-The Hero has a shotgun, a laser rifle and grenades.
-
-The Hero must find a flag hidden in the map.
-
-Once taken, the flag gives 1 health point, 4 armor points and full ammo to all humans.
-
-The hero can't be healed by a medic or infected without dying.
-
-Next flag in: %d sec
-
-The Hero found the flag!
