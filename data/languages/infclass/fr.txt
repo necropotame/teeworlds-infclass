@@ -461,10 +461,10 @@ The Hero must find a flag hidden in the map.
 == Les Héro·ïne·s doivent trouver un drapeau caché dans la carte.
 
 Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.
-== Lorsqu'illes le trouve, le drapeau donne 1 point de vie, 4 points d'armure et toutes les munitions à chaque humain·e
+== Lorsqu'illes le trouvent, le drapeau donne 1 point de vie, 4 points d'armure et toutes les munitions à chaque humain·e
 
 The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.
-== Les Héro·ïne·s ne peuvent pas être soigné par les médecins, et illes peuvent survivre à une attaque des infecté·e·s.
+== Les Héro·ïne·s ne peuvent pas être soigné·e·s par les médecins, et illes peuvent survivre à une attaque des infecté·e·s.
 
 Next flag in %d sec
 == Prochain drapeau dans: %d sec
