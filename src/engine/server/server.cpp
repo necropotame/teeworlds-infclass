@@ -1303,6 +1303,10 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				{
 					SendRconLine(ClientID, "No rcon password set on server. Set sv_rcon_password and/or sv_rcon_mod_password to enable the remote console.");
 				}
+				else if(!m_NetServer.HasSecurityToken(ClientID))
+				{
+					SendRconLine(ClientID, "You must use a client that support anti-spoof protection (DDNet-like)");
+				}
 				else if(g_Config.m_SvRconPassword[0] && str_comp(pPw, g_Config.m_SvRconPassword) == 0)
 				{
 					CMsgPacker Msg(NETMSG_RCON_AUTH_STATUS);

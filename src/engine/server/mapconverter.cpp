@@ -131,8 +131,6 @@ void CMapConverter::CreateCircle(array<CQuad>* pQuads, vec2 CenterPos, float Siz
 	InitQuad(&Quad);
 	Quad.m_aPoints[0].x = f2fx(CenterPos.x);
 	Quad.m_aPoints[0].y = f2fx(CenterPos.y);
-	Quad.m_aPoints[3].x = f2fx(CenterPos.x);
-	Quad.m_aPoints[3].y = f2fx(CenterPos.y);
 	Quad.m_aColors[0].r = Quad.m_aColors[1].r = Quad.m_aColors[2].r = Quad.m_aColors[3].r = Color.r*255.0f;
 	Quad.m_aColors[0].g = Quad.m_aColors[1].g = Quad.m_aColors[2].g = Quad.m_aColors[3].g = Color.g*255.0f;
 	Quad.m_aColors[0].b = Quad.m_aColors[1].b = Quad.m_aColors[2].b = Quad.m_aColors[3].b = Color.b*255.0f;
@@ -147,14 +145,17 @@ void CMapConverter::CreateCircle(array<CQuad>* pQuads, vec2 CenterPos, float Siz
 	vec2 LastPos = CenterPos+RadiusVect;
 	for(int i=0; i<32; i++)
 	{
+		vec2 PosMid = CenterPos+rotate(RadiusVect, AngleIter - AngleStep/2.0f);
 		vec2 Pos = CenterPos+rotate(RadiusVect, AngleIter);
 		
 		Quad.m_aPoints[1].x = f2fx(LastPos.x);
 		Quad.m_aPoints[1].y = f2fx(LastPos.y);
 		Quad.m_aPoints[2].x = f2fx(Pos.x);
 		Quad.m_aPoints[2].y = f2fx(Pos.y);
-		Quad.m_aPoints[4].x = f2fx((Pos.x+LastPos.x)/2.0f);
-		Quad.m_aPoints[4].y = f2fx((Pos.y+LastPos.y)/2.0f);
+		Quad.m_aPoints[3].x = f2fx(PosMid.x);
+		Quad.m_aPoints[3].y = f2fx(PosMid.y);
+		Quad.m_aPoints[4].x = f2fx((PosMid.x+CenterPos.x)/2.0f);
+		Quad.m_aPoints[4].y = f2fx((PosMid.y+CenterPos.y)/2.0f);
 		
 		pQuads->add(Quad);
 		
