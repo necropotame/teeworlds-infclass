@@ -222,6 +222,7 @@ public:
 
 	void DoSnapshot();
 
+	static int ClientRejoinCallback(int ClientID, void *pUser);
 	static int NewClientCallback(int ClientID, void *pUser);
 	static int DelClientCallback(int ClientID, int Type, const char *pReason, void *pUser);
 

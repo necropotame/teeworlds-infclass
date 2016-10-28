@@ -863,6 +863,38 @@ void CServer::DoSnapshot()
 	GameServer()->OnPostSnap();
 }
 
+int CServer::ClientRejoinCallback(int ClientID, void *pUser)
+{
+	CServer *pThis = (CServer *)pUser;
+
+	pThis->m_aClients[ClientID].m_Authed = AUTHED_NO;
+	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
+	pThis->m_aClients[ClientID].m_Quitting = false;
+
+	pThis->m_aClients[ClientID].Reset();
+	
+	//Getback session about the client
+	IServer::CClientSession* pSession = pThis->m_NetSession.GetData(pThis->m_NetServer.ClientAddr(ClientID));
+	if(pSession)
+	{
+		dbg_msg("infclass", "session found for the client %d. Round id = %d, class id = %d", ClientID, pSession->m_RoundId, pSession->m_Class);
+		pThis->m_aClients[ClientID].m_Session = *pSession;
+		pThis->m_NetSession.RemoveSession(pThis->m_NetServer.ClientAddr(ClientID));
+	}
+	
+	//Getback accusation about the client
+	IServer::CClientAccusation* pAccusation = pThis->m_NetAccusation.GetData(pThis->m_NetServer.ClientAddr(ClientID));
+	if(pAccusation)
+	{
+		dbg_msg("infclass", "%d accusation(s) found for the client %d", pAccusation->m_Num, ClientID);
+		pThis->m_aClients[ClientID].m_Accusation = *pAccusation;
+		pThis->m_NetAccusation.RemoveSession(pThis->m_NetServer.ClientAddr(ClientID));
+	}
+
+	pThis->SendMap(ClientID);
+
+	return 0;
+}
 
 int CServer::NewClientCallback(int ClientID, void *pUser)
 {
@@ -1106,8 +1138,8 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				return;
 
 			int Chunk = Unpacker.GetInt();
-			unsigned int ChunkSize = 1024-128;
-			unsigned int Offset = Chunk * ChunkSize;
+			int ChunkSize = 1024-128;
+			int Offset = Chunk * ChunkSize;
 			int Last = 0;
 
 			m_FastDownloadLastAsk[ClientID] = Chunk;
@@ -1155,7 +1187,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				net_addr_str(m_NetServer.ClientAddr(ClientID), aAddrStr, sizeof(aAddrStr), true);
 
 				char aBuf[256];
-				str_format(aBuf, sizeof(aBuf), "player is ready. ClientID=%x addr=%s", ClientID, aAddrStr);
+				str_format(aBuf, sizeof(aBuf), "player is ready. ClientID=%x addr=%s secure=%s", ClientID, aAddrStr, m_NetServer.HasSecurityToken(ClientID)?"yes":"no");
 				Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBuf);
 				m_aClients[ClientID].m_State = CClient::STATE_READY;
 				m_aClients[ClientID].m_WaitingTime = TickSpeed()*g_Config.m_InfConWaitingTime;
@@ -1525,8 +1557,8 @@ void CServer::PumpNetwork()
 				continue;
 
 			int Chunk = m_FastDownloadLastSent[i]++;
-			unsigned int ChunkSize = 1024-128;
-			unsigned int Offset = Chunk * ChunkSize;
+			int ChunkSize = 1024-128;
+			int Offset = Chunk * ChunkSize;
 			int Last = 0;
 
 			// drop faulty map data requests
@@ -1820,7 +1852,7 @@ int CServer::Run()
 		}
 	}
 
-	m_NetServer.SetCallbacks(NewClientCallback, DelClientCallback, this);
+	m_NetServer.SetCallbacks(NewClientCallback, ClientRejoinCallback, DelClientCallback, this);
 
 	m_Econ.Init(Console(), &m_ServerBan);
 
@@ -2109,16 +2141,25 @@ bool CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 						break;
 				}
 				
-				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? "Admin" :
-										pThis->m_aClients[i].m_Authed == CServer::AUTHED_MOD ? "Mod" : "";
-				str_format(aBuf, sizeof(aBuf), "#%02i (%s) %s, [%s], cs:%i | ar:%i | language:%s",
+				//Add some padding to make the command more readable
+				char aBufName[18];
+				str_copy(aBufName, pThis->ClientName(i), sizeof(aBufName));
+				for(int c=str_length(aBufName); c<((int)sizeof(aBufName))-1; c++)
+					aBufName[c] = ' ';
+				aBufName[sizeof(aBufName)-1] = 0;
+				
+				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? " Admin" :
+										pThis->m_aClients[i].m_Authed == CServer::AUTHED_MOD ? " Moderator" : "Player";
+				
+				const char *pSecurityStr = pThis->m_NetServer.HasSecurityToken(i) ? " Protected" : "Unprotected";
+				
+				str_format(aBuf, sizeof(aBuf), "#%02i | %s | %s | %s | %s | %s",
 					i,
+					aBufName,
 					aAddrStr,
-					pThis->ClientName(i),
+					aLangBuf,
 					pAuthStr,
-					pThis->m_aClients[i].m_CustomSkin,
-					pThis->m_aClients[i].m_AlwaysRandom,
-					aLangBuf
+					pSecurityStr
 				);
 			}
 			else
@@ -2439,6 +2480,12 @@ int main(int argc, const char **argv) // ignore_convention
 		}
 	}
 #endif
+
+	if(secure_random_init() != 0)
+	{
+		dbg_msg("secure", "could not initialize secure RNG");
+		return -1;
+	}
 
 	CServer *pServer = CreateServer();
 	IKernel *pKernel = IKernel::Create();
