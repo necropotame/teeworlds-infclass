@@ -276,7 +276,7 @@ function build(settings)
 	end
 
 	-- build client, server, version server and master server
-	client_exe = Link(client_settings, "infclass_client", game_shared, game_client,
+	client_exe = Link(client_settings, "infclass_editor", game_shared, game_client,
 		engine, client, game_editor, zlib, pnglite, wavpack, md5,
 		client_link_other, client_osxlaunch)
 

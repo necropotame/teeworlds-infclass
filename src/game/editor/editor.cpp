@@ -23,6 +23,7 @@
 #include "auto_map.h"
 #include "editor.h"
 
+int CEditor::ms_FileButtonTexture;
 int CEditor::ms_CheckerTexture;
 int CEditor::ms_BackgroundTexture;
 int CEditor::ms_CursorTexture;
@@ -2792,7 +2793,7 @@ void CEditor::AddFileDialogEntry(int Index, CUIRect *pView)
 	Button.VSplitLeft(Button.h, &FileIcon, &Button);
 	Button.VSplitLeft(5.0f, 0, &Button);
 
-	Graphics()->TextureSet(g_pData->m_aImages[IMAGE_FILEICONS].m_Id);
+	Graphics()->TextureSet(ms_FileButtonTexture);
 	Graphics()->QuadsBegin();
 	RenderTools()->SelectSprite(m_FileList[Index].m_IsDir?SPRITE_FILE_FOLDER:SPRITE_FILE_MAP2);
 	IGraphics::CQuadItem QuadItem(FileIcon.x, FileIcon.y, FileIcon.w, FileIcon.h);
@@ -4023,6 +4024,7 @@ void CEditor::Init()
 	ms_PhysicsTexture = Graphics()->LoadTexture("editor/physics.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
 	ms_EntitiesTexture = Graphics()->LoadTexture("editor/entities.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
 	ms_ZoneTexture = Graphics()->LoadTexture("editor/zones.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
+	ms_FileButtonTexture = Graphics()->LoadTexture("file_icons.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
 
 	m_TilesetPicker.m_pEditor = this;
 	m_TilesetPicker.MakePalette();

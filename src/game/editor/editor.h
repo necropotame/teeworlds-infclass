@@ -586,6 +586,7 @@ public:
 		m_SelectedQuadEnvelope = -1;
 		m_SelectedEnvelopePoint = -1;
 
+		ms_FileButtonTexture = 0;
 		ms_CheckerTexture = 0;
 		ms_BackgroundTexture = 0;
 		ms_CursorTexture = 0;
@@ -718,6 +719,7 @@ public:
     int m_SelectedQuadEnvelope;
 	int m_SelectedImage;
 
+	static int ms_FileButtonTexture;
 	static int ms_CheckerTexture;
 	static int ms_BackgroundTexture;
 	static int ms_CursorTexture;
