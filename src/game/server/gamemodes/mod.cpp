@@ -6,6 +6,7 @@
 #include <engine/shared/config.h>
 #include <engine/server/mapconverter.h>
 #include <engine/server/roundstatistics.h>
+#include <engine/shared/network.h>
 #include <game/mapitems.h>
 #include <time.h>
 #include <iostream>
@@ -74,6 +75,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	
 	m_HumanCounter = 0;
 	m_InfectedCounter = 0;
+	m_NumFirstInfected = 0;
 	m_InfectedStarted = false;
 	
 	for(int j=0; j<m_MapHeight; j++)
@@ -98,6 +100,24 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 CGameControllerMOD::~CGameControllerMOD()
 {
 	if(m_GrowingMap) delete[] m_GrowingMap;
+}
+
+void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
+{
+	if(Type == CLIENTDROPTYPE_BAN) return;
+	if(Type == CLIENTDROPTYPE_KICK) return;
+	if(Type == CLIENTDROPTYPE_SHUTDOWN) return;	
+	
+	CPlayer* pPlayer = GameServer()->m_apPlayers[ClientID];
+	if(pPlayer && pPlayer->IsInfected() && m_InfectedStarted)
+	{
+		UpdatePlayerCounter(ClientID);
+		
+		if(m_NumFirstInfected > m_InfectedCounter-1)
+		{
+			Server()->Ban(ClientID, 10*60, "Leaver");
+		}
+	}
 }
 
 bool CGameControllerMOD::OnEntity(int Index, vec2 Pos)
@@ -149,53 +169,64 @@ void CGameControllerMOD::EndRound()
 	IGameController::EndRound();
 }
 
+void CGameControllerMOD::UpdatePlayerCounter(int ClientException)
+{
+	m_HumanCounter = 0;
+	m_InfectedCounter = 0;
+	
+	//Count type of players
+	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+	while(Iter.Next())
+	{
+		if(Iter.ClientID() == ClientException) continue;
+		
+		if(Iter.Player()->IsInfected()) m_InfectedCounter++;
+		else m_HumanCounter++;
+	}
+	
+	if(m_HumanCounter + m_InfectedCounter < 4)
+		m_NumFirstInfected = 1;
+	else
+		m_NumFirstInfected = 2;
+}
+
 void CGameControllerMOD::Tick()
 {
 	IGameController::Tick();
 	
 	//Check session
-	for(int i = 0; i < MAX_CLIENTS; i ++)
 	{
-		//Update session
-		IServer::CClientSession* pSession = Server()->GetClientSession(i);
-		if(pSession && GameServer()->m_apPlayers[i])
+		CPlayerIterator<PLAYERITER_ALL> Iter(GameServer()->m_apPlayers);
+		while(Iter.Next())
 		{
-			if(!Server()->GetClientMemory(i, CLIENTMEMORY_SESSION_PROCESSED))
+			//Update session
+			IServer::CClientSession* pSession = Server()->GetClientSession(Iter.ClientID());
+			if(pSession)
 			{
-				//The client already participated to this round,
-				//and he exit the game as infected.
-				//To avoid cheating, we assign to him the same class again.
-				if(
-					m_InfectedStarted &&
-					pSession->m_RoundId == m_RoundId &&
-					pSession->m_Class > END_HUMANCLASS
-				)
+				if(!Server()->GetClientMemory(Iter.ClientID(), CLIENTMEMORY_SESSION_PROCESSED))
 				{
-					GameServer()->m_apPlayers[i]->SetClass(pSession->m_Class);
+					//The client already participated to this round,
+					//and he exit the game as infected.
+					//To avoid cheating, we assign to him the same class again.
+					if(
+						m_InfectedStarted &&
+						pSession->m_RoundId == m_RoundId &&
+						pSession->m_Class > END_HUMANCLASS
+					)
+					{
+						Iter.Player()->SetClass(pSession->m_Class);
+					}
+					
+					Server()->SetClientMemory(Iter.ClientID(), CLIENTMEMORY_SESSION_PROCESSED, true);
 				}
 				
-				Server()->SetClientMemory(i, CLIENTMEMORY_SESSION_PROCESSED, true);
+				pSession->m_Class = Iter.Player()->GetClass();
+				pSession->m_RoundId = GameServer()->m_pController->GetRoundId();
 			}
-			
-			pSession->m_Class = GameServer()->m_apPlayers[i]->GetClass();
-			pSession->m_RoundId = GameServer()->m_pController->GetRoundId();
 		}
 	}
 	
-	m_HumanCounter = 0;
-	m_InfectedCounter = 0;
-	
-	//Count type of players
-	for(int i = 0; i < MAX_CLIENTS; i ++)
-	{
-		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-		
-		if(!pPlayer) continue;
-		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-		
-		if(pPlayer->IsInfected()) m_InfectedCounter++;
-		else m_HumanCounter++;
-	}
+	UpdatePlayerCounter();
 	
 	m_InfectedStarted = false;
 	
@@ -203,60 +234,54 @@ void CGameControllerMOD::Tick()
 	if(m_GameOverTick == -1 && m_HumanCounter + m_InfectedCounter >= 2)
 	{
 		//If the infection started
-		if(m_RoundStartTick + Server()->TickSpeed()*10 < Server()->Tick())
+		if(m_RoundStartTick + Server()->TickSpeed()*10 <= Server()->Tick())
 		{
+			bool StartInfectionStrigger = (m_RoundStartTick + Server()->TickSpeed()*10 == Server()->Tick());
+			
 			if(m_pHeroFlag)
-				m_pHeroFlag->Show();	
+				m_pHeroFlag->Show();
 			
 			m_InfectedStarted = true;
 	
-			for(int i = 0; i < MAX_CLIENTS; i ++)
+			CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+			while(Iter.Next())
 			{
-				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-				
-				if(!pPlayer) continue;
-				if(pPlayer->GetTeam() == TEAM_SPECTATORS)
+				if(Iter.Player()->GetClass() == PLAYERCLASS_NONE)
 				{
-					pPlayer->StartInfection();
-				}
-				else if(pPlayer->GetClass() == PLAYERCLASS_NONE)
-				{
-					pPlayer->SetClass(ChooseHumanClass(pPlayer));
-					if(pPlayer->GetCharacter())
-						pPlayer->GetCharacter()->IncreaseArmor(10);
+					if(StartInfectionStrigger)
+					{
+						Iter.Player()->SetClass(ChooseHumanClass(Iter.Player()));
+						if(Iter.Player()->GetCharacter())
+							Iter.Player()->GetCharacter()->IncreaseArmor(10);
+					}
+					else
+						Iter.Player()->StartInfection();
 				}
 			}
 			
-			//If needed, infect players
-			int nbInfectedNeeded = 2;
-			if(m_InfectedCounter + m_HumanCounter < 4)
-			{
-				nbInfectedNeeded = 1;
-			}
+			int NumNeededInfection = m_NumFirstInfected;
 			
-			while(m_InfectedCounter < nbInfectedNeeded)
+			while(m_InfectedCounter < NumNeededInfection)
 			{
 				float InfectionProb = 1.0/static_cast<float>(m_HumanCounter);
 				float random = frandom();
 				
 				//Fair infection
 				bool FairInfectionFound = false;
-				for(int i = 0; i < MAX_CLIENTS; i ++)
+				
+				Iter.Reset();
+				while(Iter.Next())
 				{
-					CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+					if(Iter.Player()->IsInfected()) continue;
 					
-					if(!pPlayer) continue;
-					if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-					if(pPlayer->IsInfected()) continue;
-					
-					if(!Server()->IsClientInfectedBefore(i))
+					if(!Server()->IsClientInfectedBefore(Iter.ClientID()))
 					{
-						Server()->InfecteClient(i);
-						GameServer()->m_apPlayers[i]->StartInfection();
+						Server()->InfecteClient(Iter.ClientID());
+						Iter.Player()->StartInfection();
 						m_InfectedCounter++;
 						m_HumanCounter--;
 						
-						GameServer()->SendChatTarget_Language_s(-1, "%s has been infected", Server()->ClientName(i));
+						GameServer()->SendChatTarget_Language_s(-1, "%s has been infected", Server()->ClientName(Iter.ClientID()));
 						FairInfectionFound = true;
 						break;
 					}
@@ -265,22 +290,19 @@ void CGameControllerMOD::Tick()
 				//Unfair infection
 				if(!FairInfectionFound)
 				{
-					for(int i = 0; i < MAX_CLIENTS; i ++)
+					Iter.Reset();
+					while(Iter.Next())
 					{
-						CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-						
-						if(!pPlayer) continue;
-						if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-						if(pPlayer->IsInfected()) continue;
+						if(Iter.Player()->IsInfected()) continue;
 						
 						if(random < InfectionProb)
 						{
-							Server()->InfecteClient(i);
-							GameServer()->m_apPlayers[i]->StartInfection();
+							Server()->InfecteClient(Iter.ClientID());
+							Iter.Player()->StartInfection();
 							m_InfectedCounter++;
 							m_HumanCounter--;
 							
-							GameServer()->SendChatTarget_Language_s(-1, "%s has been infected", Server()->ClientName(i));
+							GameServer()->SendChatTarget_Language_s(-1, "%s has been infected", Server()->ClientName(Iter.ClientID()));
 							
 							break;
 						}
@@ -297,15 +319,10 @@ void CGameControllerMOD::Tick()
 			if(m_pHeroFlag)
 				m_pHeroFlag->Show();
 			
-			for(int i = 0; i < MAX_CLIENTS; i ++)
+			CPlayerIterator<PLAYERITER_SPECTATORS> IterSpec(GameServer()->m_apPlayers);
+			while(IterSpec.Next())
 			{
-				CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-				
-				if(!pPlayer) continue;
-				if(pPlayer->GetTeam() == TEAM_SPECTATORS)
-				{
-					pPlayer->SetClass(PLAYERCLASS_NONE);
-				}
+				IterSpec.Player()->SetClass(PLAYERCLASS_NONE);
 			}
 		}
 		
@@ -412,22 +429,18 @@ void CGameControllerMOD::Tick()
 						GameServer()->SendChatTarget_Language_i(-1, "%i humans won the round", m_HumanCounter);
 					}
 					
-					for(int i = 0; i < MAX_CLIENTS; i ++)
+					CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+					while(Iter.Next())
 					{
-						CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-						
-						if(!pPlayer) continue;
-						if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-						
-						if(!pPlayer->IsInfected())
+						if(!Iter.Player()->IsInfected())
 						{
 							//TAG_SCORE
-							Server()->RoundStatistics()->OnScoreEvent(i, SCOREEVENT_HUMAN_SURVIVE, pPlayer->GetClass());
-							Server()->RoundStatistics()->SetPlayerAsWinner(i);
-							GameServer()->SendScoreSound(i);
-							pPlayer->m_WinAsHuman++;
+							Server()->RoundStatistics()->OnScoreEvent(Iter.ClientID(), SCOREEVENT_HUMAN_SURVIVE, Iter.Player()->GetClass());
+							Server()->RoundStatistics()->SetPlayerAsWinner(Iter.ClientID());
+							GameServer()->SendScoreSound(Iter.ClientID());
+							Iter.Player()->m_WinAsHuman++;
 							
-							GameServer()->SendChatTarget_Language(i, "You have survived, +5 points");
+							GameServer()->SendChatTarget_Language(Iter.ClientID(), "You have survived, +5 points");
 						}
 					}
 				}
@@ -480,14 +493,10 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Hero = 0;
 		int Support = 0;
 		
-		for(int i = 0; i < MAX_CLIENTS; i ++)
+		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+		while(Iter.Next())
 		{
-			CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-			
-			if(!pPlayer) continue;
-			if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-			
-			switch(pPlayer->GetClass())
+			switch(Iter.Player()->GetClass())
 			{
 				case PLAYERCLASS_NINJA:
 				case PLAYERCLASS_MERCENARY:
@@ -533,18 +542,15 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		return;
 
 	//Search for witch
-	for(int i = 0; i < MAX_CLIENTS; i++)
+	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+	while(Iter.Next())
 	{
-		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-		
-		if(!pPlayer) continue;
-		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-		
-		if(pPlayer->GetClass() == PLAYERCLASS_WITCH)
+		if(Iter.Player()->GetClass() == PLAYERCLASS_WITCH)
 		{
-			pGameDataObj->m_FlagCarrierRed = i;
+			pGameDataObj->m_FlagCarrierRed = Iter.ClientID();
 		}
 	}
+	
 	pGameDataObj->m_FlagCarrierBlue = FLAG_ATSTAND;
 }
 
@@ -687,17 +693,15 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 		
 	if(m_InfectedStarted && pPlayer->IsInfected() && rand()%3 > 0)
 	{
-		for(int i = 0; i < MAX_CLIENTS; i ++)
+		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+		while(Iter.Next())
 		{
-			CPlayer *pWitch = GameServer()->m_apPlayers[i];
-			
-			if(!pWitch) continue;
-			if(pWitch->GetCID() == pPlayer->GetCID()) continue;
-			if(pWitch->GetClass() != PLAYERCLASS_WITCH) continue;
-			if(!pWitch->GetCharacter()) continue;
+			if(Iter.Player()->GetCID() == pPlayer->GetCID()) continue;
+			if(Iter.Player()->GetClass() != PLAYERCLASS_WITCH) continue;
+			if(!Iter.Player()->GetCharacter()) continue;
 			
 			vec2 SpawnPos;
-			if(pWitch->GetCharacter()->FindWitchSpawnPosition(SpawnPos))
+			if(Iter.Player()->GetCharacter()->FindWitchSpawnPosition(SpawnPos))
 			{
 				*pOutPos = SpawnPos;
 				return true;
@@ -735,14 +739,10 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	int nbHero = 0;
 	int nbMedic = 0;
 	int nbDefender = 0;
-	for(int i = 0; i < MAX_CLIENTS; i++)
+	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+	while(Iter.Next())
 	{
-		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-		
-		if(!pPlayer) continue;
-		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-		
-		switch(pPlayer->GetClass())
+		switch(Iter.Player()->GetClass())
 		{
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
@@ -867,16 +867,13 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	int nbInfected = 0;
 	bool thereIsAWitch = false;
 	bool thereIsAnUndead = false;
-	for(int i = 0; i < MAX_CLIENTS; i++)
+	
+	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+	while(Iter.Next())
 	{
-		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-		
-		if(!pPlayer) continue;
-		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-		
-		if(pPlayer->IsInfected()) nbInfected++;
-		if(pPlayer->GetClass() == PLAYERCLASS_WITCH) thereIsAWitch = true;
-		if(pPlayer->GetClass() == PLAYERCLASS_UNDEAD) thereIsAnUndead = true;
+		if(Iter.Player()->IsInfected()) nbInfected++;
+		if(Iter.Player()->GetClass() == PLAYERCLASS_WITCH) thereIsAWitch = true;
+		if(Iter.Player()->GetClass() == PLAYERCLASS_UNDEAD) thereIsAnUndead = true;
 	}
 	
 	//Check if hunters are enabled
@@ -997,14 +994,11 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 	int nbMedic = 0;
 	int nbHero = 0;
 	int nbSupport = 0;
-	for(int i = 0; i < MAX_CLIENTS; i++)
+	
+	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+	while(Iter.Next())
 	{
-		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-		
-		if(!pPlayer) continue;
-		if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-		
-		switch(pPlayer->GetClass())
+		switch(Iter.Player()->GetClass())
 		{
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:

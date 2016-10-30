@@ -150,6 +150,7 @@ public:
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
 	virtual bool IsChoosableClass(int PlayerClass);
 	virtual bool IsSpawnable(vec2 Position);
+	virtual void OnClientDrop(int ClientID, int Type) {};
 	
 	int GetRoundId() { return m_RoundId; }
 /* INFECTION MODIFICATION END *****************************************/

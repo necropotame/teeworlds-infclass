@@ -30,11 +30,13 @@ public:
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
 	virtual bool IsChoosableClass(int PlayerClass);
 	virtual bool CanVote();
+	virtual void OnClientDrop(int ClientID, int Type);
 	
 	void ResetFinalExplosion();
 	
 private:
 	bool IsSpawnable(vec2 Pos);
+	void UpdatePlayerCounter(int ClientException = -1);
 	
 private:
 	float m_ClassProbability[NB_PLAYERCLASS];
@@ -46,6 +48,7 @@ private:
 	int* m_GrowingMap;
 	bool m_ExplosionStarted;
 	
+	int m_NumFirstInfected;
 	int m_HumanCounter;
 	int m_InfectedCounter;
 	bool m_InfectedStarted;

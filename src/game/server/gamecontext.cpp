@@ -1233,34 +1233,7 @@ void CGameContext::OnClientConnected(int ClientID)
 
 void CGameContext::OnClientDrop(int ClientID, int Type, const char *pReason)
 {
-	if(m_apPlayers[ClientID] && m_apPlayers[ClientID]->IsInfected())
-	{
-		int InfectedCounter = 0;
-		int HumanCounter = 0;
-		for(int i = 0; i < MAX_CLIENTS; i ++)
-		{
-			if(i == ClientID) continue;
-			CPlayer *pPlayer = m_apPlayers[i];
-			if(!pPlayer) continue;
-			if(pPlayer->GetTeam() == TEAM_SPECTATORS) continue;
-			if(pPlayer->IsInfected()) InfectedCounter++;
-			else HumanCounter++;
-		}
-		
-		if(HumanCounter + InfectedCounter >= 2)
-		{
-			int nbInfectedNeeded = 2;
-			if(InfectedCounter + HumanCounter < 4)
-				nbInfectedNeeded = 1;
-			
-			if(InfectedCounter < nbInfectedNeeded)
-			{
-				//Leaver, ban him for 10 minutes
-				Server()->Ban(ClientID, 10*60, "Leaver");
-			}
-		}
-	}
-	
+	m_pController->OnClientDrop(ClientID, Type);
 	
 	AbortVoteKickOnDisconnect(ClientID);
 	m_apPlayers[ClientID]->OnDisconnect(Type, pReason);
@@ -1614,9 +1587,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			if(m_apPlayers[ClientID]->IsInfected() && pMsg->m_Team == TEAM_SPECTATORS) 
 			{
 				int InfectedCount = 0;
-				for(int i = 0; i < MAX_CLIENTS; i++)
+				CPlayerIterator<PLAYERITER_INGAME> Iter(m_apPlayers);
+				while(Iter.Next())
 				{
-					 if(m_apPlayers[i] && m_apPlayers[i]->IsInfected() && m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
+					 if(Iter.Player()->IsInfected())
 						 InfectedCount++;
 				}
 
