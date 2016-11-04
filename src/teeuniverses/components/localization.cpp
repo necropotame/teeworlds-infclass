@@ -47,7 +47,7 @@ CLocalization::CLanguage::CLanguage(const char* pName, const char* pFilename, co
 	
 	Status = U_ZERO_ERROR;
 	m_pPluralRules = uplrules_openForType(m_aFilename, UPLURAL_TYPE_CARDINAL, &Status);
-	if(Status != U_ZERO_ERROR)
+	if(Status != U_ZERO_ERROR && Status != U_USING_FALLBACK_WARNING)
 	{
 		if(m_pPluralRules)
 		{
@@ -60,9 +60,10 @@ CLocalization::CLanguage::CLanguage(const char* pName, const char* pFilename, co
 	//Time unit for second formater
 	Status = U_ZERO_ERROR;
 	m_pTimeUnitFormater = new icu::TimeUnitFormat(m_aFilename,  UTMUTFMT_ABBREVIATED_STYLE, Status);
-	if(Status != U_ZERO_ERROR)
+	if(Status != U_ZERO_ERROR && Status != U_USING_FALLBACK_WARNING)
 	{
-		dbg_msg("Localization", "Can't create timeunit formater (error #%d)", Status);
+		dbg_msg("Localization", "Can't create timeunit formater %s (error #%d)", pFilename, Status);
+		delete m_pTimeUnitFormater;
 		m_pTimeUnitFormater = NULL;
 	}
 }
