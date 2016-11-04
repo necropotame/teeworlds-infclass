@@ -62,7 +62,7 @@ CLocalization::CLanguage::CLanguage(const char* pName, const char* pFilename, co
 	m_pTimeUnitFormater = new icu::TimeUnitFormat(m_aFilename,  UTMUTFMT_ABBREVIATED_STYLE, Status);
 	if(Status != U_ZERO_ERROR)
 	{
-		dbg_msg("Localization", "Can't create timeunit formater");
+		dbg_msg("Localization", "Can't create timeunit formater (error #%d)", Status);
 		m_pTimeUnitFormater = NULL;
 	}
 }
