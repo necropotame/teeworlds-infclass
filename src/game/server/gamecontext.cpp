@@ -1692,7 +1692,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 508: //Mozambique
 					case 626: //Timor-Leste
 					case 678: //Sao Tome and Principe
-						str_copy(m_VoteLanguage[ClientID], "pt-br", sizeof(m_VoteLanguage[ClientID]));		
+						str_copy(m_VoteLanguage[ClientID], "pt", sizeof(m_VoteLanguage[ClientID]));		
 						break;
 					case 12: //Algeria
 					case 48: //Bahrain
@@ -2931,8 +2931,6 @@ bool CGameContext::ConLanguage(IConsole::IResult *pResult, void *pUserData)
 		else if(str_comp_nocase(pLanguageCode, "la") == 0)
 			ExistingLanguage = true;
 		else if(str_comp_nocase(pLanguageCode, "pt") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "pt-br") == 0)
 			ExistingLanguage = true;
 		else if(str_comp_nocase(pLanguageCode, "en") == 0)
 			ExistingLanguage = true;
