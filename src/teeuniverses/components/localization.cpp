@@ -35,7 +35,7 @@ CLocalization::CLanguage::CLanguage(const char* pName, const char* pFilename, co
 	
 	Status = U_ZERO_ERROR;
 	m_pNumberFormater = unum_open(UNUM_DECIMAL, NULL, -1, m_aFilename, NULL, &Status);
-	if(Status != U_ZERO_ERROR && Status != U_USING_FALLBACK_WARNING)
+	if(U_FAILURE(Status))
 	{
 		if(m_pNumberFormater)
 		{
@@ -47,7 +47,7 @@ CLocalization::CLanguage::CLanguage(const char* pName, const char* pFilename, co
 	
 	Status = U_ZERO_ERROR;
 	m_pPluralRules = uplrules_openForType(m_aFilename, UPLURAL_TYPE_CARDINAL, &Status);
-	if(Status != U_ZERO_ERROR && Status != U_USING_FALLBACK_WARNING)
+	if(U_FAILURE(Status))
 	{
 		if(m_pPluralRules)
 		{
@@ -60,7 +60,7 @@ CLocalization::CLanguage::CLanguage(const char* pName, const char* pFilename, co
 	//Time unit for second formater
 	Status = U_ZERO_ERROR;
 	m_pTimeUnitFormater = new icu::TimeUnitFormat(m_aFilename,  UTMUTFMT_ABBREVIATED_STYLE, Status);
-	if(Status != U_ZERO_ERROR && Status != U_USING_FALLBACK_WARNING)
+	if(U_FAILURE(Status))
 	{
 		dbg_msg("Localization", "Can't create timeunit formater %s (error #%d)", pFilename, Status);
 		delete m_pTimeUnitFormater;
@@ -226,7 +226,7 @@ const char* CLocalization::CLanguage::Localize_P(int Number, const char* pText) 
 	UErrorCode Status = U_ZERO_ERROR;
 	uplrules_select(m_pPluralRules, static_cast<double>(Number), aPluralKeyWord, 6, &Status);
 	
-	if(Status != U_ZERO_ERROR)
+	if(U_FAILURE(Status))
 		return NULL;
 	
 	int PluralCode = PLURALTYPE_NONE;
@@ -285,7 +285,7 @@ bool CLocalization::Init()
 {
 	UErrorCode Status = U_ZERO_ERROR;
 	m_pUtf8Converter = ucnv_open("utf8", &Status);
-	if(Status != U_ZERO_ERROR)
+	if(U_FAILURE(Status))
 	{
 		dbg_msg("Localization", "Can't create UTF8/UTF16 convertert");
 		return false;
@@ -463,7 +463,7 @@ void CLocalization::AppendNumber(dynamic_string& Buffer, int& BufferIter, CLangu
 	
 	UErrorCode Status = U_ZERO_ERROR;
 	unum_format(pLanguage->m_pNumberFormater, Number, aBufUtf16, sizeof(aBufUtf16), NULL, &Status);
-	if(Status != U_ZERO_ERROR)
+	if(U_FAILURE(Status))
 		BufferIter = Buffer.append_at(BufferIter, "_NUMBER_");
 	else
 	{
@@ -475,10 +475,8 @@ void CLocalization::AppendNumber(dynamic_string& Buffer, int& BufferIter, CLangu
 			Buffer.resize_buffer(Buffer.maxsize()*2);
 		
 		int Length = ucnv_fromUChars(m_pUtf8Converter, Buffer.buffer()+BufferIter, Buffer.maxsize() - BufferIter, aBufUtf16, SrcLength, &Status);
-		if(Status != U_ZERO_ERROR)
-		{
+		if(U_FAILURE(Status))
 			BufferIter = Buffer.append_at(BufferIter, "_NUMBER_");
-		}
 		else
 			BufferIter += Length;
 	}
@@ -494,10 +492,8 @@ void CLocalization::AppendDuration(dynamic_string& Buffer, int& BufferIter, CLan
 	Formattable.adoptObject(pAmount);
 	pLanguage->m_pTimeUnitFormater->format(Formattable, BufUTF16, Status);
 	
-	if(Status != U_ZERO_ERROR)
-	{
+	if(U_FAILURE(Status))
 		BufferIter = Buffer.append_at(BufferIter, "_DURATION_");
-	}
 	else
 	{
 		int SrcLength = BufUTF16.length();
@@ -510,7 +506,7 @@ void CLocalization::AppendDuration(dynamic_string& Buffer, int& BufferIter, CLan
 		Status = U_ZERO_ERROR;
 		int Length = ucnv_fromUChars(m_pUtf8Converter, Buffer.buffer()+BufferIter, Buffer.maxsize() - BufferIter, BufUTF16.getBuffer(), SrcLength, &Status);
 		
-		if(Status != U_ZERO_ERROR)
+		if(U_FAILURE(Status))
 			BufferIter = Buffer.append_at(BufferIter, "_DURATION_");
 		else
 			BufferIter += Length;
