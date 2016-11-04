@@ -29,10 +29,12 @@ def ConvertPo2Json(languageCode, plurals):
 
 ConvertPo2Json("ar", ["zero", "one", "two", "few", "many", "other"])
 ConvertPo2Json("es", ["one", "other"])
+ConvertPo2Json("de", ["one", "other"])
 ConvertPo2Json("fr", ["one", "other"])
 ConvertPo2Json("hu", ["one", "other"])
 ConvertPo2Json("it", ["one", "other"])
+ConvertPo2Json("la", ["one", "other"])
 ConvertPo2Json("nl", ["one", "other"])
 ConvertPo2Json("pt", ["one", "other"])
 ConvertPo2Json("pl", ["one", "many", "other"])
-ConvertPo2Json("la", ["one", "other"])
+ConvertPo2Json("ru", ["one", "few", "many", "other"])

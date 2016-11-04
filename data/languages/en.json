@@ -10,9 +10,9 @@
 		"other": "{int:NumBombs} bombs left"
 	},
 	{
-		"key": "{int:NumMines} active mines",
-		"one": "One active mine",
-		"other": "{int:NumMines} active mines"
+		"key": "{int:NumMines} mines are actives",
+		"one": "One mine is active",
+		"other": "{int:NumMines} mines are active",
 	},
 	{
 		"key": "Each bomb can explode {int:NumBombs} times.",

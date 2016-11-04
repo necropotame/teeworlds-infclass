@@ -74,8 +74,8 @@
 	},
 	{
 		"key": "One bomb left",
-		"one": "",
-		"other": "",
+		"one": "Uma bomba restando",
+		"other": "{int:NumBombs} bombas restando",
 	},
 	{
 		"key": "One mine is active",
@@ -176,6 +176,7 @@
 	},
 	{
 		"key": "Unknown class",
+		"value": "Classe desconhecida"
 	},
 	{
 		"key": "You are a human: {str:ClassName}",
@@ -203,9 +204,11 @@
 	},
 	{
 		"key": "You can change the language of this mod using the command /language.",
+		"value": "Voc\u00ea pode mudar o idioma deste mod usando o comando /language"
 	},
 	{
 		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "Se seu idioma n\u00e3o estiver dispon\u00edvel, voc\u00ea pode ajudar com a tradu\u00e7\u00e3o (/help translate)"
 	},
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
@@ -245,12 +248,15 @@
 	},
 	{
 		"key": "How to translate the mod",
+		"value": "Como traduzir este mod"
 	},
 	{
 		"key": "Create an account on Transifex and join a translation team:",
+		"value": "Crie uma conta no Transifex e entre em um time de tradu\u00e7\u00e3o:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "Se voc\u00ea tiver alguma pergunta sobre o processo de tradu\u00e7\u00e3o, por favor entre em contato conosco no IRC ({str:IRCAddress})"
 	},
 	{
 		"key": "The Engineer can build walls with his hammer to block infected.",
@@ -270,8 +276,8 @@
 	},
 	{
 		"key": "Each bomb can explode one time.",
-		"one": "",
-		"other": "",
+		"one": "Cada bomba pode explodir uma vez.",
+		"other": "Cada bomba pode explodir {int:NumBombs} vezes.",
 	},
 	{
 		"key": "Use the hammer to place the bomb and explode it multiple times.",
@@ -287,8 +293,8 @@
 	},
 	{
 		"key": "Mines are limited to one per player at the same time.",
-		"one": "",
-		"other": "",
+		"one": "Minas s\u00e3o limitadas \u00e0 uma de cada vez por jogador.",
+		"other": "Minas s\u00e3o limitadas \u00e0 {int:NumMines} por jogador ao mesmo tempo.",
 	},
 	{
 		"key": "He has also grenades that teleport him.",
@@ -324,8 +330,8 @@
 	},
 	{
 		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
-		"one": "",
-		"other": "",
+		"one": "Seu martelo foi substitu\u00eddo por uma katana, permitindo que ele pule uma vez antes de tocar no ch\u00e3o.",
+		"other": "Seu martelo foi substitu\u00eddo por uma katana, permitindo que ele pule {int:NinjaJump} vezes antes de tocar no ch\u00e3o.",
 	},
 	{
 		"key": "The Mercenary fly in air using his machine gun.",
@@ -333,8 +339,8 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal one damage point.",
-		"one": "",
-		"other": "",
+		"one": "Ele tamb\u00e9m pode jogar granadas venenosas que causam um ponto de dano.",
+		"other": "Ele tamb\u00e9m pode jogar granadas venenosas que causam {int:NumDamagePoints} pontos de dano.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -426,9 +432,11 @@
 	},
 	{
 		"key": "Available help pages: {str:PageList}",
+		"value": "P\u00e1ginas de ajuda dispon\u00edveis: {str:PageList}"
 	},
 	{
 		"key": "Choose a help page with /help <page>",
+		"value": "Escolha uma p\u00e1gina de ajuda com /help <p\u00e1gina>"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -444,6 +452,7 @@
 	},
 	{
 		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "Idiomas dispon\u00edveis: {str:ListOfLanguage}"
 	},
 	{
 		"key": "List of commands",
@@ -455,24 +464,31 @@
 	},
 	{
 		"key": "No player was found with this name",
+		"value": "Nenhum jogador foi encontrado com esse nome"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",
+		"value": "Por favor espere 5 minutos antes de criar outra conta"
 	},
 	{
 		"key": "An error occured during the creation of your account.",
+		"value": "Um erro ocorreu durante a cria\u00e7\u00e3o da sua conta."
 	},
 	{
 		"key": "This username is already taken by an existing account",
+		"value": "Esse nome de usu\u00e1rio j\u00e1 est\u00e1 em uso por uma conta existente."
 	},
 	{
 		"key": "Your account has been created and you are now logged.",
+		"value": "Sua conta foi criada e agora voc\u00ea est\u00e1 logado."
 	},
 	{
 		"key": "You must be logged to see your rank",
+		"value": "Voc\u00ea precisa fazer login para ver seu rank."
 	},
 	{
 		"key": "You must be logged to see your goal",
+		"value": "Voc\u00ea precisa fazer login para ver sua meta"
 	},
 	{
 		"key": "You already notify that {str:PlayerName} must be banned",
