@@ -1,7 +1,7 @@
 ##### SERVER ###########################################################
 
 Switch language to english ?
-== Zmienić język na Angielski ?
+== Zmienić język na Polski ?
 
 %s entered and joined the game
 == %s Połączył się i jest gotowy do gry

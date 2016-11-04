@@ -2716,7 +2716,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_LP(
 				Buffer, pLanguage, g_Config.m_InfPoisonDamage,
-				_P("He can also throw poison grenades that each deal one damage point.", "He can also throw poison grenades that each deals {int:NumDamagePoints} damage points."),
+				_P("He can also throw poison grenades that each deal one damage point.", "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points."),
 				"NumDamagePoints", &g_Config.m_InfPoisonDamage,
 				NULL
 			);

@@ -9,8 +9,8 @@
 	},
 	{
 		"key": "One human won the round",
-		"zero": "Um humano ganhou a partida",
-		"one": "{int:NumHumans} humanos ganharam a partida",
+		"one": "Um humano ganhou a partida",
+		"other": "{int:NumHumans} humanos ganharam a partida",
 	},
 	{
 		"key": "You have survived, +5 points",
@@ -74,13 +74,13 @@
 	},
 	{
 		"key": "One bomb left",
-		"zero": "",
 		"one": "",
+		"other": "",
 	},
 	{
 		"key": "One mine is active",
-		"zero": "",
 		"one": "",
+		"other": "",
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -270,8 +270,8 @@
 	},
 	{
 		"key": "Each bomb can explode one time.",
-		"zero": "",
 		"one": "",
+		"other": "",
 	},
 	{
 		"key": "Use the hammer to place the bomb and explode it multiple times.",
@@ -287,8 +287,8 @@
 	},
 	{
 		"key": "Mines are limited to one per player at the same time.",
-		"zero": "",
 		"one": "",
+		"other": "",
 	},
 	{
 		"key": "He has also grenades that teleport him.",
@@ -324,17 +324,17 @@
 	},
 	{
 		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
-		"zero": "",
 		"one": "",
+		"other": "",
 	},
 	{
 		"key": "The Mercenary fly in air using his machine gun.",
 		"value": "O Mercen\u00e1rio pode voar usando sua metralhadora."
 	},
 	{
-		"key": "He can also throw poison grenades that deals one damage point.",
-		"zero": "",
+		"key": "He can also throw poison grenades that each deal one damage point.",
 		"one": "",
+		"other": "",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -353,7 +353,7 @@
 		"value": "O Smoker pode infectar humanos e curar infectados com seu martelo."
 	},
 	{
-		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
 		"value": "Ele tamb\u00e9m pode causar 4 pontos de dano por segundo enganchando humanos."
 	},
 	{
@@ -365,7 +365,7 @@
 		"value": "Todos os humanos afetados pela explos\u00e3o se tornam infectados."
 	},
 	{
-		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
 		"value": "Ele tamb\u00e9m causa 1 ponto de dano por segundo enganchando humanos."
 	},
 	{
@@ -393,7 +393,7 @@
 		"value": "Qualquer humano que tocar um gancho no modo teia \u00e9 automaticamento agarrado."
 	},
 	{
-		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
 		"value": "O gancho da aranha (nos dois modos) causa 1 ponto de dano por segundo e pode agarrar humanos por 2 segundos. "
 	},
 	{
@@ -421,7 +421,7 @@
 		"value": "Se a Bruxa morrer, ela desaparece e \u00e9 substitu\u00edda por outra classe de infectado."
 	},
 	{
-		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Ela tamb\u00e9m pode causar 1 ponto de dano por segundo enganchando humanos."
 	},
 	{
@@ -441,6 +441,9 @@
 	{
 		"key": "Unknown language",
 		"value": "Idioma desconhecido"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
 	},
 	{
 		"key": "List of commands",

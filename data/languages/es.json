@@ -332,9 +332,9 @@
 		"value": "El mercenario vuela usando su metralleta."
 	},
 	{
-		"key": "He can also throw poison grenades that deals one damage point.",
-		"one": "El puede tambi\u00e9n puede lanzar granadas de pociones que inflingen un punto de da\u00f1o.",
-		"other": "El puede tambi\u00e9n puede lanzar granadas de pociones que inflingen {int:NumDamagePoints} puntos de da\u00f1o.",
+		"key": "He can also throw poison grenades that each deal one damage point.",
+		"one": "",
+		"other": "",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -353,7 +353,7 @@
 		"value": "El Smoker puede infectar a humanos y curar a otros infectados con su martillo."
 	},
 	{
-		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
 		"value": "Tambi\u00e9n puede infligir 4 puntos de da\u00f1o por segundo al enganchar a humanos."
 	},
 	{
@@ -365,7 +365,7 @@
 		"value": "Todos los humanos afectados por la explosi\u00f3n son infectados."
 	},
 	{
-		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
 		"value": "Tambi\u00e9n puede infligir 1 punto de da\u00f1o por segundo al enganchar a humanos."
 	},
 	{
@@ -393,7 +393,7 @@
 		"value": "Cualquier humano que toque el gancho en modo telara\u00f1a es autom\u00e1ticamente agarrado."
 	},
 	{
-		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
 		"value": "El gancho de la ara\u00f1a (en ambos modos) inflinge 1 punto de da\u00f1o por segundo y puede agarrar a un humano durante 2 segundos."
 	},
 	{
@@ -421,7 +421,7 @@
 		"value": "Si la Bruja muere, esta desaparece y es reemplazada por otra clase de infectado."
 	},
 	{
-		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Tambi\u00e9n puede infligir 1 punto de da\u00f1o por segundo al enganchar a humanos."
 	},
 	{
@@ -440,6 +440,9 @@
 	},
 	{
 		"key": "Unknown language",
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
 	},
 	{
 		"key": "List of commands",

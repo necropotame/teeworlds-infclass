@@ -338,7 +338,7 @@
 		"value": "Les Mercenaires peuvent voler dans l'air \u00e0 l'aide de leur mitrailleuse."
 	},
 	{
-		"key": "He can also throw poison grenades that deals one damage point.",
+		"key": "He can also throw poison grenades that each deal one damage point.",
 		"one": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent un point de d\u00e9g\u00e2t.",
 		"other": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent {int:NumDamagePoints} points de d\u00e9g\u00e2t.",
 	},
@@ -359,7 +359,7 @@
 		"value": "Les Smokers peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
 	},
 	{
-		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
 		"value": "Illes peut aussi infliger 4 points de d\u00e9g\u00e2t par seconde quand illes agrippent une humaine ou un humain."
 	},
 	{
@@ -371,7 +371,7 @@
 		"value": "Tous les humains et les humaines touch\u00e9s par l'explosion sont infect\u00e9s."
 	},
 	{
-		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
 		"value": "Illes peuvent aussi infliger 1 point de d\u00e9g\u00e2t par seconde en agrippant un humain ou une humaine."
 	},
 	{
@@ -399,7 +399,7 @@
 		"value": "Lorsqu'un humain ou une humaine touche un grappin en mode toile, ille est automatiquement attrap\u00e9 par l'Araign\u00e9e."
 	},
 	{
-		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
 		"value": "Le grappin de l'Araign\u00e9e (dans les deux modes) inflige 1 point de d\u00e9g\u00e2t par seconde et peut tirer un humain ou une humaine pendant 2 secondes."
 	},
 	{
@@ -427,7 +427,7 @@
 		"value": "Un Sorcier ou une Sorci\u00e8re qui meurt redevient un\u00b7e infect\u00e9\u00b7e classique."
 	},
 	{
-		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Illes peuvent aussi infliger 1 point de d\u00e9g\u00e2t par seconde en agrippant un humain ou une humaine."
 	},
 	{
@@ -449,6 +449,10 @@
 	{
 		"key": "Unknown language",
 		"value": "Langue inconnue"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "Langues disponibles : {str:ListOfLanguage}"
 	},
 	{
 		"key": "List of commands",

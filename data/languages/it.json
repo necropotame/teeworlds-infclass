@@ -325,7 +325,7 @@
 		"value": "Il Mercenario vola nell'aria usando la sua pistola."
 	},
 	{
-		"key": "He can also throw poison grenades that deals one damage point.",
+		"key": "He can also throw poison grenades that each deal one damage point.",
 		"one": "Lui pu\u00f2 anche lanciare granate velenose che infliggono un punti danno. ",
 		"other": "Lui pu\u00f2 anche lanciare granate velenose che infliggono {int:NumDamagePoints} punti danno.",
 	},
@@ -345,7 +345,7 @@
 		"value": "Lo Smoker pu\u00f2 infettare gli umani e guarire gli infetti con il suo martello."
 	},
 	{
-		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
 		"value": "Lui pu\u00f2 anche infliggere 4 punti di danno per secondo quando afferra un umano col suo gancio."
 	},
 	{
@@ -357,7 +357,7 @@
 		"value": "Tutti gli umani toccati dall'esposione diventano infetti."
 	},
 	{
-		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
 		"value": "Lui pu\u00f2 anche infliggere 1 punto di danno per secondo quando afferra un umano col suo gancio."
 	},
 	{
@@ -385,7 +385,7 @@
 		"value": "Qualsiasi umano che tocca la corda in modalit\u00e0 ragnatela sar\u00e0 automaticamente afferrato."
 	},
 	{
-		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
 		"value": "La corda del ragno (in entrambi i modi) infligge 1 punto danno per secondo e pu\u00f2 afferrare un umano per 2 secondi."
 	},
 	{
@@ -413,7 +413,7 @@
 		"value": "Se la Strega muore, ella scompare ed \u00e8 rimpiazzata da un infetto di un altra classe."
 	},
 	{
-		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Lei pu\u00f2 anche infliggere 1 punto di danno per secondo quando afferra un umano col suo gancio."
 	},
 	{
@@ -433,6 +433,9 @@
 	{
 		"key": "Unknown language",
 		"value": "Lingua sconosciuta"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
 	},
 	{
 		"key": "List of commands",

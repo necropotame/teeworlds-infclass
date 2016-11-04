@@ -326,7 +326,7 @@
 		"value": "De huurling kan in de lucht vliegen met zijn machinegeweer."
 	},
 	{
-		"key": "He can also throw poison grenades that deals one damage point.",
+		"key": "He can also throw poison grenades that each deal one damage point.",
 		"one": "",
 		"other": "",
 	},
@@ -346,7 +346,7 @@
 		"value": "De smoker kan mensen infecteren en mensen genezen met zijn hamer."
 	},
 	{
-		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
 		"value": "Hij kan ook 4 schade punten opleveren per seconde door mensen te haken."
 	},
 	{
@@ -358,7 +358,7 @@
 		"value": "Alle mensen rond de explosie worden ge\u00efnfecteerd."
 	},
 	{
-		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
 		"value": "Hij kan ook 1 schade punt opleveren per seconde door mensen te haken."
 	},
 	{
@@ -386,7 +386,7 @@
 		"value": "Ieder mens dat de haak aanraakt in web-modus is automatisch gevangen."
 	},
 	{
-		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
 		"value": "De haak van een spin (in beide modus) levert 1 schade punt op per seconde en kan een mens grijpen gedurende 2 seconden."
 	},
 	{
@@ -414,7 +414,7 @@
 		"value": "Als de heks sterft, verdwijnt ze en wordt ze vervangen door een andere klas van de ge\u00efnfecteerden."
 	},
 	{
-		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Ze kan ook 1 schade punt aanrichten per seconde door het haken van mensen."
 	},
 	{
@@ -434,6 +434,9 @@
 	{
 		"key": "Unknown language",
 		"value": "Onbekende taal"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
 	},
 	{
 		"key": "List of commands",

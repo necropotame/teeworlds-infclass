@@ -325,7 +325,7 @@
 		"value": "A soldos tud rep\u00fclni a sorozatl\u00f6v\u0151j\u00e1vel."
 	},
 	{
-		"key": "He can also throw poison grenades that deals one damage point.",
+		"key": "He can also throw poison grenades that each deal one damage point.",
 		"one": "",
 		"other": "",
 	},
@@ -345,7 +345,7 @@
 		"value": "A f\u00fcst\u00f6s kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
 	},
 	{
-		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
 		"value": "Tov\u00e1bb\u00e1 m\u00e1sodpercenk\u00e9nt 4 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
 	},
 	{
@@ -357,7 +357,7 @@
 		"value": "A robban\u00e1s k\u00f6zel\u00e9ben minden embert megfert\u0151l."
 	},
 	{
-		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
 		"value": "Tov\u00e1bb\u00e1 m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
 	},
 	{
@@ -385,7 +385,7 @@
 		"value": "Ha egy ember hozz\u00e1\u00e9r a horoghoz h\u00e1l\u00f3 m\u00f3dban, a zombi automatikusan r\u00e1akaszkodik."
 	},
 	{
-		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
 		"value": "Mindk\u00e9t esetben m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
 	},
 	{
@@ -413,7 +413,7 @@
 		"value": "Ha a boszork\u00e1ny meghal, ut\u00e1na m\u00e1r nem boszork\u00e1ny lesz."
 	},
 	{
-		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Tov\u00e1bb\u00e1 m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
 	},
 	{
@@ -433,6 +433,9 @@
 	{
 		"key": "Unknown language",
 		"value": "Ismeretlen nyelv"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
 	},
 	{
 		"key": "List of commands",
