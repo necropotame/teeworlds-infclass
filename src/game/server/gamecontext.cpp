@@ -1261,7 +1261,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			{
 				//Inverse order and add ligature for arabic
 				dynamic_string Buffer;
-				Buffer.copy(pMsg->m_pMessage+4);
+				Buffer.copy(pMsg->m_pMessage);
 				Server()->Localization()->ArabicShaping(Buffer);
 				SendChat(ClientID, Team, Buffer.buffer());
 			}
