@@ -1,6 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <game/server/gamecontext.h>
+#include <engine/shared/config.h>
 #include "bomb.h"
 
 CBomb::CBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
@@ -11,9 +12,10 @@ CBomb::CBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 	m_DetectionRadius = 60.0f;
 	m_StartTick = Server()->Tick();
 	m_Owner = Owner;
-	m_nbBomb = 3;
+	m_nbBomb = g_Config.m_InfBombs;
 	
-	for(int i=0; i<MAX_BOMB; i++)
+	m_IDBomb.set_size(g_Config.m_InfBombs);
+	for(int i=0; i<m_IDBomb.size(); i++)
 	{
 		m_IDBomb[i] = Server()->SnapNewID();
 	}
@@ -27,7 +29,7 @@ void CBomb::Destroy()
 		OwnerChar->m_pBomb = 0;
 	}
 	
-	for(int i=0; i<MAX_BOMB; i++)
+	for(int i=0; i<m_IDBomb.size(); i++)
 	{
 		Server()->SnapFreeID(m_IDBomb[i]);
 	}
@@ -84,7 +86,7 @@ void CBomb::Snap(int SnappingClient)
 		if(NetworkClipped(SnappingClient))
 			return;
 		
-		float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(MAX_BOMB);
+		float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_IDBomb.size());
 		
 		CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDBomb[i], sizeof(CNetObj_Projectile)));
 		pProj->m_X = (int)(m_Pos.x + m_DetectionRadius*cos(shiftedAngle));
@@ -103,7 +105,7 @@ void CBomb::TickPaused()
 
 bool CBomb::AddBomb()
 {
-	if(m_nbBomb < MAX_BOMB)
+	if(m_nbBomb < m_IDBomb.size())
 	{
 		m_nbBomb++;
 		return true;

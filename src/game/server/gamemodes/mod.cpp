@@ -281,7 +281,10 @@ void CGameControllerMOD::Tick()
 						m_InfectedCounter++;
 						m_HumanCounter--;
 						
-						GameServer()->SendChatTarget_Language_s(-1, "%s has been infected", Server()->ClientName(Iter.ClientID()));
+						GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTION, _("{str:VictimName} has been infected"),
+							"VictimName", Server()->ClientName(Iter.ClientID()),
+							NULL
+						);
 						FairInfectionFound = true;
 						break;
 					}
@@ -302,7 +305,7 @@ void CGameControllerMOD::Tick()
 							m_InfectedCounter++;
 							m_HumanCounter--;
 							
-							GameServer()->SendChatTarget_Language_s(-1, "%s has been infected", Server()->ClientName(Iter.ClientID()));
+							GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTION, _("{str:VictimName} has been infected"), "VictimName", Server()->ClientName(Iter.ClientID()), NULL);
 							
 							break;
 						}
@@ -329,11 +332,9 @@ void CGameControllerMOD::Tick()
 		//Win check
 		if(m_InfectedStarted && m_HumanCounter == 0 && m_InfectedCounter > 1)
 		{			
-			float RoundDuration = static_cast<float>((Server()->Tick()-m_RoundStartTick)/((float)Server()->TickSpeed()))/60.0f;
-			int Minutes = static_cast<int>(RoundDuration);
-			int Seconds = static_cast<int>((RoundDuration - Minutes)*60.0f);
+			int Seconds = (Server()->Tick()-m_RoundStartTick)/((float)Server()->TickSpeed());
 			
-			GameServer()->SendChatTarget_Language_ii(-1, "Infected won the round in %i:%02i minutes", Minutes, Seconds);
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTED, _("Infected won the round in {sec:RoundDuration}"), "RoundDuration", &Seconds, NULL);
 			
 			EndRound();
 		}
@@ -420,14 +421,7 @@ void CGameControllerMOD::Tick()
 			{
 				if(m_HumanCounter)
 				{
-					if(m_HumanCounter <= 1)
-					{
-						GameServer()->SendChatTarget_Language(-1, "One human won the round");
-					}
-					else
-					{
-						GameServer()->SendChatTarget_Language_i(-1, "%i humans won the round", m_HumanCounter);
-					}
+					GameServer()->SendChatTarget_Localization_P(-1, CHATCATEGORY_HUMANS, m_HumanCounter, _P("One human won the round", "{int:NumHumans} humans won the round"), "NumHumans", &m_HumanCounter, NULL);
 					
 					CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 					while(Iter.Next())
@@ -440,13 +434,14 @@ void CGameControllerMOD::Tick()
 							GameServer()->SendScoreSound(Iter.ClientID());
 							Iter.Player()->m_WinAsHuman++;
 							
-							GameServer()->SendChatTarget_Language(Iter.ClientID(), "You have survived, +5 points");
+							GameServer()->SendChatTarget_Localization(Iter.ClientID(), CHATCATEGORY_SCORE, _("You have survived, +5 points"), NULL);
 						}
 					}
 				}
 				else
 				{
-					GameServer()->SendChatTarget_Language_ii(-1, "Infected won the round in %i:%02i minutes", g_Config.m_SvTimelimit, 0);
+					int Seconds = g_Config.m_SvTimelimit*60;
+					GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTED, _("Infected won the round in {sec:RoundDuration}"), "RoundDuration", &Seconds, NULL);
 				}
 				
 				EndRound();
@@ -567,7 +562,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		{
 			if(!pVictim->IsInfected())
 			{
-				GameServer()->SendChatTarget_Language_s(pKiller->GetCID(), "You have infected %s, +3 points", Server()->ClientName(pVictimPlayer->GetCID()));
+				GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have infected {str:VictimName}, +3 points"), "VictimName", Server()->ClientName(pVictimPlayer->GetCID()), NULL);
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_INFECTION, pKiller->GetClass());
 				GameServer()->SendScoreSound(pKiller->GetCID());
 				
@@ -595,7 +590,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		}
 		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
 		{
-			GameServer()->SendChatTarget_Language(pKiller->GetCID(), "You have killed a witch, +5 points");
+			GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have killed a witch, +5 points"), NULL);
 			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_WITCH, pKiller->GetClass());
 			GameServer()->SendScoreSound(pKiller->GetCID());
 		}
@@ -932,7 +927,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		random -= m_ClassProbability[PLAYERCLASS_UNDEAD];
 		if(random < 0.0f)
 		{
-			GameServer()->SendBroadcast_Language(-1, "The undead is coming!", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+			GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The undead is coming!"), NULL);
 			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 			return PLAYERCLASS_UNDEAD;
 		}
@@ -943,7 +938,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		random -= m_ClassProbability[PLAYERCLASS_WITCH];
 		if(random < 0.0f)
 		{
-			GameServer()->SendBroadcast_Language(-1, "The witch is coming!", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+			GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The witch is coming!"), NULL);
 			GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 			return PLAYERCLASS_WITCH;
 		}

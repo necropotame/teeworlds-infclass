@@ -121,7 +121,7 @@ private:
 	int m_class;
 	int m_ScoreMode;
 	int m_DefaultScoreMode;
-	int m_Language;
+	char m_aLanguage[16];
 	
 public:
 	int m_Authed;
@@ -141,8 +141,8 @@ public:
 	void StartInfection(bool force = false);
 	bool IsKownClass(int c);
 	
-	int GetLanguage();
-	void SetLanguage(int Language);
+	const char* GetLanguage();
+	void SetLanguage(const char* pLanguage);
 	
 	bool m_WasHumanThisRound;
 	int m_WinAsHuman;

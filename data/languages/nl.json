@@ -1,0 +1,473 @@
+{"translation":[
+	{
+		"key": "{str:VictimName} has been infected",
+		"value": "{str:VictimName} is ge\u00efnfecteerd"
+	},
+	{
+		"key": "Infected won the round in {sec:RoundDuration}",
+		"value": "De ge\u00efnfecteerden wonnen deze ronde in {sec:RoundDuration}"
+	},
+	{
+		"key": "One human won the round",
+		"one": "E\u00e9n mens won deze ronde",
+		"other": "{int:NumHumans} mensen wonnen deze ronde",
+	},
+	{
+		"key": "You have survived, +5 points",
+		"value": "Je hebt het overleefd, +5 punten"
+	},
+	{
+		"key": "You have infected {str:VictimName}, +3 points",
+		"value": "Je hebt {str:VictimName} ge\u00efnfecteerd, +3 punten"
+	},
+	{
+		"key": "You have killed a witch, +5 points",
+		"value": "Je hebt een heks vermoord, +5 punten"
+	},
+	{
+		"key": "The undead is coming!",
+		"value": "De ondode komt eraan!"
+	},
+	{
+		"key": "The witch is coming!",
+		"value": "De heks komt eraan!"
+	},
+	{
+		"key": "Random choice",
+		"value": "Willekeurige keuze"
+	},
+	{
+		"key": "Engineer",
+		"value": "Ingenieur"
+	},
+	{
+		"key": "Soldier",
+		"value": "Soldaat"
+	},
+	{
+		"key": "Scientist",
+		"value": "Wetenschapper"
+	},
+	{
+		"key": "Medic",
+		"value": "Dokter"
+	},
+	{
+		"key": "Hero",
+		"value": "Ninja"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Huurling"
+	},
+	{
+		"key": "Sniper",
+		"value": "Scherpschutter"
+	},
+	{
+		"key": "Choose your class",
+		"value": "Kies jouw klas"
+	},
+	{
+		"key": "One bomb left",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "One mine is active",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laser muur: {sec:RemainingTime}"
+	},
+	{
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Vergrendelde positie: {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Web-modus geactiveerd"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "De heks is dood"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "De ondode is eindelijk dood"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Type \"/help {str:ClassName}\" voor meer informatie over je klas"
+	},
+	{
+		"key": "The Hero found the flag!",
+	},
+	{
+		"key": "Hook protection enabled",
+		"value": "Beveiliging van de haak ingeschakeld"
+	},
+	{
+		"key": "Hook protection disabled",
+		"value": "Beveiliging van de haak uitgeschakeld"
+	},
+	{
+		"key": "{str:PlayerName} has been banned ({str:Reason})",
+		"value": "{str:PlayerName} is verbannen ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has been kicked ({str:Reason})",
+		"value": "{str:PlayerName} is uit het spel geschopt ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game ({str:Reason})",
+		"value": "{str:PlayerName} heeft het spel verlaten ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game",
+		"value": "{str:PlayerName} heeft het spel verlaten"
+	},
+	{
+		"key": "{str:PlayerName} joined the spectators",
+		"value": "{str:PlayerName} sloot zich aan bij de toeschouwers"
+	},
+	{
+		"key": "{str:PlayerName} joined the game",
+		"value": "{str:PlayerName} sloot zich aan tot het spel"
+	},
+	{
+		"key": "Smoker",
+		"value": "Smoker"
+	},
+	{
+		"key": "Hunter",
+		"value": "Jager"
+	},
+	{
+		"key": "Boomer",
+		"value": "Boomer"
+	},
+	{
+		"key": "Ghost",
+		"value": "Geest"
+	},
+	{
+		"key": "Spider",
+		"value": "Spin"
+	},
+	{
+		"key": "Witch",
+		"value": "Heks"
+	},
+	{
+		"key": "Undead",
+		"value": "Ondode"
+	},
+	{
+		"key": "Unknown class",
+	},
+	{
+		"key": "You are a human: {str:ClassName}",
+		"value": "Je bent een mens: {str:ClassName}"
+	},
+	{
+		"key": "You are an infected: {str:ClassName}",
+		"value": "Je bent ge\u00efnfecteerd: {str:ClassName}"
+	},
+	{
+		"key": "{str:PlayerName} entered and joined the game",
+		"value": "{str:PlayerName} is binnengekomen en sloot zich aan tot het spel"
+	},
+	{
+		"key": "You can't join the spectators right now",
+		"value": "Je kan op dit moment niet aansluiten bij de toeschouwers"
+	},
+	{
+		"key": "{str:PlayerName} changed their name to {str:NewName}",
+		"value": "{str:PlayerName} veranderde zijn naam naar {str:NewName}"
+	},
+	{
+		"key": "Switch language to english ?",
+		"value": "Verander taal in het Nederlands?"
+	},
+	{
+		"key": "You can change the language of this mod using the command /language.",
+	},
+	{
+		"key": "If your language is not available, you can help with translation (/help translate).",
+	},
+	{
+		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
+		"value": "InfectionClass, door necropotame (version {str:VersionCode})"
+	},
+	{
+		"key": "Based on Infection mod by Gravity",
+		"value": "Gebaseerd op Infection, door Gravity"
+	},
+	{
+		"key": "Thanks to {str:ListOfContributors}",
+		"value": "Dankzij {str:ListOfContributors}"
+	},
+	{
+		"key": "Rules of the game",
+		"value": "Regels van het spel"
+	},
+	{
+		"key": "InfectionClass is a team game between humans and infected.",
+		"value": "InfectionClass is een team spel tussen mensen en ge\u00efnfecteerden."
+	},
+	{
+		"key": "All players start as human.",
+		"value": "Alle spelers starten als een mens."
+	},
+	{
+		"key": "10 seconds later, two players become infected.",
+		"value": "10 seconden later worden twee spelers ge\u00efnfecteerd."
+	},
+	{
+		"key": "The goal for humans is to survive until the army clean the map.",
+		"value": "Het doel voor de mens is om te overleven tot het leger de kaart opruimt."
+	},
+	{
+		"key": "The goal for infected is to infect all humans.",
+		"value": "Het doel voor de ge\u00efnfecteerden is voor alle mensen te infecteren."
+	},
+	{
+		"key": "How to translate the mod",
+	},
+	{
+		"key": "Create an account on Transifex and join a translation team:",
+	},
+	{
+		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+	},
+	{
+		"key": "The Engineer can build walls with his hammer to block infected.",
+		"value": "De ingenieur kan muren maken met zijn hamer om ge\u00efnfecteren te blokkeren."
+	},
+	{
+		"key": "When an infected touch the wall, he dies.",
+		"value": "Wanneer een ge\u00efnfecteerde de muur raakt, sterft hij."
+	},
+	{
+		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
+		"value": "De levensduur van een muur is {sec:LifeSpan} en muren zijn beperkt tot \u00e9\u00e9n per speler tegelijk."
+	},
+	{
+		"key": "The Soldier can pose floating bombs with his hammer.",
+		"value": "De soldaat kan zwevende bommen vormen met zijn hamer."
+	},
+	{
+		"key": "Each bomb can explode one time.",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "Use the hammer to place the bomb and explode it multiple times.",
+		"value": "Gebruik de hamer om een bom te plaatsen en om ze meerdere keren te laten ontploffen."
+	},
+	{
+		"key": "Bombs are limited to one per player at the same time.",
+		"value": "Bommen beperkt tot \u00e9\u00e9n per speler tegelijk."
+	},
+	{
+		"key": "The Scientist can pose floating mines with his hammer.",
+		"value": "De wetenschapper kan zwevende mijnen vormen met zijn hamer."
+	},
+	{
+		"key": "Mines are limited to one per player at the same time.",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "He has also grenades that teleport him.",
+		"value": "Hij kan ook granaten gooien die hem teleporteren."
+	},
+	{
+		"key": "The Medic can protect humans with his hammer by giving them armor.",
+		"value": "De dokter kan alle mensen beschermen met zijn hamer door hen armor te geven."
+	},
+	{
+		"key": "He has also a powerful shotgun that can pullback infected.",
+		"value": "Hij heeft ook een krachtig jachtgeweer dat ge\u00efnfecteerden kan terugdeinzen."
+	},
+	{
+		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+	},
+	{
+		"key": "The Hero must find a flag hidden in the map.",
+	},
+	{
+		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+	},
+	{
+		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+	},
+	{
+		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
+		"value": "De ninja kan flits granaten gooien die ge\u00efnfecteerden bevriezen voor drie seconden."
+	},
+	{
+		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "The Mercenary fly in air using his machine gun.",
+		"value": "De huurling kan in de lucht vliegen met zijn machinegeweer."
+	},
+	{
+		"key": "He can also throw poison grenades that deals one damage point.",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
+		"value": "De scherpschutter kan zijn positie vergrendelen in de lucht voor 15 seconden met zijn hamer."
+	},
+	{
+		"key": "He can jump two times in air.",
+		"value": "Hij kan twee keer springen in de lucht."
+	},
+	{
+		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+	},
+	{
+		"key": "The Smoker can infect humans and heal infected with his hammer.",
+		"value": "De smoker kan mensen infecteren en mensen genezen met zijn hamer."
+	},
+	{
+		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"value": "Hij kan ook 4 schade punten opleveren per seconde door mensen te haken."
+	},
+	{
+		"key": "The Boomer explodes when he attack.",
+		"value": "De boomer ontploft wanneer hij aanvalt."
+	},
+	{
+		"key": "All humans affected by the explosion become infected.",
+		"value": "Alle mensen rond de explosie worden ge\u00efnfecteerd."
+	},
+	{
+		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"value": "Hij kan ook 1 schade punt opleveren per seconde door mensen te haken."
+	},
+	{
+		"key": "The Hunter can infect humans and heal infected with his hammer.",
+		"value": "De jager kan mensen infecteren en mensen genezen met zijn hamer."
+	},
+	{
+		"key": "The Ghost can infect humans and heal infected with his hammer.",
+		"value": "De geest kan mensen infecteren en mensen genezen met zijn hamer."
+	},
+	{
+		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
+		"value": "Hij is onzichtbaar, behalve als er een mens in de buurt is, als hij schade krijgt of hij zijn hamer gebruikt."
+	},
+	{
+		"key": "The Spider can infect humans and heal infected with his hammer.",
+		"value": "De spin kan mensen infecteren en mensen genezen met zijn hamer."
+	},
+	{
+		"key": "When selecting any gun, his hook enter in web mode.",
+		"value": "Bij het verwisselen van pistool gaat zijn haak in web-modus."
+	},
+	{
+		"key": "Any human that touch a hook in web mode is automatically grabbed.",
+		"value": "Ieder mens dat de haak aanraakt in web-modus is automatisch gevangen."
+	},
+	{
+		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"value": "De haak van een spin (in beide modus) levert 1 schade punt op per seconde en kan een mens grijpen gedurende 2 seconden."
+	},
+	{
+		"key": "The Undead can infect humans and heal infected with his hammer.",
+		"value": "De ondode kan mensen infecteren en mensen genezen met zijn hamer."
+	},
+	{
+		"key": "Instead of dying, he freezes during 10 seconds.",
+		"value": "In plaats van te sterven, bevriest hij voor 10 seconden."
+	},
+	{
+		"key": "If an infected heals him, the freeze effect disappear.",
+		"value": "Als een ge\u00efnfecteerde hem geneest, dan is hij niet meer bevroren."
+	},
+	{
+		"key": "The Witch can infect humans and heal infected with his hammer.",
+		"value": "De heks kan mensen infecteren en ge\u00efnfecteerden genezen met haar hamer."
+	},
+	{
+		"key": "When an infected dies, he may re-spawn near her.",
+		"value": "Wanneer een ge\u00efnfecteerde sterft is er een kans dat hij herleeft in de buurt van haar."
+	},
+	{
+		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"value": "Als de heks sterft, verdwijnt ze en wordt ze vervangen door een andere klas van de ge\u00efnfecteerden."
+	},
+	{
+		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"value": "Ze kan ook 1 schade punt aanrichten per seconde door het haken van mensen."
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+	},
+	{
+		"key": "Choose a help page with /help <page>",
+	},
+	{
+		"key": "A random class will be automatically attributed to you when rounds start",
+		"value": "Een willekeurige klas zal automatisch toegevoegd worden wanneer de ronde start"
+	},
+	{
+		"key": "The class selector will be displayed when rounds start",
+		"value": "De klas selector zal worden weergegeven wanneer rondes starten"
+	},
+	{
+		"key": "Unknown language",
+		"value": "Onbekende taal"
+	},
+	{
+		"key": "List of commands",
+		"value": "Lijst van commando's"
+	},
+	{
+		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "Druk op <F3> of <F4> voor het in- of uitschakelen van de bescherming van de haak"
+	},
+	{
+		"key": "No player was found with this name",
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+	},
+	{
+		"key": "This username is already taken by an existing account",
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+	},
+	{
+		"key": "You must be logged to see your rank",
+	},
+	{
+		"key": "You must be logged to see your goal",
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+	},
+]}

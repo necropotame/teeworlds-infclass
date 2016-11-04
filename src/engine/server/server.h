@@ -141,7 +141,7 @@ public:
 		int m_CustomSkin;
 		int m_AlwaysRandom;
 		int m_DefaultScoreMode;
-		int m_Language;
+		char m_aLanguage[16];
 		int m_WaitingTime;
 		int m_WasInfected;
 		
@@ -302,8 +302,8 @@ public:
 	virtual int GetClientDefaultScoreMode(int ClientID);
 	virtual void SetClientDefaultScoreMode(int ClientID, int Value);
 	
-	virtual int GetClientLanguage(int ClientID);
-	virtual void SetClientLanguage(int ClientID, int Value);
+	virtual const char* GetClientLanguage(int ClientID);
+	virtual void SetClientLanguage(int ClientID, const char* pLanguage);
 	
 	virtual int GetFireDelay(int WID);
 	virtual void SetFireDelay(int WID, int Time);

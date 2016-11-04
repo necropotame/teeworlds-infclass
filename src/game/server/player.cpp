@@ -32,7 +32,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_WinAsHuman = 0;
 	m_class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
-	m_Language = Server()->GetClientLanguage(ClientID);
+	SetLanguage(Server()->GetClientLanguage(ClientID));
 	for(int i=0; i<NB_PLAYERCLASS; i++)
 	{
 		m_knownClass[i] = false;
@@ -62,7 +62,7 @@ void CPlayer::Tick()
 	if(!Server()->ClientIngame(m_ClientID))
 		return;
 
-	Server()->SetClientLanguage(m_ClientID, m_Language);
+	Server()->SetClientLanguage(m_ClientID, m_aLanguage);
 
 	// do latency stuff
 	{
@@ -168,9 +168,9 @@ void CPlayer::HookProtection(bool Value, bool Automatic)
 		if(!m_HookProtectionAutomatic || !Automatic)
 		{
 			if(m_HookProtection)
-				GameServer()->SendChatTarget_Language(GetCID(), "Hook protection enabled");
+				GameServer()->SendChatTarget_Localization(GetCID(), CHATCATEGORY_DEFAULT, _("Hook protection enabled"), NULL);
 			else
-				GameServer()->SendChatTarget_Language(GetCID(), "Hook protection disabled");
+				GameServer()->SendChatTarget_Localization(GetCID(), CHATCATEGORY_DEFAULT, _("Hook protection disabled"), NULL);
 		}
 	}
 	
@@ -394,19 +394,30 @@ void CPlayer::OnDisconnect(int Type, const char *pReason)
 	{
 		if(Type == CLIENTDROPTYPE_BAN)
 		{
-			GameServer()->SendChatTarget_Language_ss(-1, "%s has been banned (%s)", Server()->ClientName(m_ClientID), pReason);
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has been banned ({str:Reason})"),
+				"PlayerName", Server()->ClientName(m_ClientID),
+				"Reason", pReason,
+				NULL);
 		}
 		else if(Type == CLIENTDROPTYPE_KICK)
 		{
-			GameServer()->SendChatTarget_Language_ss(-1, "%s has been kicked (%s)", Server()->ClientName(m_ClientID), pReason);
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has been kicked ({str:Reason})"),
+				"PlayerName", Server()->ClientName(m_ClientID),
+				"Reason", pReason,
+				NULL);
 		}
 		else if(pReason && *pReason)
 		{
-			GameServer()->SendChatTarget_Language_ss(-1, "%s has left the game (%s)", Server()->ClientName(m_ClientID), pReason);
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has left the game ({str:Reason})"),
+				"PlayerName", Server()->ClientName(m_ClientID),
+				"Reason", pReason,
+				NULL);
 		}
 		else
 		{
-			GameServer()->SendChatTarget_Language_s(-1, "%s has left the game", Server()->ClientName(m_ClientID));
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has left the game"),
+				"PlayerName", Server()->ClientName(m_ClientID),
+				NULL);
 		}
 	}
 }
@@ -491,11 +502,11 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 	{
 		if(Team == TEAM_SPECTATORS)
 		{
-			GameServer()->SendChatTarget_Language_s(-1, "%s joined the spectators", Server()->ClientName(m_ClientID));
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} joined the spectators"), "PlayerName", Server()->ClientName(m_ClientID), NULL);
 		}
 		else
 		{
-			GameServer()->SendChatTarget_Language_s(-1, "%s joined the game", Server()->ClientName(m_ClientID));
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} joined the game"), "PlayerName", Server()->ClientName(m_ClientID), NULL);
 		}
 	}
 
@@ -687,13 +698,13 @@ void CPlayer::SetScoreMode(int Mode)
 	m_ScoreMode = Mode;
 }
 
-int CPlayer::GetLanguage()
+const char* CPlayer::GetLanguage()
 {
-	return m_Language;
+	return m_aLanguage;
 }
 
-void CPlayer::SetLanguage(int Language)
+void CPlayer::SetLanguage(const char* pLanguage)
 {
-	m_Language = Language;
+	str_copy(m_aLanguage, pLanguage, sizeof(m_aLanguage));
 }
 /* INFECTION MODIFICATION END *****************************************/

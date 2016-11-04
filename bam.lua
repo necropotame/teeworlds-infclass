@@ -2,6 +2,7 @@ CheckVersion("0.4")
 
 Import("configure.lua")
 Import("other/sdl/sdl.lua")
+Import("other/icu/icu.lua")
 Import("other/freetype/freetype.lua")
 Import("other/mysql/mysql.lua")
 
@@ -13,6 +14,7 @@ config:Add(OptTestCompileC("minmacosxsdk", "int main(){return 0;}", "-mmacosx-ve
 config:Add(OptTestCompileC("macosxppc", "int main(){return 0;}", "-arch ppc"))
 config:Add(OptLibrary("zlib", "zlib.h", false))
 config:Add(SDL.OptFind("sdl", true))
+config:Add(ICU.OptFind("icu", true))
 config:Add(FreeType.OptFind("freetype", true))
 config:Add(Mysql.OptFind("mysql", false))
 config:Finalize("config.lua")
@@ -207,6 +209,7 @@ function build(settings)
 	wavpack = Compile(settings, Collect("src/engine/external/wavpack/*.c"))
 	pnglite = Compile(settings, Collect("src/engine/external/pnglite/*.c"))
 	md5 = Compile(settings, "src/engine/external/md5/md5.c")
+	json = Compile(settings, "src/engine/external/json-parser/json.c")
 
 	-- build game components
 	engine_settings = settings:Copy()
@@ -250,6 +253,7 @@ function build(settings)
 	engine = Compile(engine_settings, Collect("src/engine/shared/*.cpp", "src/base/*.c"))
 	client = Compile(client_settings, Collect("src/engine/client/*.cpp"))
 	server = Compile(server_settings, Collect("src/engine/server/*.cpp"))
+	teeuniverses = Compile(server_settings, Collect("src/teeuniverses/*.cpp", "src/teeuniverses/components/*.cpp", "src/teeuniverses/system/*.cpp"))
 
 	versionserver = Compile(settings, Collect("src/versionsrv/*.cpp"))
 	masterserver = Compile(settings, Collect("src/mastersrv/*.cpp"))
@@ -281,7 +285,7 @@ function build(settings)
 		client_link_other, client_osxlaunch)
 
 	server_exe = Link(server_settings, "infclass_srv", engine, server,
-		game_shared, game_server, zlib, server_link_other, md5)
+		game_shared, game_server, teeuniverses, zlib, server_link_other, md5, json)
 
 	serverlaunch = {}
 	if platform == "macosx" then
@@ -342,6 +346,9 @@ release_sql_settings.cc.defines:Add("CONF_RELEASE", "CONF_SQL")
 
 config.mysql:Apply(debug_sql_settings)
 config.mysql:Apply(release_sql_settings)
+
+config.icu:Apply(debug_sql_settings)
+config.icu:Apply(release_sql_settings)
 
 if platform == "macosx" then
 	debug_settings_ppc = debug_settings:Copy()

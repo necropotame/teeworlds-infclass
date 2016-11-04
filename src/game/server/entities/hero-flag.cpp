@@ -38,7 +38,7 @@ void CHeroFlag::FindPosition()
 void CHeroFlag::GiveGift(CCharacter* pHero)
 {
 	// Find other players	
-	GameServer()->SendBroadcast_Language(-1, "The Hero found the flag!", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+	GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The Hero found the flag!"), NULL);
 	
 	m_CoolDownTick = Server()->TickSpeed()*15;
 	

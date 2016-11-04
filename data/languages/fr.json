@@ -1,0 +1,497 @@
+{"translation":[
+	{
+		"key": "{str:VictimName} has been infected",
+		"value": "{str:VictimName} a \u00e9t\u00e9 infect\u00e9\u00b7e"
+	},
+	{
+		"key": "Infected won the round in {sec:RoundDuration}",
+		"value": "Les infect\u00e9\u00b7e\u00b7s ont gagn\u00e9 la manche en {sec:RoundDuration}"
+	},
+	{
+		"key": "One human won the round",
+		"one": "Un\u00b7e humain\u00b7e a gagn\u00e9 la manche",
+		"other": "{int:NumHumans} humain\u00b7e\u00b7s ont gagn\u00e9 la manche",
+	},
+	{
+		"key": "You have survived, +5 points",
+		"value": "Vous avez surv\u00e9cu, +5 points"
+	},
+	{
+		"key": "You have infected {str:VictimName}, +3 points",
+		"value": "Vous avez infect\u00e9 {str:VictimName}, +3 points"
+	},
+	{
+		"key": "You have killed a witch, +5 points",
+		"value": "Vous avez tu\u00e9 une Sorci\u00e8re ou un Sorcier, +5 points"
+	},
+	{
+		"key": "The undead is coming!",
+		"value": "Un\u00b7e Invincible arrive !"
+	},
+	{
+		"key": "The witch is coming!",
+		"value": "Un\u00b7e Sorcier\u00b7i\u00e8re arrive !"
+	},
+	{
+		"key": "Random choice",
+		"value": "Choix al\u00e9atoire"
+	},
+	{
+		"key": "Engineer",
+		"value": "Ing\u00e9nieur\u00b7e"
+	},
+	{
+		"key": "Soldier",
+		"value": "Soldat\u00b7e"
+	},
+	{
+		"key": "Scientist",
+		"value": "Scientifique"
+	},
+	{
+		"key": "Medic",
+		"value": "M\u00e9decin"
+	},
+	{
+		"key": "Hero",
+		"value": "H\u00e9ro\u00b7\u00efne"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Mercenaire"
+	},
+	{
+		"key": "Sniper",
+		"value": "Sniper"
+	},
+	{
+		"key": "Choose your class",
+		"value": "Choisissez votre classe"
+	},
+	{
+		"key": "One bomb left",
+		"one": "Une bombe restante",
+		"other": "{int:NumBombs} bombes restantes",
+	},
+	{
+		"key": "One mine is active",
+		"one": "Une mine est active",
+		"other": "{int:NumMines} mines sont actives",
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Prochain drapeau dans {sec:RemainingTime}"
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Barri\u00e8re laser : {sec:RemainingTime}"
+	},
+	{
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Verrou de position : {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Mode toile activ\u00e9"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "Un\u00b7e Sorcier\u00b7i\u00e8re a disparu"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Un\u00b7e Invincible a disparu"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Tapez \"/help {str:ClassName}\" pour plus d'information sur votre classe"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Le drapeau a \u00e9t\u00e9 trouv\u00e9 par un\u00b7e H\u00e9ro\u00b7\u00efne!"
+	},
+	{
+		"key": "Hook protection enabled",
+		"value": "Protection contre le grappin activ\u00e9e"
+	},
+	{
+		"key": "Hook protection disabled",
+		"value": "Protection contre le grappin d\u00e9sactiv\u00e9"
+	},
+	{
+		"key": "{str:PlayerName} has been banned ({str:Reason})",
+		"value": "{str:PlayerName} a \u00e9t\u00e9 banni\u00b7e ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has been kicked ({str:Reason})",
+		"value": "{str:PlayerName} a \u00e9t\u00e9 vir\u00e9\u00b7e ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game ({str:Reason})",
+		"value": "{str:PlayerName} a quitt\u00e9 la partie ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game",
+		"value": "{str:PlayerName} a quitt\u00e9 la partie"
+	},
+	{
+		"key": "{str:PlayerName} joined the spectators",
+		"value": "{str:PlayerName} a rejoint les spectateurs"
+	},
+	{
+		"key": "{str:PlayerName} joined the game",
+		"value": "{str:PlayerName} a rejoint la partie"
+	},
+	{
+		"key": "Smoker",
+		"value": "Smoker"
+	},
+	{
+		"key": "Hunter",
+		"value": "Chasseur/Chasseuse"
+	},
+	{
+		"key": "Boomer",
+		"value": "Boomer"
+	},
+	{
+		"key": "Ghost",
+		"value": "Fant\u00f4me"
+	},
+	{
+		"key": "Spider",
+		"value": "Araign\u00e9e"
+	},
+	{
+		"key": "Witch",
+		"value": "Sorci\u00e8re/Sorcier"
+	},
+	{
+		"key": "Undead",
+		"value": "Invincible"
+	},
+	{
+		"key": "Unknown class",
+		"value": "Classe inconnue"
+	},
+	{
+		"key": "You are a human: {str:ClassName}",
+		"value": "Vous \u00eates humain\u00b7e : {str:ClassName}"
+	},
+	{
+		"key": "You are an infected: {str:ClassName}",
+		"value": "Vous \u00eates infect\u00e9\u00b7e : {str:ClassName}"
+	},
+	{
+		"key": "{str:PlayerName} entered and joined the game",
+		"value": "{str:PlayerName} est arriv\u00e9\u00b7e et a rejoint la partie"
+	},
+	{
+		"key": "You can't join the spectators right now",
+		"value": "Vous ne pouvez-pas rejoindre les spectateurs pour le moment"
+	},
+	{
+		"key": "{str:PlayerName} changed their name to {str:NewName}",
+		"value": "{str:PlayerName} a chang\u00e9 son nom pour {str:NewName}"
+	},
+	{
+		"key": "Switch language to english ?",
+		"value": "Passer la langue en fran\u00e7ais ?"
+	},
+	{
+		"key": "You can change the language of this mod using the command /language.",
+		"value": "Vous pouvez changer la langue de ce mod en utilisant la commande /language."
+	},
+	{
+		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "Si votre langue c'est pas disponible, vous pouvez aider \u00e0 la traduction (/help translate)"
+	},
+	{
+		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
+		"value": "InfectionClass, par necropotame (version {str:VersionCode})"
+	},
+	{
+		"key": "Based on Infection mod by Gravity",
+		"value": "Bas\u00e9 sur le mod Infection par Gravity"
+	},
+	{
+		"key": "Thanks to {str:ListOfContributors}",
+		"value": "Merci \u00e0 {str:ListOfContributors}"
+	},
+	{
+		"key": "Rules of the game",
+		"value": "R\u00e8gles du jeu"
+	},
+	{
+		"key": "InfectionClass is a team game between humans and infected.",
+		"value": "InfectionClass est un jeu d'\u00e9quipe entre humain\u00b7e\u00b7s et infect\u00e9\u00b7e\u00b7s."
+	},
+	{
+		"key": "All players start as human.",
+		"value": "Toutes les joueuses et les joueurs commencent comme humain\u00b7e."
+	},
+	{
+		"key": "10 seconds later, two players become infected.",
+		"value": "10 secondes plus tard, deux joueuses ou joueurs deviennent infect\u00e9\u00b7e\u00b7s."
+	},
+	{
+		"key": "The goal for humans is to survive until the army clean the map.",
+		"value": "Le but des humain\u00b7e\u00b7s est de survivre jusqu'\u00e0 ce que l'arm\u00e9e nettoie la zone."
+	},
+	{
+		"key": "The goal for infected is to infect all humans.",
+		"value": "Le but des infect\u00e9\u00b7e\u00b7s est d'infecter toutes les humaines et les humains."
+	},
+	{
+		"key": "How to translate the mod",
+		"value": "Comment traduire le mod"
+	},
+	{
+		"key": "Create an account on Transifex and join a translation team:",
+		"value": "Cr\u00e9ez un compte sur Transifex et rejoignez une \u00e9quipe de traduction:"
+	},
+	{
+		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "Pour toute question sur le processus de traduction, merci de nous contacter par IRC ({str:IRCAddress})"
+	},
+	{
+		"key": "The Engineer can build walls with his hammer to block infected.",
+		"value": "Les Ing\u00e9nieur\u00b7e peuvent cr\u00e9er avec leur marteau des barri\u00e8res pour bloquer les infect\u00e9s."
+	},
+	{
+		"key": "When an infected touch the wall, he dies.",
+		"value": "Un\u00b7e infect\u00e9\u00b7e qui touche la barri\u00e8re meurt imm\u00e9diatement."
+	},
+	{
+		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
+		"value": "La dur\u00e9e de vie d'une barri\u00e8re est de {sec:LifeSpan}, et les barri\u00e8res sont limit\u00e9es \u00e0 une par personne."
+	},
+	{
+		"key": "The Soldier can pose floating bombs with his hammer.",
+		"value": "Les Soldat\u00b7e\u00b7s peuvent cr\u00e9er des bombes flottantes avec leur marteau."
+	},
+	{
+		"key": "Each bomb can explode one time.",
+		"one": "Chaque bombe peut exploser une seule fois",
+		"other": "Chaque bombe peut exploser {int:NumBombs} fois",
+	},
+	{
+		"key": "Use the hammer to place the bomb and explode it multiple times.",
+		"value": "Utiliser le marteau pour placer une bombe et la faire exploser plusieurs fois."
+	},
+	{
+		"key": "Bombs are limited to one per player at the same time.",
+		"value": "Il ne peut y avoir qu'une bombe par Soldat\u00b7e au m\u00eame moment."
+	},
+	{
+		"key": "The Scientist can pose floating mines with his hammer.",
+		"value": "Les Scientifiques peuvent cr\u00e9er des mines avec leur marteau."
+	},
+	{
+		"key": "Mines are limited to one per player at the same time.",
+		"one": "Les mines sont limit\u00e9es \u00e0 une par personne au m\u00eame moment.",
+		"other": "Les mines sont limit\u00e9es \u00e0 {int:NumMines} par personne au m\u00eame moment.",
+	},
+	{
+		"key": "He has also grenades that teleport him.",
+		"value": "Il ne peut y avoir que deux mines par Scientifique au m\u00eame moment."
+	},
+	{
+		"key": "The Medic can protect humans with his hammer by giving them armor.",
+		"value": "Les M\u00e9decins peuvent prot\u00e9ger les humain\u00b7e\u00b7s \u00e0 l'aide de leur marteau en leur donnant une armure."
+	},
+	{
+		"key": "He has also a powerful shotgun that can pullback infected.",
+		"value": "Illes disposent aussi d'un puissant fusil \u00e0 pompe qui peut repousser les infect\u00e9\u00b7e\u00b7s."
+	},
+	{
+		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+		"value": "Les H\u00e9ro\u00b7\u00efne\u00b7s ont un fusil \u00e0 pompe, un fusil laser et des grenades."
+	},
+	{
+		"key": "The Hero must find a flag hidden in the map.",
+		"value": "Les H\u00e9ro\u00b7\u00efne\u00b7s doivent trouver un drapeau cach\u00e9 dans la carte."
+	},
+	{
+		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+		"value": "Lorsqu'illes le trouvent, le drapeau donne 1 point de vie, 4 points d'armure et toutes les munitions \u00e0 chaque humain\u00b7e"
+	},
+	{
+		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "Les H\u00e9ro\u00b7\u00efne\u00b7s ne peuvent pas \u00eatre soign\u00e9\u00b7e\u00b7s par les m\u00e9decins, et illes peuvent survivre \u00e0 une attaque des infect\u00e9\u00b7e\u00b7s."
+	},
+	{
+		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
+		"value": "Les Ninja peuvent lancer des grenades flash qui immobilisent les infect\u00e9\u00b7e\u00b7s pendant trois secondes."
+	},
+	{
+		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"one": "Son marteau est remplac\u00e9 par un katana lui permetant de sauter une fois avant de toucher le sol.",
+		"other": "Son marteau est remplac\u00e9 par un katana lui permetant de sauter {int:NinjaJump} fois avant de toucher le sol.",
+	},
+	{
+		"key": "The Mercenary fly in air using his machine gun.",
+		"value": "Les Mercenaires peuvent voler dans l'air \u00e0 l'aide de leur mitrailleuse."
+	},
+	{
+		"key": "He can also throw poison grenades that deals one damage point.",
+		"one": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent un point de d\u00e9g\u00e2t.",
+		"other": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent {int:NumDamagePoints} points de d\u00e9g\u00e2t.",
+	},
+	{
+		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
+		"value": "Les Sniper peuvent verrouiller leur position dans l'air pendant 15 secondes avec leur marteau."
+	},
+	{
+		"key": "He can jump two times in air.",
+		"value": "Illes peuvent sauter deux fois en l'air."
+	},
+	{
+		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+		"value": "Illes disposent \u00e9galement d'un puissant fusil qui inflige 20 points de d\u00e9g\u00e2t en position verrouill\u00e9e, et 9-10 en situation normale"
+	},
+	{
+		"key": "The Smoker can infect humans and heal infected with his hammer.",
+		"value": "Les Smokers peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
+	},
+	{
+		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"value": "Illes peut aussi infliger 4 points de d\u00e9g\u00e2t par seconde quand illes agrippent une humaine ou un humain."
+	},
+	{
+		"key": "The Boomer explodes when he attack.",
+		"value": "Les Boomers explosent quand illes attaquent."
+	},
+	{
+		"key": "All humans affected by the explosion become infected.",
+		"value": "Tous les humains et les humaines touch\u00e9s par l'explosion sont infect\u00e9s."
+	},
+	{
+		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"value": "Illes peuvent aussi infliger 1 point de d\u00e9g\u00e2t par seconde en agrippant un humain ou une humaine."
+	},
+	{
+		"key": "The Hunter can infect humans and heal infected with his hammer.",
+		"value": "Les Chasseuses et les Chasseurs peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
+	},
+	{
+		"key": "The Ghost can infect humans and heal infected with his hammer.",
+		"value": "Les Fant\u00f4me peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
+	},
+	{
+		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
+		"value": "Illes sont invisibles, sauf si une humaine ou un humain est proche d'eux, si illes prennent un d\u00e9g\u00e2t, ou si illes utilisent leur marteau."
+	},
+	{
+		"key": "The Spider can infect humans and heal infected with his hammer.",
+		"value": "Les Araign\u00e9es peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
+	},
+	{
+		"key": "When selecting any gun, his hook enter in web mode.",
+		"value": "Quand illes s\u00e9lectionnent une arme, leur grappin entre en mode \"toile\"."
+	},
+	{
+		"key": "Any human that touch a hook in web mode is automatically grabbed.",
+		"value": "Lorsqu'un humain ou une humaine touche un grappin en mode toile, ille est automatiquement attrap\u00e9 par l'Araign\u00e9e."
+	},
+	{
+		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"value": "Le grappin de l'Araign\u00e9e (dans les deux modes) inflige 1 point de d\u00e9g\u00e2t par seconde et peut tirer un humain ou une humaine pendant 2 secondes."
+	},
+	{
+		"key": "The Undead can infect humans and heal infected with his hammer.",
+		"value": "Les Invincibles peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
+	},
+	{
+		"key": "Instead of dying, he freezes during 10 seconds.",
+		"value": "\u00c0 la place de mourir, illes sont gel\u00e9\u00b7e\u00b7s pendant 10 secondes."
+	},
+	{
+		"key": "If an infected heals him, the freeze effect disappear.",
+		"value": "Si un infect\u00e9\u00b7e les soignent, l'effet de g\u00e8le est supprim\u00e9."
+	},
+	{
+		"key": "The Witch can infect humans and heal infected with his hammer.",
+		"value": "Les Sorci\u00e8res et les Sorciers peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
+	},
+	{
+		"key": "When an infected dies, he may re-spawn near her.",
+		"value": "Quand un\u00b7e infect\u00e9\u00b7e meurt, ce dernier a une chance de r\u00e9-appara\u00eetre \u00e0 cot\u00e9 d'un Sorcier ou d'une Sorci\u00e8re."
+	},
+	{
+		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"value": "Un Sorcier ou une Sorci\u00e8re qui meurt redevient un\u00b7e infect\u00e9\u00b7e classique."
+	},
+	{
+		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"value": "Illes peuvent aussi infliger 1 point de d\u00e9g\u00e2t par seconde en agrippant un humain ou une humaine."
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Pages d'aide disponibles : {str:PageList}"
+	},
+	{
+		"key": "Choose a help page with /help <page>",
+		"value": "Choisissez une page d'aide avec /help <page>"
+	},
+	{
+		"key": "A random class will be automatically attributed to you when rounds start",
+		"value": "Une classe al\u00e9atoire vous sera automatiquement attribu\u00e9e en d\u00e9but de manche"
+	},
+	{
+		"key": "The class selector will be displayed when rounds start",
+		"value": "Le s\u00e9lecteur de classe sera affich\u00e9 en d\u00e9but de manche"
+	},
+	{
+		"key": "Unknown language",
+		"value": "Langue inconnue"
+	},
+	{
+		"key": "List of commands",
+		"value": "Liste des commandes"
+	},
+	{
+		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "Appuyer sur <F3> or <F4> pour activer ou d\u00e9sactiver la protection contre le grapin"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Aucun joueur et aucune joueuse n'a \u00e9t\u00e9 trouv\u00e9 avec ce nom"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Veuillez attendre 5 minutes avant de cr\u00e9er un nouveau compte"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Une erreur est survenue durant la cr\u00e9ation de votre compte"
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Ce nom d'utilisateur est d\u00e9j\u00e0 pris par un compte existant"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Votre compte a \u00e9t\u00e9 cr\u00e9\u00e9 et vous \u00eates maintenant connect\u00e9"
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Vous devez \u00eatre connect\u00e9 pour voir votre rang"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Vous devez \u00eatre connect\u00e9 pour voir votre objectif"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Vous avez d\u00e9j\u00e0 notifi\u00e9 que {str:PlayerName} doit \u00eatre banni"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} veut voir {str:VictimName} banni ({str:Reason})"
+	},
+]}

@@ -40,6 +40,8 @@
 #include <engine/server/mapconverter.h>
 #include <engine/server/sql_job.h>
 #include <engine/server/crypt.h>
+
+#include <teeuniverses/components/localization.h>
 /* INFECTION MODIFICATION END *****************************************/
 
 #if defined(CONF_FAMILY_WINDOWS)
@@ -321,7 +323,7 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_CustomSkin = 0;
 		m_AlwaysRandom = 0;
 		m_DefaultScoreMode = PLAYERSCOREMODE_SCORE;
-		m_Language = LANGUAGE_EN;
+		str_copy(m_aLanguage, "en", sizeof(m_aLanguage));
 		
 		mem_zero(m_Memory, sizeof(m_Memory));
 		
@@ -2096,55 +2098,7 @@ bool CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 		{
 			net_addr_str(pThis->m_NetServer.ClientAddr(i), aAddrStr, sizeof(aAddrStr), true);
 			if(pThis->m_aClients[i].m_State == CClient::STATE_INGAME)
-			{
-				char aLangBuf[8];
-				
-				switch(pThis->m_aClients[i].m_Language)
-				{
-					case LANGUAGE_EN:
-						str_copy(aLangBuf, "en", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_FR:
-						str_copy(aLangBuf, "fr", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_DE:
-						str_copy(aLangBuf, "de", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_UK:
-						str_copy(aLangBuf, "uk", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_RU:
-						str_copy(aLangBuf, "ru", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_IT:
-						str_copy(aLangBuf, "it", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_ES:
-						str_copy(aLangBuf, "es", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_AR:
-						str_copy(aLangBuf, "ar", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_PL:
-						str_copy(aLangBuf, "pl", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_NL:
-						str_copy(aLangBuf, "nl", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_HU:
-						str_copy(aLangBuf, "hu", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_LA:
-						str_copy(aLangBuf, "la", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_PT:
-						str_copy(aLangBuf, "pt", sizeof(aLangBuf));
-						break;
-					case LANGUAGE_PT_BR:
-						str_copy(aLangBuf, "pt-br", sizeof(aLangBuf));
-						break;
-				}
-				
+			{				
 				//Add some padding to make the command more readable
 				char aBufName[18];
 				str_copy(aBufName, pThis->ClientName(i), sizeof(aBufName));
@@ -2161,7 +2115,7 @@ bool CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 					i,
 					aBufName,
 					aAddrStr,
-					aLangBuf,
+					pThis->m_aClients[i].m_aLanguage,
 					pAuthStr,
 					pSecurityStr
 				);
@@ -2502,7 +2456,15 @@ int main(int argc, const char **argv) // ignore_convention
 	IEngineMasterServer *pEngineMasterServer = CreateEngineMasterServer();
 	IStorage *pStorage = CreateStorage("Teeworlds", IStorage::STORAGETYPE_SERVER, argc, argv); // ignore_convention
 	IConfig *pConfig = CreateConfig();
-
+	
+	pServer->m_pLocalization = new CLocalization(pStorage);
+	pServer->m_pLocalization->InitConfig(0, NULL);
+	if(!pServer->m_pLocalization->Init())
+	{
+		dbg_msg("localization", "could not initialize localization");
+		return -1;
+	}
+	
 	pServer->InitRegister(&pServer->m_NetServer, pEngineMasterServer, pConsole);
 
 	{
@@ -2522,7 +2484,7 @@ int main(int argc, const char **argv) // ignore_convention
 		if(RegisterFail)
 			return -1;
 	}
-
+	
 	pEngine->Init();
 	pConfig->Init();
 	pEngineMasterServer->Init();
@@ -2546,7 +2508,9 @@ int main(int argc, const char **argv) // ignore_convention
 	// run the server
 	dbg_msg("server", "starting...");
 	pServer->Run();
-
+	
+	delete pServer->m_pLocalization;
+	
 	// free
 	delete pServer;
 	delete pKernel;
@@ -2617,14 +2581,14 @@ void CServer::SetClientDefaultScoreMode(int ClientID, int Value)
 	m_aClients[ClientID].m_DefaultScoreMode = Value;
 }
 
-int CServer::GetClientLanguage(int ClientID)
+const char* CServer::GetClientLanguage(int ClientID)
 {
-	return m_aClients[ClientID].m_Language;
+	return m_aClients[ClientID].m_aLanguage;
 }
 
-void CServer::SetClientLanguage(int ClientID, int Value)
+void CServer::SetClientLanguage(int ClientID, const char* pLanguage)
 {
-	m_aClients[ClientID].m_Language = Value;
+	str_copy(m_aClients[ClientID].m_aLanguage, pLanguage, sizeof(m_aClients[ClientID].m_aLanguage));
 }
 	
 int CServer::GetFireDelay(int WID)
@@ -2732,18 +2696,20 @@ class CGameServerCmd_SendChatTarget_Language : public CServer::CGameServerCmd
 {
 private:
 	int m_ClientID;
+	int m_ChatCategory;
 	char m_aText[128];
 	
 public:
-	CGameServerCmd_SendChatTarget_Language(int ClientID, const char* pText)
+	CGameServerCmd_SendChatTarget_Language(int ClientID, int ChatCategory, const char* pText)
 	{
 		m_ClientID = ClientID;
+		m_ChatCategory = ChatCategory;
 		str_copy(m_aText, pText, sizeof(m_aText));
 	}
 
 	virtual void Execute(IGameServer* pGameServer)
 	{
-		pGameServer->SendChatTarget_Language(m_ClientID, m_aText);
+		pGameServer->SendChatTarget_Localization(m_ClientID, m_ChatCategory, m_aText, NULL);
 	}
 };
 
@@ -2786,7 +2752,7 @@ public:
 					m_pServer->m_aClients[m_ClientID].m_UserID = UserID;
 					str_copy(m_pServer->m_aClients[m_ClientID].m_aUsername, m_sName.Str(), sizeof(m_pServer->m_aClients[m_ClientID].m_aUsername));
 					
-					CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "You are now logged.");
+					CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, "You are now logged.");
 					m_pServer->AddGameServerCmd(pCmd);
 					
 					//If we are really unlucky, the client can deconnect and an another one connect during this small code
@@ -2798,13 +2764,13 @@ public:
 			}
 			else
 			{
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "Wrong username/password.");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, "Wrong username/password.");
 				m_pServer->AddGameServerCmd(pCmd);
 			}
 		}
 		catch (sql::SQLException &e)
 		{
-			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the logging.");
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, "An error occured during the logging.");
 			m_pServer->AddGameServerCmd(pCmd);
 			dbg_msg("sql", "Can't check username/password (MySQL Error: %s)", e.what());
 			
@@ -2884,7 +2850,7 @@ public:
 			if(pSqlServer->GetResults()->next())
 			{
 				dbg_msg("infclass", "Registration flooding");
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "Please wait 5 minutes before create an another account");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("Please wait 5 minutes before create an another account"));
 				m_pServer->AddGameServerCmd(pCmd);
 				
 				return true;
@@ -2892,7 +2858,7 @@ public:
 		}
 		catch (sql::SQLException &e)
 		{
-			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("An error occured during the creation of your account."));
 			m_pServer->AddGameServerCmd(pCmd);
 			dbg_msg("sql", "Can't check username existance (MySQL Error: %s)", e.what());
 			
@@ -2911,7 +2877,7 @@ public:
 			if(pSqlServer->GetResults()->next())
 			{
 				dbg_msg("infclass", "User already taken");
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "This username is already taken by an existing account");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("This username is already taken by an existing account"));
 				m_pServer->AddGameServerCmd(pCmd);
 				
 				return true;
@@ -2919,7 +2885,7 @@ public:
 		}
 		catch (sql::SQLException &e)
 		{
-			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("An error occured during the creation of your account."));
 			m_pServer->AddGameServerCmd(pCmd);
 			dbg_msg("sql", "Can't check username existance (MySQL Error: %s)", e.what());
 			
@@ -2938,7 +2904,7 @@ public:
 		}
 		catch (sql::SQLException &e)
 		{
-			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("An error occured during the creation of your account."));
 			m_pServer->AddGameServerCmd(pCmd);
 			dbg_msg("sql", "Can't create new user (MySQL Error: %s)", e.what());
 			
@@ -2956,7 +2922,7 @@ public:
 
 			if(pSqlServer->GetResults()->next())
 			{
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "Your account has been created and you are now logged.");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("Your account has been created and you are now logged."));
 				m_pServer->AddGameServerCmd(pCmd);
 							
 				//The client is still the same
@@ -2977,7 +2943,7 @@ public:
 			}
 			else
 			{
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("An error occured during the creation of your account."));
 				m_pServer->AddGameServerCmd(pCmd);
 				
 				return false;
@@ -2985,7 +2951,7 @@ public:
 		}
 		catch (sql::SQLException &e)
 		{
-			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, "An error occured during the creation of your account.");
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("An error occured during the creation of your account."));
 			m_pServer->AddGameServerCmd(pCmd);
 			dbg_msg("sql", "Can't get the ID of the new user (MySQL Error: %s)", e.what());
 			
@@ -3525,7 +3491,7 @@ void CServer::ShowRank(int ClientID, int ScoreType)
 	}
 	else if(m_pGameServer)
 	{
-		m_pGameServer->SendChatTarget_Language(ClientID, "You must be logged to see your rank");
+		m_pGameServer->SendChatTarget_Localization(ClientID, CHATCATEGORY_DEFAULT, _("You must be logged to see your rank"), NULL);
 	}
 }
 
@@ -3609,7 +3575,7 @@ void CServer::ShowGoal(int ClientID, int ScoreType)
 	}
 	else if(m_pGameServer)
 	{
-		m_pGameServer->SendChatTarget_Language(ClientID, "You must be logged to see your goal");
+		m_pGameServer->SendChatTarget_Localization(ClientID, CHATCATEGORY_DEFAULT, _("You must be logged to see your goal"), NULL);
 	}
 }
 
@@ -3892,7 +3858,7 @@ void CServer::AddAccusation(int From, int To, const char* pReason)
 		if(net_addr_comp(&m_aClients[To].m_Accusation.m_Addresses[i], &FromAddr) == 0)
 		{
 			if(m_pGameServer)
-				m_pGameServer->SendChatTarget_Language_s(From, "You already notify that %s must be banned", ClientName(To));
+				m_pGameServer->SendChatTarget_Localization(From, CHATCATEGORY_DEFAULT, _("You already notify that {str:PlayerName} must be banned"), "PlayerName", ClientName(To), NULL);
 			return;
 		}
 	}
@@ -3906,7 +3872,14 @@ void CServer::AddAccusation(int From, int To, const char* pReason)
 	}
 		
 	if(m_pGameServer)
-		m_pGameServer->SendChatTarget_Language_sss(-1, "%s wants %s to be banned (%s)", ClientName(From), ClientName(To), pReason);
+	{
+		m_pGameServer->SendChatTarget_Localization(-1, CHATCATEGORY_ACCUSATION, _("{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})"),
+			"PlayerName", ClientName(From),
+			"VictimName", ClientName(To),
+			"Reason", pReason,
+			NULL
+		);
+	}
 }
 
 bool CServer::ClientShouldBeBanned(int ClientID)

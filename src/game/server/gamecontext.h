@@ -10,8 +10,9 @@
 
 #include <game/layers.h>
 #include <game/voting.h>
-#include <game/localization.h>
 #include <game/server/classes.h>
+
+#include <teeuniverses/components/localization.h>
 
 #include "eventhandler.h"
 #include "gamecontroller.h"
@@ -63,7 +64,6 @@ class CGameContext : public IGameServer
 	CNetObjHandler m_NetObjHandler;
 	CTuningParams m_Tuning;
 
-	static bool ConReloadLocalization(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneParam(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneReset(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneDump(IConsole::IResult *pResult, void *pUserData);
@@ -222,33 +222,20 @@ private:
 	
 	static bool ConFriendlyBan(IConsole::IResult *pResult, void *pUserData);
 	
-	static bool s_ServerLocalizationInitialized;
-	static CLocalizationDatabase s_ServerLocalization[NUM_TRANSLATED_LANGUAGES];
-	
-	void LoadServerLocatization();
-	void InitializeServerLocatization();
-	
 public:
 	virtual void OnSetAuthed(int ClientID,int Level);
-	virtual const char* ServerLocalize(const char* pText, int Language);
 	
 	virtual void SendBroadcast(int To, const char *pText, int Priority, int LifeSpan);
-	virtual void SendBroadcast_Language(int To, const char* pText, int Priority, int LifeSpan);
-	virtual void SendBroadcast_Language_s(int To, const char* pText, const char* pParam, int Priority, int LifeSpan);
-	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, int Priority, int LifeSpan);
+	virtual void SendBroadcast_Localization(int To, int Priority, int LifeSpan, const char* pText, ...);
+	virtual void SendBroadcast_Localization_P(int To, int Priority, int LifeSpan, int Number, const char* pText, ...);
 	virtual void SendBroadcast_ClassIntro(int To, int Class);
 	virtual void ClearBroadcast(int To, int Priority);
 	
-	virtual void SendChatTarget_Language(int To, const char* pText);
-	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam);
-	virtual void SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2);
-	virtual void SendChatTarget_Language_sss(int To, const char* pText, const char* pParam1, const char* pParam2, const char* pParam3);
-	virtual void SendChatTarget_Language_i(int To, const char* pText, int Param);
-	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2);
+	virtual void SendChatTarget_Localization(int To, int Category, const char* pText, ...);
+	virtual void SendChatTarget_Localization_P(int To, int Category, int Number, const char* pText, ...);
 	
 	virtual void SendMOTD(int To, const char* pParam);
-	virtual void SendMOTD_Language(int To, const char* pParam);
-	virtual void SendMOTD_Language_s(int To, const char* pText, const char* pParam);
+	virtual void SendMOTD_Localization(int To, const char* pText, ...);
 	
 	void CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan);
 	void CreateHammerDotEvent(vec2 Pos, int LifeSpan);
@@ -258,7 +245,7 @@ public:
 	
 private:
 	int m_VoteLanguageTick[MAX_CLIENTS];
-	int m_VoteLanguage[MAX_CLIENTS];
+	char m_VoteLanguage[MAX_CLIENTS][16];
 	int m_VoteBanClientID;
 	
 	class CBroadcastState

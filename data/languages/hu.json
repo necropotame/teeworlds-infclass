@@ -1,0 +1,472 @@
+{"translation":[
+	{
+		"key": "{str:VictimName} has been infected",
+		"value": "{str:VictimName}-t megfert\u0151zt\u00e9k"
+	},
+	{
+		"key": "Infected won the round in {sec:RoundDuration}",
+		"value": "A zombik megnyert\u00e9k a j\u00e1t\u00e9kot {sec:RoundDuration}"
+	},
+	{
+		"key": "One human won the round",
+		"one": "Egy ember nyerte meg a j\u00e1t\u00e9kot",
+		"other": "{int:NumHumans} ember nyerte meg j\u00e1t\u00e9kot",
+	},
+	{
+		"key": "You have survived, +5 points",
+		"value": "T\u00fal\u00e9lted az inv\u00e1zi\u00f3t, +5 pont"
+	},
+	{
+		"key": "You have infected {str:VictimName}, +3 points",
+		"value": "Megfert\u0151zted {str:VictimName}-t, +3 pont"
+	},
+	{
+		"key": "You have killed a witch, +5 points",
+		"value": "Meg\u00f6lted a boszork\u00e1nyt, +5 pont"
+	},
+	{
+		"key": "The undead is coming!",
+		"value": "J\u00f6n az \u00e9l\u0151halott!"
+	},
+	{
+		"key": "The witch is coming!",
+		"value": "J\u00f6n a boszork\u00e1ny!"
+	},
+	{
+		"key": "Random choice",
+		"value": "V\u00e9letlenszer\u0171"
+	},
+	{
+		"key": "Engineer",
+		"value": "M\u00e9rn\u00f6k"
+	},
+	{
+		"key": "Soldier",
+		"value": "K\u00f6zkatona"
+	},
+	{
+		"key": "Scientist",
+		"value": "Tud\u00f3s"
+	},
+	{
+		"key": "Medic",
+		"value": "Orvos"
+	},
+	{
+		"key": "Hero",
+	},
+	{
+		"key": "Ninja",
+		"value": "Nindzsa"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Zsoldos"
+	},
+	{
+		"key": "Sniper",
+		"value": "Mesterl\u00f6v\u00e9sz"
+	},
+	{
+		"key": "Choose your class",
+		"value": "V\u00e1lasztd ki az oszt\u00e1lyodat"
+	},
+	{
+		"key": "One bomb left",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "One mine is active",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "L\u00e9zer-fal: {sec:RemainingTime}"
+	},
+	{
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Position lock: {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "H\u00e1l\u00f3 m\u00f3d bekapcsolva"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "A boszork\u00e1ny meghalt"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Az \u00e9l\u0151halott v\u00e9gre meghalt"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "\u00cdrd be, hogy \"/help {str:ClassName}\", hogy t\u00f6bbet megtudhass az oszt\u00e1lyodr\u00f3l"
+	},
+	{
+		"key": "The Hero found the flag!",
+	},
+	{
+		"key": "Hook protection enabled",
+		"value": "Horog-v\u00e9delem bekapcsolva"
+	},
+	{
+		"key": "Hook protection disabled",
+		"value": "Horog-v\u00e9delem kikapcsolva"
+	},
+	{
+		"key": "{str:PlayerName} has been banned ({str:Reason})",
+		"value": "{str:PlayerName}-t letiltott\u00e1k ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has been kicked ({str:Reason})",
+		"value": "{str:PlayerName}-t kir\u00fagt\u00e1k ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game ({str:Reason})",
+		"value": "{str:PlayerName} kil\u00e9pett a j\u00e1t\u00e9kb\u00f3l ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game",
+		"value": "{str:PlayerName} kil\u00e9pett a j\u00e1t\u00e9kb\u00f3l"
+	},
+	{
+		"key": "{str:PlayerName} joined the spectators",
+		"value": "{str:PlayerName} csatlakozott a megfigyel\u0151kh\u00f6z"
+	},
+	{
+		"key": "{str:PlayerName} joined the game",
+		"value": "{str:PlayerName} csatlakozott a j\u00e1t\u00e9khoz"
+	},
+	{
+		"key": "Smoker",
+		"value": "Smoker"
+	},
+	{
+		"key": "Hunter",
+		"value": "Hunter"
+	},
+	{
+		"key": "Boomer",
+		"value": "Boomer"
+	},
+	{
+		"key": "Ghost",
+		"value": "Szellem"
+	},
+	{
+		"key": "Spider",
+		"value": "P\u00f3k"
+	},
+	{
+		"key": "Witch",
+		"value": "Boszork\u00e1ny"
+	},
+	{
+		"key": "Undead",
+		"value": "\u00c9l\u0151halott"
+	},
+	{
+		"key": "Unknown class",
+	},
+	{
+		"key": "You are a human: {str:ClassName}",
+		"value": "Ember vagy: {str:ClassName}"
+	},
+	{
+		"key": "You are an infected: {str:ClassName}",
+		"value": "Zombi vagy: {str:ClassName}"
+	},
+	{
+		"key": "{str:PlayerName} entered and joined the game",
+		"value": "{str:PlayerName} bel\u00e9pett, \u00e9s csatlakozott a j\u00e1t\u00e9khoz"
+	},
+	{
+		"key": "You can't join the spectators right now",
+		"value": "Most nem csatlakozhatsz a megfigyel\u0151kh\u00f6z"
+	},
+	{
+		"key": "{str:PlayerName} changed their name to {str:NewName}",
+		"value": "{str:PlayerName} megv\u00e1ltoztatta nev\u00e9t {str:NewName}-ra"
+	},
+	{
+		"key": "Switch language to english ?",
+		"value": "M\u00f3dos\u00edtod a nyelvet magyarra?"
+	},
+	{
+		"key": "You can change the language of this mod using the command /language.",
+	},
+	{
+		"key": "If your language is not available, you can help with translation (/help translate).",
+	},
+	{
+		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
+		"value": "InfectionClass, k\u00e9sz\u00edtette: necropotame (version {str:VersionCode})"
+	},
+	{
+		"key": "Based on Infection mod by Gravity",
+		"value": "Gravity Infection nev\u0171 j\u00e1t\u00e9km\u00f3dja alapj\u00e1n"
+	},
+	{
+		"key": "Thanks to {str:ListOfContributors}",
+		"value": "K\u00f6sz\u00f6net illeti: {str:ListOfContributors}"
+	},
+	{
+		"key": "Rules of the game",
+		"value": "A j\u00e1t\u00e9kszab\u00e1lyok"
+	},
+	{
+		"key": "InfectionClass is a team game between humans and infected.",
+		"value": "Az InfectionClass egy csapatj\u00e1t\u00e9k emberek \u00e9s zombik k\u00f6zt."
+	},
+	{
+		"key": "All players start as human.",
+		"value": "Minden j\u00e1t\u00e9kos emberk\u00e9nt kezdi a k\u00f6rt."
+	},
+	{
+		"key": "10 seconds later, two players become infected.",
+		"value": "10 m\u00e1sodperc m\u00falva 2 j\u00e1t\u00e9kos megfert\u0151z\u0151dik"
+	},
+	{
+		"key": "The goal for humans is to survive until the army clean the map.",
+		"value": "Az emberek c\u00e9lja, hogy t\u00fal\u00e9lj\u00e9k a t\u00e1mad\u00e1sokat, miel\u0151tt a hadsereg megtiszt\u00edtja a p\u00e1ly\u00e1t."
+	},
+	{
+		"key": "The goal for infected is to infect all humans.",
+		"value": "A zombik c\u00e9lja, hogy minden embert megfert\u0151zzenek."
+	},
+	{
+		"key": "How to translate the mod",
+	},
+	{
+		"key": "Create an account on Transifex and join a translation team:",
+	},
+	{
+		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+	},
+	{
+		"key": "The Engineer can build walls with his hammer to block infected.",
+		"value": "A m\u00e9rn\u00f6k falakat \u00e9p\u00edthat kalap\u00e1cs\u00e1val, hogy kiv\u00e9dje a zombik t\u00e1mad\u00e1s\u00e1t."
+	},
+	{
+		"key": "When an infected touch the wall, he dies.",
+		"value": "Ha egy zombi hozz\u00e1\u00e9r a falhoz, meghal."
+	},
+	{
+		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
+		"value": "A fal {sec:LifeSpan} m\u00falva megsemmis\u00fcl, \u00e9s egy m\u00e9rn\u00f6knek egyszerre csak egy fel\u00e1ll\u00edtott fala lehet."
+	},
+	{
+		"key": "The Soldier can pose floating bombs with his hammer.",
+		"value": "A k\u00f6zkatona fel\u00e1ll\u00edthat lebeg\u0151 bomb\u00e1kat kalap\u00e1cs\u00e1val."
+	},
+	{
+		"key": "Each bomb can explode one time.",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "Use the hammer to place the bomb and explode it multiple times.",
+		"value": "Szint\u00e9n kalap\u00e1ccsal lehet a bomb\u00e1kat aktiv\u00e1lni, hogy felrobbanjanak."
+	},
+	{
+		"key": "Bombs are limited to one per player at the same time.",
+		"value": "Egy k\u00f6zkaton\u00e1nak egyszerre csak egy fel\u00e1ll\u00edtott bomb\u00e1ja lehet."
+	},
+	{
+		"key": "The Scientist can pose floating mines with his hammer.",
+		"value": "A tud\u00f3s fel\u00e1ll\u00edthat lebeg\u0151 akn\u00e1kat kalap\u00e1cs\u00e1val."
+	},
+	{
+		"key": "Mines are limited to one per player at the same time.",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "He has also grenades that teleport him.",
+		"value": "Tov\u00e1bb\u00e1 teleport\u00e1lhat gr\u00e1n\u00e1tvet\u0151j\u00e9vel."
+	},
+	{
+		"key": "The Medic can protect humans with his hammer by giving them armor.",
+		"value": "Az orvos gy\u00f3gy\u00edthatja kalap\u00e1cs\u00e1val az embereket: t\u00f6bb pajzs ikon lesz nekik."
+	},
+	{
+		"key": "He has also a powerful shotgun that can pullback infected.",
+		"value": "Van tov\u00e1bb\u00e1 egy er\u0151s g\u00e9pfegyvere, ami ell\u00f6ki a zombikat."
+	},
+	{
+		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+	},
+	{
+		"key": "The Hero must find a flag hidden in the map.",
+	},
+	{
+		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+	},
+	{
+		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+	},
+	{
+		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
+		"value": "A nindzsa l\u0151hett bomb\u00e1kat, amik lefagyasztj\u00e1k a zombikat."
+	},
+	{
+		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "The Mercenary fly in air using his machine gun.",
+		"value": "A soldos tud rep\u00fclni a sorozatl\u00f6v\u0151j\u00e1vel."
+	},
+	{
+		"key": "He can also throw poison grenades that deals one damage point.",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
+		"value": "A mesterl\u00f6v\u00e9sz leveg\u0151bel a tud maradni, amit kalap\u00e1cs\u00e1val aktiv\u00e1lhat."
+	},
+	{
+		"key": "He can jump two times in air.",
+		"value": "K\u00e9tszer ugorhat leveg\u0151ben."
+	},
+	{
+		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+	},
+	{
+		"key": "The Smoker can infect humans and heal infected with his hammer.",
+		"value": "A f\u00fcst\u00f6s kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
+	},
+	{
+		"key": "He can also inflict 4 damage points per seconds by hooking humans.",
+		"value": "Tov\u00e1bb\u00e1 m\u00e1sodpercenk\u00e9nt 4 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
+	},
+	{
+		"key": "The Boomer explodes when he attack.",
+		"value": "A bomba t\u00e1mad\u00e1skor felrobban."
+	},
+	{
+		"key": "All humans affected by the explosion become infected.",
+		"value": "A robban\u00e1s k\u00f6zel\u00e9ben minden embert megfert\u0151l."
+	},
+	{
+		"key": "He can also inflict 1 damage point per seconds by hooking humans.",
+		"value": "Tov\u00e1bb\u00e1 m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
+	},
+	{
+		"key": "The Hunter can infect humans and heal infected with his hammer.",
+		"value": "A vad\u00e1sz kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
+	},
+	{
+		"key": "The Ghost can infect humans and heal infected with his hammer.",
+		"value": "A szellem kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
+	},
+	{
+		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
+		"value": "L\u00e1thatatlan az emberek sz\u00e1b\u00e1ra kiv\u00e9ve ha k\u00f6zel vannak hozz\u00e1, vagy kaszn\u00e1lja kalap\u00e1cs\u00e1t."
+	},
+	{
+		"key": "The Spider can infect humans and heal infected with his hammer.",
+		"value": "A p\u00f3k kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
+	},
+	{
+		"key": "When selecting any gun, his hook enter in web mode.",
+		"value": "Amikor fegyvert v\u00e1lt, a horgot h\u00e1l\u00f3 m\u00f3dban haszn\u00e1lhatja."
+	},
+	{
+		"key": "Any human that touch a hook in web mode is automatically grabbed.",
+		"value": "Ha egy ember hozz\u00e1\u00e9r a horoghoz h\u00e1l\u00f3 m\u00f3dban, a zombi automatikusan r\u00e1akaszkodik."
+	},
+	{
+		"key": "The hook of the spider (in both mode) deal 1 damage point per seconds and can grab a human during 2 seconds.",
+		"value": "Mindk\u00e9t esetben m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
+	},
+	{
+		"key": "The Undead can infect humans and heal infected with his hammer.",
+		"value": "Az \u00e9l\u0151halott kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
+	},
+	{
+		"key": "Instead of dying, he freezes during 10 seconds.",
+		"value": "Nem hal meg, hanem lefagy 10 m\u00e1sodpercre."
+	},
+	{
+		"key": "If an infected heals him, the freeze effect disappear.",
+		"value": "Ha egy zombi meg\u00fcti kalap\u00e1cs\u00e1val, \u00fajra j\u00e1tszhat."
+	},
+	{
+		"key": "The Witch can infect humans and heal infected with his hammer.",
+		"value": "A boszork\u00e1ny kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
+	},
+	{
+		"key": "When an infected dies, he may re-spawn near her.",
+		"value": "Ha egy zombit meg\u00f6lnek, j\u00f3 es\u00e9llyel a boszork\u00e1nyhoz k\u00f6zel fog \u00fajra felt\u0171nni."
+	},
+	{
+		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"value": "Ha a boszork\u00e1ny meghal, ut\u00e1na m\u00e1r nem boszork\u00e1ny lesz."
+	},
+	{
+		"key": "She can also inflict 1 damage point per seconds by hooking humans.",
+		"value": "Tov\u00e1bb\u00e1 m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+	},
+	{
+		"key": "Choose a help page with /help <page>",
+	},
+	{
+		"key": "A random class will be automatically attributed to you when rounds start",
+		"value": "Ha a k\u00f6r elkezd\u0151dik, \u00e9s nem v\u00e1lasztott\u00e1l, v\u00e9letlenszer\u0171 oszt\u00e1lyt kapsz"
+	},
+	{
+		"key": "The class selector will be displayed when rounds start",
+		"value": "Az oszt\u00e1ly-v\u00e1laszt\u00f3 elt\u0171nik, ha a k\u00f6r elkezd\u0151dik"
+	},
+	{
+		"key": "Unknown language",
+		"value": "Ismeretlen nyelv"
+	},
+	{
+		"key": "List of commands",
+		"value": "Parancsok list\u00e1ja"
+	},
+	{
+		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "Nyomd le az <F3>-at vagy <F4>-et, hogy enged\u00e9lyezd vagy letiltsd a horog-v\u00e9delmet"
+	},
+	{
+		"key": "No player was found with this name",
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+	},
+	{
+		"key": "This username is already taken by an existing account",
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+	},
+	{
+		"key": "You must be logged to see your rank",
+	},
+	{
+		"key": "You must be logged to see your goal",
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+	},
+]}

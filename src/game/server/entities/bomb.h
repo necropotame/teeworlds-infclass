@@ -4,8 +4,7 @@
 #define GAME_SERVER_ENTITIES_BOMB_H
 
 #include <game/server/entity.h>
-
-#define MAX_BOMB 3
+#include <base/tl/array.h>
 
 class CBomb : public CEntity
 {
@@ -22,7 +21,7 @@ public:
 
 private:
 	int m_StartTick;
-	int m_IDBomb[MAX_BOMB];
+	array<int> m_IDBomb;
 	int m_nbBomb;
 	
 public:

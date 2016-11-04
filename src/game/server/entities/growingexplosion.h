@@ -1,5 +1,8 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
+
+#include <engine/shared/config.h>
+
 #ifndef GAME_SERVER_ENTITIES_GROWINGEXP_H
 #define GAME_SERVER_ENTITIES_GROWINGEXP_H
 
@@ -231,7 +234,7 @@ public:
 							GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_QUESTION);
 							break;
 						case GROWINGEXPLOSIONEFFECT_POISON_INFECTED:
-							p->Poison(7, m_Owner);
+							p->Poison(g_Config.m_InfPoisonDamage, m_Owner);
 							GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_DROP);
 							break;
 						case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:

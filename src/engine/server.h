@@ -50,26 +50,6 @@ enum
 
 enum
 {
-	LANGUAGE_FR=0,
-	LANGUAGE_DE,
-	LANGUAGE_RU,
-	LANGUAGE_UK,
-	LANGUAGE_IT,
-	LANGUAGE_ES,
-	LANGUAGE_AR,
-	LANGUAGE_HU,
-	LANGUAGE_PL,
-	LANGUAGE_NL,
-	LANGUAGE_LA,
-	LANGUAGE_PT,
-	LANGUAGE_PT_BR,
-	LANGUAGE_EN, //Must be the last
-	NUM_LANGUAGES,
-	NUM_TRANSLATED_LANGUAGES = NUM_LANGUAGES-1,
-};
-
-enum
-{
 	CLIENTMEMORY_LANGUAGESELECTION=0,
 	CLIENTMEMORY_TOP10,
 	CLIENTMEMORY_MOTD,
@@ -83,6 +63,17 @@ enum
 	MAX_ACCUSATIONS = 8,
 };
 
+enum
+{
+	CHATCATEGORY_DEFAULT=0,
+	CHATCATEGORY_INFECTION,
+	CHATCATEGORY_SCORE,
+	CHATCATEGORY_PLAYER,
+	CHATCATEGORY_INFECTED,
+	CHATCATEGORY_HUMANS,
+	CHATCATEGORY_ACCUSATION,
+};
+
 /* INFECTION MODIFICATION END *****************************************/
 
 class IServer : public IInterface
@@ -91,6 +82,9 @@ class IServer : public IInterface
 protected:
 	int m_CurrentGameTick;
 	int m_TickSpeed;
+
+public:
+	class CLocalization* m_pLocalization;
 
 public:
 	enum
@@ -123,6 +117,8 @@ public:
 	};
 	
 	virtual ~IServer() {};
+	
+	inline class CLocalization* Localization() { return m_pLocalization; }
 
 	int Tick() const { return m_CurrentGameTick; }
 	int TickSpeed() const { return m_TickSpeed; }
@@ -183,8 +179,8 @@ public:
 	virtual int GetClientDefaultScoreMode(int ClientID) = 0;
 	virtual void SetClientDefaultScoreMode(int ClientID, int Value) = 0;
 	
-	virtual int GetClientLanguage(int ClientID) = 0;
-	virtual void SetClientLanguage(int ClientID, int Value) = 0;
+	virtual const char* GetClientLanguage(int ClientID) = 0;
+	virtual void SetClientLanguage(int ClientID, const char* pLanguage) = 0;
 	
 	virtual int GetFireDelay(int WID) = 0;
 	virtual void SetFireDelay(int WID, int Time) = 0;
@@ -258,18 +254,13 @@ public:
 	
 /* INFECTION MODIFICATION START ***************************************/
 	virtual void ClearBroadcast(int To, int Priority) = 0;
-	virtual void SendBroadcast_Language(int To, const char* pText, int Priority, int LifeSpan) = 0;
-	virtual void SendBroadcast_Language_i(int To, const char* pText, int Param, int Priority, int LifeSpan) = 0;
+	virtual void SendBroadcast_Localization(int To, int Priority, int LifeSpan, const char* pText, ...) = 0;
+	virtual void SendBroadcast_Localization_P(int To, int Priority, int LifeSpan, int Number, const char* pText, ...) = 0;
 	virtual void SendChatTarget(int To, const char* pText) = 0;
-	virtual void SendChatTarget_Language(int To, const char* pText) = 0;
-	virtual void SendChatTarget_Language_s(int To, const char* pText, const char* pParam) = 0;
-	virtual void SendChatTarget_Language_ss(int To, const char* pText, const char* pParam1, const char* pParam2) = 0;
-	virtual void SendChatTarget_Language_sss(int To, const char* pText, const char* pParam1, const char* pParam2, const char* pParam3) = 0;
-	virtual void SendChatTarget_Language_i(int To, const char* pText, int Param) = 0;
-	virtual void SendChatTarget_Language_ii(int To, const char* pText, int Param1, int Param2) = 0;
+	virtual void SendChatTarget_Localization(int To, int Category, const char* pText, ...) = 0;
+	virtual void SendChatTarget_Localization_P(int To, int Category, int Number, const char* pText, ...) = 0;
 	virtual void SendMOTD(int To, const char* pText) = 0;
-	virtual void SendMOTD_Language(int To, const char* pText) = 0;
-	virtual void SendMOTD_Language_s(int To, const char* pText, const char* pParam) = 0;
+	virtual void SendMOTD_Localization(int To, const char* pText, ...) = 0;
 	
 	virtual void OnSetAuthed(int ClientID, int Level) = 0;
 /* INFECTION MODIFICATION END *****************************************/

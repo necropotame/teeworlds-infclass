@@ -1240,7 +1240,7 @@ void CCharacter::Tick()
 		else
 		{
 			int FreezeSec = 1+(m_FrozenTime/Server()->TickSpeed());
-			GameServer()->SendBroadcast_Language_i(m_pPlayer->GetCID(), "You are frozen: %d sec", FreezeSec, BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME);
+			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, "You are frozen: {sec:EffectDuration}", "EffectDuration", &FreezeSec, NULL);
 		}
 	}
 	
@@ -1425,7 +1425,7 @@ void CCharacter::Tick()
 	
 	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_DartLifeSpan <= 0)
 	{
-		m_DartLeft = 2;
+		m_DartLeft = g_Config.m_InfNinjaJump;
 	}
 	
 	if(m_IsFrozen)
@@ -1528,62 +1528,62 @@ void CCharacter::Tick()
 				switch(m_pPlayer->m_MenuClassChooserItem)
 				{
 					case CMapConverter::MENUCLASS_RANDOM:
-						GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Random choice", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+						GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Random choice"), NULL);
 						Broadcast = true;
 						break;
 					case CMapConverter::MENUCLASS_ENGINEER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Engineer", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Engineer"), NULL);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_SOLDIER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SOLDIER))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Soldier", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Soldier"), NULL);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_SCIENTIST:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SCIENTIST))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Scientist", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Scientist"), NULL);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_MEDIC:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Medic", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Medic"), NULL);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_HERO:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_HERO))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Hero", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Hero"), NULL);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_NINJA:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_NINJA))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Ninja", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Ninja"), NULL);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_MERCENARY:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MERCENARY))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Mercenary", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Mercenary"), NULL);
 							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_SNIPER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SNIPER))
 						{
-							GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Sniper", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Sniper"), NULL);
 							Broadcast = true;
 						}
 						break;
@@ -1593,7 +1593,7 @@ void CCharacter::Tick()
 			if(!Broadcast)
 			{
 				m_pPlayer->m_MenuClassChooserItem = -1;
-				GameServer()->SendBroadcast_Language(m_pPlayer->GetCID(), "Choose your class", BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME);
+				GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Choose your class"), NULL);
 			}
 			
 			if(m_Input.m_Fire&1 && m_pPlayer->m_MenuClassChooserItem >= 0)
@@ -1649,7 +1649,14 @@ void CCharacter::Tick()
 	if(GetClass() == PLAYERCLASS_SOLDIER)
 	{
 		if(m_pBomb)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Bombs left: %d", m_pBomb->GetNbBombs(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+		{
+			int BombLeft = m_pBomb->GetNbBombs();
+			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, BombLeft,
+				_P("One bomb left", "{int:NumBombs} bombs left"),
+				"NumBombs", &BombLeft,
+				NULL
+			);
+		}
 	}
 	else if(GetClass() == PLAYERCLASS_SCIENTIST)
 	{
@@ -1662,7 +1669,13 @@ void CCharacter::Tick()
 			p = (CMine *)p->TypeNext();
 		}
 		if(NbMines > 0)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Active mines: %d", NbMines, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+		{
+			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NbMines,
+				_P("One mine is active", "{int:NumMines} mines are actives"),
+				"NumMines", &NbMines,
+				NULL
+			);
+		}
 	}
 	else if(GetClass() == PLAYERCLASS_HERO)
 	{
@@ -1684,22 +1697,45 @@ void CCharacter::Tick()
 			p = (CHeroFlag *)p->TypeNext();
 		}
 		if(CoolDown > 0)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Next flag in %d sec", 1+CoolDown/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+		{
+			int Seconds = 1+CoolDown/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Next flag in {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
 	}
 	else if(GetClass() == PLAYERCLASS_ENGINEER)
 	{
 		if(m_pBarrier)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Laser wall: %d sec", 1+m_pBarrier->GetTick()/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+		{
+			int Seconds = 1+m_pBarrier->GetTick()/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Laser wall: {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
 	}
 	else if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
-			GameServer()->SendBroadcast_Language_i(GetPlayer()->GetCID(), "Position lock: %d sec", 1+m_PositionLockTick/Server()->TickSpeed(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+		{
+			int Seconds = 1+m_PositionLockTick/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Position lock: {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
 	}
 	else if(GetClass() == PLAYERCLASS_SPIDER)
 	{
 		if(m_HookMode > 0)
-			GameServer()->SendBroadcast_Language(GetPlayer()->GetCID(), "Web mode enabled", BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME);
+		{
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, _("Web mode enabled"), NULL);
+		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -1898,13 +1934,13 @@ void CCharacter::Die(int Killer, int Weapon)
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
 		m_pPlayer->StartInfection(true);
-		GameServer()->SendBroadcast_Language(-1, "The witch is dead", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+		GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The witch is dead"), NULL);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else if(GetClass() == PLAYERCLASS_UNDEAD)
 	{
 		m_pPlayer->StartInfection(true);
-		GameServer()->SendBroadcast_Language(-1, "The undead is finally dead", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+		GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The undead is finally dead"), NULL);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else
@@ -2017,7 +2053,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	{
 		m_pPlayer->StartInfection();
 		
-		GameServer()->SendChatTarget_Language_s(From, "You have infected %s, +3 points", Server()->ClientName(m_pPlayer->GetCID()));
+		GameServer()->SendChatTarget_Localization(From, CHATCATEGORY_SCORE, _("You have infected {str:VictimName}, +3 points"), "VictimName", Server()->ClientName(m_pPlayer->GetCID()), NULL);
 		Server()->RoundStatistics()->OnScoreEvent(From, SCOREEVENT_INFECTION, GameServer()->m_apPlayers[From]->GetClass());
 		GameServer()->SendScoreSound(From);
 	
@@ -2294,7 +2330,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_ENGINEER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_ENGINEER))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "engineer");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "engineer", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_ENGINEER] = true;
 			}
 			break;
@@ -2311,7 +2347,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SOLDIER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SOLDIER))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "soldier");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "soldier", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_SOLDIER] = true;
 			}
 			break;
@@ -2327,7 +2363,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MERCENARY);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MERCENARY))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "mercenary");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "mercenary", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_MERCENARY] = true;
 			}
 			break;
@@ -2344,7 +2380,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SNIPER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SNIPER))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "sniper");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "sniper", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_SNIPER] = true;
 			}
 			break;
@@ -2362,7 +2398,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SCIENTIST);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SCIENTIST))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "scientist");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "scientist", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_SCIENTIST] = true;
 			}
 			break;
@@ -2379,7 +2415,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MEDIC);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_MEDIC))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "medic");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "medic", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
 			}
 			break;
@@ -2397,7 +2433,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_HERO);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_HERO))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "hero");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "hero", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_HERO] = true;
 			}
 			break;
@@ -2413,7 +2449,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_NINJA);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_NINJA))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "ninja");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "ninja", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_NINJA] = true;
 			}
 			break;
@@ -2435,7 +2471,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SMOKER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SMOKER))
 			{   
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "smoker");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "smoker", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_SMOKER] = true;
 			}
 			break;
@@ -2450,7 +2486,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_BOOMER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BOOMER))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "boomer");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "boomer", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_BOOMER] = true;
 			}
 			break;
@@ -2465,7 +2501,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_HUNTER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_HUNTER))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "hunter");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "hunter", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -2480,7 +2516,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_GHOST);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_GHOST))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "ghost");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "ghost", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_GHOST] = true;
 			}
 			break;
@@ -2495,7 +2531,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SPIDER);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SPIDER))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "spider");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "spider", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_SPIDER] = true;
 			}
 			break;
@@ -2510,7 +2546,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_UNDEAD);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_UNDEAD))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "undead");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "undead", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
@@ -2525,7 +2561,7 @@ void CCharacter::ClassSpawnAttributes()
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_WITCH);
 			if(!m_pPlayer->IsKownClass(PLAYERCLASS_WITCH))
 			{
-				GameServer()->SendChatTarget_Language_s(m_pPlayer->GetCID(), "Type \"/help %s\" for more information about your class", "witch");
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "witch", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_WITCH] = true;
 			}
 			break;
