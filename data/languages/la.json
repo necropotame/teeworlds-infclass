@@ -8,7 +8,7 @@
 		"value": "Infecti evicere per {sec:RoundDuration}"
 	},
 	{
-		"key": "One human won the round",
+		"key": "{int:NumHumans} humans won the round",
 		"one": "Homo unicus pugnam evicit",
 		"other": "{int:NumHumans} Homines pugnam evicere",
 	},
@@ -73,12 +73,12 @@
 		"value": "Classem elige"
 	},
 	{
-		"key": "One bomb left",
+		"key": "{int:NumBombs} bombs left",
 		"one": "Bomba una reliqua",
 		"other": "{int:NumBombs} bombae reliquae",
 	},
 	{
-		"key": "One mine is active",
+		"key": "{int:NumMines} mines are actives",
 		"one": "Mina una reliqua",
 		"other": "{int:NumMines} minae reliquae",
 	},
@@ -275,7 +275,7 @@
 		"value": "Miles malleo bombas impendentes creare potest."
 	},
 	{
-		"key": "Each bomb can explode one time.",
+		"key": "Each bomb can explode {int:NumBombs} times.",
 		"one": "Bomba posita explosioni uni ideona est.",
 		"other": "Bomba posita explosioni numeri {int:NumBombs} ideona est.",
 	},
@@ -292,7 +292,7 @@
 		"value": "Scientista malleo minas pendentes interponere potest."
 	},
 	{
-		"key": "Mines are limited to one per player at the same time.",
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
 		"one": "Minae terminatae sunt, ut una arenario quoicumque quandocumque exstet.",
 		"other": "Minae terminatae sunt, ut {int:NumMines} arenario quoicumque quandocumque exstent.",
 	},
@@ -329,7 +329,7 @@
 		"value": "Ninja granatas iacere potest quae infectos tres secundas congelare pollent."
 	},
 	{
-		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
 		"one": "Malleus eius katana permutatus. Quo in manus pervenit, ut insultet semel, antequam solum contingit.",
 		"other": "Malleus eius katana permutatus. Quo in manus pervenit, ut insultet {int:NinjaJump} temporibus, antequam solum contingit.",
 	},
@@ -338,7 +338,7 @@
 		"value": "Mercennarius sclopeto polybolico in aere volare potest."
 	},
 	{
-		"key": "He can also throw poison grenades that each deal one damage point.",
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Ad hoc granatas veneficas iacere potest quae singulae plagam unam inponunt.",
 		"other": "Ad hoc granatas veneficas iacere potest quae singulae plagas {int:NumDamagePoints} inponunt.",
 	},

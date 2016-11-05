@@ -8,7 +8,7 @@
 		"value": "Los infectados han ganado la ronda en {sec:RoundDuration}"
 	},
 	{
-		"key": "One human won the round",
+		"key": "{int:NumHumans} humans won the round",
 		"one": "Un humano ha ganado la ronda",
 		"other": "{int:NumHumans} humanos han ganado la ronda",
 	},
@@ -73,14 +73,14 @@
 		"value": "Selecciona tu clase"
 	},
 	{
-		"key": "One bomb left",
-		"one": "",
-		"other": "",
+		"key": "{int:NumBombs} bombs left",
+		"one": "{int:NumBombs} bomba restantes",
+		"other": "{int:NumBombs} bombas restantes",
 	},
 	{
-		"key": "One mine is active",
-		"one": "",
-		"other": "",
+		"key": "{int:NumMines} mines are actives",
+		"one": "{int:NumMines} mina activada",
+		"other": "{int:NumMines} minas activadas",
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -176,6 +176,7 @@
 	},
 	{
 		"key": "Unknown class",
+		"value": "Cl\u00e1se desconocida"
 	},
 	{
 		"key": "You are a human: {str:ClassName}",
@@ -203,9 +204,11 @@
 	},
 	{
 		"key": "You can change the language of this mod using the command /language.",
+		"value": "Puedes cambiar la lengua del mod usando el comando /language."
 	},
 	{
 		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "Si tu idioma no es disponible, puedes ayudar traduciendo (/help translate)."
 	},
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
@@ -245,12 +248,15 @@
 	},
 	{
 		"key": "How to translate the mod",
+		"value": "Como traducir el mod"
 	},
 	{
 		"key": "Create an account on Transifex and join a translation team:",
+		"value": "Crea una cuenta en Transifex y te une a un equipo de traducci\u00f3n."
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "Para cualquier pregunta sobre el procedimiento de traducci\u00f3n, nos contacta por IRC ({str:IRCAddress})"
 	},
 	{
 		"key": "The Engineer can build walls with his hammer to block infected.",
@@ -269,7 +275,7 @@
 		"value": "El Soldado puede colocar bombas flotantes con su martillo."
 	},
 	{
-		"key": "Each bomb can explode one time.",
+		"key": "Each bomb can explode {int:NumBombs} times.",
 		"one": "Cada bomba puede explotar una vez.",
 		"other": "Cada bomba puede explotar {int:NumBombs} veces.",
 	},
@@ -286,7 +292,7 @@
 		"value": "El cient\u00edfico puede poner minas flotantes con su martillo."
 	},
 	{
-		"key": "Mines are limited to one per player at the same time.",
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
 		"one": "Las minas est\u00e1n limitadas a una por jugador al mismo tiempo.",
 		"other": "Las minas est\u00e1n limitadas a {int:NumMines} por jugador al mismo tiempo.",
 	},
@@ -323,7 +329,7 @@
 		"value": "El Ninja puede lanzar granadas destello, las cuales pueden congelar a los infectados durante tres segundos."
 	},
 	{
-		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
 		"one": "Su martillo ha sido reemplazado por una katana, permiti\u00e9ndole saltar una vez antes de tocar el suelo.",
 		"other": "Su martillo ha sido reemplazado por una katana, permiti\u00e9ndole saltar {int:NinjaJump} veces antes de tocar el suelo.",
 	},
@@ -332,9 +338,9 @@
 		"value": "El mercenario vuela usando su metralleta."
 	},
 	{
-		"key": "He can also throw poison grenades that each deal one damage point.",
-		"one": "",
-		"other": "",
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
+		"one": "\u00c9l tambi\u00e9n puede lanzar granadas de pociones que infligen {int:NumDamagePoints} punto de da\u00f1o.",
+		"other": "\u00c9l tambi\u00e9n puede lanzar granadas de pociones que infligen {int:NumDamagePoints} puntos de da\u00f1o.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -346,7 +352,7 @@
 	},
 	{
 		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
-		"value": "El tiene tambi\u00e9n un rifle potente que inflinge 20 puntos de da\u00f1o cuando est\u00e1 bloqueado en una posicion y 9-10 en otros casos."
+		"value": "\u00c9l tiene tambi\u00e9n un rifle potente que inflige 20 puntos de da\u00f1o cuando est\u00e1 bloqueado en una posici\u00f3n y 9\u201310 en otros casos."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",
@@ -378,7 +384,7 @@
 	},
 	{
 		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
-		"value": "El es invisible, excepto si un humano esta cerca de \u00e9l, si le inflingen da\u00f1o o si usa su martillo."
+		"value": "\u00c9l es invisible, excepto si un humano esta cerca de \u00e9l, si le infligen da\u00f1o o si usa su martillo."
 	},
 	{
 		"key": "The Spider can infect humans and heal infected with his hammer.",
@@ -386,7 +392,7 @@
 	},
 	{
 		"key": "When selecting any gun, his hook enter in web mode.",
-		"value": "Cuando seleccion cualquier arma, el gancho entra en modo telara\u00f1a."
+		"value": "Con la selecci\u00f3n de cualquier arma el gancho entra en modo telara\u00f1a."
 	},
 	{
 		"key": "Any human that touch a hook in web mode is automatically grabbed.",
@@ -426,9 +432,11 @@
 	},
 	{
 		"key": "Available help pages: {str:PageList}",
+		"value": "P\u00e1ginas de ayuda disponibles: {str:PageList}"
 	},
 	{
 		"key": "Choose a help page with /help <page>",
+		"value": "Escoge una p\u00e1gina de ayuda con /help <p\u00e1gina>"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -440,41 +448,54 @@
 	},
 	{
 		"key": "Unknown language",
+		"value": "Idioma desconocido"
 	},
 	{
 		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "Idiomas disponibles: {str:ListOfLanguage}"
 	},
 	{
 		"key": "List of commands",
+		"value": "Lista de comandos"
 	},
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "Pulsa <F3> o <F4> para activar o desactivar la protecci\u00f3n de gancho"
 	},
 	{
 		"key": "No player was found with this name",
+		"value": "Ning\u00fan jugador con ese nombre fue encontrado."
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",
+		"value": "\u00a1Espera 5 minutos antes de que creares otra cuenta, por favor!"
 	},
 	{
 		"key": "An error occured during the creation of your account.",
+		"value": "Se produjo un error en el curso de la creaci\u00f3n de tu cuenta."
 	},
 	{
 		"key": "This username is already taken by an existing account",
+		"value": "Este nombre de usuario ya est\u00e1 cogido por una cuenta existente"
 	},
 	{
 		"key": "Your account has been created and you are now logged.",
+		"value": "Tu cuenta fue creada y ya has iniciado tu sesi\u00f3n."
 	},
 	{
 		"key": "You must be logged to see your rank",
+		"value": "Debes estar conectado con tu cuenta para ver tu rango"
 	},
 	{
 		"key": "You must be logged to see your goal",
+		"value": "Debes estar conectado con tu cuenta para ver tu objetivo"
 	},
 	{
 		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Ya has anunciado que {str:PlayerName} debe ser baneado"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} pide que {str:VictimName} sea baneado ({str:Reason})"
 	},
 ]}

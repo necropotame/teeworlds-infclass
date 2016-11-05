@@ -8,10 +8,10 @@
 		"value": "Zainfekowani wygrali gr\u0119 w {sec:RoundDuration}"
 	},
 	{
-		"key": "One human won the round",
-		"one": "",
-		"many": "",
-		"other": "",
+		"key": "{int:NumHumans} humans won the round",
+		"one": "Jeden cz\u0142owiek wygra\u0142 rund\u0119",
+		"many": "{int:NumHumans} Ludzie wygrali rund\u0119",
+		"other": "{int:NumHumans} Ludzie wygrali rund\u0119 ",
 	},
 	{
 		"key": "You have survived, +5 points",
@@ -55,6 +55,7 @@
 	},
 	{
 		"key": "Hero",
+		"value": "Bohater"
 	},
 	{
 		"key": "Ninja",
@@ -73,19 +74,20 @@
 		"value": "Wybierz swoj\u0105 ras\u0119"
 	},
 	{
-		"key": "One bomb left",
-		"one": "",
-		"many": "",
-		"other": "",
+		"key": "{int:NumBombs} bombs left",
+		"one": "Jedna bomba pozosta\u0142a",
+		"many": "{int:NumBombs} pozosta\u0142o bomb",
+		"other": "{int:NumBombs} pozosta\u0142o bomb",
 	},
 	{
-		"key": "One mine is active",
-		"one": "",
-		"many": "",
-		"other": "",
+		"key": "{int:NumMines} mines are actives",
+		"one": "Jedna mina jest aktywna",
+		"many": "{int:NumMines} miny s\u0105 aktywne",
+		"other": "{int:NumMines} miny s\u0105 aktywne",
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Nast\u0119pna flaga za  {sec:RemainingTime}"
 	},
 	{
 		"key": "Laser wall: {sec:RemainingTime}",
@@ -113,6 +115,7 @@
 	},
 	{
 		"key": "The Hero found the flag!",
+		"value": "Bohater znalaz\u0142 flag\u0119!"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -160,6 +163,7 @@
 	},
 	{
 		"key": "Ghost",
+		"value": "Duch"
 	},
 	{
 		"key": "Spider",
@@ -175,6 +179,7 @@
 	},
 	{
 		"key": "Unknown class",
+		"value": "Nieznana klasa"
 	},
 	{
 		"key": "You are a human: {str:ClassName}",
@@ -202,9 +207,11 @@
 	},
 	{
 		"key": "You can change the language of this mod using the command /language.",
+		"value": "Mo\u017cesz zmieni\u0107 j\u0119zyk tego moda u\u017cywaj\u0105c komendy /language"
 	},
 	{
 		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "Je\u015bli tw\u00f3j j\u0119zyk nie jest dost\u0119pny, mo\u017cesz pom\u00f3c z t\u0142umaczeniem (/help translate)."
 	},
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
@@ -244,12 +251,15 @@
 	},
 	{
 		"key": "How to translate the mod",
+		"value": "Jak przet\u0142umaczy\u0107 ten mod"
 	},
 	{
 		"key": "Create an account on Transifex and join a translation team:",
+		"value": "Utw\u00f3rz konto na Transiflex i do\u0142\u0105cz do dru\u017cyny t\u0142umaczy:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "W razie jakichkolwiek pyta\u0144 o proces t\u0142umaczenia, prosz\u0119 skontaktuj si\u0119 z nami na IRC  ({str:IRCAddress})"
 	},
 	{
 		"key": "The Engineer can build walls with his hammer to block infected.",
@@ -268,10 +278,10 @@
 		"value": "\u017bo\u0142nierz mo\u017ce stawia\u0107 lataj\u0105ce bomby swoim m\u0142otem."
 	},
 	{
-		"key": "Each bomb can explode one time.",
-		"one": "",
-		"many": "",
-		"other": "",
+		"key": "Each bomb can explode {int:NumBombs} times.",
+		"one": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 raz.",
+		"many": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 {int:NumBombs} razy",
+		"other": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 {int:NumBombs} razy",
 	},
 	{
 		"key": "Use the hammer to place the bomb and explode it multiple times.",
@@ -283,15 +293,17 @@
 	},
 	{
 		"key": "The Scientist can pose floating mines with his hammer.",
+		"value": "Naukowiec mo\u017ce stawia\u0107 lataj\u0105ce miny swoim m\u0142otem."
 	},
 	{
-		"key": "Mines are limited to one per player at the same time.",
-		"one": "",
-		"many": "",
-		"other": "",
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
+		"one": "Miny s\u0105 limitowane dla ka\u017cdego gracza w jednym momencie.",
+		"many": "Miny s\u0105 limitowane {int:NumMines} dla ka\u017cdego gracza w jednym momencie.",
+		"other": "Miny s\u0105 limitowane {int:NumMines} dla ka\u017cdego gracza w jednym momencie.",
 	},
 	{
 		"key": "He has also grenades that teleport him.",
+		"value": "Ma r\u00f3wnie\u017c granaty do teleportacji."
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
@@ -303,35 +315,39 @@
 	},
 	{
 		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+		"value": "Bohater ma strzelb\u0119, karabin laserowy i granatnik."
 	},
 	{
 		"key": "The Hero must find a flag hidden in the map.",
+		"value": "Bohater musi odnale\u017a\u0107 flag\u0119 ukryt\u0105 na mapie."
 	},
 	{
 		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+		"value": "Raz zebrana flaga, dale 1 punk \u017cycia, 4 punkty pancerza, i pe\u0142ne magazynki dla wszystkich ludzi. Pe\u0142ne \u017cycie i pancerz dla bohatera."
 	},
 	{
 		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "Bohater nie mo\u017ce by\u0107 uleczony przez lekarza, ale mo\u017ce wytrzyma\u0107 nap\u00f3r zara\u017conych, przyp\u0142acaj\u0105c to punktami \u017cycia."
 	},
 	{
 		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
 		"value": "Ninja mo\u017ce rzuca\u0107 granaty o\u015blepiaj\u0105ce, kt\u00f3re zamra\u017caj\u0105 zainfekowanych na trzy sekundy."
 	},
 	{
-		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
-		"one": "",
-		"many": "",
-		"other": "",
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
+		"one": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 raz przed dotkni\u0119ciem ziemi.",
+		"many": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 {int:NinjaJump}  razy przed dotkni\u0119ciem ziemi.",
+		"other": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 {int:NinjaJump}  razy przed dotkni\u0119ciem ziemi.",
 	},
 	{
 		"key": "The Mercenary fly in air using his machine gun.",
 		"value": "Najemnik mo\u017ce lata\u0107 u\u017cywaj\u0105c swojego pistelotu maszynowego."
 	},
 	{
-		"key": "He can also throw poison grenades that each deal one damage point.",
-		"one": "",
-		"many": "",
-		"other": "",
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
+		"one": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, gdzie ka\u017cdy zabiera 1 punkt obra\u017ce\u0144.",
+		"many": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, gdzie ka\u017cdy zabiera {int:NumDamagePoints punkt\u00f3w obra\u017ce\u0144.",
+		"other": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, gdzie ka\u017cdy zabiera {int:NumDamagePoints punkt\u00f3w obra\u017ce\u0144.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -343,6 +359,7 @@
 	},
 	{
 		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+		"value": "Ma r\u00f3wnie\u017c pot\u0119\u017cny karabin, kt\u00f3ry zabiera 20 punkt\u00f3w obra\u017cen w pozycji zablokowanej i 9-10 gdy nie jest."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",
@@ -370,9 +387,11 @@
 	},
 	{
 		"key": "The Ghost can infect humans and heal infected with his hammer.",
+		"value": "Duch mo\u017ce zara\u017ca\u0107 ludzi i leczy\u0107 zara\u017conych swoim m\u0142otem."
 	},
 	{
 		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
+		"value": "Jest niewidzialny, dop\u00f3ki nie ma cz\u0142owieka w jego okolicy, otrzyma obra\u017cenia lub u\u017cyje m\u0142ota."
 	},
 	{
 		"key": "The Spider can infect humans and heal infected with his hammer.",
@@ -420,9 +439,11 @@
 	},
 	{
 		"key": "Available help pages: {str:PageList}",
+		"value": "Dost\u0119pne strony z pomoc\u0105: {str:PageList}"
 	},
 	{
 		"key": "Choose a help page with /help <page>",
+		"value": "Wybierz stron\u0119 pomocnicz\u0105 u\u017cywaj\u0105c /help <page>"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -438,6 +459,7 @@
 	},
 	{
 		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "Dost\u0119pne j\u0119zyki: {str:ListOfLanguage}"
 	},
 	{
 		"key": "List of commands",
@@ -445,32 +467,42 @@
 	},
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "Naci\u015bnij <f3> lub <f4> aby aktywowa\u0107 lub dezaktywowa\u0107 ochron\u0119 przed hakiem."
 	},
 	{
 		"key": "No player was found with this name",
+		"value": "Gracz z takim imieniem nie zosta\u0142 odnaleziony"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",
+		"value": "Prosz\u0119 poczekaj 5 minut przed utworzeniem nast\u0119pnego konta"
 	},
 	{
 		"key": "An error occured during the creation of your account.",
+		"value": "Wyst\u0105pi\u0142 b\u0142\u0105d podczas tworzenia twojego konta."
 	},
 	{
 		"key": "This username is already taken by an existing account",
+		"value": "Nazwa u\u017cytkownika jest zaj\u0119ta przez istniej\u0105ce konto"
 	},
 	{
 		"key": "Your account has been created and you are now logged.",
+		"value": "Twoje konto zosta\u0142o utworzone i jeste\u015b zalogowany."
 	},
 	{
 		"key": "You must be logged to see your rank",
+		"value": "Musisz by\u0107 zalogowany by zobaczy\u0107 sw\u00f3j ranking"
 	},
 	{
 		"key": "You must be logged to see your goal",
+		"value": "Musisz by\u0107 zalogowany by zobaczy\u0107 sw\u00f3j gol"
 	},
 	{
 		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Ju\u017c zg\u0142osi\u0142e\u015b, to \u017ce {str:PlayerName} musi by\u0107 zbanowany"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} chce {str:VictimName} aby by\u0142 zbanowany ({str:Reason})"
 	},
 ]}

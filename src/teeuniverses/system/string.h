@@ -138,12 +138,10 @@ public:
 		int Size = Pos+BufferSize+1;
 		if(Size > m_MaxSize)
 		{
-			int NewSize;
-			do
-			{
-				NewSize = m_MaxSize*2;
-			}
-			while(Size > NewSize);
+			int NewSize = m_MaxSize*2;
+			while(Size > NewSize)
+				NewSize *= 2;
+			
 			resize_buffer(NewSize);
 		}
 		
@@ -157,12 +155,10 @@ public:
 		int Size = Pos+Num+1;
 		if(Size > m_MaxSize)
 		{
-			int NewSize;
-			do
-			{
-				NewSize = m_MaxSize*2;
-			}
-			while(Size > NewSize);
+			int NewSize = m_MaxSize*2;
+			while(Size > NewSize)
+				NewSize *= 2;
+			
 			resize_buffer(NewSize);
 		}
 		

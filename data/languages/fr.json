@@ -8,7 +8,7 @@
 		"value": "Les infect\u00e9\u00b7e\u00b7s ont gagn\u00e9 la manche en {sec:RoundDuration}"
 	},
 	{
-		"key": "One human won the round",
+		"key": "{int:NumHumans} humans won the round",
 		"one": "Un\u00b7e humain\u00b7e a gagn\u00e9 la manche",
 		"other": "{int:NumHumans} humain\u00b7e\u00b7s ont gagn\u00e9 la manche",
 	},
@@ -73,12 +73,12 @@
 		"value": "Choisissez votre classe"
 	},
 	{
-		"key": "One bomb left",
+		"key": "{int:NumBombs} bombs left",
 		"one": "Une bombe restante",
 		"other": "{int:NumBombs} bombes restantes",
 	},
 	{
-		"key": "One mine is active",
+		"key": "{int:NumMines} mines are actives",
 		"one": "Une mine est active",
 		"other": "{int:NumMines} mines sont actives",
 	},
@@ -275,7 +275,7 @@
 		"value": "Les Soldat\u00b7e\u00b7s peuvent cr\u00e9er des bombes flottantes avec leur marteau."
 	},
 	{
-		"key": "Each bomb can explode one time.",
+		"key": "Each bomb can explode {int:NumBombs} times.",
 		"one": "Chaque bombe peut exploser une seule fois",
 		"other": "Chaque bombe peut exploser {int:NumBombs} fois",
 	},
@@ -292,7 +292,7 @@
 		"value": "Les Scientifiques peuvent cr\u00e9er des mines avec leur marteau."
 	},
 	{
-		"key": "Mines are limited to one per player at the same time.",
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
 		"one": "Les mines sont limit\u00e9es \u00e0 une par personne au m\u00eame moment.",
 		"other": "Les mines sont limit\u00e9es \u00e0 {int:NumMines} par personne au m\u00eame moment.",
 	},
@@ -329,7 +329,7 @@
 		"value": "Les Ninja peuvent lancer des grenades flash qui immobilisent les infect\u00e9\u00b7e\u00b7s pendant trois secondes."
 	},
 	{
-		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
 		"one": "Son marteau est remplac\u00e9 par un katana lui permetant de sauter une fois avant de toucher le sol.",
 		"other": "Son marteau est remplac\u00e9 par un katana lui permetant de sauter {int:NinjaJump} fois avant de toucher le sol.",
 	},
@@ -338,7 +338,7 @@
 		"value": "Les Mercenaires peuvent voler dans l'air \u00e0 l'aide de leur mitrailleuse."
 	},
 	{
-		"key": "He can also throw poison grenades that each deal one damage point.",
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent un point de d\u00e9g\u00e2t.",
 		"other": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent {int:NumDamagePoints} points de d\u00e9g\u00e2t.",
 	},

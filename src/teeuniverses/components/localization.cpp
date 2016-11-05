@@ -634,7 +634,7 @@ void CLocalization::Format_V(dynamic_string& Buffer, const char* pLanguageCode, 
 		Iter = str_utf8_forward(pText, Iter);
 	}
 	
-	if(ParamTypeStart == -1 && ParamNameStart == -1)
+	if(Iter > 0 && ParamTypeStart == -1 && ParamNameStart == -1)
 	{
 		BufferIter = Buffer.append_at_num(BufferIter, pText+Start, Iter-Start);
 	}

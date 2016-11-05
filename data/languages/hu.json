@@ -8,7 +8,7 @@
 		"value": "A zombik megnyert\u00e9k a j\u00e1t\u00e9kot {sec:RoundDuration}"
 	},
 	{
-		"key": "One human won the round",
+		"key": "{int:NumHumans} humans won the round",
 		"one": "Egy ember nyerte meg a j\u00e1t\u00e9kot",
 		"other": "{int:NumHumans} ember nyerte meg j\u00e1t\u00e9kot",
 	},
@@ -54,6 +54,7 @@
 	},
 	{
 		"key": "Hero",
+		"value": "H\u0151s"
 	},
 	{
 		"key": "Ninja",
@@ -69,20 +70,21 @@
 	},
 	{
 		"key": "Choose your class",
-		"value": "V\u00e1lasztd ki az oszt\u00e1lyodat"
+		"value": "V\u00e1lasztd ki az oszt\u00e1lyodat!"
 	},
 	{
-		"key": "One bomb left",
-		"one": "",
-		"other": "",
+		"key": "{int:NumBombs} bombs left",
+		"one": "Egy bomb\u00e1d maradt.",
+		"other": "{int:NumBombs} bomb\u00e1d maradt.",
 	},
 	{
-		"key": "One mine is active",
-		"one": "",
-		"other": "",
+		"key": "{int:NumMines} mines are actives",
+		"one": "Egy akt\u00edv akn\u00e1d van.",
+		"other": "{int:NumMines} akt\u00edv akn\u00e1d van.",
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
+		"value": "K\u00f6vetkez\u0151 z\u00e1szl\u00f3 \u00e9rkezik: {sec:RemainingTime} m\u00e1sodperc"
 	},
 	{
 		"key": "Laser wall: {sec:RemainingTime}",
@@ -90,7 +92,7 @@
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Position lock: {sec:RemainingTime}"
+		"value": "Hely-z\u00e1r: {sec:RemainingTime}"
 	},
 	{
 		"key": "Web mode enabled",
@@ -110,6 +112,7 @@
 	},
 	{
 		"key": "The Hero found the flag!",
+		"value": "A H\u0151s megtal\u00e1lta a z\u00e1szl\u00f3t!"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -145,15 +148,15 @@
 	},
 	{
 		"key": "Smoker",
-		"value": "Smoker"
+		"value": "F\u00fcst\u00f6s"
 	},
 	{
 		"key": "Hunter",
-		"value": "Hunter"
+		"value": "Vad\u00e1sz"
 	},
 	{
 		"key": "Boomer",
-		"value": "Boomer"
+		"value": "Bomba"
 	},
 	{
 		"key": "Ghost",
@@ -173,6 +176,7 @@
 	},
 	{
 		"key": "Unknown class",
+		"value": "Ismeretlen oszt\u00e1ly"
 	},
 	{
 		"key": "You are a human: {str:ClassName}",
@@ -197,12 +201,6 @@
 	{
 		"key": "Switch language to english ?",
 		"value": "M\u00f3dos\u00edtod a nyelvet magyarra?"
-	},
-	{
-		"key": "You can change the language of this mod using the command /language.",
-	},
-	{
-		"key": "If your language is not available, you can help with translation (/help translate).",
 	},
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
@@ -241,15 +239,6 @@
 		"value": "A zombik c\u00e9lja, hogy minden embert megfert\u0151zzenek."
 	},
 	{
-		"key": "How to translate the mod",
-	},
-	{
-		"key": "Create an account on Transifex and join a translation team:",
-	},
-	{
-		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
-	},
-	{
 		"key": "The Engineer can build walls with his hammer to block infected.",
 		"value": "A m\u00e9rn\u00f6k falakat \u00e9p\u00edthat kalap\u00e1cs\u00e1val, hogy kiv\u00e9dje a zombik t\u00e1mad\u00e1s\u00e1t."
 	},
@@ -266,9 +255,9 @@
 		"value": "A k\u00f6zkatona fel\u00e1ll\u00edthat lebeg\u0151 bomb\u00e1kat kalap\u00e1cs\u00e1val."
 	},
 	{
-		"key": "Each bomb can explode one time.",
-		"one": "",
-		"other": "",
+		"key": "Each bomb can explode {int:NumBombs} times.",
+		"one": "Minden bomba egy alkalommal robbanhat fel.",
+		"other": "Minden bomba {int:NumBombs} alkalommal robbanhat fel.",
 	},
 	{
 		"key": "Use the hammer to place the bomb and explode it multiple times.",
@@ -283,9 +272,9 @@
 		"value": "A tud\u00f3s fel\u00e1ll\u00edthat lebeg\u0151 akn\u00e1kat kalap\u00e1cs\u00e1val."
 	},
 	{
-		"key": "Mines are limited to one per player at the same time.",
-		"one": "",
-		"other": "",
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
+		"one": "Minden j\u00e1t\u00e9kosnak egyszerre csak egy akn\u00e1ja lehet.",
+		"other": "Minden j\u00e1t\u00e9kosnak egyszerre {int:NumMines} akn\u00e1ja lehet.",
 	},
 	{
 		"key": "He has also grenades that teleport him.",
@@ -301,22 +290,22 @@
 	},
 	{
 		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+		"value": "A h\u0151snek van egy sorozatl\u00f6v\u0151je, l\u00e9zerpisztolya \u00e9s gr\u00e1n\u00e1tvet\u0151je."
 	},
 	{
 		"key": "The Hero must find a flag hidden in the map.",
+		"value": "A h\u0151snek meg kell tal\u00e1lnia a t\u00e9rk\u00e9pen elrejtett z\u00e1szl\u00f3t."
 	},
 	{
 		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
-	},
-	{
-		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "Ha megtal\u00e1lj\u00e1k, a z\u00e1szl\u00f3 minden embernek ad 1 \u00e9leter\u0151pontot, 4 p\u00e1nc\u00e9lpontot \u00e9s teljes t\u00f6lt\u00e9nyt\u00e1rat; a h\u0151snek ezen k\u00edv\u00fcl teljes \u00e9leter\u0151t \u00e9s p\u00e1nc\u00e9lt."
 	},
 	{
 		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
 		"value": "A nindzsa l\u0151hett bomb\u00e1kat, amik lefagyasztj\u00e1k a zombikat."
 	},
 	{
-		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
 		"one": "",
 		"other": "",
 	},
@@ -325,7 +314,7 @@
 		"value": "A soldos tud rep\u00fclni a sorozatl\u00f6v\u0151j\u00e1vel."
 	},
 	{
-		"key": "He can also throw poison grenades that each deal one damage point.",
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "",
 		"other": "",
 	},
@@ -336,9 +325,6 @@
 	{
 		"key": "He can jump two times in air.",
 		"value": "K\u00e9tszer ugorhat leveg\u0151ben."
-	},
-	{
-		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",
@@ -417,12 +403,6 @@
 		"value": "Tov\u00e1bb\u00e1 m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-	},
-	{
-		"key": "Choose a help page with /help <page>",
-	},
-	{
 		"key": "A random class will be automatically attributed to you when rounds start",
 		"value": "Ha a k\u00f6r elkezd\u0151dik, \u00e9s nem v\u00e1lasztott\u00e1l, v\u00e9letlenszer\u0171 oszt\u00e1lyt kapsz"
 	},
@@ -435,41 +415,11 @@
 		"value": "Ismeretlen nyelv"
 	},
 	{
-		"key": "Available languages: {str:ListOfLanguage}",
-	},
-	{
 		"key": "List of commands",
 		"value": "Parancsok list\u00e1ja"
 	},
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Nyomd le az <F3>-at vagy <F4>-et, hogy enged\u00e9lyezd vagy letiltsd a horog-v\u00e9delmet"
-	},
-	{
-		"key": "No player was found with this name",
-	},
-	{
-		"key": "Please wait 5 minutes before create an another account",
-	},
-	{
-		"key": "An error occured during the creation of your account.",
-	},
-	{
-		"key": "This username is already taken by an existing account",
-	},
-	{
-		"key": "Your account has been created and you are now logged.",
-	},
-	{
-		"key": "You must be logged to see your rank",
-	},
-	{
-		"key": "You must be logged to see your goal",
-	},
-	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-	},
-	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
 	},
 ]}

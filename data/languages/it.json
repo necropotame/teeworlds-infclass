@@ -8,7 +8,7 @@
 		"value": "Gli infetti hanno vinto l'incontro in {sec:RoundDuration}"
 	},
 	{
-		"key": "One human won the round",
+		"key": "{int:NumHumans} humans won the round",
 		"one": "Un umano ha vinto l'incontro",
 		"other": "{int:NumHumans} umani hanno vinto l'incontro",
 	},
@@ -54,6 +54,7 @@
 	},
 	{
 		"key": "Hero",
+		"value": "Eroe"
 	},
 	{
 		"key": "Ninja",
@@ -72,17 +73,18 @@
 		"value": "Scegli la tua classe"
 	},
 	{
-		"key": "One bomb left",
-		"one": "",
-		"other": "",
+		"key": "{int:NumBombs} bombs left",
+		"one": "Una bomba rimasta",
+		"other": "{int:NumBombs}bombe rimaste",
 	},
 	{
-		"key": "One mine is active",
-		"one": "",
-		"other": "",
+		"key": "{int:NumMines} mines are actives",
+		"one": "Una mina \u00e8 attiva",
+		"other": "{int:NumMines} le mine sono attive",
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Prossima bandiera in {sec:RemainingTime}"
 	},
 	{
 		"key": "Laser wall: {sec:RemainingTime}",
@@ -110,6 +112,7 @@
 	},
 	{
 		"key": "The Hero found the flag!",
+		"value": "L'Eroe ha trovato la bandiera"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -173,6 +176,7 @@
 	},
 	{
 		"key": "Unknown class",
+		"value": "Classe sconosciuta"
 	},
 	{
 		"key": "You are a human: {str:ClassName}",
@@ -200,9 +204,11 @@
 	},
 	{
 		"key": "You can change the language of this mod using the command /language.",
+		"value": "Puoi cambiare la lingua di questa modalit\u00e0 usando il comando /language"
 	},
 	{
 		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "Se la tua lingua non \u00e8 disponibile, puoi aiutarci a tradurla (/help translate)."
 	},
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
@@ -242,12 +248,15 @@
 	},
 	{
 		"key": "How to translate the mod",
+		"value": "Come tradurre questa modalit\u00e0"
 	},
 	{
 		"key": "Create an account on Transifex and join a translation team:",
+		"value": "Crea un account su Transifex e unisciti al nostro team di traduzioni:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "Per qualsiasi domanda sul processo di traduzione, si prega di contattarci su IRC ({str:IRCAddress})"
 	},
 	{
 		"key": "The Engineer can build walls with his hammer to block infected.",
@@ -259,14 +268,14 @@
 	},
 	{
 		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
-		"value": "La durata di vita di una barriera \u00e8 di {sec:LifeSpan} e sono limitate ad una per giocatore nello stesso momento."
+		"value": "La durata di una barriera \u00e8 di {sec:LifeSpan} e sono limitate ad una per giocatore nello stesso momento."
 	},
 	{
 		"key": "The Soldier can pose floating bombs with his hammer.",
 		"value": "Il Soldato pu\u00f2 creare col suo martello bombe."
 	},
 	{
-		"key": "Each bomb can explode one time.",
+		"key": "Each bomb can explode {int:NumBombs} times.",
 		"one": "Ogni insieme di bombe pu\u00f2 esplodere un volte.",
 		"other": "Ogni insieme di bombe pu\u00f2 esplodere {int:NumBombs} volte.",
 	},
@@ -283,7 +292,7 @@
 		"value": "Lo scienziato pu\u00f2 piazzare mine volanti con il suo martello."
 	},
 	{
-		"key": "Mines are limited to one per player at the same time.",
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
 		"one": "Le mine sono limitate a {int:NumMines} per giocatore nello stesso tempo. ",
 		"other": "Le mine sono limitate a {int:NumMines} per giocatore nello stesso tempo. ",
 	},
@@ -301,22 +310,26 @@
 	},
 	{
 		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+		"value": "L'Eroe ha un fucile a pompa, un fucile di precisione e un lanciagranate."
 	},
 	{
 		"key": "The Hero must find a flag hidden in the map.",
+		"value": "L'Eroe deve trovare una bandiera nascosta nella mappa"
 	},
 	{
 		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+		"value": "Una volta presa, la bandiera d\u00e0 1 punto salute, 4 punti d'armatura e ricarica le munizioni di tutti gli umani, oltre alla salute e alle munizioni dell'eroe."
 	},
 	{
 		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "L'eroe non pu\u00f2 essere curato da un medico, ma pu\u00f2 resistere una martellata da un infetto, se ha vita sufficente."
 	},
 	{
 		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
 		"value": "Il Ninja pu\u00f2 lanciare granate stordenti che possono immobilizzare gli infetti per 3 secondi."
 	},
 	{
-		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
 		"one": "Il suo martello \u00e8 rimpiazzato da una katana che gli permette di saltare un volte prima di toccare terra.",
 		"other": "Il suo martello \u00e8 rimpiazzato da una katana che gli permette di saltare {int:NinjaJump} volte prima di toccare terra.",
 	},
@@ -325,7 +338,7 @@
 		"value": "Il Mercenario vola nell'aria usando la sua pistola."
 	},
 	{
-		"key": "He can also throw poison grenades that each deal one damage point.",
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Lui pu\u00f2 anche lanciare granate velenose che infliggono un punti danno. ",
 		"other": "Lui pu\u00f2 anche lanciare granate velenose che infliggono {int:NumDamagePoints} punti danno.",
 	},
@@ -339,6 +352,7 @@
 	},
 	{
 		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+		"value": "Ha anche un potente fucile di precisione che infligge 20 punti danno in posizione bloccata e 9-10 in posizione normale."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",
@@ -418,9 +432,11 @@
 	},
 	{
 		"key": "Available help pages: {str:PageList}",
+		"value": "Pagine d'aiuto disponibili: {str:PageList}"
 	},
 	{
 		"key": "Choose a help page with /help <page>",
+		"value": "Scegli una pagina d'aiuto con /help <page>"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -436,6 +452,7 @@
 	},
 	{
 		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "Lingue disponibili: {str:ListOfLanguage}"
 	},
 	{
 		"key": "List of commands",
@@ -447,29 +464,38 @@
 	},
 	{
 		"key": "No player was found with this name",
+		"value": "Nessun giocatore \u00e8 stato trovato con questo nome"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",
+		"value": "Si prega di aspettare 5 minuti prima di creare un altro account"
 	},
 	{
 		"key": "An error occured during the creation of your account.",
+		"value": "Si \u00e8 verificato un errore durante la creazione del tuo account."
 	},
 	{
 		"key": "This username is already taken by an existing account",
+		"value": "Questo username \u00e8 stato gi\u00e0 preso da un account esistente"
 	},
 	{
 		"key": "Your account has been created and you are now logged.",
+		"value": "Il tuo account \u00e8 stato creato e hai ora effettuato l'accesso."
 	},
 	{
 		"key": "You must be logged to see your rank",
+		"value": "Devi aver effettuato l'accesso per vedere il tuo rank"
 	},
 	{
 		"key": "You must be logged to see your goal",
+		"value": "Devi aver effettuato l'accesso per vedere il tuo obiettivo"
 	},
 	{
 		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Hai gi\u00e0 informato che {str:PlayerName} deve essere bandito"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} vuole che {str:VictimName} sia bandito ({str:Reason})"
 	},
 ]}

@@ -8,7 +8,7 @@
 		"value": "Os infectados ganharam a partida em {sec:RoundDuration}"
 	},
 	{
-		"key": "One human won the round",
+		"key": "{int:NumHumans} humans won the round",
 		"one": "Um humano ganhou a partida",
 		"other": "{int:NumHumans} humanos ganharam a partida",
 	},
@@ -73,14 +73,14 @@
 		"value": "Escolha a sua classe"
 	},
 	{
-		"key": "One bomb left",
+		"key": "{int:NumBombs} bombs left",
 		"one": "Uma bomba restando",
 		"other": "{int:NumBombs} bombas restando",
 	},
 	{
-		"key": "One mine is active",
-		"one": "",
-		"other": "",
+		"key": "{int:NumMines} mines are actives",
+		"one": "Uma mina est\u00e1 ativa",
+		"other": "{int:NumMines} minas est\u00e3o ativas",
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -275,7 +275,7 @@
 		"value": "O Soldado pode colocar bombas flutuantes com seu martelo."
 	},
 	{
-		"key": "Each bomb can explode one time.",
+		"key": "Each bomb can explode {int:NumBombs} times.",
 		"one": "Cada bomba pode explodir uma vez.",
 		"other": "Cada bomba pode explodir {int:NumBombs} vezes.",
 	},
@@ -292,7 +292,7 @@
 		"value": "O Cientista pode colocar minas com seu martelo."
 	},
 	{
-		"key": "Mines are limited to one per player at the same time.",
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
 		"one": "Minas s\u00e3o limitadas \u00e0 uma de cada vez por jogador.",
 		"other": "Minas s\u00e3o limitadas \u00e0 {int:NumMines} por jogador ao mesmo tempo.",
 	},
@@ -329,7 +329,7 @@
 		"value": "O Ninja pode jogar granadas atordoantes que congelam seus inimigos por tr\u00eas segundos."
 	},
 	{
-		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
 		"one": "Seu martelo foi substitu\u00eddo por uma katana, permitindo que ele pule uma vez antes de tocar no ch\u00e3o.",
 		"other": "Seu martelo foi substitu\u00eddo por uma katana, permitindo que ele pule {int:NinjaJump} vezes antes de tocar no ch\u00e3o.",
 	},
@@ -338,7 +338,7 @@
 		"value": "O Mercen\u00e1rio pode voar usando sua metralhadora."
 	},
 	{
-		"key": "He can also throw poison grenades that each deal one damage point.",
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Ele tamb\u00e9m pode jogar granadas venenosas que causam um ponto de dano.",
 		"other": "Ele tamb\u00e9m pode jogar granadas venenosas que causam {int:NumDamagePoints} pontos de dano.",
 	},
@@ -492,8 +492,10 @@
 	},
 	{
 		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Voc\u00ea j\u00e1 prop\u00f4s que {str:PlayerName} deve ser banido"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} quer que {str:VictimName} seja banido ({str:Reason})"
 	},
 ]}

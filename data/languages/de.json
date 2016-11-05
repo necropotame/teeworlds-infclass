@@ -8,7 +8,7 @@
 		"value": "Die Erkrankten haben die Runde in {sec:RoundDuration}"
 	},
 	{
-		"key": "One human won the round",
+		"key": "{int:NumHumans} humans won the round",
 		"one": "Ein \u00dcberlebender hat die Runde gewonnen.",
 		"other": "{int:NumHumans} \u00dcberlebende haben die Runde gewonnen.",
 	},
@@ -73,12 +73,12 @@
 		"value": "W\u00e4hle deine Klasse"
 	},
 	{
-		"key": "One bomb left",
+		"key": "{int:NumBombs} bombs left",
 		"one": "Eine verbleibende Bombe",
 		"other": "{int:NumBombs} verbleibende Bomben",
 	},
 	{
-		"key": "One mine is active",
+		"key": "{int:NumMines} mines are actives",
 		"one": "Eine Mine ist scharf",
 		"other": "{int:NumMines} Minen sind scharf",
 	},
@@ -275,7 +275,7 @@
 		"value": "Der Soldat kann verm\u00f6ge seines Hammers schwebende Bomben erzeugen."
 	},
 	{
-		"key": "Each bomb can explode one time.",
+		"key": "Each bomb can explode {int:NumBombs} times.",
 		"one": "Jegliche Bombe kann einmal gesprengt werden.",
 		"other": "Jegliche Bombe kann {int:NumBombs}mal gesprengt werden.",
 	},
@@ -292,7 +292,7 @@
 		"value": "Der Wissenschaftler kann mit seinem Hammer schwebende Minen legen."
 	},
 	{
-		"key": "Mines are limited to one per player at the same time.",
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
 		"one": "Ein Spieler kann nicht mehr als eine Mine zur selben Zeit legen.",
 		"other": "Ein Spieler kann nicht mehr als {int:NumMines} Minen zur selben Zeit legen.",
 	},
@@ -329,7 +329,7 @@
 		"value": "Der Ninja kann Granaten werfen, die beim Aufprall getroffene Erkrankte f\u00fcr drei Sekunden einfrieren."
 	},
 	{
-		"key": "His hammer is replaced by a katana, allowing him to jump one time before touching the ground.",
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
 		"one": "Sein Hammer ist durch ein japanisches Langschwert ersetzt, welches seinem Tr\u00e4ger die F\u00e4higkeit verleiht, einmal durch die Luft zu sto\u00dfen, ehe er wieder den Boden ber\u00fchren mu\u00df.",
 		"other": "Sein Hammer ist durch ein japanisches Langschwert ersetzt, welches seinem Tr\u00e4ger die F\u00e4higkeit verleiht, {int:NinjaJump}mal durch die Luft zu sto\u00dfen, ehe er wieder den Boden ber\u00fchren mu\u00df.",
 	},
@@ -338,7 +338,7 @@
 		"value": "Der S\u00f6ldner ist mit einem Maschinengewehr ausgestattet, dessen R\u00fccksto\u00df ihn in die L\u00fcfte erhebt."
 	},
 	{
-		"key": "He can also throw poison grenades that each deal one damage point.",
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Er kann zudem Giftgranaten werfen, welche bei Z\u00fcndung jedem betroffenen Erkrankten einen Schadenspunkt zuf\u00fcgen.",
 		"other": "Er kann zudem Giftgranaten werfen, welche bei Z\u00fcndung jedem betroffenen Erkrankten {int:NumDamagePoints} Schadenspunkte zuf\u00fcgen.",
 	},

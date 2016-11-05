@@ -1672,7 +1672,7 @@ void CCharacter::Tick()
 		{
 			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NbMines,
 				//~ _P("One mine is active", "{int:NumMines} mines are active"),
-				_P("One mine is active", "{int:NumMines} mines are active"),
+				_P("One mine is active", "{int:NumMines} mines are actives"),
 				"NumMines", &NbMines,
 				NULL
 			);
