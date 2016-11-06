@@ -11,12 +11,17 @@
 		"direction": "rtl"
 	},
 	{
+		"file": "cs",
+		"name": "czech",
+		"parent": "en"
+	},
+	{
 		"file": "de",
 		"name": "deutsch",
 		"parent": "en"
 	},
 	{
-		"file": "en",
+		"file": "es",
 		"name": "español",
 		"parent": "en"
 	},

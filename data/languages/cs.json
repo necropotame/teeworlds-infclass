@@ -1,0 +1,508 @@
+{"translation":[
+	{
+		"key": "{str:VictimName} has been infected",
+		"value": "{str:VictimName} byl naka\u017een"
+	},
+	{
+		"key": "Infected won the round in {sec:RoundDuration}",
+		"value": "Naka\u017een\u00ed vyhr\u00e1li kolo v \u010dase {sec:RoundDuration}"
+	},
+	{
+		"key": "{int:NumHumans} humans won the round",
+		"one": "Vyhr\u00e1l jeden \u010dlovek",
+		"few": "{int:NumHumans} lid\u00e9 vyhr\u00e1li",
+		"other": "{int:NumHumans} lid\u00e9 vyhr\u00e1li",
+	},
+	{
+		"key": "You have survived, +5 points",
+		"value": "P\u0159e\u017eil jsi, +5 bod\u016f"
+	},
+	{
+		"key": "You have infected {str:VictimName}, +3 points",
+		"value": "Nakazil jsi {str:VictimName}, +3 body"
+	},
+	{
+		"key": "You have killed a witch, +5 points",
+		"value": "Zabil jsi \u010darod\u011bjnici, +5 bod\u016f"
+	},
+	{
+		"key": "The undead is coming!",
+		"value": "Nemrtv\u00fd p\u0159ich\u00e1z\u00ed!"
+	},
+	{
+		"key": "The witch is coming!",
+		"value": "\u010carod\u011bjnice p\u0159ich\u00e1z\u00ed!"
+	},
+	{
+		"key": "Random choice",
+		"value": "N\u00e1hodn\u00e1 volba"
+	},
+	{
+		"key": "Engineer",
+		"value": "In\u017een\u00fdr"
+	},
+	{
+		"key": "Soldier",
+		"value": "Voj\u00e1k"
+	},
+	{
+		"key": "Scientist",
+		"value": "V\u011bdec"
+	},
+	{
+		"key": "Medic",
+		"value": "L\u00e9ka\u0159"
+	},
+	{
+		"key": "Hero",
+		"value": "Hrdina"
+	},
+	{
+		"key": "Ninja",
+		"value": "Nind\u017ea"
+	},
+	{
+		"key": "Mercenary",
+		"value": "\u017doldn\u00e9\u0159"
+	},
+	{
+		"key": "Sniper",
+		"value": "Odst\u0159elova\u010d"
+	},
+	{
+		"key": "Choose your class",
+		"value": "Vyber si sv\u00e9 povol\u00e1n\u00ed"
+	},
+	{
+		"key": "{int:NumBombs} bombs left",
+		"one": "Jedna bomba zb\u00fdv\u00e1",
+		"few": "{int:NumBombs} bomby zb\u00fdvaj\u00ed",
+		"other": "{int:NumBombs} bomby zb\u00fdvaj\u00ed",
+	},
+	{
+		"key": "{int:NumMines} mines are actives",
+		"one": "Jedna mina je pr\u00e1v\u011b aktivn\u00ed",
+		"few": "{int:NumMines} miny jsou aktivn\u00ed",
+		"other": "{int:NumMines} miny jsou aktivn\u00ed",
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "P\u0159\u00ed\u0161t\u00ed vlajka se spawne za {sec:RemainingTime}"
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laserov\u00e1 st\u011bna: {sec:RemainingTime}"
+	},
+	{
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Znehybn\u011bn\u00ed: {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Pavu\u010dinov\u00fd m\u00f3d aktivov\u00e1n"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "\u010carod\u011bjnice byla zabita"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Nemrtv\u00fd je kone\u010dn\u011b mrtv\u00fd"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Napi\u0161 \"/help {str:ClassName}\" pro v\u00edc informac\u00ed o tv\u00e9m povol\u00e1n\u00ed"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Hrdina na\u0161el vlajku!"
+	},
+	{
+		"key": "Hook protection enabled",
+		"value": "Ochrana proti h\u00e1k\u016fm aktivov\u00e1na"
+	},
+	{
+		"key": "Hook protection disabled",
+		"value": "Ochrana proti h\u00e1k\u016fm deaktivov\u00e1na"
+	},
+	{
+		"key": "{str:PlayerName} has been banned ({str:Reason})",
+		"value": "{str:PlayerName} byl zabanov\u00e1n ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has been kicked ({str:Reason})",
+		"value": "{str:PlayerName} byl vyhozen ze hry ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game ({str:Reason})",
+		"value": "{str:PlayerName} opustil hru ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game",
+		"value": "{str:PlayerName} opustil hru"
+	},
+	{
+		"key": "{str:PlayerName} joined the spectators",
+		"value": "{str:PlayerName} za\u010dal pozorovat"
+	},
+	{
+		"key": "{str:PlayerName} joined the game",
+		"value": "{str:PlayerName} se p\u0159ipojil do hry"
+	},
+	{
+		"key": "Smoker",
+		"value": "Ku\u0159\u00e1k"
+	},
+	{
+		"key": "Hunter",
+		"value": "Lovec"
+	},
+	{
+		"key": "Boomer",
+		"value": "Sebevrah"
+	},
+	{
+		"key": "Ghost",
+		"value": "Duch"
+	},
+	{
+		"key": "Spider",
+		"value": "Pavouk"
+	},
+	{
+		"key": "Witch",
+		"value": "\u010carod\u011bjnice"
+	},
+	{
+		"key": "Undead",
+		"value": "Nemrtv\u00fd"
+	},
+	{
+		"key": "Unknown class",
+		"value": "Nezn\u00e1m\u00e9 povol\u00e1n\u00ed"
+	},
+	{
+		"key": "You are a human: {str:ClassName}",
+		"value": "Jsi \u010dlov\u011bk {str:ClassName}"
+	},
+	{
+		"key": "You are an infected: {str:ClassName}",
+		"value": "Jsi naka\u017een\u00fd: {str:ClassName}"
+	},
+	{
+		"key": "{str:PlayerName} entered and joined the game",
+		"value": "{str:PlayerName} se p\u0159ipojil a vstoupil do hry"
+	},
+	{
+		"key": "You can't join the spectators right now",
+		"value": "Pr\u00e1v\u011b nem\u016f\u017ee\u0161 pozorovat"
+	},
+	{
+		"key": "{str:PlayerName} changed their name to {str:NewName}",
+		"value": "{str:PlayerName} zm\u011bnil sv\u00e9 jm\u00e9no na {str:NewName}"
+	},
+	{
+		"key": "Switch language to english ?",
+		"value": "Zm\u011bnit jazyk do angli\u010dtiny"
+	},
+	{
+		"key": "You can change the language of this mod using the command /language.",
+		"value": "M\u016f\u017ee\u0161 zm\u011bnit jazyk tohoto m\u00f3du pomoc\u00ed p\u0159\u00edkazu /language"
+	},
+	{
+		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "Pokud tv\u016fk jazyk nen\u00ed dostupn\u00fd, m\u016f\u017ee\u0161 pomoct s p\u0159ekladem (/help translate)."
+	},
+	{
+		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
+		"value": "InfectionClass, vytvo\u0159il necropotame (version{str:VersionCode})"
+	},
+	{
+		"key": "Based on Infection mod by Gravity",
+		"value": "Na b\u00e1zi Infection m\u00f3du, kter\u00fd byl vytvo\u0159en hr\u00e1\u010dem Gravity"
+	},
+	{
+		"key": "Thanks to {str:ListOfContributors}",
+		"value": "D\u011bkujeme {str:ListOfContributors}"
+	},
+	{
+		"key": "Rules of the game",
+		"value": "Pravidla hry"
+	},
+	{
+		"key": "InfectionClass is a team game between humans and infected.",
+		"value": "InfectionClass je t\u00fdmov\u00e1 hra, mezi lidmi a naka\u017een\u00fdmi."
+	},
+	{
+		"key": "All players start as human.",
+		"value": "V\u0161ichni hr\u00e1\u010di za\u010d\u00ednaj\u00ed jako \u010dlov\u011bk."
+	},
+	{
+		"key": "10 seconds later, two players become infected.",
+		"value": "Za 10 sekund se 2 hr\u00e1\u010di stanou naka\u017een\u00fdmi."
+	},
+	{
+		"key": "The goal for humans is to survive until the army clean the map.",
+		"value": "C\u00edl lid\u00ed je p\u0159e\u017e\u00edt, dokud arm\u00e1da konflikt nevy\u0159e\u0161\u00ed."
+	},
+	{
+		"key": "The goal for infected is to infect all humans.",
+		"value": "C\u00edl naka\u017een\u00fdch, je nakazit v\u0161echny lidi."
+	},
+	{
+		"key": "How to translate the mod",
+		"value": "Jak p\u0159elo\u017eit m\u00f3d"
+	},
+	{
+		"key": "Create an account on Transifex and join a translation team:",
+		"value": "Vytvo\u0159 si \u00fa\u010det na Transifex a p\u0159ipoj se k p\u0159ekladatel\u016fm."
+	},
+	{
+		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "Pokud m\u00e1\u0161 n\u011bjak\u00e9 ot\u00e1zky o p\u0159ekl\u00e1d\u00e1n\u00ed kontaktuj n\u00e1s na IRC ({str:IRCAddress})"
+	},
+	{
+		"key": "The Engineer can build walls with his hammer to block infected.",
+		"value": "In\u017een\u00fdr m\u016f\u017ee kladivem budovat laserov\u00e9 zdi."
+	},
+	{
+		"key": "When an infected touch the wall, he dies.",
+		"value": "Kdy\u017e se naka\u017een\u00fd dotkne zdi, zem\u0159e."
+	},
+	{
+		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
+		"value": "\u017divotnost zdi je {sec:LifeSpan}, a ze\u010f m\u016f\u017ee\u0161 m\u00edt v\u017edy jen jednu."
+	},
+	{
+		"key": "The Soldier can pose floating bombs with his hammer.",
+		"value": "Voj\u00e1k m\u016f\u017ee sv\u00fdm kladivem um\u00edstit nehybn\u00e9 bomby"
+	},
+	{
+		"key": "Each bomb can explode {int:NumBombs} times.",
+		"one": "Ka\u017ed\u00e1 bomba m\u016f\u017ee vybouchnout jednou",
+		"few": "Ka\u017ed\u00e1 bomba m\u016f\u017ee vybouchnout dvakr\u00e1t",
+		"other": "Ka\u017ed\u00e1 bomba m\u016f\u017ee vybouchnout t\u0159ikr\u00e1t",
+	},
+	{
+		"key": "Use the hammer to place the bomb and explode it multiple times.",
+		"value": "Pou\u017eij kladivo poprv\u00e9 k um\u00edst\u011bn\u00ed bomby, podruh\u00e9 k nech\u00e1n\u00ed bomby vybouchnout."
+	},
+	{
+		"key": "Bombs are limited to one per player at the same time.",
+		"value": "Bombu m\u016f\u017ee\u0161 um\u00edstit jen jednu."
+	},
+	{
+		"key": "The Scientist can pose floating mines with his hammer.",
+		"value": "V\u011bdci m\u016f\u017eou kladivem um\u00edstit nehybn\u00e9 miny"
+	},
+	{
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
+		"one": "Minu m\u016f\u017ee\u0161 m\u00edt v\u017edy jen jednu.",
+		"few": "Miny m\u016f\u017ee\u0161 m\u00edt maxim\u00e1ln\u011b {int:NumMines}",
+		"other": "Minu m\u016f\u017ee\u0161 m\u00edt v\u017edy jen {int:NumMines}",
+	},
+	{
+		"key": "He has also grenades that teleport him.",
+		"value": "V\u011bdec m\u00e1 taky gr\u00e1natomet, kter\u00fd ho teleportuje."
+	},
+	{
+		"key": "The Medic can protect humans with his hammer by giving them armor.",
+		"value": "L\u00e9ka\u0159 m\u016f\u017ee lid\u00edm sv\u00fdm kladivem d\u00e1t \u0161t\u00edty."
+	},
+	{
+		"key": "He has also a powerful shotgun that can pullback infected.",
+		"value": "M\u00e1 i silnou brokovnici, kter\u00e1 dok\u00e1\u017ee od\u017educhnout naka\u017een\u00e9"
+	},
+	{
+		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+		"value": "Hrdina m\u00e1 brokovnici, laser a gran\u00e1tomet"
+	},
+	{
+		"key": "The Hero must find a flag hidden in the map.",
+		"value": "Mus\u00ed naj\u00edt vlajku skrytou n\u011bkde ve h\u0159e"
+	},
+	{
+		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+		"value": "Kdy\u017e vezme vlajku, p\u0159id\u00e1 1 \u017eivot, 4 \u0161t\u00edty a v\u0161echny n\u00e1boje v\u0161em lidem.\nK tomu p\u0159id\u00e1 v\u0161echny \u017eivoty a brn\u011bn\u00ed hrdinovi."
+	},
+	{
+		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "Hrdina nem\u016f\u017ee b\u00fdt vyl\u00e9\u010den l\u00e9a\u0159em, ale dok\u00e1\u017ee vydr\u017eet bouchnut\u00ed od naka\u017een\u00e9ho, kdy\u017e m\u00e1 dost \u017eivot\u016f."
+	},
+	{
+		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
+		"value": "Ninja m\u00e1 gran\u00e1tomet, kter\u00fd zmraz\u00ed naka\u017een\u00e9 na 3 vte\u0159iny."
+	},
+	{
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
+		"one": "Jeho kladivo je nahrazeno katanou, se kterou m\u016f\u017ee sko\u010dit 1 kr\u00e1t, p\u0159ed dotknut\u00edm se zem\u011b",
+		"few": "Jeho kladivo je nahrazeno katanou, se kterou m\u016f\u017ee sko\u010dit {int:NinjaJump} kr\u00e1t p\u0159ed dotkut\u00edm se zem\u011b.",
+		"other": "Jeho kladivo je nahrazeno katanou, se kterou m\u016f\u017ee sko\u010dit {int:NinjaJump} kr\u00e1t p\u0159ed dotkut\u00edm se zem\u011b",
+	},
+	{
+		"key": "The Mercenary fly in air using his machine gun.",
+		"value": "\u017doldn\u00e9\u0159 l\u00e9t\u00e1 ve vzduchu pomoc\u00ed jeho pistole."
+	},
+	{
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
+		"one": "Taky m\u016f\u017ee h\u00e1zet gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed 1 \u017eivot za vte\u0159inu",
+		"few": "Taky m\u016f\u017ee h\u00e1zet gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed 1 \u017eivot za vte\u0159inu",
+		"other": "Taky m\u016f\u017ee h\u00e1zet gran\u00e1ty, kter\u00e9 ud\u011bluj\u00ed {int:NumDamagePoints} \u00fato\u010dn\u00e9 body",
+	},
+	{
+		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
+		"value": "Sniper se m\u016f\u017ee znehybnit ve vzduchu po dobu 15 sekund pou\u017eit\u00edm kladiva."
+	},
+	{
+		"key": "He can jump two times in air.",
+		"value": "M\u016f\u017ee sko\u010dit 3 kr\u00e1t"
+	},
+	{
+		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+		"value": "Taky m\u00e1 velmi siln\u00fd laser, kter\u00fd ud\u011bluje 20 \u017eivot\u016f v zhehybn\u011bnosti a 9-10 norm\u00e1ln\u011b."
+	},
+	{
+		"key": "The Smoker can infect humans and heal infected with his hammer.",
+		"value": "Ku\u0159\u00e1k m\u016f\u017ee infikovat lidi and l\u00e9\u010dit infikovan\u00e9 sv\u00fdm kladivem"
+	},
+	{
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
+		"value": "Taky m\u016f\u017ee zp\u016fsobit 4 \u00fato\u010dn\u00e9 body za sekundu dotknut\u00ed se h\u00e1kem \u010dlov\u011bka."
+	},
+	{
+		"key": "The Boomer explodes when he attack.",
+		"value": "Sebevrah exploduje kdy\u017e za\u00fato\u010d\u00ed sv\u00fdm kladivem."
+	},
+	{
+		"key": "All humans affected by the explosion become infected.",
+		"value": "V\u0161ichni lid\u00e9 v dosahu exploze se stanou naka\u017een\u00fdmi."
+	},
+	{
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
+		"value": "Taky m\u016f\u017ee zp\u016fsobit 1 \u00fato\u010dn\u00fd bod za sekundu zah\u00e1knut\u00edm lid\u00ed."
+	},
+	{
+		"key": "The Hunter can infect humans and heal infected with his hammer.",
+		"value": "lovec m\u016f\u017ee infikovat lidi a l\u00e9\u010dit naka\u017een\u00e9 sv\u00fdm kladivem."
+	},
+	{
+		"key": "The Ghost can infect humans and heal infected with his hammer.",
+		"value": "Duch m\u016f\u017ee infikovat lidi a l\u00e9\u010dit naka\u017een\u00e9 sv\u00fdm kladivem."
+	},
+	{
+		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
+		"value": "Je neviditeln\u00fd dokud neza\u00fato\u010d\u00ed, nebo dokud se neocitne p\u0159\u00edli\u0161 bl\u00edzko \u010dlov\u011bka."
+	},
+	{
+		"key": "The Spider can infect humans and heal infected with his hammer.",
+		"value": "Pavou m\u016f\u017ee infikovat lidi a l\u00e9\u010dit infikovan\u00e9 sv\u00fdm kladivem"
+	},
+	{
+		"key": "When selecting any gun, his hook enter in web mode.",
+		"value": "P\u0159i pokou\u0161en\u00ed se p\u0159epnout na jinou zbra\u0148 se jeho h\u00e1k dostane do pavu\u010dinov\u00e9ho m\u00f3du"
+	},
+	{
+		"key": "Any human that touch a hook in web mode is automatically grabbed.",
+		"value": "Jak\u00fdkoliv \u010dlov\u011bk, kter\u00fd se dotkne h\u00e1ku v pavu\u010dinov\u00e9m m\u00f3du tak je automaticky p\u0159it\u00e1hnut k pavoukovi."
+	},
+	{
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
+		"value": "H\u00e1k pavouka ud\u011bluje 1 \u00fato\u010dn\u00fd bod(v jak\u00e9moliv m\u00f3du) za sekundu a \u010dlov\u011bka m\u016f\u017ee dr\u017eet 2 sekundy."
+	},
+	{
+		"key": "The Undead can infect humans and heal infected with his hammer.",
+		"value": "Nemrtv\u00fd m\u016f\u017ee infikovat lidi a l\u00e9\u010dit naka\u017een\u00e9."
+	},
+	{
+		"key": "Instead of dying, he freezes during 10 seconds.",
+		"value": "M\u00edsto smrti se zmraz\u00ed na 10 sekund"
+	},
+	{
+		"key": "If an infected heals him, the freeze effect disappear.",
+		"value": "Pokud ho naka\u017een\u00fd vyl\u00e9\u010d\u00ed zmrazen\u00ed zmiz\u00ed"
+	},
+	{
+		"key": "The Witch can infect humans and heal infected with his hammer.",
+		"value": "\u010carod\u011bjnice m\u016f\u017eou infikovat lidi a l\u00e9\u010dit naka\u017een\u00e9 sv\u00fdm kladivem."
+	},
+	{
+		"key": "When an infected dies, he may re-spawn near her.",
+		"value": "Kdy\u017e naka\u017een\u00fd zem\u0159e, m\u016f\u017ee se spawnout u \u010darod\u011bjnice."
+	},
+	{
+		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"value": "Kdy\u017e zem\u0159e\u0161 jako \u010darod\u011bjnice, tak se spawne\u0161 s jin\u00fdm povol\u00e1n\u00edm."
+	},
+	{
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
+		"value": "M\u016f\u017ee ud\u011blit 1 \u00fato\u010dn\u00fd bod za sekundu zah\u00e1knut\u00edm \u010dlov\u011bka."
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Dostupn\u00e9 str\u00e1nky pomoci: {str:PageList}"
+	},
+	{
+		"key": "Choose a help page with /help <page>",
+		"value": "Vyber si str\u00e1nku pomoc\u00ed p\u0159\u00edkazu /help <\u010dislo-strany>"
+	},
+	{
+		"key": "A random class will be automatically attributed to you when rounds start",
+		"value": "Pokud si do za\u010d\u00e1tku kola nevybere\u0161 povol\u00e1n\u00ed, tak je ti n\u00e1hodn\u011b ud\u011bleno."
+	},
+	{
+		"key": "The class selector will be displayed when rounds start",
+		"value": "V\u00fdb\u011br povol\u00e1n\u00ed se ti zobraz\u00ed na obrazovce kdy\u017e za\u010dne kolo."
+	},
+	{
+		"key": "Unknown language",
+		"value": "Nezn\u00e1m\u00fd jazyk"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "Dostupn\u00e9 jazyky: {str:ListOfLanguage}"
+	},
+	{
+		"key": "List of commands",
+		"value": "List p\u0159\u00edkaz\u016f"
+	},
+	{
+		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "Zm\u00e1\u010dkni <F3> nebo <F4> k aktivaci,  nebo deaktivaci h\u00e1kov\u00e9 ochrany"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Nebyl nalezen \u017e\u00e1dn\u00fd hr\u00e1\u010d s t\u00edmhle jm\u00e9nem"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Pros\u00edm, po\u010dkej 5 minut p\u0159ed vytvo\u0159en\u00edm dal\u0161\u00edho \u00fa\u010dtu."
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "P\u0159i vytv\u00e1\u0159en\u00ed \u00fa\u010dtu se stala chyba."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Toto jm\u00e9no je obsazen\u00e9"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Tv\u016fj \u00fa\u010det byl vytvo\u0159en a u\u017e jsi p\u0159ihl\u00e1\u0161en."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Mus\u00ed\u0161 b\u00fdt p\u0159\u00edhl\u00e1\u0161en, aby jsi vid\u011bl svou pozici"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Mus\u00ed\u0161 b\u00fdt p\u0159ihl\u00e1\u0161en, aby jsi vid\u011bl sv\u016fj c\u00edl"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "U\u017e jsi ozn\u00e1mil, \u017ee  {str:PlayerName} mus\u00ed b\u00fdt zabanov\u00e1n"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} chce, aby byl {str:VictimName} zabanov\u00e1n z d\u016fvodu: ({str:Reason})"
+	},
+]}
