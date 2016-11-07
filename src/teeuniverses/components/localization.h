@@ -87,6 +87,7 @@ public:
 	public:
 		UPluralRules* m_pPluralRules;
 		UNumberFormat* m_pNumberFormater;
+		UNumberFormat* m_pPercentFormater;
 		icu::TimeUnitFormat* m_pTimeUnitFormater;
 		
 	public:
@@ -128,6 +129,7 @@ protected:
 	const char* LocalizeWithDepth_P(const char* pLanguageCode, int Number, const char* pText, int Depth);
 	
 	void AppendNumber(dynamic_string& Buffer, int& BufferIter, CLanguage* pLanguage, int Number);
+	void AppendPercent(dynamic_string& Buffer, int& BufferIter, CLanguage* pLanguage, double Number);
 	void AppendDuration(dynamic_string& Buffer, int& BufferIter, CLanguage* pLanguage, int Number, icu::TimeUnit::UTimeUnitFields Type);
 
 public:

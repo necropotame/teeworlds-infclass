@@ -18,6 +18,7 @@
 #include "mine.h"
 #include "mercenarybomb.h"
 #include "hero-flag.h"
+#include "flyingpoint.h"
 
 //input count
 struct CInputCount
@@ -79,6 +80,8 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_InAirTick = 0;
 	m_InWater = 0;
 	m_WaterJumpLifeSpan = 0;
+	m_GhoulLevel = 0;
+	m_GhoulLevelTick = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -166,6 +169,8 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_AntiFireTick = Server()->Tick();
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
+	m_GhoulLevel = 0;
+	m_GhoulLevelTick = 0;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
 	m_Poison = 0;
@@ -467,6 +472,17 @@ void CCharacter::UpdateTuningParam()
 	if(FixedPosition)
 	{
 		pTuningParams->m_Gravity = 0.0f;
+	}
+	
+	if(GetClass() == PLAYERCLASS_GHOUL)
+	{
+		float Factor = clamp(m_GhoulLevel, 0, 16)/16.0f;
+		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + 0.5f*Factor);
+		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + 0.5f*Factor);
+		pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f + 0.3f*Factor);
+		pTuningParams->m_AirJumpImpulse = pTuningParams->m_AirJumpImpulse * (1.0f + 0.3f*Factor);
+		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * (1.0f + 0.5f*Factor);
+		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f + 0.5f*Factor);
 	}
 }
 
@@ -1082,21 +1098,23 @@ void CCharacter::HandleWeapons()
 			CCharacter *VictimChar = GameServer()->GetPlayerChar(m_Core.m_HookedPlayer);
 			if(VictimChar)
 			{
+				float Rate = 1.0f;
+				int Damage = 1;
+				
 				if(GetClass() == PLAYERCLASS_SMOKER)
 				{
-					if(m_HookDmgTick + Server()->TickSpeed()*0.5 < Server()->Tick())
-					{
-						m_HookDmgTick = Server()->Tick();
-						VictimChar->TakeDamage(vec2(0.0f,0.0f), 2, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
-					}
+					Rate = 0.5f;
+					Damage = 2;
 				}
-				else
+				else if(GetClass() == PLAYERCLASS_GHOUL)
 				{
-					if(m_HookDmgTick + Server()->TickSpeed() < Server()->Tick())
-					{
-						m_HookDmgTick = Server()->Tick();
-						VictimChar->TakeDamage(vec2(0.0f,0.0f), 1, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
-					}
+					Rate = 0.25f + 0.75/(1.0f+m_GhoulLevel/2.0f);
+				}
+				
+				if(m_HookDmgTick + Server()->TickSpeed()*Rate < Server()->Tick())
+				{
+					m_HookDmgTick = Server()->Tick();
+					VictimChar->TakeDamage(vec2(0.0f,0.0f), Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 				}
 			}
 		}
@@ -1201,6 +1219,22 @@ void CCharacter::Tick()
 	}
 	else
 		m_InWater = 0;
+	
+	if(GetClass() == PLAYERCLASS_GHOUL)
+	{
+		if(m_GhoulLevel > 0)
+		{
+			m_GhoulLevelTick--;
+			
+			if(m_GhoulLevelTick <= 0)
+			{
+				m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion)/100;
+				m_GhoulLevel--;
+			}
+		}
+		
+		m_pPlayer->SetClassSkin(PLAYERCLASS_GHOUL, m_GhoulLevel);
+	}
 	
 	//Check is the character is in toxic gaz
 	if(m_Alive && GameServer()->Collision()->CheckZoneFlag(m_Pos, CCollision::ZONEFLAG_INFECTION))
@@ -1738,6 +1772,18 @@ void CCharacter::Tick()
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, _("Web mode enabled"), NULL);
 		}
 	}
+	else if(GetClass() == PLAYERCLASS_GHOUL)
+	{
+		if(m_GhoulLevel)
+		{
+			float FodderInStomach = m_GhoulLevel/16.0f;
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Stomach filled by {percent:FodderInStomach}"),
+				"FodderInStomach", &FodderInStomach,
+				NULL
+			);
+		}
+	}
 /* INFECTION MODIFICATION END *****************************************/
 
 	// Previnput
@@ -1878,6 +1924,29 @@ void CCharacter::Die(int Killer, int Weapon)
 		return;
 	}
 	
+	//Find the nearest ghoul
+	{
+		CCharacter* pGhoul = NULL;
+		float MinLen = 999999999.0f;
+		
+		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+		{
+			if(p->GetClass() != PLAYERCLASS_GHOUL || p == this) continue;
+
+			float Len = distance(p->m_Pos, m_Pos);
+			if(MinLen > Len)
+			{
+				MinLen = Len;
+				pGhoul = p;
+			}
+		}
+		
+		if(pGhoul && MinLen < 800.0f)
+		{
+			new CFlyingPoint(GameWorld(), m_Pos, pGhoul->GetPlayer()->GetCID(), m_Core.m_Vel);
+		}
+	}
+	
 	DestroyChildEntities();
 /* INFECTION MODIFICATION END *****************************************/
 	
@@ -1963,6 +2032,17 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
 	{
 		m_Core.m_Vel += Force;
+	}
+	
+	if(GetClass() == PLAYERCLASS_GHOUL)
+	{
+		int DamageAccepted = 0;
+		for(int i=0; i<Dmg; i++)
+		{
+			if(rand()%32 >= m_GhoulLevel)
+				DamageAccepted++;
+		}
+		Dmg = DamageAccepted;
 	}
 
 	if(From != m_pPlayer->GetCID() && pKillerPlayer)
@@ -2536,6 +2616,21 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_SPIDER] = true;
 			}
 			break;
+		case PLAYERCLASS_GHOUL:
+			m_Health = 10;
+			m_Armor = 0;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_GHOUL);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_GHOUL))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "ghoul", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_GHOUL] = true;
+			}
+			break;
 		case PLAYERCLASS_UNDEAD:
 			m_Health = 10;
 			m_Armor = 0;
@@ -2616,6 +2711,15 @@ void CCharacter::SetClass(int ClassChoosed)
 bool CCharacter::IsInfected() const
 {
 	return m_pPlayer->IsInfected();
+}
+
+void CCharacter::IncreaseLevel()
+{
+	if(GetClass() == PLAYERCLASS_GHOUL && m_GhoulLevel < 16)
+	{
+		m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion)/100;
+		m_GhoulLevel++;
+	}
 }
 
 void CCharacter::Freeze(float Time, int Player, int Reason)

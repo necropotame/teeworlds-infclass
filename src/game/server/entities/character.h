@@ -178,6 +178,8 @@ private:
 	int m_FrozenTime;
 	int m_FreezeReason;
 	int m_InAirTick;
+	int m_GhoulLevel;
+	int m_GhoulLevelTick;
 	
 	char m_GhostSearchMap[GHOST_SEARCHMAP_SIZE*GHOST_SEARCHMAP_SIZE];
 	
@@ -214,6 +216,7 @@ public:
 	bool FindPortalPosition(vec2 Pos, vec2& Res);
 	bool FindWitchSpawnPosition(vec2& Res);
 	void SaturateVelocity(vec2 Force, float MaxSpeed);
+	void IncreaseLevel();
 /* INFECTION MODIFICATION END *****************************************/
 };
 

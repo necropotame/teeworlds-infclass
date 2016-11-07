@@ -135,7 +135,7 @@ public:
 	void SetScoreMode(int Mode);
 	
 	int GetClass();
-	void SetClassSkin(int newClass);
+	void SetClassSkin(int newClass, int State = 0);
 	void SetClass(int newClass);
 	bool IsInfected() const;
 	void StartInfection(bool force = false);

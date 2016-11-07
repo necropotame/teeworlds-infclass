@@ -130,5 +130,6 @@ MACRO_CONFIG_INT(InfMineRadius, inf_mine_radius, 46, 0, 1024, CFGFLAG_SERVER, "R
 MACRO_CONFIG_INT(InfMineLimit, inf_mine_limit, 2, 0, 1024, CFGFLAG_SERVER, "Maximum number of mines per player")
 MACRO_CONFIG_INT(InfNinjaJump, inf_ninja_jump, 2, 0, 1024, CFGFLAG_SERVER, "Maximum number of katana attacks")
 MACRO_CONFIG_INT(InfPoisonDamage, inf_poison_damage, 2, 0, 1024, CFGFLAG_SERVER, "Damage deals by the poison grenades")
+MACRO_CONFIG_INT(InfGhoulDigestion, inf_ghoul_digestion, 350, 0, 10000, CFGFLAG_SERVER, "Time for a ghoul to digest an infected (centisec)")
 
 #endif

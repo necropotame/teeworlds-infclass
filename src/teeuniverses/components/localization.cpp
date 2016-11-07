@@ -14,6 +14,7 @@ CLocalization::CLanguage::CLanguage() :
 	m_Direction(CLocalization::DIRECTION_LTR),
 	m_pPluralRules(NULL),
 	m_pNumberFormater(NULL),
+	m_pPercentFormater(NULL),
 	m_pTimeUnitFormater(NULL)
 {
 	m_aName[0] = 0;
@@ -25,7 +26,8 @@ CLocalization::CLanguage::CLanguage(const char* pName, const char* pFilename, co
 	m_Loaded(false),
 	m_Direction(CLocalization::DIRECTION_LTR),
 	m_pPluralRules(NULL),
-	m_pNumberFormater(NULL)
+	m_pNumberFormater(NULL),
+	m_pPercentFormater(NULL)
 {
 	str_copy(m_aName, pName, sizeof(m_aName));
 	str_copy(m_aFilename, pFilename, sizeof(m_aFilename));
@@ -43,6 +45,18 @@ CLocalization::CLanguage::CLanguage(const char* pName, const char* pFilename, co
 			m_pNumberFormater = NULL;
 		}
 		dbg_msg("Localization", "Can't create number formater for %s (error #%d)", m_aFilename, Status);
+	}
+	
+	Status = U_ZERO_ERROR;
+	m_pPercentFormater = unum_open(UNUM_PERCENT, NULL, -1, m_aFilename, NULL, &Status);
+	if(U_FAILURE(Status))
+	{
+		if(m_pPercentFormater)
+		{
+			unum_close(m_pPercentFormater);
+			m_pPercentFormater = NULL;
+		}
+		dbg_msg("Localization", "Can't create percent formater for %s (error #%d)", m_aFilename, Status);
 	}
 	
 	Status = U_ZERO_ERROR;
@@ -81,6 +95,9 @@ CLocalization::CLanguage::~CLanguage()
 	
 	if(m_pNumberFormater)
 		unum_close(m_pNumberFormater);
+	
+	if(m_pPercentFormater)
+		unum_close(m_pPercentFormater);
 		
 	if(m_pPluralRules)
 		uplrules_close(m_pPluralRules);
@@ -482,6 +499,31 @@ void CLocalization::AppendNumber(dynamic_string& Buffer, int& BufferIter, CLangu
 	}
 }
 
+void CLocalization::AppendPercent(dynamic_string& Buffer, int& BufferIter, CLanguage* pLanguage, double Number)
+{
+	UChar aBufUtf16[128];
+	
+	UErrorCode Status = U_ZERO_ERROR;
+	unum_formatDouble(pLanguage->m_pPercentFormater, Number, aBufUtf16, sizeof(aBufUtf16), NULL, &Status);
+	if(U_FAILURE(Status))
+		BufferIter = Buffer.append_at(BufferIter, "_PERCENT_");
+	else
+	{
+		//Update buffer size
+		int SrcLength = u_strlen(aBufUtf16);
+		int NeededSize = UCNV_GET_MAX_BYTES_FOR_STRING(SrcLength, ucnv_getMaxCharSize(m_pUtf8Converter));
+		
+		while(Buffer.maxsize() - BufferIter <= NeededSize)
+			Buffer.resize_buffer(Buffer.maxsize()*2);
+		
+		int Length = ucnv_fromUChars(m_pUtf8Converter, Buffer.buffer()+BufferIter, Buffer.maxsize() - BufferIter, aBufUtf16, SrcLength, &Status);
+		if(U_FAILURE(Status))
+			BufferIter = Buffer.append_at(BufferIter, "_PERCENT_");
+		else
+			BufferIter += Length;
+	}
+}
+
 void CLocalization::AppendDuration(dynamic_string& Buffer, int& BufferIter, CLanguage* pLanguage, int Number, icu::TimeUnit::UTimeUnitFields Type)
 {
 	UErrorCode Status = U_ZERO_ERROR;
@@ -570,6 +612,11 @@ void CLocalization::Format_V(dynamic_string& Buffer, const char* pLanguageCode, 
 						{
 							int Number = *((const int*) pVarArgValue);
 							AppendNumber(Buffer, BufferIter, pLanguage, Number);
+						}
+						else if(str_comp_num("percent:", pText+ParamTypeStart, 4) == 0)
+						{
+							float Number = (*((const float*) pVarArgValue));
+							AppendPercent(Buffer, BufferIter, pLanguage, Number);
 						}
 						else if(str_comp_num("sec:", pText+ParamTypeStart, 4) == 0)
 						{

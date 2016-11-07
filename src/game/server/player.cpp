@@ -262,6 +262,9 @@ void CPlayer::Snap(int SnappingClient)
 				case PLAYERCLASS_SPIDER:
 					str_format(aClanName, sizeof(aClanName), "%sSpider", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
+				case PLAYERCLASS_GHOUL:
+					str_format(aClanName, sizeof(aClanName), "%sGhoul", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					break;
 				case PLAYERCLASS_UNDEAD:
 					str_format(aClanName, sizeof(aClanName), "%sUndead", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
@@ -274,69 +277,7 @@ void CPlayer::Snap(int SnappingClient)
 			
 			StrToInts(&pClientInfo->m_Clan0, 3, aClanName);
 			
-			if(SnapScoreMode == PLAYERSCOREMODE_CLASS)
-			{
-				switch(GetClass())
-				{
-					case PLAYERCLASS_MEDIC:
-						PlayerInfoScore = 700 + GetCID();
-						break;
-					case PLAYERCLASS_HERO:
-						PlayerInfoScore = 800 + GetCID();
-						break;
-						
-					case PLAYERCLASS_ENGINEER:
-						PlayerInfoScore = 600 + GetCID();
-						break;
-					case PLAYERCLASS_SOLDIER:
-						PlayerInfoScore = 500 + GetCID();
-						break;
-					case PLAYERCLASS_SCIENTIST:
-						PlayerInfoScore = 400 + GetCID();
-						break;
-						
-					case PLAYERCLASS_NINJA:
-						PlayerInfoScore = 300 + GetCID();
-						break;
-						
-					case PLAYERCLASS_MERCENARY:
-						PlayerInfoScore = 200 + GetCID();
-						break;
-					case PLAYERCLASS_SNIPER:
-						PlayerInfoScore = 100 + GetCID();
-						break;
-						
-					case PLAYERCLASS_NONE:
-						PlayerInfoScore = GetCID();
-						break;
-						
-					case PLAYERCLASS_SMOKER:
-						PlayerInfoScore = -100 - GetCID();
-						break;
-					case PLAYERCLASS_BOOMER:
-						PlayerInfoScore = -200 - GetCID();
-						break;
-					case PLAYERCLASS_HUNTER:
-						PlayerInfoScore = -300 - GetCID();
-						break;
-					case PLAYERCLASS_GHOST:
-						PlayerInfoScore = -400 - GetCID();
-						break;
-					case PLAYERCLASS_SPIDER:
-						PlayerInfoScore = -500 - GetCID();
-						break;
-					case PLAYERCLASS_UNDEAD:
-						PlayerInfoScore = -600 - GetCID();
-						break;
-					case PLAYERCLASS_WITCH:
-						PlayerInfoScore = -700 - GetCID();
-						break;
-					default:
-						PlayerInfoScore = -999;
-				}
-			}
-			else
-				PlayerInfoScore = Server()->RoundStatistics()->PlayerScore(m_ClientID);
+			PlayerInfoScore = Server()->RoundStatistics()->PlayerScore(m_ClientID);
 		}
 	}
 	
@@ -555,7 +496,7 @@ int CPlayer::GetClass()
 	return m_class;
 }
 
-void CPlayer::SetClassSkin(int newClass)
+void CPlayer::SetClassSkin(int newClass, int State)
 {
 	switch(newClass)
 	{
@@ -621,6 +562,15 @@ void CPlayer::SetClassSkin(int newClass)
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_GHOUL:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "cammo", sizeof(m_TeeInfos.m_SkinName));
+			{
+				int Hue = 58 * clamp(16-State, 0, 16)/16.0f;
+				m_TeeInfos.m_ColorBody = (Hue<<16) + (255<<8);
+			}
 			m_TeeInfos.m_ColorFeet = 65414;
 			break;
 		case PLAYERCLASS_UNDEAD:

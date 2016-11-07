@@ -34,6 +34,9 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_SPIDER] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_SPIDER];
 	
+	m_ClassProbability[PLAYERCLASS_GHOUL] = 0.20f * m_ClassProbability[PLAYERCLASS_SMOKER];
+	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_GHOUL];
+	
 	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_WITCH];
 	
@@ -895,6 +898,14 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		spiderEnabled = false;
 	}
 	
+	//Check if ghoul are enabled
+	bool ghoulEnabled = true;
+	if(Server()->GetClassAvailability(PLAYERCLASS_GHOUL) == 0)
+	{
+		TotalProbInfectedClass -= m_ClassProbability[PLAYERCLASS_GHOUL];
+		ghoulEnabled = false;
+	}
+	
 	//Check if boomers are enabled
 	bool boomerEnabled = true;
 	if(Server()->GetClassAvailability(PLAYERCLASS_BOOMER) == 0)
@@ -968,6 +979,15 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		if(random < 0.0f)
 		{
 			return PLAYERCLASS_SPIDER;
+		}
+	}
+	
+	if(ghoulEnabled)
+	{
+		random -= m_ClassProbability[PLAYERCLASS_GHOUL];
+		if(random < 0.0f)
+		{
+			return PLAYERCLASS_GHOUL;
 		}
 	}
 	
