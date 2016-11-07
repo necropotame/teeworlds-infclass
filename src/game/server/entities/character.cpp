@@ -476,13 +476,15 @@ void CCharacter::UpdateTuningParam()
 	
 	if(GetClass() == PLAYERCLASS_GHOUL)
 	{
-		float Factor = clamp(m_GhoulLevel, 0, 16)/16.0f;
+		float Factor = clamp(m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f);
 		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + 0.5f*Factor);
 		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + 0.5f*Factor);
-		pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f + 0.3f*Factor);
-		pTuningParams->m_AirJumpImpulse = pTuningParams->m_AirJumpImpulse * (1.0f + 0.3f*Factor);
+		pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f + 0.35f*Factor);
+		pTuningParams->m_AirJumpImpulse = pTuningParams->m_AirJumpImpulse * (1.0f + 0.35f*Factor);
 		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * (1.0f + 0.5f*Factor);
 		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f + 0.5f*Factor);
+		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f + 0.5f*Factor);
+		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + 0.5f*Factor);
 	}
 }
 
@@ -1228,7 +1230,7 @@ void CCharacter::Tick()
 			
 			if(m_GhoulLevelTick <= 0)
 			{
-				m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion)/100;
+				m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
 				m_GhoulLevel--;
 			}
 		}
@@ -1776,7 +1778,7 @@ void CCharacter::Tick()
 	{
 		if(m_GhoulLevel)
 		{
-			float FodderInStomach = m_GhoulLevel/16.0f;
+			float FodderInStomach = m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize);
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 				_("Stomach filled by {percent:FodderInStomach}"),
 				"FodderInStomach", &FodderInStomach,
@@ -2026,7 +2028,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
 	
-	if(pKillerPlayer->IsInfected() && Mode == TAKEDAMAGEMODE_INFECTION && GetClass() == PLAYERCLASS_HERO)
+	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected())
 		Dmg = 12;
 	
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
@@ -2039,7 +2041,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		int DamageAccepted = 0;
 		for(int i=0; i<Dmg; i++)
 		{
-			if(rand()%32 >= m_GhoulLevel)
+			if(rand()%(g_Config.m_InfGhoulStomachSize) >= m_GhoulLevel)
 				DamageAccepted++;
 		}
 		Dmg = DamageAccepted;
@@ -2715,9 +2717,9 @@ bool CCharacter::IsInfected() const
 
 void CCharacter::IncreaseLevel()
 {
-	if(GetClass() == PLAYERCLASS_GHOUL && m_GhoulLevel < 16)
+	if(GetClass() == PLAYERCLASS_GHOUL && m_GhoulLevel < static_cast<float>(g_Config.m_InfGhoulStomachSize))
 	{
-		m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion)/100;
+		m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
 		m_GhoulLevel++;
 	}
 }

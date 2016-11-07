@@ -568,7 +568,7 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "cammo", sizeof(m_TeeInfos.m_SkinName));
 			{
-				int Hue = 58 * clamp(16-State, 0, 16)/16.0f;
+				int Hue = 58 * (1.0f - clamp(State/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f));
 				m_TeeInfos.m_ColorBody = (Hue<<16) + (255<<8);
 			}
 			m_TeeInfos.m_ColorFeet = 65414;

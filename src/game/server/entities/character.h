@@ -217,6 +217,7 @@ public:
 	bool FindWitchSpawnPosition(vec2& Res);
 	void SaturateVelocity(vec2 Force, float MaxSpeed);
 	void IncreaseLevel();
+	inline int GetGhoulLevel() { return m_GhoulLevel; }
 /* INFECTION MODIFICATION END *****************************************/
 };
 

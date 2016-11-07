@@ -34,7 +34,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_ClassProbability[PLAYERCLASS_SPIDER] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_SPIDER];
 	
-	m_ClassProbability[PLAYERCLASS_GHOUL] = 0.20f * m_ClassProbability[PLAYERCLASS_SMOKER];
+	m_ClassProbability[PLAYERCLASS_GHOUL] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];
 	m_TotalProbInfectedClass += m_ClassProbability[PLAYERCLASS_GHOUL];
 	
 	m_ClassProbability[PLAYERCLASS_WITCH] = 0.25f * m_ClassProbability[PLAYERCLASS_SMOKER];

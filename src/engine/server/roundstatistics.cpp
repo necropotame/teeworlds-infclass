@@ -80,6 +80,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_SPIDER:
 			m_SpiderScore += Points;
 			break;
+		case PLAYERCLASS_GHOUL:
+			m_GhoulScore += Points;
+			break;
 		case PLAYERCLASS_UNDEAD:
 			m_UndeadScore += Points;
 			break;

@@ -39,6 +39,7 @@ public:
 		int m_BoomerScore;
 		int m_GhostScore;
 		int m_SpiderScore;
+		int m_GhoulScore;
 		int m_UndeadScore;
 		int m_WitchScore;
 		

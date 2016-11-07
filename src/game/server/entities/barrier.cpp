@@ -80,7 +80,17 @@ void CBarrier::Tick()
 					}
 					
 					if(p->GetClass() != PLAYERCLASS_UNDEAD)
-						m_LifeSpan -= ((Server()->TickSpeed()*g_Config.m_InfBarrierTimeReduce)/100);
+					{
+						int LifeSpanReducer = ((Server()->TickSpeed()*g_Config.m_InfBarrierTimeReduce)/100);
+						
+						if(p->GetClass() == PLAYERCLASS_GHOUL)
+						{
+							float Factor = clamp(p->GetGhoulLevel()/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f);
+							LifeSpanReducer += Server()->TickSpeed() * 8.0f * Factor;
+						}
+						
+						m_LifeSpan -= LifeSpanReducer;
+					}
 				}
 				
 				p->Die(m_Owner, WEAPON_HAMMER);

@@ -595,6 +595,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
 	SetClassAvailability(PLAYERCLASS_GHOST, 1);
 	SetClassAvailability(PLAYERCLASS_SPIDER, 1);
+	SetClassAvailability(PLAYERCLASS_GHOUL, 1);
 	SetClassAvailability(PLAYERCLASS_BOOMER, 1);
 	SetClassAvailability(PLAYERCLASS_UNDEAD, 1);
 	SetClassAvailability(PLAYERCLASS_WITCH, 1);
@@ -3746,6 +3747,8 @@ public:
 				UpdateScore(pSqlServer, SQL_SCORETYPE_GHOST_SCORE, m_PlayerStatistics.m_GhostScore, "Ghost");
 			if(m_PlayerStatistics.m_SpiderScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_SPIDER_SCORE, m_PlayerStatistics.m_SpiderScore, "Spider");
+			if(m_PlayerStatistics.m_GhoulScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_GHOUL_SCORE, m_PlayerStatistics.m_SpiderScore, "Ghoul");
 			if(m_PlayerStatistics.m_UndeadScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_UNDEAD_SCORE, m_PlayerStatistics.m_UndeadScore, "Undead");
 			if(m_PlayerStatistics.m_WitchScore > 0)
