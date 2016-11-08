@@ -5,10 +5,11 @@
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include <game/server/entities/growingexplosion.h>
-#include "mercenarybomb.h"
 
-CMercenaryBomb::CMercenaryBomb(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_MERCENARYBOMB)
+#include "merc-grenade.h"
+
+CMercenaryGrenade::CMercenaryGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_MERCENARY_GRENADE)
 {
 	m_Pos = Pos;
 	m_ActualPos = Pos;
@@ -20,12 +21,12 @@ CMercenaryBomb::CMercenaryBomb(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2
 	GameWorld()->InsertEntity(this);
 }
 
-void CMercenaryBomb::Reset()
+void CMercenaryGrenade::Reset()
 {
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-vec2 CMercenaryBomb::GetPos(float Time)
+vec2 CMercenaryGrenade::GetPos(float Time)
 {
 	float Curvature = GameServer()->Tuning()->m_GrenadeCurvature;
 	float Speed = GameServer()->Tuning()->m_GrenadeSpeed;
@@ -33,12 +34,12 @@ vec2 CMercenaryBomb::GetPos(float Time)
 	return CalcPos(m_Pos, m_Direction, Curvature, Speed, Time);
 }
 
-void CMercenaryBomb::TickPaused()
+void CMercenaryGrenade::TickPaused()
 {
 	m_StartTick++;
 }
 
-void CMercenaryBomb::Tick()
+void CMercenaryGrenade::Tick()
 {
 	float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
@@ -98,7 +99,7 @@ void CMercenaryBomb::Tick()
 	
 }
 
-void CMercenaryBomb::FillInfo(CNetObj_Projectile *pProj)
+void CMercenaryGrenade::FillInfo(CNetObj_Projectile *pProj)
 {
 	pProj->m_X = (int)m_Pos.x;
 	pProj->m_Y = (int)m_Pos.y;
@@ -108,7 +109,7 @@ void CMercenaryBomb::FillInfo(CNetObj_Projectile *pProj)
 	pProj->m_Type = WEAPON_GRENADE;
 }
 
-void CMercenaryBomb::Snap(int SnappingClient)
+void CMercenaryGrenade::Snap(int SnappingClient)
 {
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 
@@ -120,7 +121,7 @@ void CMercenaryBomb::Snap(int SnappingClient)
 		FillInfo(pProj);
 }
 	
-void CMercenaryBomb::Explode()
+void CMercenaryGrenade::Explode()
 {
 	new CGrowingExplosion<4>(GameWorld(), m_ActualPos, m_ActualDir, m_Owner, GROWINGEXPLOSIONEFFECT_POISON_INFECTED);
 	GameServer()->m_World.DestroyEntity(this);

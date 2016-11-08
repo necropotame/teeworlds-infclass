@@ -12,13 +12,17 @@
 #include <iostream>
 
 #include "character.h"
-#include "laser.h"
-#include "scientist-laser.h"
 #include "projectile.h"
-#include "mine.h"
-#include "mercenarybomb.h"
-#include "hero-flag.h"
+#include "laser.h"
+
 #include "flyingpoint.h"
+
+#include "engineer-wall.h"
+#include "soldier-bomb.h"
+#include "scientist-laser.h"
+#include "scientist-mine.h"
+#include "merc-grenade.h"
+#include "hero-flag.h"
 
 //input count
 struct CInputCount
@@ -61,8 +65,6 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_AirJumpCounter = 0;
 	m_FirstShot = true;
 	
-	m_pBarrier = 0;
-	m_pBomb = 0;
 	m_FlagID = Server()->SnapNewID();
 	m_HeartID = Server()->SnapNewID();
 	m_CursorID = Server()->SnapNewID();
@@ -548,10 +550,10 @@ void CCharacter::FireWeapon()
 /* INFECTION MODIFICATION START ***************************************/
 			if(GetClass() == PLAYERCLASS_ENGINEER)
 			{
-				if(m_pBarrier)
+				for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
 				{
-					GameServer()->m_World.DestroyEntity(m_pBarrier);
-					m_pBarrier = 0;
+					if(pWall->m_Owner == m_pPlayer->GetCID())
+						GameServer()->m_World.DestroyEntity(pWall);
 				}
 					
 				if(m_FirstShot)
@@ -575,8 +577,7 @@ void CCharacter::FireWeapon()
 					{
 						m_FirstShot = true;
 						
-						CBarrier *pBarrier = new CBarrier(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
-						m_pBarrier = pBarrier;
+						new CEngineerWall(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
 						
 						GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 					}
@@ -584,15 +585,19 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SOLDIER)
 			{
-				if(m_pBomb)
+				bool BombFound = false;
+				for(CSoldierBomb *pBomb = (CSoldierBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SOLDIER_BOMB); pBomb; pBomb = (CSoldierBomb*) pBomb->TypeNext())
 				{
-					m_pBomb->Explode();
+					if(pBomb->m_Owner == m_pPlayer->GetCID())
+					{
+						pBomb->Explode();
+						BombFound = true;
+					}
 				}
-				else
+				
+				if(!BombFound)
 				{
-					CBomb *pBomb = new CBomb(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
-					m_pBomb = pBomb;
-					
+					new CSoldierBomb(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 				}
 			}
@@ -617,10 +622,10 @@ void CCharacter::FireWeapon()
 				int NbMine = 0;
 				
 				int OlderMineTick = Server()->Tick()+1;
-				CMine* pOlderMine = 0;
-				CMine* pIntersectMine = 0;
+				CScientistMine* pOlderMine = 0;
+				CScientistMine* pIntersectMine = 0;
 				
-				CMine* p = (CMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MINE);
+				CScientistMine* p = (CScientistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCIENTIST_MINE);
 				while(p)
 				{
 					float d = distance(p->m_Pos, ProjStartPos);
@@ -645,7 +650,7 @@ void CCharacter::FireWeapon()
 					else if(d < 2.0f*g_Config.m_InfMineRadius)
 						FreeSpace = false;
 					
-					p = (CMine *)p->TypeNext();
+					p = (CScientistMine *)p->TypeNext();
 				}
 				
 				if(FreeSpace)
@@ -655,7 +660,7 @@ void CCharacter::FireWeapon()
 					else if(NbMine >= g_Config.m_InfMineLimit && pOlderMine)
 						GameServer()->m_World.DestroyEntity(pOlderMine);
 					
-					new CMine(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
+					new CScientistMine(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
 					
 					m_ReloadTimer = Server()->TickSpeed()/2;
 				}
@@ -883,10 +888,10 @@ void CCharacter::FireWeapon()
 			{				
 				//Find bomb
 				bool BombFound = false;
-				for(CMercenaryBomb *bomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARYBOMB); bomb; bomb = (CMercenaryBomb *)bomb->TypeNext())
+				for(CMercenaryGrenade *pGrenade = (CMercenaryGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_GRENADE); pGrenade; pGrenade = (CMercenaryGrenade*) pGrenade->TypeNext())
 				{
-					if(bomb->m_Owner != m_pPlayer->GetCID()) continue;
-					bomb->Explode();
+					if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
+					pGrenade->Explode();
 					BombFound = true;
 				}
 				
@@ -901,7 +906,7 @@ void CCharacter::FireWeapon()
 					{
 						float a = GetAngle(Direction) + ((float)rand()/(float)RAND_MAX)/5.0f;
 						
-						CMercenaryBomb *pProj = new CMercenaryBomb(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
+						CMercenaryGrenade *pProj = new CMercenaryGrenade(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
 
 						// pack the Projectile and send it to the client Directly
 						CNetObj_Projectile p;
@@ -1684,32 +1689,36 @@ void CCharacter::Tick()
 		
 	if(GetClass() == PLAYERCLASS_SOLDIER)
 	{
-		if(m_pBomb)
+		int NumBombs = 0;
+		for(CSoldierBomb *pBomb = (CSoldierBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SOLDIER_BOMB); pBomb; pBomb = (CSoldierBomb*) pBomb->TypeNext())
 		{
-			int BombLeft = m_pBomb->GetNbBombs();
-			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, BombLeft,
+			if(pBomb->m_Owner == m_pPlayer->GetCID())
+				NumBombs += pBomb->GetNbBombs();
+		}
+		
+		if(NumBombs)
+		{
+			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumBombs,
 				_P("One bomb left", "{int:NumBombs} bombs left"),
-				"NumBombs", &BombLeft,
+				"NumBombs", &NumBombs,
 				NULL
 			);
 		}
 	}
 	else if(GetClass() == PLAYERCLASS_SCIENTIST)
 	{
-		int NbMines = 0;
-		CMine* p = (CMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MINE);
-		while(p)
+		int NumMines = 0;
+		for(CScientistMine *pMine = (CScientistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCIENTIST_MINE); pMine; pMine = (CScientistMine*) pMine->TypeNext())
 		{
-			if(p->GetOwner() == m_pPlayer->GetCID())
-				NbMines++;
-			p = (CMine *)p->TypeNext();
+			if(pMine->m_Owner == m_pPlayer->GetCID())
+				NumMines++;
 		}
-		if(NbMines > 0)
+		
+		if(NumMines > 0)
 		{
-			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NbMines,
-				//~ _P("One mine is active", "{int:NumMines} mines are active"),
+			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumMines,
 				_P("One mine is active", "{int:NumMines} mines are actives"),
-				"NumMines", &NbMines,
+				"NumMines", &NumMines,
 				NULL
 			);
 		}
@@ -1718,21 +1727,17 @@ void CCharacter::Tick()
 	{
 		//Search for flag
 		int CoolDown = 999999999;
-		CHeroFlag* p = (CHeroFlag*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_HEROFLAG);
-		while(p)
+		for(CHeroFlag *pFlag = (CHeroFlag*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_HERO_FLAG); pFlag; pFlag = (CHeroFlag*) pFlag->TypeNext())
 		{
-			if(p->GetCoolDown() <= 0)
+			if(pFlag->GetCoolDown() <= 0)
 			{
 				CoolDown = 0;
 				break;
 			}
-			else
-			{
-				if(p->GetCoolDown() < CoolDown)
-					CoolDown = p->GetCoolDown();
-			}
-			p = (CHeroFlag *)p->TypeNext();
+			else if(pFlag->GetCoolDown() < CoolDown)
+				CoolDown = pFlag->GetCoolDown();
 		}
+		
 		if(CoolDown > 0)
 		{
 			int Seconds = 1+CoolDown/Server()->TickSpeed();
@@ -1745,9 +1750,19 @@ void CCharacter::Tick()
 	}
 	else if(GetClass() == PLAYERCLASS_ENGINEER)
 	{
-		if(m_pBarrier)
+		CEngineerWall* pCurrentWall = NULL;
+		for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
 		{
-			int Seconds = 1+m_pBarrier->GetTick()/Server()->TickSpeed();
+			if(pWall->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentWall = pWall;
+				break;
+			}
+		}
+		
+		if(pCurrentWall)
+		{
+			int Seconds = 1+pCurrentWall->GetTick()/Server()->TickSpeed();
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 				_("Laser wall: {sec:RemainingTime}"),
 				"RemainingTime", &Seconds,
@@ -2234,9 +2249,19 @@ void CCharacter::Snap(int SnappingClient)
 		}
 	}
 	
-	if(GetClass() == PLAYERCLASS_ENGINEER && !m_pBarrier && !m_FirstShot)
+	if(pClient && !pClient->IsInfected() && GetClass() == PLAYERCLASS_ENGINEER && !m_FirstShot)
 	{
-		if(pClient && !pClient->IsInfected())
+		CEngineerWall* pCurrentWall = NULL;
+		for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
+		{
+			if(pWall->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentWall = pWall;
+				break;
+			}
+		}
+		
+		if(!pCurrentWall)
 		{
 			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_BarrierHintID, sizeof(CNetObj_Laser)));
 			if(!pObj)
@@ -2667,32 +2692,28 @@ void CCharacter::ClassSpawnAttributes()
 }
 
 void CCharacter::DestroyChildEntities()
-{		
-	if(m_pBarrier)
+{
+	for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
 	{
-		GameServer()->m_World.DestroyEntity(m_pBarrier);
-		m_pBarrier = 0;
+		if(pWall->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pWall);
 	}
-	if(m_pBomb)
+	for(CSoldierBomb *pBomb = (CSoldierBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SOLDIER_BOMB); pBomb; pBomb = (CSoldierBomb*) pBomb->TypeNext())
 	{
-		GameServer()->m_World.DestroyEntity(m_pBomb);
-		m_pBomb = 0;
+		if(pBomb->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pBomb);
 	}
-	for(CMercenaryBomb *bomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARYBOMB); bomb; bomb = (CMercenaryBomb *)bomb->TypeNext())
+	for(CMercenaryGrenade* pGrenade = (CMercenaryGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_GRENADE); pGrenade; pGrenade = (CMercenaryGrenade*) pGrenade->TypeNext())
 	{
-		if(bomb->m_Owner != m_pPlayer->GetCID()) continue;
-		bomb->Explode();
+		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pGrenade);
 	}
+	for(CScientistMine* pMine = (CScientistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCIENTIST_MINE); pMine; pMine = (CScientistMine*) pMine->TypeNext())
 	{
-		CMine* p = (CMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MINE);
-		while(p)
-		{
-			if(p->GetOwner() == m_pPlayer->GetCID())
-				GameServer()->m_World.DestroyEntity(p);
+		if(pMine->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pMine);
+	}
 			
-			p = (CMine *)p->TypeNext();
-		}
-	}		
 	m_FirstShot = true;
 	m_HookMode = 0;
 	m_PositionLockTick = 0;

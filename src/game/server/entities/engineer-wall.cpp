@@ -6,13 +6,13 @@
 #include <game/server/gamecontext.h>
 #include <engine/server/roundstatistics.h>
 #include <engine/shared/config.h>
-#include "barrier.h"
+#include "engineer-wall.h"
 
 const float g_BarrierMaxLength = 300.0;
 const float g_BarrierRadius = 0.0;
 
-CBarrier::CBarrier(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_BARRIER)
+CEngineerWall::CEngineerWall(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_ENGINEER_WALL)
 {
 	m_Pos = Pos1;
 	if(distance(Pos1, Pos2) > g_BarrierMaxLength)
@@ -26,23 +26,17 @@ CBarrier::CBarrier(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner)
 	m_EndPointID = Server()->SnapNewID();
 }
 
-void CBarrier::Destroy()
+CEngineerWall::~CEngineerWall()
 {
 	Server()->SnapFreeID(m_EndPointID);
-	
-	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
-	if(OwnerChar && OwnerChar->m_pBarrier == this)
-	{
-		OwnerChar->m_pBarrier = 0;
-	}
 }
 
-void CBarrier::Reset()
+void CEngineerWall::Reset()
 {
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-void CBarrier::Tick()
+void CEngineerWall::Tick()
 {
 	m_LifeSpan--;
 	
@@ -99,12 +93,12 @@ void CBarrier::Tick()
 	}
 }
 
-void CBarrier::TickPaused()
+void CEngineerWall::TickPaused()
 {
 	//~ ++m_EvalTick;
 }
 
-void CBarrier::Snap(int SnappingClient)
+void CEngineerWall::Snap(int SnappingClient)
 {
 	if(NetworkClipped(SnappingClient))
 		return;

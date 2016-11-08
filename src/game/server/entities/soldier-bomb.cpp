@@ -2,10 +2,10 @@
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <game/server/gamecontext.h>
 #include <engine/shared/config.h>
-#include "bomb.h"
+#include "soldier-bomb.h"
 
-CBomb::CBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_BOMB)
+CSoldierBomb::CSoldierBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_SOLDIER_BOMB)
 {
 	m_Pos = Pos;
 	GameWorld()->InsertEntity(this);
@@ -21,27 +21,18 @@ CBomb::CBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 	}
 }
 
-void CBomb::Destroy()
+CSoldierBomb::~CSoldierBomb()
 {
-	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
-	if(OwnerChar && OwnerChar->m_pBomb == this)
-	{
-		OwnerChar->m_pBomb = 0;
-	}
-	
 	for(int i=0; i<m_IDBomb.size(); i++)
-	{
 		Server()->SnapFreeID(m_IDBomb[i]);
-	}
-	delete this;
 }
 
-void CBomb::Reset()
+void CSoldierBomb::Reset()
 {
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-void CBomb::Explode()
+void CSoldierBomb::Explode()
 {
 	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 	if(!OwnerChar)
@@ -76,7 +67,7 @@ void CBomb::Explode()
 	}
 }
 
-void CBomb::Snap(int SnappingClient)
+void CSoldierBomb::Snap(int SnappingClient)
 {
 	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	float angle = fmodf(time*pi/2, 2.0f*pi);
@@ -98,12 +89,12 @@ void CBomb::Snap(int SnappingClient)
 	}
 }
 
-void CBomb::TickPaused()
+void CSoldierBomb::TickPaused()
 {
 	++m_StartTick;
 }
 
-bool CBomb::AddBomb()
+bool CSoldierBomb::AddBomb()
 {
 	if(m_nbBomb < m_IDBomb.size())
 	{

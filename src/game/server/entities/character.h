@@ -9,11 +9,6 @@
 
 #include <game/gamecore.h>
 
-/* INFECTION MODIFICATION START ***************************************/
-#include <game/server/entities/bomb.h>
-#include <game/server/entities/barrier.h>
-/* INFECTION MODIFICATION END *****************************************/
-
 enum
 {
 	WEAPON_GAME = -3, // team switching etc
@@ -186,8 +181,6 @@ private:
 	vec2 m_SpawnPosition;
 
 public:
-	CBarrier* m_pBarrier;
-	CBomb* m_pBomb;
 	int m_PositionLockTick;
 	bool m_PositionLocked;
 	int m_PoisonTick;

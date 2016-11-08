@@ -2,11 +2,13 @@
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <game/server/gamecontext.h>
 #include <engine/shared/config.h>
-#include "mine.h"
+
+#include "scientist-mine.h"
+
 #include "growingexplosion.h"
 
-CMine::CMine(CGameWorld *pGameWorld, vec2 Pos, int Owner)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_MINE)
+CScientistMine::CScientistMine(CGameWorld *pGameWorld, vec2 Pos, int Owner)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_SCIENTIST_MINE)
 {
 	m_Pos = Pos;
 	GameWorld()->InsertEntity(this);
@@ -20,26 +22,25 @@ CMine::CMine(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 	}
 }
 
-void CMine::Destroy()
+CScientistMine::~CScientistMine()
 {
 	for(int i=0; i<NUM_IDS; i++)
 	{
 		Server()->SnapFreeID(m_IDs[i]);
 	}
-	delete this;
 }
 
-void CMine::Reset()
+void CScientistMine::Reset()
 {
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-int CMine::GetOwner() const
+int CScientistMine::GetOwner() const
 {
 	return m_Owner;
 }
 
-void CMine::Explode(int DetonatedBy)
+void CScientistMine::Explode(int DetonatedBy)
 {
 	new CGrowingExplosion<6>(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED);
 	GameServer()->m_World.DestroyEntity(this);
@@ -59,11 +60,11 @@ void CMine::Explode(int DetonatedBy)
 	}
 }
 
-void CMine::Snap(int SnappingClient)
+void CScientistMine::Snap(int SnappingClient)
 {
-	float AngleStep = 2.0f * pi / CMine::NUM_SIDE;
+	float AngleStep = 2.0f * pi / CScientistMine::NUM_SIDE;
 	float Radius = g_Config.m_InfMineRadius;
-	for(int i=0; i<CMine::NUM_SIDE; i++)
+	for(int i=0; i<CScientistMine::NUM_SIDE; i++)
 	{
 		vec2 PartPosStart = m_Pos + vec2(Radius * cos(AngleStep*i), Radius * sin(AngleStep*i));
 		vec2 PartPosEnd = m_Pos + vec2(Radius * cos(AngleStep*(i+1)), Radius * sin(AngleStep*(i+1)));
@@ -78,13 +79,13 @@ void CMine::Snap(int SnappingClient)
 		pObj->m_FromY = (int)PartPosEnd.y;
 		pObj->m_StartTick = Server()->Tick();
 	}
-	for(int i=0; i<CMine::NUM_PARTICLES; i++)
+	for(int i=0; i<CScientistMine::NUM_PARTICLES; i++)
 	{
 		float RandomRadius = frandom()*(Radius-4.0f);
 		float RandomAngle = 2.0f * pi * frandom();
 		vec2 ParticlePos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
 		
-		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[CMine::NUM_SIDE+i], sizeof(CNetObj_Projectile)));
+		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[CScientistMine::NUM_SIDE+i], sizeof(CNetObj_Projectile)));
 		if(pObj)
 		{
 			pObj->m_X = (int)ParticlePos.x;
@@ -97,7 +98,7 @@ void CMine::Snap(int SnappingClient)
 	}
 }
 
-void CMine::Tick()
+void CScientistMine::Tick()
 {
 	// Find other players
 	bool MustExplode = false;
@@ -124,7 +125,7 @@ void CMine::Tick()
 		Explode(DetonatedBy);
 }
 
-void CMine::TickPaused()
+void CScientistMine::TickPaused()
 {
 	++m_StartTick;
 }

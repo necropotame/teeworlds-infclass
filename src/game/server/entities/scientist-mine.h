@@ -1,11 +1,11 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
-#ifndef GAME_SERVER_ENTITIES_MINE_H
-#define GAME_SERVER_ENTITIES_MINE_H
+#ifndef GAME_SERVER_ENTITIES_SCIENTIST_MINE_H
+#define GAME_SERVER_ENTITIES_SCIENTIST_MINE_H
 
 #include <game/server/entity.h>
 
-class CMine : public CEntity
+class CScientistMine : public CEntity
 {
 public:
 	enum
@@ -16,10 +16,10 @@ public:
 	};
 	
 public:
-	CMine(CGameWorld *pGameWorld, vec2 Pos, int Owner);
+	CScientistMine(CGameWorld *pGameWorld, vec2 Pos, int Owner);
+	virtual ~CScientistMine();
 
 	virtual void Snap(int SnappingClient);
-	void Destroy();
 	void Reset();
 	void TickPaused();
 	void Tick();
