@@ -12,9 +12,9 @@ CSoldierBomb::CSoldierBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 	m_DetectionRadius = 60.0f;
 	m_StartTick = Server()->Tick();
 	m_Owner = Owner;
-	m_nbBomb = g_Config.m_InfBombs;
+	m_nbBomb = g_Config.m_InfSoldierBombs;
 	
-	m_IDBomb.set_size(g_Config.m_InfBombs);
+	m_IDBomb.set_size(g_Config.m_InfSoldierBombs);
 	for(int i=0; i<m_IDBomb.size(); i++)
 	{
 		m_IDBomb[i] = Server()->SnapNewID();

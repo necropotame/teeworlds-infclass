@@ -2648,9 +2648,9 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Soldier can pose floating bombs with his hammer."), NULL); 
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_LP(
-				Buffer, pLanguage, g_Config.m_InfBombs,
+				Buffer, pLanguage, g_Config.m_InfSoldierBombs,
 				_P("Each bomb can explode one time.", "Each bomb can explode {int:NumBombs} times."),
-				"NumBombs", &g_Config.m_InfBombs,
+				"NumBombs", &g_Config.m_InfSoldierBombs,
 				NULL
 			);
 			Buffer.append("\n\n");

@@ -22,6 +22,7 @@
 #include "scientist-laser.h"
 #include "scientist-mine.h"
 #include "merc-grenade.h"
+#include "merc-bomb.h"
 #include "hero-flag.h"
 
 //input count
@@ -613,6 +614,29 @@ void CCharacter::FireWeapon()
 					else if(m_PositionLockTick > Server()->TickSpeed())
 					{
 						m_PositionLockTick = Server()->TickSpeed();
+					}
+				}
+			}
+			else if(GetClass() == PLAYERCLASS_MERCENARY)
+			{
+				int NumBombs = 0;
+				for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
+				{
+					if(pBomb->m_Owner == m_pPlayer->GetCID())
+						NumBombs++;
+				}
+				
+				if(NumBombs < g_Config.m_InfMercBombs)
+				{
+					new CMercenaryBomb(GameWorld(), m_Pos, m_pPlayer->GetCID());
+					GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
+				}
+				else
+				{
+					for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
+					{
+						if(pBomb->m_Owner == m_pPlayer->GetCID())
+							pBomb->Explode();
 					}
 				}
 			}
@@ -1687,7 +1711,29 @@ void CCharacter::Tick()
 		}
 	}
 		
-	if(GetClass() == PLAYERCLASS_SOLDIER)
+	if(GetClass() == PLAYERCLASS_ENGINEER)
+	{
+		CEngineerWall* pCurrentWall = NULL;
+		for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
+		{
+			if(pWall->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentWall = pWall;
+				break;
+			}
+		}
+		
+		if(pCurrentWall)
+		{
+			int Seconds = 1+pCurrentWall->GetTick()/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Laser wall: {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
+	}
+	else if(GetClass() == PLAYERCLASS_SOLDIER)
 	{
 		int NumBombs = 0;
 		for(CSoldierBomb *pBomb = (CSoldierBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SOLDIER_BOMB); pBomb; pBomb = (CSoldierBomb*) pBomb->TypeNext())
@@ -1723,6 +1769,47 @@ void CCharacter::Tick()
 			);
 		}
 	}
+	else if(GetClass() == PLAYERCLASS_SNIPER)
+	{
+		if(m_PositionLocked)
+		{
+			int Seconds = 1+m_PositionLockTick/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Position lock: {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
+	}
+	else if(GetClass() == PLAYERCLASS_MERCENARY)
+	{
+		int NumBombs = 0;
+		for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
+		{
+			if(pBomb->m_Owner == m_pPlayer->GetCID())
+				NumBombs++;
+		}
+		
+		if(NumBombs)
+		{
+			if(NumBombs < g_Config.m_InfMercBombs)
+			{
+				GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumBombs,
+					_P("One bomb installed", "{int:NumBombs} bombs installed"),
+					"NumBombs", &NumBombs,
+					NULL
+				);
+			}
+			else if(NumBombs >= g_Config.m_InfMercBombs)
+			{
+				GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumBombs,
+					_P("One bomb ready", "{int:NumBombs} bombs ready"),
+					"NumBombs", &NumBombs,
+					NULL
+				);
+			}
+		}
+	}
 	else if(GetClass() == PLAYERCLASS_HERO)
 	{
 		//Search for flag
@@ -1743,40 +1830,6 @@ void CCharacter::Tick()
 			int Seconds = 1+CoolDown/Server()->TickSpeed();
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 				_("Next flag in {sec:RemainingTime}"),
-				"RemainingTime", &Seconds,
-				NULL
-			);
-		}
-	}
-	else if(GetClass() == PLAYERCLASS_ENGINEER)
-	{
-		CEngineerWall* pCurrentWall = NULL;
-		for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
-		{
-			if(pWall->m_Owner == m_pPlayer->GetCID())
-			{
-				pCurrentWall = pWall;
-				break;
-			}
-		}
-		
-		if(pCurrentWall)
-		{
-			int Seconds = 1+pCurrentWall->GetTick()/Server()->TickSpeed();
-			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
-				_("Laser wall: {sec:RemainingTime}"),
-				"RemainingTime", &Seconds,
-				NULL
-			);
-		}
-	}
-	else if(GetClass() == PLAYERCLASS_SNIPER)
-	{
-		if(m_PositionLocked)
-		{
-			int Seconds = 1+m_PositionLockTick/Server()->TickSpeed();
-			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
-				_("Position lock: {sec:RemainingTime}"),
 				"RemainingTime", &Seconds,
 				NULL
 			);
@@ -2463,7 +2516,8 @@ void CCharacter::ClassSpawnAttributes()
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
-			m_aWeapons[WEAPON_HAMMER].m_Got = false;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(INFWEAPON_MERCENARY_GRENADE));
 			GiveWeapon(WEAPON_GUN, Server()->GetMaxAmmo(INFWEAPON_MERCENARY_GUN));
 			m_ActiveWeapon = WEAPON_GUN;
@@ -2707,6 +2761,11 @@ void CCharacter::DestroyChildEntities()
 	{
 		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pGrenade);
+	}
+	for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
+	{
+		if(pBomb->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pBomb);
 	}
 	for(CScientistMine* pMine = (CScientistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCIENTIST_MINE); pMine; pMine = (CScientistMine*) pMine->TypeNext())
 	{
