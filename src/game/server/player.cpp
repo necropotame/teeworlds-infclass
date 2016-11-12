@@ -39,8 +39,9 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	}
 	m_WasHumanThisRound = false;
 	
-	m_InClassChooserMenu = 0;
-	m_MenuClassChooserItem = -1;
+	m_MapMenu = 0;
+	m_MapMenuItem = -1;
+	m_MapMenuTick = -1;
 	m_HookProtectionAutomatic = true;
 	
 	m_PrevTuningParams = *pGameServer->Tuning();
@@ -119,6 +120,9 @@ void CPlayer::Tick()
 		++m_LastActionTick;
 		++m_TeamChangeTick;
  	}
+
+	if(m_MapMenu > 0)
+		m_MapMenuTick++;
  	
  	HandleTuningParams();
 }
@@ -597,6 +601,9 @@ void CPlayer::SetClass(int newClass)
 	if(m_class == newClass)
 		return;
 		
+	m_GhoulLevel = 0;
+	m_GhoulLevelTick = 0;
+	
 	m_class = newClass;
 	
 	if(m_class < END_HUMANCLASS)
@@ -657,4 +664,21 @@ void CPlayer::SetLanguage(const char* pLanguage)
 {
 	str_copy(m_aLanguage, pLanguage, sizeof(m_aLanguage));
 }
+void CPlayer::OpenMapMenu(int Menu)
+{
+	m_MapMenu = Menu;
+	m_MapMenuTick = 0;
+}
+
+void CPlayer::CloseMapMenu()
+{
+	m_MapMenu = 0;
+	m_MapMenuTick = -1;
+}
+
+bool CPlayer::MapMenuClickable()
+{
+	return (m_MapMenu > 0 && (m_MapMenuTick > Server()->TickSpeed()/2));
+}
+
 /* INFECTION MODIFICATION END *****************************************/

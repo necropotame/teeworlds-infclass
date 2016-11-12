@@ -63,6 +63,8 @@ class CGameContext : public IGameServer
 	CCollision m_Collision;
 	CNetObjHandler m_NetObjHandler;
 	CTuningParams m_Tuning;
+	int m_TargetToKill;
+	int m_TargetToKillCoolDown;
 
 	static bool ConTuneParam(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneReset(IConsole::IResult *pResult, void *pUserData);
@@ -239,6 +241,7 @@ public:
 	
 	void CreateLaserDotEvent(vec2 Pos0, vec2 Pos1, int LifeSpan);
 	void CreateHammerDotEvent(vec2 Pos, int LifeSpan);
+	void CreateLoveEvent(vec2 Pos);
 	void SendHitSound(int ClientID);
 	void SendScoreSound(int ClientID);
 	void AddBroadcast(int ClientID, const char* pText, int Priority, int LifeSpan);
@@ -281,7 +284,22 @@ private:
 	};
 	array<HammerDotState> m_HammerDots;
 	
+	struct LoveDotState
+	{
+		vec2 m_Pos;
+		int m_LifeSpan;
+		int m_SnapID;
+	};
+	array<LoveDotState> m_LoveDots;
+	
 	int m_aHitSoundState[MAX_CLIENTS]; //1 for hit, 2 for kill (no sounds must be sent)	
+
+public:
+	virtual int GetTargetToKill();
+	virtual void TargetKilled();
+	virtual void EnableTargetToKill() { m_TargetToKill = (m_TargetToKill < 0 ? -1 : m_TargetToKill); }
+	virtual void DisableTargetToKill() { m_TargetToKill = -2; }
+	virtual int GetTargetToKillCoolDown() { return m_TargetToKillCoolDown; }
 /* INFECTION MODIFICATION END *****************************************/
 };
 

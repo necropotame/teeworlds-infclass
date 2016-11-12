@@ -123,6 +123,6 @@ void CMercenaryGrenade::Snap(int SnappingClient)
 	
 void CMercenaryGrenade::Explode()
 {
-	new CGrowingExplosion<4>(GameWorld(), m_ActualPos, m_ActualDir, m_Owner, GROWINGEXPLOSIONEFFECT_POISON_INFECTED);
+	new CGrowingExplosion(GameWorld(), m_ActualPos, m_ActualDir, m_Owner, 4, GROWINGEXPLOSIONEFFECT_POISON_INFECTED);
 	GameServer()->m_World.DestroyEntity(this);
 }

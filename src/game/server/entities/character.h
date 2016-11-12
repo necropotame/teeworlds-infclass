@@ -173,8 +173,6 @@ private:
 	int m_FrozenTime;
 	int m_FreezeReason;
 	int m_InAirTick;
-	int m_GhoulLevel;
-	int m_GhoulLevelTick;
 	
 	char m_GhostSearchMap[GHOST_SEARCHMAP_SIZE*GHOST_SEARCHMAP_SIZE];
 	
@@ -183,6 +181,7 @@ private:
 public:
 	int m_PositionLockTick;
 	bool m_PositionLocked;
+	int m_LoveTick;
 	int m_PoisonTick;
 	int m_Poison;
 	int m_PoisonFrom;
@@ -203,14 +202,14 @@ public:
 	bool IsFrozen() const;
 	void Unfreeze();
 	void Poison(int Count, int From);
+	void Love();
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);
 	void UpdateTuningParam();
 	bool FindPortalPosition(vec2 Pos, vec2& Res);
 	bool FindWitchSpawnPosition(vec2& Res);
 	void SaturateVelocity(vec2 Force, float MaxSpeed);
-	void IncreaseLevel();
-	inline int GetGhoulLevel() { return m_GhoulLevel; }
+	void IncreaseGhoulLevel(int Points);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

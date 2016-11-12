@@ -124,14 +124,14 @@ MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 6, 0, 16, CFGFLAG_SERVER, "Maxi
 MACRO_CONFIG_INT(InfHeroLimit, inf_hero_limit, 4, 0, 16, CFGFLAG_SERVER, "Maximum number of heros in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 6, 0, 16, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfSoldierBombs, inf_soldier_bombs, 3, 1, 16, CFGFLAG_SERVER, "Number of bombs for the soldier")
-MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 2, 1, 16, CFGFLAG_SERVER, "Number of bombs for the mercenary")
+MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 30, 1, 16, CFGFLAG_SERVER, "Number of bombs for the mercenary")
 MACRO_CONFIG_INT(InfBarrierLifeSpan, inf_barrier_lifespan, 30, 0, 100, CFGFLAG_SERVER, "Barrier lifespan")
 MACRO_CONFIG_INT(InfBarrierTimeReduce, inf_barrier_timereduce, 150, 0, 10000, CFGFLAG_SERVER, "Time to remove from a barrier lifespan when an infected die (centisec)")
 MACRO_CONFIG_INT(InfMineRadius, inf_mine_radius, 46, 0, 1024, CFGFLAG_SERVER, "Radius of mines")
 MACRO_CONFIG_INT(InfMineLimit, inf_mine_limit, 2, 0, 1024, CFGFLAG_SERVER, "Maximum number of mines per player")
 MACRO_CONFIG_INT(InfNinjaJump, inf_ninja_jump, 2, 0, 1024, CFGFLAG_SERVER, "Maximum number of katana attacks")
 MACRO_CONFIG_INT(InfPoisonDamage, inf_poison_damage, 8, 0, 1024, CFGFLAG_SERVER, "Damage deals by the poison grenades")
-MACRO_CONFIG_INT(InfGhoulDigestion, inf_ghoul_digestion, 20, 0, 10000, CFGFLAG_SERVER, "Time for a ghoul to digest an infected (sec)")
-MACRO_CONFIG_INT(InfGhoulStomachSize, inf_ghoul_stomach_size, 12, 0, 10000, CFGFLAG_SERVER, "Number of dead that the ghoul can eat")
+MACRO_CONFIG_INT(InfGhoulDigestion, inf_ghoul_digestion, 5, 0, 10000, CFGFLAG_SERVER, "Time for a ghoul to digest an infected (sec)")
+MACRO_CONFIG_INT(InfGhoulStomachSize, inf_ghoul_stomach_size, 120, 0, 10000, CFGFLAG_SERVER, "Number of dead that the ghoul can eat")
 
 #endif

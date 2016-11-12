@@ -123,10 +123,16 @@ private:
 	int m_DefaultScoreMode;
 	char m_aLanguage[16];
 	
+	int m_MapMenu;
+	int m_MapMenuTick;
+	
 public:
 	int m_Authed;
 	int m_ScoreRound;
 	int m_HumanTime;
+	
+	int m_GhoulLevel;
+	int m_GhoulLevelTick;
 	
 	bool m_knownClass[NB_PLAYERCLASS];
 	int m_InfectionTick;
@@ -149,8 +155,7 @@ public:
 	bool m_HookProtection;
 	bool m_HookProtectionAutomatic;
 	
-	int m_InClassChooserMenu;
-	int m_MenuClassChooserItem;
+	int m_MapMenuItem;
 	
 	CTuningParams m_PrevTuningParams;
 	CTuningParams m_NextTuningParams;
@@ -158,7 +163,10 @@ public:
 	void HandleTuningParams();
 	
 	bool InscoreBoard() { return m_PlayerFlags & PLAYERFLAG_SCOREBOARD; };
-	bool InClassChooserMenu() { return m_InClassChooserMenu && (m_Team != TEAM_SPECTATORS); };
+	int MapMenu() { return (m_Team != TEAM_SPECTATORS) ? m_MapMenu : 0; };
+	void OpenMapMenu(int Menu);
+	void CloseMapMenu();
+	bool MapMenuClickable();
 /* INFECTION MODIFICATION END *****************************************/
 };
 

@@ -28,17 +28,27 @@ public:
 	
 	enum
 	{
-		TIMESHIFT_MENUCLASS = 60,
-		TIMESHIFT_MENUCLASS_MASK = NUM_MENUCLASS+1,
-	};
-	
-	enum
-	{
 		MASK_DEFENDER = 1,
 		MASK_MEDIC = 2,
 		MASK_HERO = 4,
 		MASK_SUPPORT = 8,
 		MASK_ALL = MASK_DEFENDER | MASK_MEDIC | MASK_HERO | MASK_SUPPORT,
+	};
+	
+	enum
+	{
+		MENUEFFECT_CANCEL = 0,
+		MENUEFFECT_EXPLOSION,
+		MENUEFFECT_LOVE,
+		MENUEFFECT_SHOCKWAVE,
+		NUM_MENUEFFECT,
+	};
+	
+	enum
+	{
+		TIMESHIFT_MENUCLASS = 60,
+		TIMESHIFT_MENUCLASS_MASK = NUM_MENUCLASS+1,
+		TIMESHIFT_MENUEFFECT = TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK,
 	};
 
 protected:
@@ -78,6 +88,7 @@ protected:
 	void CopyGameLayer();
 	void CopyLayers();
 	
+	void AddImageQuad(const char* pName, int ImageID, int GridX, int GridY, int X, int Y, int Width, int Height, vec2 Pos, vec2 Size, int Env);
 	void AddTeeLayer(const char* pName, int ImageID, vec2 Pos, float Size, int Env=-1, bool Black=false);
 	int AddExternalImage(const char* pImageName, int Width, int Height);
 	

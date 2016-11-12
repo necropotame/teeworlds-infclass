@@ -241,6 +241,8 @@ void CGameControllerMOD::Tick()
 		{
 			bool StartInfectionStrigger = (m_RoundStartTick + Server()->TickSpeed()*10 == Server()->Tick());
 			
+			GameServer()->EnableTargetToKill();
+			
 			if(m_pHeroFlag)
 				m_pHeroFlag->Show();
 			
@@ -324,6 +326,8 @@ void CGameControllerMOD::Tick()
 		{
 			if(m_pHeroFlag)
 				m_pHeroFlag->Show();
+			
+			GameServer()->DisableTargetToKill();
 			
 			CPlayerIterator<PLAYERITER_SPECTATORS> IterSpec(GameServer()->m_apPlayers);
 			while(IterSpec.Next())
@@ -453,6 +457,8 @@ void CGameControllerMOD::Tick()
 	}
 	else
 	{
+		GameServer()->DisableTargetToKill();
+		
 		if(m_pHeroFlag)
 			m_pHeroFlag->Show();
 		
@@ -526,13 +532,24 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_SUPPORT;
 	}
 	
-	if(GameServer()->m_apPlayers[SnappingClient] && GameServer()->m_apPlayers[SnappingClient]->InClassChooserMenu())
+	if(GameServer()->m_apPlayers[SnappingClient])
 	{
-		int Item = GameServer()->m_apPlayers[SnappingClient]->m_MenuClassChooserItem;
-		int Timer = ((CMapConverter::TIMESHIFT_MENUCLASS + (Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK)*60 + 30)*Server()->TickSpeed();
-		
-		pGameInfoObj->m_RoundStartTick = Server()->Tick() - Timer;
-		pGameInfoObj->m_TimeLimit = 0;
+		if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 1)
+		{
+			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
+			int Timer = ((CMapConverter::TIMESHIFT_MENUCLASS + (Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK)*60 + 30)*Server()->TickSpeed();
+			
+			pGameInfoObj->m_RoundStartTick = Server()->Tick() - Timer;
+			pGameInfoObj->m_TimeLimit = 0;
+		}
+		else if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 2)
+		{
+			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
+			int Timer = ((CMapConverter::TIMESHIFT_MENUEFFECT + (Item+1))*60 + 30)*Server()->TickSpeed();
+			
+			pGameInfoObj->m_RoundStartTick = Server()->Tick() - Timer;
+			pGameInfoObj->m_TimeLimit = 0;
+		}
 	}
 
 	CNetObj_GameData *pGameDataObj = (CNetObj_GameData *)Server()->SnapNewItem(NETOBJTYPE_GAMEDATA, 0, sizeof(CNetObj_GameData));
@@ -596,6 +613,13 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have killed a witch, +5 points"), NULL);
 			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_WITCH, pKiller->GetClass());
 			GameServer()->SendScoreSound(pKiller->GetCID());
+		}
+		else if(pKiller->GetClass() == PLAYERCLASS_NINJA && pVictim->GetPlayer()->GetCID() == GameServer()->GetTargetToKill())
+		{
+			GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have eliminated your target, +3 points"), NULL);
+			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_TARGET, pKiller->GetClass());
+			GameServer()->SendScoreSound(pKiller->GetCID());
+			GameServer()->TargetKilled();
 		}
 		else if(pVictim->IsInfected())
 		{

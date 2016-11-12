@@ -9,16 +9,27 @@
 class CMercenaryBomb : public CEntity
 {
 public:
-	CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner);
+	enum
+	{
+		EFFECT_EXPLOSION = 0,
+		EFFECT_SHOCKWAVE,
+		EFFECT_LOVE,
+	};
+	
+public:
+	CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner, int Type);
 
 	virtual void Snap(int SnappingClient);
 	void Reset();
 	void Explode();
 	void TickPaused();
+	void IncreaseDamage();
 	
 public:
 	int m_StartTick;
 	int m_Owner;
+	int m_Damage;
+	int m_Type;
 };
 
 #endif

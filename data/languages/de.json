@@ -5,7 +5,7 @@
 	},
 	{
 		"key": "Infected won the round in {sec:RoundDuration}",
-		"value": "Die Erkrankten haben die Runde in {sec:RoundDuration}"
+		"value": "Die Erkrankten haben die Runde in {sec:RoundDuration} gewonnen"
 	},
 	{
 		"key": "{int:NumHumans} humans won the round",

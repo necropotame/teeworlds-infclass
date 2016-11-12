@@ -83,8 +83,6 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_InAirTick = 0;
 	m_InWater = 0;
 	m_WaterJumpLifeSpan = 0;
-	m_GhoulLevel = 0;
-	m_GhoulLevelTick = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -172,8 +170,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_AntiFireTick = Server()->Tick();
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
-	m_GhoulLevel = 0;
-	m_GhoulLevelTick = 0;
+	m_LoveTick = -1;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
 	m_Poison = 0;
@@ -479,7 +476,7 @@ void CCharacter::UpdateTuningParam()
 	
 	if(GetClass() == PLAYERCLASS_GHOUL)
 	{
-		float Factor = clamp(m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f);
+		float Factor = clamp(m_pPlayer->m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f);
 		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + 0.5f*Factor);
 		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + 0.5f*Factor);
 		pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f + 0.35f*Factor);
@@ -526,7 +523,7 @@ void CCharacter::FireWeapon()
 	if(FullAuto && (m_LatestInput.m_Fire&1) && (m_aWeapons[m_ActiveWeapon].m_Ammo || (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GRENADE)))
 		WillFire = true;
 
-	if(!WillFire)
+	if(!WillFire || m_pPlayer->MapMenu() > 0)
 		return;
 
 	// check for ammo
@@ -619,26 +616,32 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_MERCENARY)
 			{
-				int NumBombs = 0;
+				CMercenaryBomb* pCurrentBomb = NULL;
 				for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
 				{
 					if(pBomb->m_Owner == m_pPlayer->GetCID())
-						NumBombs++;
+					{
+						pCurrentBomb = pBomb;
+						break;
+					}
 				}
 				
-				if(NumBombs < g_Config.m_InfMercBombs)
+				if(pCurrentBomb)
 				{
-					new CMercenaryBomb(GameWorld(), m_Pos, m_pPlayer->GetCID());
-					GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
+					if(distance(pCurrentBomb->m_Pos, m_Pos) < 120.0f)
+					{
+						pCurrentBomb->IncreaseDamage();
+						GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
+					}
+					else
+						pCurrentBomb->Explode();
 				}
 				else
 				{
-					for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
-					{
-						if(pBomb->m_Owner == m_pPlayer->GetCID())
-							pBomb->Explode();
-					}
+					m_pPlayer->OpenMapMenu(2);
 				}
+				
+				m_ReloadTimer = Server()->TickSpeed()/4;
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
@@ -1008,7 +1011,7 @@ void CCharacter::FireWeapon()
 			if(GetClass() == PLAYERCLASS_SNIPER)
 			{
 				if(m_PositionLocked)
-					Damage = 20;
+					Damage = 30;
 				else
 					Damage = min(10, 9 + rand()%4);
 			}
@@ -1139,7 +1142,7 @@ void CCharacter::HandleWeapons()
 				}
 				else if(GetClass() == PLAYERCLASS_GHOUL)
 				{
-					Rate = 0.25f + 0.75/(1.0f+m_GhoulLevel/2.0f);
+					Rate = 0.25f + 0.75/(1.0f+m_pPlayer->m_GhoulLevel/2.0f);
 				}
 				
 				if(m_HookDmgTick + Server()->TickSpeed()*Rate < Server()->Tick())
@@ -1253,18 +1256,18 @@ void CCharacter::Tick()
 	
 	if(GetClass() == PLAYERCLASS_GHOUL)
 	{
-		if(m_GhoulLevel > 0)
+		if(m_pPlayer->m_GhoulLevel > 0)
 		{
-			m_GhoulLevelTick--;
+			m_pPlayer->m_GhoulLevelTick--;
 			
-			if(m_GhoulLevelTick <= 0)
+			if(m_pPlayer->m_GhoulLevelTick <= 0 &&  m_pPlayer->m_GhoulLevel > 0)
 			{
-				m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
-				m_GhoulLevel--;
+				m_pPlayer->m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
+				m_pPlayer->m_GhoulLevel--;
 			}
 		}
 		
-		m_pPlayer->SetClassSkin(PLAYERCLASS_GHOUL, m_GhoulLevel);
+		m_pPlayer->SetClassSkin(PLAYERCLASS_GHOUL, m_pPlayer->m_GhoulLevel);
 	}
 	
 	//Check is the character is in toxic gaz
@@ -1305,9 +1308,12 @@ void CCharacter::Tick()
 		else
 		{
 			int FreezeSec = 1+(m_FrozenTime/Server()->TickSpeed());
-			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, "You are frozen: {sec:EffectDuration}", "EffectDuration", &FreezeSec, NULL);
+			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are frozen: {sec:EffectDuration}"), "EffectDuration", &FreezeSec, NULL);
 		}
 	}
+	
+	if(m_LoveTick > 0)
+		--m_LoveTick;
 	
 	if(m_Poison > 0)
 	{
@@ -1571,12 +1577,12 @@ void CCharacter::Tick()
 		}
 	}
 	
-	if(m_pPlayer->InClassChooserMenu())
+	if(m_pPlayer->MapMenu() == 1)
 	{
 		if(GetClass() != PLAYERCLASS_NONE)
 		{
 			m_AntiFireTick = Server()->Tick();
-			m_pPlayer->m_InClassChooserMenu = 0;
+			m_pPlayer->CloseMapMenu();
 		}
 		else
 		{
@@ -1588,9 +1594,9 @@ void CCharacter::Tick()
 			{
 				float Angle = 2.0f*pi+atan2(CursorPos.x, -CursorPos.y);
 				float AngleStep = 2.0f*pi/static_cast<float>(CMapConverter::NUM_MENUCLASS);
-				m_pPlayer->m_MenuClassChooserItem = ((int)((Angle+AngleStep/2.0f)/AngleStep))%CMapConverter::NUM_MENUCLASS;
+				m_pPlayer->m_MapMenuItem = ((int)((Angle+AngleStep/2.0f)/AngleStep))%CMapConverter::NUM_MENUCLASS;
 				
-				switch(m_pPlayer->m_MenuClassChooserItem)
+				switch(m_pPlayer->m_MapMenuItem)
 				{
 					case CMapConverter::MENUCLASS_RANDOM:
 						GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Random choice"), NULL);
@@ -1657,16 +1663,16 @@ void CCharacter::Tick()
 			
 			if(!Broadcast)
 			{
-				m_pPlayer->m_MenuClassChooserItem = -1;
+				m_pPlayer->m_MapMenuItem = -1;
 				GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Choose your class"), NULL);
 			}
 			
-			if(m_Input.m_Fire&1 && m_pPlayer->m_MenuClassChooserItem >= 0)
+			if(m_Input.m_Fire&1 && m_pPlayer->m_MapMenuItem >= 0)
 			{
 				bool Bonus = false;
 				
 				int NewClass = -1;
-				switch(m_pPlayer->m_MenuClassChooserItem)
+				switch(m_pPlayer->m_MapMenuItem)
 				{
 					case CMapConverter::MENUCLASS_MEDIC:
 						NewClass = PLAYERCLASS_MEDIC;
@@ -1701,12 +1707,79 @@ void CCharacter::Tick()
 				if(NewClass >= 0 && GameServer()->m_pController->IsChoosableClass(NewClass))
 				{
 					m_AntiFireTick = Server()->Tick();
-					m_pPlayer->m_InClassChooserMenu = 0;
+					m_pPlayer->m_MapMenuItem = 0;
 					m_pPlayer->SetClass(NewClass);
 					
 					if(Bonus)
 						IncreaseArmor(10);
 				}
+			}
+		}
+	}
+	else if(m_pPlayer->MapMenu() == 2)
+	{
+		vec2 CursorPos = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
+		
+		bool Broadcast = false;
+
+		if(length(CursorPos) > 100.0f)
+		{
+			float Angle = 2.0f*pi+atan2(CursorPos.x, -CursorPos.y);
+			float AngleStep = 2.0f*pi/static_cast<float>(CMapConverter::NUM_MENUEFFECT);
+			m_pPlayer->m_MapMenuItem = ((int)((Angle+AngleStep/2.0f)/AngleStep))%CMapConverter::NUM_MENUEFFECT;
+			
+			switch(m_pPlayer->m_MapMenuItem)
+			{
+				case CMapConverter::MENUEFFECT_CANCEL:
+					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Cancel"), NULL);
+					Broadcast = true;
+					break;
+				case CMapConverter::MENUEFFECT_EXPLOSION:
+					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Explosion"), NULL);
+					Broadcast = true;
+					break;
+				case CMapConverter::MENUEFFECT_LOVE:
+					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Aphrodisiac"), NULL);
+					Broadcast = true;
+					break;
+				case CMapConverter::MENUEFFECT_SHOCKWAVE:
+					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Shockwave"), NULL);
+					Broadcast = true;
+					break;
+			}
+		}
+		
+		if(!Broadcast)
+		{
+			m_pPlayer->m_MapMenuItem = -1;
+			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Choose bomb effect"), NULL);
+		}
+		
+		if(m_Input.m_Fire&1 && m_pPlayer->m_MapMenuItem >= 0 && m_pPlayer->MapMenuClickable())
+		{
+			int BombType = -1;
+			switch(m_pPlayer->m_MapMenuItem)
+			{
+				case CMapConverter::MENUEFFECT_CANCEL:
+					m_pPlayer->CloseMapMenu();
+					break;
+				case CMapConverter::MENUEFFECT_EXPLOSION:
+					BombType = CMercenaryBomb::EFFECT_EXPLOSION;
+					break;
+				case CMapConverter::MENUEFFECT_LOVE:
+					BombType = CMercenaryBomb::EFFECT_LOVE;
+					break;
+				case CMapConverter::MENUEFFECT_SHOCKWAVE:
+					BombType = CMercenaryBomb::EFFECT_SHOCKWAVE;
+					break;
+			}
+			
+			if(BombType >= 0)
+			{
+				new CMercenaryBomb(GameWorld(), m_Pos, m_pPlayer->GetCID(), BombType);
+				GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
+				
+				m_pPlayer->CloseMapMenu();
 			}
 		}
 	}
@@ -1769,6 +1842,29 @@ void CCharacter::Tick()
 			);
 		}
 	}
+	else if(GetClass() == PLAYERCLASS_NINJA)
+	{
+		int TargetID = GameServer()->GetTargetToKill();
+		int CoolDown = GameServer()->GetTargetToKillCoolDown();
+		
+		if(CoolDown > 0)
+		{
+			int Seconds = 1+CoolDown/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Next target in {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
+		else if(TargetID >= 0)
+		{
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Target to eliminate: {str:PlayerName}"),
+				"PlayerName", Server()->ClientName(TargetID),
+				NULL
+			);
+		}
+	}
 	else if(GetClass() == PLAYERCLASS_SNIPER)
 	{
 		if(m_PositionLocked)
@@ -1783,31 +1879,24 @@ void CCharacter::Tick()
 	}
 	else if(GetClass() == PLAYERCLASS_MERCENARY)
 	{
-		int NumBombs = 0;
+		CMercenaryBomb* pCurrentBomb = NULL;
 		for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
 		{
 			if(pBomb->m_Owner == m_pPlayer->GetCID())
-				NumBombs++;
+			{
+				pCurrentBomb = pBomb;
+				break;
+			}
 		}
 		
-		if(NumBombs)
+		if(pCurrentBomb)
 		{
-			if(NumBombs < g_Config.m_InfMercBombs)
-			{
-				GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumBombs,
-					_P("One bomb installed", "{int:NumBombs} bombs installed"),
-					"NumBombs", &NumBombs,
-					NULL
-				);
-			}
-			else if(NumBombs >= g_Config.m_InfMercBombs)
-			{
-				GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumBombs,
-					_P("One bomb ready", "{int:NumBombs} bombs ready"),
-					"NumBombs", &NumBombs,
-					NULL
-				);
-			}
+			float BombLevel = pCurrentBomb->m_Damage/static_cast<float>(g_Config.m_InfMercBombs);
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Explosive yield: {percent:BombLevel}"),
+				"BombLevel", &BombLevel,
+				NULL
+			);
 		}
 	}
 	else if(GetClass() == PLAYERCLASS_HERO)
@@ -1844,9 +1933,9 @@ void CCharacter::Tick()
 	}
 	else if(GetClass() == PLAYERCLASS_GHOUL)
 	{
-		if(m_GhoulLevel)
+		if(m_pPlayer->m_GhoulLevel)
 		{
-			float FodderInStomach = m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize);
+			float FodderInStomach = m_pPlayer->m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize);
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 				_("Stomach filled by {percent:FodderInStomach}"),
 				"FodderInStomach", &FodderInStomach,
@@ -1864,7 +1953,6 @@ void CCharacter::Tick()
 
 void CCharacter::TickDefered()
 {
-	
 	// advance the dummy
 	{
 		CCharacterCore::CParams CoreTickParams(&GameWorld()->m_Core.m_Tuning);
@@ -2013,8 +2101,13 @@ void CCharacter::Die(int Killer, int Weapon)
 		
 		if(pGhoul && MinLen < 800.0f)
 		{
-			new CFlyingPoint(GameWorld(), m_Pos, pGhoul->GetPlayer()->GetCID(), m_Core.m_Vel);
+			int Points = (IsInfected() ? 8 : 14);
+			new CFlyingPoint(GameWorld(), m_Pos, pGhoul->GetPlayer()->GetCID(), Points, m_Core.m_Vel);
 		}
+	}
+	if(GetClass() == PLAYERCLASS_GHOUL)
+	{
+		IncreaseGhoulLevel(-15);
 	}
 	
 	DestroyChildEntities();
@@ -2099,6 +2192,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected())
 		Dmg = 12;
 	
+	if(pKillerPlayer && pKillerPlayer->GetCharacter() && pKillerPlayer->GetCharacter()->m_LoveTick > 0)
+	{
+		Dmg = 0;
+		Mode = TAKEDAMAGEMODE_NOINFECTION;
+	}
+	
 	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
 	{
 		m_Core.m_Vel += Force;
@@ -2109,7 +2208,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		int DamageAccepted = 0;
 		for(int i=0; i<Dmg; i++)
 		{
-			if(rand()%(g_Config.m_InfGhoulStomachSize) >= m_GhoulLevel)
+			if(rand()%(g_Config.m_InfGhoulStomachSize) >= m_pPlayer->m_GhoulLevel/2)
 				DamageAccepted++;
 		}
 		Dmg = DamageAccepted;
@@ -2378,6 +2477,7 @@ void CCharacter::Snap(int SnappingClient)
 	int EmoteNormal = EMOTE_NORMAL;
 	if(IsInfected()) EmoteNormal = EMOTE_ANGRY;
 	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
+	if(m_LoveTick > 0) EmoteNormal = EMOTE_SURPRISE;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
 	
 	// write down the m_Core
@@ -2462,7 +2562,7 @@ void CCharacter::OpenClassChooser()
 	}
 	else
 	{
-		m_pPlayer->m_InClassChooserMenu = 1;
+		m_pPlayer->OpenMapMenu(1);
 	}
 }
 
@@ -2795,13 +2895,20 @@ bool CCharacter::IsInfected() const
 	return m_pPlayer->IsInfected();
 }
 
-void CCharacter::IncreaseLevel()
+void CCharacter::IncreaseGhoulLevel(int Points)
 {
-	if(GetClass() == PLAYERCLASS_GHOUL && m_GhoulLevel < static_cast<float>(g_Config.m_InfGhoulStomachSize))
+	if(GetClass() == PLAYERCLASS_GHOUL && m_pPlayer->m_GhoulLevel < static_cast<float>(g_Config.m_InfGhoulStomachSize))
 	{
-		m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
-		m_GhoulLevel++;
+		m_pPlayer->m_GhoulLevel += Points;
+		if(Points > 0)
+			m_pPlayer->m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
 	}
+}
+
+void CCharacter::Love()
+{
+	if(m_LoveTick <= 0)
+		m_LoveTick = Server()->TickSpeed()*5;
 }
 
 void CCharacter::Freeze(float Time, int Player, int Reason)

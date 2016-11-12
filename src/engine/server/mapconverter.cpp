@@ -164,6 +164,34 @@ void CMapConverter::CreateCircle(array<CQuad>* pQuads, vec2 CenterPos, float Siz
 	}
 }
 
+void CMapConverter::AddImageQuad(const char* pName, int ImageID, int GridX, int GridY, int X, int Y, int Width, int Height, vec2 Pos, vec2 Size, int Env)
+{
+	array<CQuad> aQuads;
+	CQuad Quad;
+	
+	float StepX = 1.0f/GridX;
+	float StepY = 1.0f/GridY;
+	
+	InitQuad(&Quad, Pos, Size);
+	Quad.m_ColorEnv = Env;
+	Quad.m_aTexcoords[0].x = Quad.m_aTexcoords[2].x = f2fx(StepX * X);
+	Quad.m_aTexcoords[1].x = Quad.m_aTexcoords[3].x = f2fx(StepX * (X + Width));
+	Quad.m_aTexcoords[0].y = Quad.m_aTexcoords[1].y = f2fx(StepY * Y);
+	Quad.m_aTexcoords[2].y = Quad.m_aTexcoords[3].y = f2fx(StepY * (Y + Height));
+	aQuads.add(Quad);
+	
+	CMapItemLayerQuads Item;
+	Item.m_Version = 2;
+	Item.m_Layer.m_Flags = 0;
+	Item.m_Layer.m_Type = LAYERTYPE_QUADS;
+	Item.m_Image = ImageID;
+	Item.m_NumQuads = aQuads.size();
+	StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), pName);
+	Item.m_Data = m_DataFile.AddDataSwapped(aQuads.size()*sizeof(CQuad), aQuads.base_ptr());
+	
+	m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
+}
+
 void CMapConverter::AddTeeLayer(const char* pName, int ImageID, vec2 Pos, float Size, int Env, bool Black)
 {
 	array<CQuad> aQuads;
@@ -463,250 +491,437 @@ void CMapConverter::Finalize()
 	int NinjaImageID = AddExternalImage("../skins/x_ninja", 256, 128);
 	int MercenaryImageID = AddExternalImage("../skins/bluestripe", 256, 128);
 	int SniperImageID = AddExternalImage("../skins/warpaint", 256, 128);
+	int GameImageID = AddExternalImage("../game", 1024, 512);
+	int ParticlesImageID = AddExternalImage("../particles", 512, 512);
 	
 	//Menu
 	
 	const float MenuRadius = 196.0f;
 	const float MenuAngleStart = -pi/2.0f;
-	const float MenuAngleStep = 2.0f*pi/static_cast<float>(NUM_MENUCLASS);
 	
-		//Menu Group
 	{
-		CMapItemGroup Item;
-		Item.m_Version = CMapItemGroup::CURRENT_VERSION;
-		Item.m_ParallaxX = 0;
-		Item.m_ParallaxY = 0;
-		Item.m_OffsetX = 0;
-		Item.m_OffsetY = 0;
-		Item.m_StartLayer = m_NumLayers;
-		Item.m_NumLayers = 10;
-		Item.m_UseClipping = 0;
-		Item.m_ClipX = 0;
-		Item.m_ClipY = 0;
-		Item.m_ClipW = 0;
-		Item.m_ClipH = 0;
-		StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Menu");
+		const float MenuAngleStep = 2.0f*pi/static_cast<float>(NUM_MENUCLASS);
 		
-		m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
-	}
-		//Menu Layers
-	{
-		array<CQuad> aQuads;
-		
-		int HiddenValues[4];
-		int NormalValues[4];
-		int HighlightValues[4];
-		
-		HiddenValues[0] = 0;
-		HiddenValues[1] = 0;
-		HiddenValues[2] = 0;
-		HiddenValues[3] = 0;
-			
-		//Two passes: one for circles, one for tees
-		for(int pass=0; pass<2; pass++)
+			//Menu Group
 		{
-			if(pass == 0)
-			{
-				NormalValues[0] = 0;
-				NormalValues[1] = 0;
-				NormalValues[2] = 0;
-				NormalValues[3] = 500;
-				
-				HighlightValues[0] = 1000;
-				HighlightValues[1] = 1000;
-				HighlightValues[2] = 1000;
-				HighlightValues[3] = 500;
-			}
-			else
-			{
-				NormalValues[0] = 1000;
-				NormalValues[1] = 1000;
-				NormalValues[2] = 1000;
-				NormalValues[3] = 1000;
-				
-				HighlightValues[0] = 1000;
-				HighlightValues[1] = 1000;
-				HighlightValues[2] = 1000;
-				HighlightValues[3] = 1000;
-			}
+			CMapItemGroup Item;
+			Item.m_Version = CMapItemGroup::CURRENT_VERSION;
+			Item.m_ParallaxX = 0;
+			Item.m_ParallaxY = 0;
+			Item.m_OffsetX = 0;
+			Item.m_OffsetY = 0;
+			Item.m_StartLayer = m_NumLayers;
+			Item.m_NumLayers = 10;
+			Item.m_UseClipping = 0;
+			Item.m_ClipX = 0;
+			Item.m_ClipY = 0;
+			Item.m_ClipW = 0;
+			Item.m_ClipH = 0;
+			StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Class Menu");
 			
-			for(int i=0; i<NUM_MENUCLASS; i++) 
-			{
-				int ClassMask = 0;
-				if(i == MENUCLASS_RANDOM) ClassMask = -1;
-				else if(i <= MENUCLASS_SCIENTIST) ClassMask = MASK_DEFENDER;
-				else if(i == MENUCLASS_MEDIC) ClassMask = MASK_MEDIC;
-				else if(i == MENUCLASS_HERO) ClassMask = MASK_HERO;
-				else ClassMask = MASK_SUPPORT;
-				
-				//Create Animation for enable/disable simulation
-				{
-					int StartPoint = m_lEnvPoints.size();
-					int NbPoints = 0;
-					
-					{
-						CEnvPoint Point;
-						Point.m_Time = 0;
-						Point.m_Curvetype = 0;
-						Point.m_aValues[0] = HiddenValues[0];
-						Point.m_aValues[1] = HiddenValues[1];
-						Point.m_aValues[2] = HiddenValues[2];
-						Point.m_aValues[3] = HiddenValues[3];
-						m_lEnvPoints.add(Point);
-						NbPoints++;
-					}	
-					{
-						CEnvPoint Point;
-						Point.m_Time = TIMESHIFT_MENUCLASS*60*1000;
-						Point.m_Curvetype = 0;
-						Point.m_aValues[0] = NormalValues[0];
-						Point.m_aValues[1] = NormalValues[1];
-						Point.m_aValues[2] = NormalValues[2];
-						Point.m_aValues[3] = NormalValues[3];
-						m_lEnvPoints.add(Point);
-						NbPoints++;
-					}
-					
-					//Iterate over all combinaisons of class availabilities
-					for(int j=0; j<=MASK_ALL; j++)
-					{
-						if(pass == 0 && ((ClassMask & j) || (ClassMask == -1))) //Highlight
-						{
-							{
-								CEnvPoint Point;
-								Point.m_Time = (TIMESHIFT_MENUCLASS+(i+1)+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
-								Point.m_Curvetype = 0;
-								Point.m_aValues[0] = HighlightValues[0];
-								Point.m_aValues[1] = HighlightValues[1];
-								Point.m_aValues[2] = HighlightValues[2];
-								Point.m_aValues[3] = HighlightValues[3];
-								m_lEnvPoints.add(Point);
-								NbPoints++;
-							}
-							{
-								CEnvPoint Point;
-								Point.m_Time = (TIMESHIFT_MENUCLASS+(i+2)+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
-								Point.m_Curvetype = 0;
-								Point.m_aValues[0] = NormalValues[0];
-								Point.m_aValues[1] = NormalValues[1];
-								Point.m_aValues[2] = NormalValues[2];
-								Point.m_aValues[3] = NormalValues[3];
-								m_lEnvPoints.add(Point);
-								NbPoints++;
-							}
-						}
-						else if((ClassMask != -1) && ((ClassMask & j) == 0)) //Hide
-						{
-							{
-								CEnvPoint Point;
-								Point.m_Time = (TIMESHIFT_MENUCLASS+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
-								Point.m_Curvetype = 0;
-								Point.m_aValues[0] = HiddenValues[0];
-								Point.m_aValues[1] = HiddenValues[1];
-								Point.m_aValues[2] = HiddenValues[2];
-								Point.m_aValues[3] = HiddenValues[3];
-								m_lEnvPoints.add(Point);
-								NbPoints++;
-							}
-							{
-								CEnvPoint Point;
-								Point.m_Time = (TIMESHIFT_MENUCLASS+(j+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000;
-								Point.m_Curvetype = 0;
-								Point.m_aValues[0] = NormalValues[0];
-								Point.m_aValues[1] = NormalValues[1];
-								Point.m_aValues[2] = NormalValues[2];
-								Point.m_aValues[3] = NormalValues[3];
-								m_lEnvPoints.add(Point);
-								NbPoints++;
-							}
-						}
-					}
-					{
-						CEnvPoint Point;
-						Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000;
-						Point.m_Curvetype = 0;
-						Point.m_aValues[0] = NormalValues[0];
-						Point.m_aValues[1] = NormalValues[1];
-						Point.m_aValues[2] = NormalValues[2];
-						Point.m_aValues[3] = NormalValues[3];
-						m_lEnvPoints.add(Point);
-						NbPoints++;
-					}
-					{
-						CEnvPoint Point;
-						Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000+1000;
-						Point.m_Curvetype = 0;
-						Point.m_aValues[0] = HiddenValues[0];
-						Point.m_aValues[1] = HiddenValues[1];
-						Point.m_aValues[2] = HiddenValues[2];
-						Point.m_aValues[3] = HiddenValues[3];
-						m_lEnvPoints.add(Point);
-						NbPoints++;
-					}
-					
-					CMapItemEnvelope Item;
-					Item.m_Version = CMapItemEnvelope::CURRENT_VERSION;
-					Item.m_Channels = 4;
-					Item.m_StartPoint = StartPoint;
-					Item.m_NumPoints = NbPoints;
-					Item.m_Synchronized = 1;
-					StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "MenuPages");
-					m_DataFile.AddItem(MAPITEMTYPE_ENVELOPE, m_NumEnvs++, sizeof(Item), &Item);
-				}
+			m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
+		}
+			//Menu Layers
+		{
+			array<CQuad> aQuads;
 			
-				//Create Circle
+			int HiddenValues[4];
+			int NormalValues[4];
+			int HighlightValues[4];
+			
+			HiddenValues[0] = 0;
+			HiddenValues[1] = 0;
+			HiddenValues[2] = 0;
+			HiddenValues[3] = 0;
+				
+			//Two passes: one for circles, one for tees
+			for(int pass=0; pass<2; pass++)
+			{
 				if(pass == 0)
 				{
-					CreateCircle(&aQuads, m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i), 96.0f, vec4(1.0f, 1.0f, 1.0f, 0.5f), m_NumEnvs-1);
+					NormalValues[0] = 0;
+					NormalValues[1] = 0;
+					NormalValues[2] = 0;
+					NormalValues[3] = 500;
+					
+					HighlightValues[0] = 1000;
+					HighlightValues[1] = 1000;
+					HighlightValues[2] = 1000;
+					HighlightValues[3] = 500;
 				}
 				else
 				{
-					vec2 Pos = m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i);
-					switch(i)
+					NormalValues[0] = 1000;
+					NormalValues[1] = 1000;
+					NormalValues[2] = 1000;
+					NormalValues[3] = 1000;
+					
+					HighlightValues[0] = 1000;
+					HighlightValues[1] = 1000;
+					HighlightValues[2] = 1000;
+					HighlightValues[3] = 1000;
+				}
+				
+				for(int i=0; i<NUM_MENUCLASS; i++) 
+				{
+					int ClassMask = 0;
+					if(i == MENUCLASS_RANDOM) ClassMask = -1;
+					else if(i <= MENUCLASS_SCIENTIST) ClassMask = MASK_DEFENDER;
+					else if(i == MENUCLASS_MEDIC) ClassMask = MASK_MEDIC;
+					else if(i == MENUCLASS_HERO) ClassMask = MASK_HERO;
+					else ClassMask = MASK_SUPPORT;
+					
+					//Create Animation for enable/disable simulation
 					{
-						case MENUCLASS_RANDOM:
-							AddTeeLayer("Random", SniperImageID, Pos, 64.0f, m_NumEnvs-1, true);
-							break;
-						case MENUCLASS_ENGINEER:
-							AddTeeLayer("Engineer", EngineerImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_SOLDIER:
-							AddTeeLayer("Soldier", SoldierImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_SCIENTIST:
-							AddTeeLayer("Scientist", ScientistImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_MEDIC:
-							AddTeeLayer("Medic", MedicImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_HERO:
-							AddTeeLayer("Hero", HeroImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_NINJA:
-							AddTeeLayer("Ninja", NinjaImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_MERCENARY:
-							AddTeeLayer("Mercenary", MercenaryImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
-						case MENUCLASS_SNIPER:
-							AddTeeLayer("Sniper", SniperImageID, Pos, 64.0f, m_NumEnvs-1);
-							break;
+						int StartPoint = m_lEnvPoints.size();
+						int NbPoints = 0;
+						
+						{
+							CEnvPoint Point;
+							Point.m_Time = 0;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = HiddenValues[0];
+							Point.m_aValues[1] = HiddenValues[1];
+							Point.m_aValues[2] = HiddenValues[2];
+							Point.m_aValues[3] = HiddenValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}	
+						{
+							CEnvPoint Point;
+							Point.m_Time = TIMESHIFT_MENUCLASS*60*1000;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = NormalValues[0];
+							Point.m_aValues[1] = NormalValues[1];
+							Point.m_aValues[2] = NormalValues[2];
+							Point.m_aValues[3] = NormalValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}
+						
+						//Iterate over all combinaisons of class availabilities
+						for(int j=0; j<=MASK_ALL; j++)
+						{
+							if(pass == 0 && ((ClassMask & j) || (ClassMask == -1))) //Highlight
+							{
+								{
+									CEnvPoint Point;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+(i+1)+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+									Point.m_Curvetype = 0;
+									Point.m_aValues[0] = HighlightValues[0];
+									Point.m_aValues[1] = HighlightValues[1];
+									Point.m_aValues[2] = HighlightValues[2];
+									Point.m_aValues[3] = HighlightValues[3];
+									m_lEnvPoints.add(Point);
+									NbPoints++;
+								}
+								{
+									CEnvPoint Point;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+(i+2)+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+									Point.m_Curvetype = 0;
+									Point.m_aValues[0] = NormalValues[0];
+									Point.m_aValues[1] = NormalValues[1];
+									Point.m_aValues[2] = NormalValues[2];
+									Point.m_aValues[3] = NormalValues[3];
+									m_lEnvPoints.add(Point);
+									NbPoints++;
+								}
+							}
+							else if((ClassMask != -1) && ((ClassMask & j) == 0)) //Hide
+							{
+								{
+									CEnvPoint Point;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+									Point.m_Curvetype = 0;
+									Point.m_aValues[0] = HiddenValues[0];
+									Point.m_aValues[1] = HiddenValues[1];
+									Point.m_aValues[2] = HiddenValues[2];
+									Point.m_aValues[3] = HiddenValues[3];
+									m_lEnvPoints.add(Point);
+									NbPoints++;
+								}
+								{
+									CEnvPoint Point;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+(j+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+									Point.m_Curvetype = 0;
+									Point.m_aValues[0] = NormalValues[0];
+									Point.m_aValues[1] = NormalValues[1];
+									Point.m_aValues[2] = NormalValues[2];
+									Point.m_aValues[3] = NormalValues[3];
+									m_lEnvPoints.add(Point);
+									NbPoints++;
+								}
+							}
+						}
+						{
+							CEnvPoint Point;
+							Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = NormalValues[0];
+							Point.m_aValues[1] = NormalValues[1];
+							Point.m_aValues[2] = NormalValues[2];
+							Point.m_aValues[3] = NormalValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}
+						{
+							CEnvPoint Point;
+							Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000+1000;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = HiddenValues[0];
+							Point.m_aValues[1] = HiddenValues[1];
+							Point.m_aValues[2] = HiddenValues[2];
+							Point.m_aValues[3] = HiddenValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}
+						
+						CMapItemEnvelope Item;
+						Item.m_Version = CMapItemEnvelope::CURRENT_VERSION;
+						Item.m_Channels = 4;
+						Item.m_StartPoint = StartPoint;
+						Item.m_NumPoints = NbPoints;
+						Item.m_Synchronized = 1;
+						StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Menu Class Pages");
+						m_DataFile.AddItem(MAPITEMTYPE_ENVELOPE, m_NumEnvs++, sizeof(Item), &Item);
+					}
+				
+					//Create Circle
+					if(pass == 0)
+					{
+						CreateCircle(&aQuads, m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i), 96.0f, vec4(1.0f, 1.0f, 1.0f, 0.5f), m_NumEnvs-1);
+					}
+					else
+					{
+						vec2 Pos = m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i);
+						switch(i)
+						{
+							case MENUCLASS_RANDOM:
+								AddTeeLayer("Random", SniperImageID, Pos, 64.0f, m_NumEnvs-1, true);
+								break;
+							case MENUCLASS_ENGINEER:
+								AddTeeLayer("Engineer", EngineerImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_SOLDIER:
+								AddTeeLayer("Soldier", SoldierImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_SCIENTIST:
+								AddTeeLayer("Scientist", ScientistImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_MEDIC:
+								AddTeeLayer("Medic", MedicImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_HERO:
+								AddTeeLayer("Hero", HeroImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_NINJA:
+								AddTeeLayer("Ninja", NinjaImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_MERCENARY:
+								AddTeeLayer("Mercenary", MercenaryImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_SNIPER:
+								AddTeeLayer("Sniper", SniperImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+						}
 					}
 				}
+			
+				if(pass == 0)
+				{
+					CMapItemLayerQuads Item;
+					Item.m_Version = 2;
+					Item.m_Layer.m_Flags = 0;
+					Item.m_Layer.m_Type = LAYERTYPE_QUADS;
+					Item.m_Image = -1;
+					Item.m_NumQuads = aQuads.size();
+					StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "UIQuads");
+					Item.m_Data = m_DataFile.AddDataSwapped(aQuads.size()*sizeof(CQuad), aQuads.base_ptr());
+					
+					m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
+				}
 			}
+		}
+	}
+	
+	//Effect menu
+	{
+		const float MenuAngleStep = 2.0f*pi/static_cast<float>(NUM_MENUEFFECT);
 		
-			if(pass == 0)
-			{
-				CMapItemLayerQuads Item;
-				Item.m_Version = 2;
-				Item.m_Layer.m_Flags = 0;
-				Item.m_Layer.m_Type = LAYERTYPE_QUADS;
-				Item.m_Image = -1;
-				Item.m_NumQuads = aQuads.size();
-				StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "UIQuads");
-				Item.m_Data = m_DataFile.AddDataSwapped(aQuads.size()*sizeof(CQuad), aQuads.base_ptr());
+			//Menu Group
+		{
+			CMapItemGroup Item;
+			Item.m_Version = CMapItemGroup::CURRENT_VERSION;
+			Item.m_ParallaxX = 0;
+			Item.m_ParallaxY = 0;
+			Item.m_OffsetX = 0;
+			Item.m_OffsetY = 0;
+			Item.m_StartLayer = m_NumLayers;
+			Item.m_NumLayers = 10;
+			Item.m_UseClipping = 0;
+			Item.m_ClipX = 0;
+			Item.m_ClipY = 0;
+			Item.m_ClipW = 0;
+			Item.m_ClipH = 0;
+			StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Effect Menu");
+			
+			m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
+		}
+		
+			//Menu Layers
+		{
+			array<CQuad> aQuads;
+			
+			int HiddenValues[4];
+			int NormalValues[4];
+			int HighlightValues[4];
+			
+			HiddenValues[0] = 0;
+			HiddenValues[1] = 0;
+			HiddenValues[2] = 0;
+			HiddenValues[3] = 0;
 				
-				m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
+			//Two passes: one for circles, one for effects
+			for(int pass=0; pass<2; pass++)
+			{
+				if(pass == 0)
+				{
+					NormalValues[0] = 0;
+					NormalValues[1] = 0;
+					NormalValues[2] = 0;
+					NormalValues[3] = 500;
+					
+					HighlightValues[0] = 1000;
+					HighlightValues[1] = 1000;
+					HighlightValues[2] = 1000;
+					HighlightValues[3] = 500;
+				}
+				else
+				{
+					NormalValues[0] = 1000;
+					NormalValues[1] = 1000;
+					NormalValues[2] = 1000;
+					NormalValues[3] = 1000;
+					
+					HighlightValues[0] = 1000;
+					HighlightValues[1] = 1000;
+					HighlightValues[2] = 1000;
+					HighlightValues[3] = 1000;
+				}
+				
+				for(int i=0; i<NUM_MENUEFFECT; i++) 
+				{
+					//Create Animation for enable/disable simulation
+					{
+						int StartPoint = m_lEnvPoints.size();
+						int NbPoints = 0;
+						
+						{
+							CEnvPoint Point;
+							Point.m_Time = 0;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = HiddenValues[0];
+							Point.m_aValues[1] = HiddenValues[1];
+							Point.m_aValues[2] = HiddenValues[2];
+							Point.m_aValues[3] = HiddenValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}	
+						{
+							CEnvPoint Point;
+							Point.m_Time = TIMESHIFT_MENUEFFECT*60*1000;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = NormalValues[0];
+							Point.m_aValues[1] = NormalValues[1];
+							Point.m_aValues[2] = NormalValues[2];
+							Point.m_aValues[3] = NormalValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}
+				
+						{
+							CEnvPoint Point;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+(i+1))*60*1000;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = HighlightValues[0];
+							Point.m_aValues[1] = HighlightValues[1];
+							Point.m_aValues[2] = HighlightValues[2];
+							Point.m_aValues[3] = HighlightValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}
+						{
+							CEnvPoint Point;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+(i+2))*60*1000;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = NormalValues[0];
+							Point.m_aValues[1] = NormalValues[1];
+							Point.m_aValues[2] = NormalValues[2];
+							Point.m_aValues[3] = NormalValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}
+						{
+							CEnvPoint Point;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+(NUM_MENUEFFECT+2))*60*1000;
+							Point.m_Curvetype = 0;
+							Point.m_aValues[0] = HiddenValues[0];
+							Point.m_aValues[1] = HiddenValues[1];
+							Point.m_aValues[2] = HiddenValues[2];
+							Point.m_aValues[3] = HiddenValues[3];
+							m_lEnvPoints.add(Point);
+							NbPoints++;
+						}
+						
+						CMapItemEnvelope Item;
+						Item.m_Version = CMapItemEnvelope::CURRENT_VERSION;
+						Item.m_Channels = 4;
+						Item.m_StartPoint = StartPoint;
+						Item.m_NumPoints = NbPoints;
+						Item.m_Synchronized = 1;
+						StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "MenuEffectPages");
+						m_DataFile.AddItem(MAPITEMTYPE_ENVELOPE, m_NumEnvs++, sizeof(Item), &Item);
+					}
+					
+					vec2 ItemPos = m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i);
+				
+					//Create Circle
+					if(pass == 0)
+					{
+						CreateCircle(&aQuads, m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i), 96.0f, vec4(1.0f, 1.0f, 1.0f, 0.5f), m_NumEnvs-1);
+					}
+					else
+					{
+						switch(i)
+						{
+							case MENUEFFECT_CANCEL:
+								break;
+							case MENUEFFECT_EXPLOSION:
+								AddImageQuad("Explosion", ParticlesImageID, 8, 8, 0, 4, 4, 4, ItemPos, vec2(68.0f, 68.0f), m_NumEnvs-1);
+								break;
+							case MENUEFFECT_LOVE:
+								AddImageQuad("Hearts", GameImageID, 32, 16, 10, 2, 2, 2, ItemPos, vec2(52.0f, 52.0f), m_NumEnvs-1);
+								break;
+							case MENUEFFECT_SHOCKWAVE:
+								AddImageQuad("Shockwave", GameImageID, 32, 16, 25, 0, 7, 4, ItemPos, vec2(68.0f, 38.86f), m_NumEnvs-1);
+								break;
+						}
+					}
+				}
+			
+				if(pass == 0)
+				{
+					CMapItemLayerQuads Item;
+					Item.m_Version = 2;
+					Item.m_Layer.m_Flags = 0;
+					Item.m_Layer.m_Type = LAYERTYPE_QUADS;
+					Item.m_Image = -1;
+					Item.m_NumQuads = aQuads.size();
+					StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "UIQuads");
+					Item.m_Data = m_DataFile.AddDataSwapped(aQuads.size()*sizeof(CQuad), aQuads.base_ptr());
+					
+					m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
+				}
 			}
 		}
 	}

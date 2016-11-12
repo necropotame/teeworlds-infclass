@@ -17,6 +17,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case SCOREEVENT_KILL_INFECTED:
 			Points = 10;
 			break;
+		case SCOREEVENT_KILL_TARGET:
+			Points = 30;
+			break;
 		case SCOREEVENT_KILL_WITCH:
 			Points = 50;
 			break;

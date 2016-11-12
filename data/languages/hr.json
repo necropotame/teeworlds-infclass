@@ -1,0 +1,508 @@
+{"translation":[
+	{
+		"key": "{str:VictimName} has been infected",
+		"value": "{str:VictimName} je zara\u017een"
+	},
+	{
+		"key": "Infected won the round in {sec:RoundDuration}",
+		"value": "Zara\u017eeni su pobijedili ovu rundu u {sec:RoundDuration}"
+	},
+	{
+		"key": "{int:NumHumans} humans won the round",
+		"one": "Jedan \u010dovjek je pobijedio ovu rundu",
+		"few": "{int:NumHumans} ljudi je pobijedilo ovu rundu",
+		"other": "{int:NumHumans} ljudi je pobijedilo ovu rundu",
+	},
+	{
+		"key": "You have survived, +5 points",
+		"value": "Pre\u017eivio si, +5 bodova"
+	},
+	{
+		"key": "You have infected {str:VictimName}, +3 points",
+		"value": "Zarazio si {str:VictimName}, +3 boda"
+	},
+	{
+		"key": "You have killed a witch, +5 points",
+		"value": "Ubio si vje\u0161ticu, +5 bodova"
+	},
+	{
+		"key": "The undead is coming!",
+		"value": "Undead dolazi!"
+	},
+	{
+		"key": "The witch is coming!",
+		"value": "Vje\u0161tica dolazi!"
+	},
+	{
+		"key": "Random choice",
+		"value": "Nasumi\u010dan izbor"
+	},
+	{
+		"key": "Engineer",
+		"value": "In\u017eenjer"
+	},
+	{
+		"key": "Soldier",
+		"value": "Vojnik"
+	},
+	{
+		"key": "Scientist",
+		"value": "Znanstvenik"
+	},
+	{
+		"key": "Medic",
+		"value": "Lije\u010dnik"
+	},
+	{
+		"key": "Hero",
+		"value": "Heroj"
+	},
+	{
+		"key": "Ninja",
+		"value": "Nind\u017ea"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Pla\u0107enik"
+	},
+	{
+		"key": "Sniper",
+		"value": "Snajper"
+	},
+	{
+		"key": "Choose your class",
+		"value": "Izaberi svoju klasu"
+	},
+	{
+		"key": "{int:NumBombs} bombs left",
+		"one": "Jedna bomba preostala",
+		"few": "{int:NumBombs} bombi preostalo",
+		"other": "{int:NumBombs} bombi preostalo",
+	},
+	{
+		"key": "{int:NumMines} mines are actives",
+		"one": "Jedna mina je aktivna",
+		"few": "{int:NumMines} mine su aktivne",
+		"other": "{int:NumMines} mine su aktivne",
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Idu\u0107a zastava u {sec:RemainingTime}"
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laserski zid: {sec:RemainingTime}"
+	},
+	{
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Pozicija zaklju\u010dana: {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Mre\u017ea uklju\u010dena"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "Vje\u0161tica je mrtva"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Undead je napokon mrtav"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Napi\u0161i \"/help {str:ClassName}\" za vi\u0161e informacija o svojoj klasi"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Heroj je na\u0161ao zastavu!"
+	},
+	{
+		"key": "Hook protection enabled",
+		"value": "Hook-za\u0161tita uklju\u010dena"
+	},
+	{
+		"key": "Hook protection disabled",
+		"value": "Hook-za\u0161tita isklju\u010dena"
+	},
+	{
+		"key": "{str:PlayerName} has been banned ({str:Reason})",
+		"value": "{str:PlayerName} je bannan sa servera ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has been kicked ({str:Reason})",
+		"value": "{str:PlayerName} je izba\u010den sa servera ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game ({str:Reason})",
+		"value": "{str:PlayerName} je iza\u0161ao iz igre ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game",
+		"value": "{str:PlayerName} je iza\u0161ao iz igre"
+	},
+	{
+		"key": "{str:PlayerName} joined the spectators",
+		"value": "{str:PlayerName} gleda igru"
+	},
+	{
+		"key": "{str:PlayerName} joined the game",
+		"value": "{str:PlayerName} se uklju\u010dio u igru"
+	},
+	{
+		"key": "Smoker",
+		"value": "Pu\u0161a\u010d"
+	},
+	{
+		"key": "Hunter",
+		"value": "Lovac"
+	},
+	{
+		"key": "Boomer",
+		"value": "Bumer"
+	},
+	{
+		"key": "Ghost",
+		"value": "Duh"
+	},
+	{
+		"key": "Spider",
+		"value": "Pauk"
+	},
+	{
+		"key": "Witch",
+		"value": "Vje\u0161tica"
+	},
+	{
+		"key": "Undead",
+		"value": "Undead"
+	},
+	{
+		"key": "Unknown class",
+		"value": "Nepoznata klasa"
+	},
+	{
+		"key": "You are a human: {str:ClassName}",
+		"value": "Ti si \u010dovjek: {str:ClassName}"
+	},
+	{
+		"key": "You are an infected: {str:ClassName}",
+		"value": "Ti si zara\u017een: {str:ClassName}"
+	},
+	{
+		"key": "{str:PlayerName} entered and joined the game",
+		"value": "{str:PlayerName} je u\u0161ao i uklju\u010dio se u igru"
+	},
+	{
+		"key": "You can't join the spectators right now",
+		"value": "Ne mo\u017ee\u0161 gledati igru sada"
+	},
+	{
+		"key": "{str:PlayerName} changed their name to {str:NewName}",
+		"value": "{str:PlayerName} je promijenio svoje ime u {str:NewName}"
+	},
+	{
+		"key": "Switch language to english ?",
+		"value": "Prebaciti jezik na engleski?"
+	},
+	{
+		"key": "You can change the language of this mod using the command /language.",
+		"value": "Mo\u017ee\u0161 promijeniti jezik na ovom modu koriste\u0107i naredbu /language"
+	},
+	{
+		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "Ako tvoj jezik nije dostupan, mo\u017ee\u0161 nam pomo\u0107i sa prijevodom (/help translate)."
+	},
+	{
+		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
+		"value": "InfectionClass, napravio necropotame (verzija {str:VersionCode})"
+	},
+	{
+		"key": "Based on Infection mod by Gravity",
+		"value": "Bazirano na Infection modu, napravio Gravity"
+	},
+	{
+		"key": "Thanks to {str:ListOfContributors}",
+		"value": "Zahvaljuju\u0107i {str:ListOfContributors}"
+	},
+	{
+		"key": "Rules of the game",
+		"value": "Pravila igre"
+	},
+	{
+		"key": "InfectionClass is a team game between humans and infected.",
+		"value": "InfectionClass je timska igra izme\u0111u ljudi i zara\u017eenih."
+	},
+	{
+		"key": "All players start as human.",
+		"value": "Svi igra\u010di zapo\u010dinju kao ljudi."
+	},
+	{
+		"key": "10 seconds later, two players become infected.",
+		"value": "10 sekundi poslije, dva igra\u010da postanu zara\u017eena."
+	},
+	{
+		"key": "The goal for humans is to survive until the army clean the map.",
+		"value": "Cilj za ljude je pre\u017eivjeti sve dok vojska ne o\u010disti mapu."
+	},
+	{
+		"key": "The goal for infected is to infect all humans.",
+		"value": "Cilj za zara\u017eene je zaraziti sve ljude."
+	},
+	{
+		"key": "How to translate the mod",
+		"value": "Kako prevesti mod"
+	},
+	{
+		"key": "Create an account on Transifex and join a translation team:",
+		"value": "Napravi ra\u010dun na Transifex-u i pridru\u017ei se timu prevoditelja:"
+	},
+	{
+		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "Za pitanja o procesu prevo\u0111enja, molimo da nas kontaktirate na IRC ({str:IRCAddress})"
+	},
+	{
+		"key": "The Engineer can build walls with his hammer to block infected.",
+		"value": "In\u017eenjer mo\u017ee raditi zidove sa \u010deki\u0107em."
+	},
+	{
+		"key": "When an infected touch the wall, he dies.",
+		"value": "Kada zara\u017eeni dotakne zid, on umre."
+	},
+	{
+		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
+		"value": "Zid radi {sec:LifeSpan}, a jedan igra\u010d mo\u017ee napraviti samo jedan zid u isto vrijeme."
+	},
+	{
+		"key": "The Soldier can pose floating bombs with his hammer.",
+		"value": "Vojnik mo\u017ee postavljati lebde\u0107e bombe sa \u010deki\u0107em."
+	},
+	{
+		"key": "Each bomb can explode {int:NumBombs} times.",
+		"one": "Svaka bomba mo\u017ee eksplodirati jedan put.",
+		"few": "Svaka bomba mo\u017ee eksplodirati {int:NumBombs} puta.",
+		"other": "Svaka bomba mo\u017ee eksplodirati {int:NumBombs} puta.",
+	},
+	{
+		"key": "Use the hammer to place the bomb and explode it multiple times.",
+		"value": "Uzmi \u010deki\u0107 za postavljanje bombi i aktiviranje vi\u0161e puta."
+	},
+	{
+		"key": "Bombs are limited to one per player at the same time.",
+		"value": "Bombe su ograni\u010dene na jednog igra\u010da u isto vrijeme."
+	},
+	{
+		"key": "The Scientist can pose floating mines with his hammer.",
+		"value": "Znanstvenik mo\u017ee postaviti ledbe\u0107e mine sa \u010deki\u0107em."
+	},
+	{
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
+		"one": "Mine su ograni\u010dene na jednog igra\u010da u isto vrijeme.",
+		"few": "Mine su ograni\u010dene na {int:NumMines} po igra\u010du u isto vrijeme.",
+		"other": "Mine su ograni\u010dene na {int:NumMines} po igra\u010du u isto vrijeme.",
+	},
+	{
+		"key": "He has also grenades that teleport him.",
+		"value": "Ima i granate koje ga teleportiraju."
+	},
+	{
+		"key": "The Medic can protect humans with his hammer by giving them armor.",
+		"value": "Lije\u010dnik mo\u017ee dati ljudima armor."
+	},
+	{
+		"key": "He has also a powerful shotgun that can pullback infected.",
+		"value": "Ima i sna\u017ean shotgun koji odbacuje zara\u017eene."
+	},
+	{
+		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+		"value": "Heroj ima shotgun, lasersku pu\u0161ku i granate."
+	},
+	{
+		"key": "The Hero must find a flag hidden in the map.",
+		"value": "Heroj mora na\u0107i zastavu skrivenu u mapi."
+	},
+	{
+		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+		"value": "Kad ju uzme, zastava daje 1 health, 4 armor, i puni municiju svim ljudima, te cijeli health i armor za heroja."
+	},
+	{
+		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "Heroja ne mo\u017ee izlije\u010diti lije\u010dnik, ali on mo\u017ee izdr\u017eati napad zara\u017eenog jer ima dovoljno healtha."
+	},
+	{
+		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
+		"value": "Nind\u017ea mo\u017ee bacati flash granate koje zalede zara\u017eene na tri sekunde."
+	},
+	{
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
+		"one": "Njegov \u010deki\u0107 je zamijenjen katanom, mo\u017ee sko\u010diti jedan put prije nego padne.",
+		"few": "Njegov \u010deki\u0107 je zamijenjen katanom, mo\u017ee sko\u010diti {int:NinjaJump} puta prije nego padne.",
+		"other": "Njegov \u010deki\u0107 je zamijenjen katanom, mo\u017ee sko\u010diti {int:NinjaJump} puta prije nego padne.",
+	},
+	{
+		"key": "The Mercenary fly in air using his machine gun.",
+		"value": "Pla\u0107enik leti zrakom koriste\u0107i se machine gunom."
+	},
+	{
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
+		"one": "Mo\u017ee bacati otrovne granate od kojih svaka dijeli jedan damage bod.",
+		"few": "Mo\u017ee bacati otrovne granate od kojih svaka dijeli {int:NumDamagePoints} damage bodova.",
+		"other": "Mo\u017ee bacati otrovne granate od kojih svaka dijeli {int:NumDamagePoints} damage bodova.",
+	},
+	{
+		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
+		"value": "Snajper mo\u017ee zaklju\u010dati svoju poziciju u zraku na 15 sekundi koriste\u0107i se \u010deki\u0107em."
+	},
+	{
+		"key": "He can jump two times in air.",
+		"value": "Mo\u017ee sko\u010diti dva puta u zrak."
+	},
+	{
+		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+		"value": "Ima i sna\u017enu pu\u0161ku koja dijeli 20 damage bodova u zaklju\u010danoj poziciji, a 9-10 bodova ina\u010de."
+	},
+	{
+		"key": "The Smoker can infect humans and heal infected with his hammer.",
+		"value": "Pu\u0161a\u010d mo\u017ee zaraziti ljude i lije\u010diti zara\u017eene svojim \u010deki\u0107em."
+	},
+	{
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
+		"value": "Nanosi 4 damage boda po sekundi kad huka ljude."
+	},
+	{
+		"key": "The Boomer explodes when he attack.",
+		"value": "Bumer eksplodira kada napadne."
+	},
+	{
+		"key": "All humans affected by the explosion become infected.",
+		"value": "Svi ljudi zahva\u0107eni eksplozijom postanu zara\u017eeni."
+	},
+	{
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
+		"value": "Mo\u017ee nanijeniti 1 damage bod po sekundi kada huka ljude."
+	},
+	{
+		"key": "The Hunter can infect humans and heal infected with his hammer.",
+		"value": "Lovac mo\u017ee zaraziti ljude i lije\u010diti zara\u017eene svojim \u010deki\u0107em."
+	},
+	{
+		"key": "The Ghost can infect humans and heal infected with his hammer.",
+		"value": "Duh mo\u017ee zaraziti ljude i lije\u010diti zara\u017eene svojim \u010deki\u0107em."
+	},
+	{
+		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
+		"value": "Nevidljiv je, osim ako je \u010dovjek blizu, ako primi udarac ili ako koristi \u010deki\u0107."
+	},
+	{
+		"key": "The Spider can infect humans and heal infected with his hammer.",
+		"value": "Pauk mo\u017ee zaraziti ljude i lije\u010diti zara\u017eene svojim \u010deki\u0107em."
+	},
+	{
+		"key": "When selecting any gun, his hook enter in web mode.",
+		"value": "Kada selektira\u0161 neko oru\u017eje, njegov huk prelazi u mre\u017eu."
+	},
+	{
+		"key": "Any human that touch a hook in web mode is automatically grabbed.",
+		"value": "Kada \u010dovjek dotakne mre\u017eu, ona ga automatski dohvati."
+	},
+	{
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
+		"value": "Paukov huk (u oba moda) nanosi 1 damage bod po sekundi i mo\u017ee dr\u017eati \u010dovjeka 2 sekunde."
+	},
+	{
+		"key": "The Undead can infect humans and heal infected with his hammer.",
+		"value": "Undead mo\u017ee zaraziti ljude i lije\u010diti zara\u017eene svojim \u010deki\u0107em."
+	},
+	{
+		"key": "Instead of dying, he freezes during 10 seconds.",
+		"value": "Umjesto da umre, on se zaledi na 10 sekundi."
+	},
+	{
+		"key": "If an infected heals him, the freeze effect disappear.",
+		"value": "Ako ga zara\u017eeni izlije\u010di, odledit \u0107e se."
+	},
+	{
+		"key": "The Witch can infect humans and heal infected with his hammer.",
+		"value": "Vje\u0161tica mo\u017ee zaraziti ljude i lije\u010diti zara\u017eene svojim \u010deki\u0107em."
+	},
+	{
+		"key": "When an infected dies, he may re-spawn near her.",
+		"value": "Kada zara\u017eeni umre, ponovo \u0107e se stvoriti kod nje."
+	},
+	{
+		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"value": "Ako Vje\u0161tica umre, ona nestaje i zamijenjena je drugom klasom zara\u017eenih."
+	},
+	{
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
+		"value": "Mo\u017ee nanijeniti 1 damage bod po sekundi kada huka ljude."
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Dostupne stranice za pomo\u0107: {str:PageList}"
+	},
+	{
+		"key": "Choose a help page with /help <page>",
+		"value": "Izaberi stranicu za pomo\u0107 upisivanjem /help <stranica>"
+	},
+	{
+		"key": "A random class will be automatically attributed to you when rounds start",
+		"value": "Nasumi\u010dna klasa \u0107e ti biti dodijeljena kada zapo\u010dne runda"
+	},
+	{
+		"key": "The class selector will be displayed when rounds start",
+		"value": "Selektor za klase \u0107e ti se prikazati kada runda zapo\u010dne"
+	},
+	{
+		"key": "Unknown language",
+		"value": "Nepoznati jezik"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "Dostupni jezici: {str:ListOfLanguage}"
+	},
+	{
+		"key": "List of commands",
+		"value": "Lista komandi"
+	},
+	{
+		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "Pritisni <F3> ili <F4> da bi dopustio ili zabranio za\u0161titu protiv hukanja"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Nije na\u0111en igra\u010d sa tim imenom."
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Molimo pri\u010dekajte 5 minuta prije nego napravite jo\u0161 jedan ra\u010dun"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Dogodila se gre\u0161ka pri izradi Va\u0161eg ra\u010duna."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Korisni\u010dko ime je ve\u0107 zauzeto"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Va\u0161 ra\u010dun je napravljen i sada ste ulogirani."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Morate biti ulogirani da bi vidjeli Va\u0161 rang"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Morate biti ulogirani da bi vidjeli svoj cilj"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Ve\u0107 ste obavjestili da {str:PlayerName} treba biti bannovan"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} \u017eeli da {str:VictimName} bude bannovan ({str:Reason})"
+	},
+]}

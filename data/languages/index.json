@@ -12,22 +12,27 @@
 	},
 	{
 		"file": "cs",
-		"name": "czech",
+		"name": "Czech",
 		"parent": "en"
 	},
 	{
 		"file": "de",
-		"name": "deutsch",
+		"name": "Deutsch",
 		"parent": "en"
 	},
 	{
 		"file": "es",
-		"name": "español",
+		"name": "Español",
 		"parent": "en"
 	},
 	{
 		"file": "fr",
-		"name": "français",
+		"name": "Français",
+		"parent": "en"
+	},
+	{
+		"file": "hr",
+		"name": "Hrvatski",
 		"parent": "en"
 	},
 	{
@@ -37,12 +42,17 @@
 	},
 	{
 		"file": "it",
-		"name": "italiano",
+		"name": "Italiano",
+		"parent": "en"
+	},
+	{
+		"file": "ja",
+		"name": "日本語",
 		"parent": "en"
 	},
 	{
 		"file": "la",
-		"name": "latine",
+		"name": "Latine",
 		"parent": "en"
 	},
 	{
@@ -52,7 +62,7 @@
 	},
 	{
 		"file": "pl",
-		"name": "polszczyzna",
+		"name": "Polszczyzna",
 		"parent": "en"
 	},
 	{
@@ -64,6 +74,11 @@
 		"file": "ru",
 		"name": "Русский",
 		"parent": "en"
+	},
+	{
+		"file": "sk",
+		"name": "Slovenčina",
+		"parent": "cs"
 	},
 	{
 		"file": "uk",

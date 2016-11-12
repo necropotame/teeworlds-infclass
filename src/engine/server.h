@@ -263,6 +263,12 @@ public:
 	virtual void SendMOTD_Localization(int To, const char* pText, ...) = 0;
 	
 	virtual void OnSetAuthed(int ClientID, int Level) = 0;
+	
+	virtual int GetTargetToKill() = 0;
+	virtual void TargetKilled() = 0;
+	virtual void EnableTargetToKill() = 0;
+	virtual void DisableTargetToKill() = 0;
+	virtual int GetTargetToKillCoolDown() = 0;
 /* INFECTION MODIFICATION END *****************************************/
 };
 

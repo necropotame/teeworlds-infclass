@@ -166,6 +166,16 @@ void CGameContext::CreateHammerDotEvent(vec2 Pos, int LifeSpan)
 	m_HammerDots.add(State);
 }
 
+void CGameContext::CreateLoveEvent(vec2 Pos)
+{
+	CGameContext::LoveDotState State;
+	State.m_Pos = Pos;
+	State.m_LifeSpan = Server()->TickSpeed();
+	State.m_SnapID = Server()->SnapNewID();
+	
+	m_LoveDots.add(State);
+}
+
 void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage, int TakeDamageMode)
 {
 	// create the event
@@ -775,6 +785,27 @@ void CGameContext::OnTick()
 		}
 	}
 	
+	//Target to kill
+	if(m_TargetToKillCoolDown > 0)
+		m_TargetToKillCoolDown--;
+		
+	if(m_TargetToKillCoolDown == 0 && m_TargetToKill == -1)
+	{
+		int m_aTargetList[MAX_CLIENTS];
+		int NbTargets = 0;
+		for(int i=0; i<MAX_CLIENTS; i++)
+		{		
+			if(m_apPlayers[i] && m_apPlayers[i]->IsInfected())
+			{
+				m_aTargetList[NbTargets] = i;
+				NbTargets++;
+			}
+		}
+		
+		if(NbTargets > 0)
+			m_TargetToKill = m_aTargetList[rand()%NbTargets];
+	}
+	
 	//Check for banvote
 	if(!m_VoteCloseTime)
 	{
@@ -958,6 +989,20 @@ void CGameContext::OnTick()
 		{
 			Server()->SnapFreeID(m_HammerDots[DotIter].m_SnapID);
 			m_HammerDots.remove_index(DotIter);
+		}
+		else
+			DotIter++;
+	}
+	
+	DotIter = 0;
+	while(DotIter < m_LoveDots.size())
+	{
+		m_LoveDots[DotIter].m_LifeSpan--;
+		m_LoveDots[DotIter].m_Pos.y -= 5.0f;
+		if(m_LoveDots[DotIter].m_LifeSpan <= 0)
+		{
+			Server()->SnapFreeID(m_LoveDots[DotIter].m_SnapID);
+			m_LoveDots.remove_index(DotIter);
 		}
 		else
 			DotIter++;
@@ -1617,89 +1662,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				
 				switch(pMsg->m_Country)
 				{
-					case 336: //Vatican
-						str_copy(m_VoteLanguage[ClientID], "la", sizeof(m_VoteLanguage[ClientID]));				
-						break;
-					case 533: //Aruba
-					case 531: //Curacao
-					case 534: //Sint Maarten
-					case 528: //Netherland
-					case 740: //Suriname
-					case 56: //Belgique
-						str_copy(m_VoteLanguage[ClientID], "nl", sizeof(m_VoteLanguage[ClientID]));					
-						break;									
-					case 204: //Benin
-					case 854: //Burkina Faso
-					case 178: //Republic of the Congo
-					case 384: //Cote d'Ivoire
-					case 266: //Gabon
-					case 324: //Ginea
-					case 466: //Mali
-					case 562: //Niger
-					case 686: //Senegal
-					case 768: //Togo
-					case 250: //France
-					case 492: //Monaco
-						str_copy(m_VoteLanguage[ClientID], "fr", sizeof(m_VoteLanguage[ClientID]));					
-						break;
-					case 203: //Czechia
-						str_copy(m_VoteLanguage[ClientID], "cs", sizeof(m_VoteLanguage[ClientID]));					
-						break;
-					case 616: //Poland
-						str_copy(m_VoteLanguage[ClientID], "pl", sizeof(m_VoteLanguage[ClientID]));		
-						break;
-					case 40: //Austria
-					case 276: //Germany
-					case 438: //Liechtenstein
-					case 756: //Switzerland
-						str_copy(m_VoteLanguage[ClientID], "de", sizeof(m_VoteLanguage[ClientID]));		
-						break;
-					case 112: //Belarus
-					case 643: //Russia
-						str_copy(m_VoteLanguage[ClientID], "ru", sizeof(m_VoteLanguage[ClientID]));
-						break;
-					case 804: //Ukraine
-						str_copy(m_VoteLanguage[ClientID], "uk", sizeof(m_VoteLanguage[ClientID]));
-						break;
-					case 380: //Italy
-						str_copy(m_VoteLanguage[ClientID], "it", sizeof(m_VoteLanguage[ClientID]));
-						break;
-					case 348: //Hungary
-						str_copy(m_VoteLanguage[ClientID], "hu", sizeof(m_VoteLanguage[ClientID]));		
-						break;
-					case 32: //Argentina
-					case 68: //Bolivia
-					case 152: //Chile
-					case 170: //Colombia
-					case 188: //Costa Rica
-					case 192: //Cuba
-					case 214: //Dominican Republic
-					case 218: //Ecuador
-					case 222: //El Salvador
-					case 226: //Equatorial Guinea
-					case 320: //Guatemala
-					case 340: //Honduras
-					case 484: //Mexico
-					case 558: //Nicaragua
-					case 591: //Panama
-					case 600: //Paraguay
-					case 604: //Peru
-					case 630: //Puerto Rico
-					case 724: //Spain
-					case 858: //Uruguay
-					case 862: //Venezuela
-						str_copy(m_VoteLanguage[ClientID], "es", sizeof(m_VoteLanguage[ClientID]));
-						break;
-					case 24: //Angola
-					case 76: //Brazil
-					case 132: //Cape Verde
-					//case 226: //Equatorial Guinea: official language, but not national language
-					//case 446: //Macao: official language, but spoken by less than 1% of the population
-					case 508: //Mozambique
-					case 626: //Timor-Leste
-					case 678: //Sao Tome and Principe
-						str_copy(m_VoteLanguage[ClientID], "pt", sizeof(m_VoteLanguage[ClientID]));		
-						break;
+					/* ar - Arabic ************************************/
 					case 12: //Algeria
 					case 48: //Bahrain
 					case 262: //Djibouti
@@ -1722,6 +1685,113 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 784: //United Arab Emirates
 					case 887: //Yemen
 						str_copy(m_VoteLanguage[ClientID], "ar", sizeof(m_VoteLanguage[ClientID]));		
+						break;
+					/* cs - Czech *************************************/	
+					case 203: //Czechia
+						str_copy(m_VoteLanguage[ClientID], "cs", sizeof(m_VoteLanguage[ClientID]));					
+						break;
+					/* de - German ************************************/	
+					case 40: //Austria
+					case 276: //Germany
+					case 438: //Liechtenstein
+					case 756: //Switzerland
+						str_copy(m_VoteLanguage[ClientID], "de", sizeof(m_VoteLanguage[ClientID]));		
+						break;
+					/* es - Spanish ***********************************/	
+					case 32: //Argentina
+					case 68: //Bolivia
+					case 152: //Chile
+					case 170: //Colombia
+					case 188: //Costa Rica
+					case 192: //Cuba
+					case 214: //Dominican Republic
+					case 218: //Ecuador
+					case 222: //El Salvador
+					case 226: //Equatorial Guinea
+					case 320: //Guatemala
+					case 340: //Honduras
+					case 484: //Mexico
+					case 558: //Nicaragua
+					case 591: //Panama
+					case 600: //Paraguay
+					case 604: //Peru
+					case 630: //Puerto Rico
+					case 724: //Spain
+					case 858: //Uruguay
+					case 862: //Venezuela
+						str_copy(m_VoteLanguage[ClientID], "es", sizeof(m_VoteLanguage[ClientID]));
+						break;	
+					/* fr - French ************************************/							
+					case 204: //Benin
+					case 854: //Burkina Faso
+					case 178: //Republic of the Congo
+					case 384: //Cote d'Ivoire
+					case 266: //Gabon
+					case 324: //Ginea
+					case 466: //Mali
+					case 562: //Niger
+					case 686: //Senegal
+					case 768: //Togo
+					case 250: //France
+					case 492: //Monaco
+						str_copy(m_VoteLanguage[ClientID], "fr", sizeof(m_VoteLanguage[ClientID]));					
+						break;
+					/* hu - Croatian **********************************/	
+					case 191: //Croatia
+						str_copy(m_VoteLanguage[ClientID], "hr", sizeof(m_VoteLanguage[ClientID]));		
+						break;
+					/* hu - Hungarian *********************************/	
+					case 348: //Hungary
+						str_copy(m_VoteLanguage[ClientID], "hu", sizeof(m_VoteLanguage[ClientID]));		
+						break;
+					/* it - Italian ***********************************/	
+					case 380: //Italy
+						str_copy(m_VoteLanguage[ClientID], "it", sizeof(m_VoteLanguage[ClientID]));
+						break;
+					/* ja - Japanese **********************************/	
+					case 392: //Japan
+						str_copy(m_VoteLanguage[ClientID], "ja", sizeof(m_VoteLanguage[ClientID]));
+						break;
+					/* la - Latin *************************************/
+					case 336: //Vatican
+						str_copy(m_VoteLanguage[ClientID], "la", sizeof(m_VoteLanguage[ClientID]));				
+						break;
+					/* nl - Dutch *************************************/
+					case 533: //Aruba
+					case 531: //Curacao
+					case 534: //Sint Maarten
+					case 528: //Netherland
+					case 740: //Suriname
+					case 56: //Belgique
+						str_copy(m_VoteLanguage[ClientID], "nl", sizeof(m_VoteLanguage[ClientID]));					
+						break;	
+					/* pl - Polish *************************************/	
+					case 616: //Poland
+						str_copy(m_VoteLanguage[ClientID], "pl", sizeof(m_VoteLanguage[ClientID]));		
+						break;
+					/* pt - Portuguese ********************************/	
+					case 24: //Angola
+					case 76: //Brazil
+					case 132: //Cape Verde
+					//case 226: //Equatorial Guinea: official language, but not national language
+					//case 446: //Macao: official language, but spoken by less than 1% of the population
+					case 508: //Mozambique
+					case 626: //Timor-Leste
+					case 678: //Sao Tome and Principe
+						str_copy(m_VoteLanguage[ClientID], "pt", sizeof(m_VoteLanguage[ClientID]));		
+						break;
+					/* ru - Russian ***********************************/	
+					case 112: //Belarus
+					case 643: //Russia
+						str_copy(m_VoteLanguage[ClientID], "ru", sizeof(m_VoteLanguage[ClientID]));
+						break;
+					/* sk - Slovak ************************************/
+					case 703: //Slovakia
+						str_copy(m_VoteLanguage[ClientID], "sk", sizeof(m_VoteLanguage[ClientID]));		
+						break;
+					/* uk - Ukranian **********************************/	
+					case 804: //Ukraine
+						str_copy(m_VoteLanguage[ClientID], "uk", sizeof(m_VoteLanguage[ClientID]));
 						break;
 				}
 				
@@ -2379,8 +2449,11 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	const char aContributors[] = "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, Socialdarwinist, FakeDeath, tee_to_F_U_UP!, Stitch626...";
 	
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("InfectionClass, by necropotame (version {str:VersionCode})"), "{str:VersionCode}", "2.0", NULL); 
+	Buffer.append("\n\n");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Based on Infection mod by Gravity"), NULL); 
+	Buffer.append("\n\n");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thanks to {str:ListOfContributors}"), "ListOfContributors", aContributors, NULL); 
+	Buffer.append("\n\n");
 	
 	pSelf->SendMOTD(ClientID, Buffer.buffer());
 	
@@ -2929,46 +3002,28 @@ bool CGameContext::ConLanguage(IConsole::IResult *pResult, void *pUserData)
 	int ClientID = pResult->GetClientID();
 	
 	const char *pLanguageCode = (pResult->NumArguments()>0) ? pResult->GetString(0) : 0x0;
-
-	bool ExistingLanguage = false;
+	char aFinalLanguageCode[8];
+	aFinalLanguageCode[0] = 0;
 
 	if(pLanguageCode)
 	{
-		if(str_comp_nocase(pLanguageCode, "fr") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "de") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "uk") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "ru") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "it") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "es") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "ar") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "hu") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "pl") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "nl") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "la") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "pt") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "cs") == 0)
-			ExistingLanguage = true;
-		else if(str_comp_nocase(pLanguageCode, "en") == 0)
-			ExistingLanguage = true;
+		if(str_comp_nocase(pLanguageCode, "ua") == 0)
+			str_copy(aFinalLanguageCode, "uk", sizeof(aFinalLanguageCode));
+		else
+		{
+			for(int i=0; i<pSelf->Server()->Localization()->m_pLanguages.size(); i++)
+			{
+				if(str_comp_nocase(pLanguageCode, pSelf->Server()->Localization()->m_pLanguages[i]->GetFilename()) == 0)
+					str_copy(aFinalLanguageCode, pLanguageCode, sizeof(aFinalLanguageCode));
+			}
+		}
 	}
 	
-	if(ExistingLanguage)
+	if(aFinalLanguageCode[0])
 	{
-		pSelf->Server()->SetClientLanguage(ClientID, pLanguageCode);
+		pSelf->Server()->SetClientLanguage(ClientID, aFinalLanguageCode);
 		if(pSelf->m_apPlayers[ClientID])
-			pSelf->m_apPlayers[ClientID]->SetLanguage(pLanguageCode);
+			pSelf->m_apPlayers[ClientID]->SetLanguage(aFinalLanguageCode);
 	}
 	else
 	{
@@ -3243,6 +3298,28 @@ void CGameContext::OnSnap(int ClientID)
 			pObj->m_Type = WEAPON_HAMMER;
 		}
 	}
+	for(int i=0; i < m_LoveDots.size(); i++)
+	{
+		if(ClientID >= 0)
+		{
+			vec2 CheckPos = m_LoveDots[i].m_Pos;
+			float dx = m_apPlayers[ClientID]->m_ViewPos.x-CheckPos.x;
+			float dy = m_apPlayers[ClientID]->m_ViewPos.y-CheckPos.y;
+			if(absolute(dx) > 1000.0f || absolute(dy) > 800.0f)
+				continue;
+			if(distance(m_apPlayers[ClientID]->m_ViewPos, CheckPos) > 1100.0f)
+				continue;
+		}
+		
+		CNetObj_Pickup *pObj = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_LoveDots[i].m_SnapID, sizeof(CNetObj_Pickup)));
+		if(pObj)
+		{
+			pObj->m_X = (int)m_LoveDots[i].m_Pos.x;
+			pObj->m_Y = (int)m_LoveDots[i].m_Pos.y;
+			pObj->m_Type = POWERUP_HEALTH;
+			pObj->m_Subtype = 0;
+		}
+	}
 /* INFECTION MODIFICATION END *****************************************/
 	
 	for(int i = 0; i < MAX_CLIENTS; i++)
@@ -3251,6 +3328,17 @@ void CGameContext::OnSnap(int ClientID)
 			m_apPlayers[i]->Snap(ClientID);
 	}
 }
+
+int CGameContext::GetTargetToKill()
+{
+	return m_TargetToKill;
+}
+void CGameContext::TargetKilled()
+{
+	m_TargetToKill = -1;
+	m_TargetToKillCoolDown = Server()->TickSpeed()*15;
+}
+
 void CGameContext::OnPreSnap() {}
 void CGameContext::OnPostSnap()
 {
