@@ -757,7 +757,7 @@ void CMapConverter::Finalize()
 			Item.m_OffsetX = 0;
 			Item.m_OffsetY = 0;
 			Item.m_StartLayer = m_NumLayers;
-			Item.m_NumLayers = 10;
+			Item.m_NumLayers = 4;
 			Item.m_UseClipping = 0;
 			Item.m_ClipX = 0;
 			Item.m_ClipY = 0;
