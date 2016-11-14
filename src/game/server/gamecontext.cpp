@@ -800,7 +800,7 @@ void CGameContext::OnTick()
 		int NbTargets = 0;
 		for(int i=0; i<MAX_CLIENTS; i++)
 		{		
-			if(m_apPlayers[i] && m_apPlayers[i]->IsInfected())
+			if(m_apPlayers[i] && m_apPlayers[i]->IsInfected() && m_apPlayers[i]->GetClass() != PLAYERCLASS_UNDEAD)
 			{
 				m_aTargetList[NbTargets] = i;
 				NbTargets++;
