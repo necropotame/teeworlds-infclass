@@ -786,10 +786,15 @@ void CGameContext::OnTick()
 	}
 	
 	//Target to kill
+	if(m_TargetToKill >= 0 && (!m_apPlayers[m_TargetToKill] || !m_apPlayers[m_TargetToKill]->GetCharacter()))
+	{
+		m_TargetToKill = -1;
+	}
+	
 	if(m_TargetToKillCoolDown > 0)
 		m_TargetToKillCoolDown--;
-		
-	if(m_TargetToKillCoolDown == 0 && m_TargetToKill == -1)
+	
+	if((m_TargetToKillCoolDown == 0 && m_TargetToKill == -1))
 	{
 		int m_aTargetList[MAX_CLIENTS];
 		int NbTargets = 0;
@@ -802,7 +807,7 @@ void CGameContext::OnTick()
 			}
 		}
 		
-		if(NbTargets > 0)
+		if(NbTargets > 1)
 			m_TargetToKill = m_aTargetList[rand()%NbTargets];
 	}
 	
