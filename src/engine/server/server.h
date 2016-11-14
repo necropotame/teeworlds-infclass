@@ -152,6 +152,7 @@ public:
 		//Login
 		int m_LogInstance;
 		int m_UserID;
+		int m_UserLevel;
 		char m_aUsername[MAX_NAME_LENGTH];
 	};
 
@@ -324,6 +325,7 @@ public:
 #ifdef CONF_SQL
 	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
 	virtual void Logout(int ClientID);
+	virtual void SetEmail(int ClientID, const char* pEmail);
 	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail);
 	virtual void ShowChallenge(int ClientID);
 	virtual void ShowTop10(int ClientID, int ScoreType);

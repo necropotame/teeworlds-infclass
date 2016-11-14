@@ -211,6 +211,7 @@ private:
 	static bool ConRegister(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLogin(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLogout(IConsole::IResult *pResult, void *pUserData);
+	static bool ConSetEmail(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTop10(IConsole::IResult *pResult, void *pUserData);
 	static bool ConChallenge(IConsole::IResult *pResult, void *pUserData);
 	static bool ConRank(IConsole::IResult *pResult, void *pUserData);

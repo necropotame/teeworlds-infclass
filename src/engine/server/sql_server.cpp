@@ -176,6 +176,7 @@ void CSqlServer::CreateTables()
 					"Username VARCHAR(64) BINARY NOT NULL, "
 					"Email VARCHAR(64) BINARY NOT NULL, "
 					"PasswordHash VARCHAR(64) BINARY NOT NULL, "
+					"Level INT DEFAULT '0' NOT NULL, "
 					"RegisterDate DATETIME NOT NULL, "
 					"RegisterIp VARCHAR(64) NOT NULL, " //The IP is kept in order to prevent registration flooding
 					"PRIMARY KEY (UserId)"

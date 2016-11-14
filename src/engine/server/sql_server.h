@@ -36,6 +36,13 @@ enum
 	SQL_SCORE_NUMROUND=32,
 };
 
+enum
+{
+	SQL_USERLEVEL_NORMAL = 0,
+	SQL_USERLEVEL_MOD = 1,
+	SQL_USERLEVEL_ADMIN = 2,
+};
+
 class CSqlServer
 {
 public:

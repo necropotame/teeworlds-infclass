@@ -318,6 +318,7 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_WasInfected = 0;
 		
 		m_UserID = -1;
+		m_UserLevel = SQL_USERLEVEL_NORMAL;
 		m_LogInstance = -1;
 		
 		m_CustomSkin = 0;
@@ -963,6 +964,7 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 	pThis->m_aClients[ClientID].m_Snapshots.PurgeAll();
 	pThis->m_aClients[ClientID].m_WaitingTime = 0;
 	pThis->m_aClients[ClientID].m_UserID = -1;
+	pThis->m_aClients[ClientID].m_UserLevel = SQL_USERLEVEL_NORMAL;
 	pThis->m_aClients[ClientID].m_LogInstance = -1;
 	pThis->m_aClients[ClientID].m_Quitting = false;
 	
@@ -1310,38 +1312,66 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				{
 					SendRconLine(ClientID, "You must use a client that support anti-spoof protection (DDNet-like)");
 				}
+#ifdef CONF_SQL
+				else if(m_aClients[ClientID].m_UserID < 0)
+				{
+					SendRconLine(ClientID, "You must be logged to your account. Please use /login");
+				}
+#endif
 				else if(g_Config.m_SvRconPassword[0] && str_comp(pPw, g_Config.m_SvRconPassword) == 0)
 				{
-					CMsgPacker Msg(NETMSG_RCON_AUTH_STATUS);
-					Msg.AddInt(1);	//authed
-					Msg.AddInt(1);	//cmdlist
-					SendMsgEx(&Msg, MSGFLAG_VITAL, ClientID, true);
+#ifdef CONF_SQL
+					if(m_aClients[ClientID].m_UserLevel == SQL_USERLEVEL_ADMIN)
+					{
+#endif
+						CMsgPacker Msg(NETMSG_RCON_AUTH_STATUS);
+						Msg.AddInt(1);	//authed
+						Msg.AddInt(1);	//cmdlist
+						SendMsgEx(&Msg, MSGFLAG_VITAL, ClientID, true);
 
-					m_aClients[ClientID].m_Authed = AUTHED_ADMIN;
-					GameServer()->OnSetAuthed(ClientID, m_aClients[ClientID].m_Authed);
-					int SendRconCmds = Unpacker.GetInt();
-					if(Unpacker.Error() == 0 && SendRconCmds)
-						m_aClients[ClientID].m_pRconCmdToSend = Console()->FirstCommandInfo(IConsole::ACCESS_LEVEL_ADMIN, CFGFLAG_SERVER);
-					SendRconLine(ClientID, "Admin authentication successful. Full remote console access granted.");
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "ClientID=%d authed (admin)", ClientID);
-					Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
+						m_aClients[ClientID].m_Authed = AUTHED_ADMIN;
+						GameServer()->OnSetAuthed(ClientID, m_aClients[ClientID].m_Authed);
+						int SendRconCmds = Unpacker.GetInt();
+						if(Unpacker.Error() == 0 && SendRconCmds)
+							m_aClients[ClientID].m_pRconCmdToSend = Console()->FirstCommandInfo(IConsole::ACCESS_LEVEL_ADMIN, CFGFLAG_SERVER);
+						SendRconLine(ClientID, "Admin authentication successful. Full remote console access granted.");
+						char aBuf[256];
+						str_format(aBuf, sizeof(aBuf), "ClientID=%d authed (admin)", ClientID);
+						Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
+					}
+#ifdef CONF_SQL
+					else
+					{
+						SendRconLine(ClientID, "You are not admin.");
+					}
+#endif
 				}
 				else if(g_Config.m_SvRconModPassword[0] && str_comp(pPw, g_Config.m_SvRconModPassword) == 0)
 				{
-					CMsgPacker Msg(NETMSG_RCON_AUTH_STATUS);
-					Msg.AddInt(1);	//authed
-					Msg.AddInt(1);	//cmdlist
-					SendMsgEx(&Msg, MSGFLAG_VITAL, ClientID, true);
+#ifdef CONF_SQL
+					if(m_aClients[ClientID].m_UserLevel == SQL_USERLEVEL_ADMIN || m_aClients[ClientID].m_UserLevel == SQL_USERLEVEL_MOD)
+					{
+#endif
+						CMsgPacker Msg(NETMSG_RCON_AUTH_STATUS);
+						Msg.AddInt(1);	//authed
+						Msg.AddInt(1);	//cmdlist
+						SendMsgEx(&Msg, MSGFLAG_VITAL, ClientID, true);
 
-					m_aClients[ClientID].m_Authed = AUTHED_MOD;
-					int SendRconCmds = Unpacker.GetInt();
-					if(Unpacker.Error() == 0 && SendRconCmds)
-						m_aClients[ClientID].m_pRconCmdToSend = Console()->FirstCommandInfo(IConsole::ACCESS_LEVEL_MOD, CFGFLAG_SERVER);
-					SendRconLine(ClientID, "Moderator authentication successful. Limited remote console access granted.");
-					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "ClientID=%d authed (moderator)", ClientID);
-					Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
+						m_aClients[ClientID].m_Authed = AUTHED_MOD;
+						int SendRconCmds = Unpacker.GetInt();
+						if(Unpacker.Error() == 0 && SendRconCmds)
+							m_aClients[ClientID].m_pRconCmdToSend = Console()->FirstCommandInfo(IConsole::ACCESS_LEVEL_MOD, CFGFLAG_SERVER);
+						SendRconLine(ClientID, "Moderator authentication successful. Limited remote console access granted.");
+						char aBuf[256];
+						str_format(aBuf, sizeof(aBuf), "ClientID=%d authed (moderator)", ClientID);
+						Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
+					}
+#ifdef CONF_SQL
+					else
+					{
+						SendRconLine(ClientID, "You are not moderator.");
+					}
+#endif
 				}
 				else if(g_Config.m_SvRconMaxTries)
 				{
@@ -2739,7 +2769,7 @@ public:
 		{	
 			//Check for username/password
 			str_format(aBuf, sizeof(aBuf), 
-				"SELECT UserId FROM %s_Users "
+				"SELECT UserId, Level FROM %s_Users "
 				"WHERE Username = '%s' AND PasswordHash = '%s';"
 				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_sPasswordHash.ClrStr());
 			pSqlServer->executeSqlQuery(aBuf);
@@ -2750,22 +2780,27 @@ public:
 				if(m_pServer->m_aClients[m_ClientID].m_LogInstance == GetInstance())
 				{
 					int UserID = (int)pSqlServer->GetResults()->getInt("UserId");
+					int UserLevel = (int)pSqlServer->GetResults()->getInt("Level");
 					m_pServer->m_aClients[m_ClientID].m_UserID = UserID;
+					m_pServer->m_aClients[m_ClientID].m_UserLevel = UserLevel;
 					str_copy(m_pServer->m_aClients[m_ClientID].m_aUsername, m_sName.Str(), sizeof(m_pServer->m_aClients[m_ClientID].m_aUsername));
-					
-					CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, "You are now logged.");
-					m_pServer->AddGameServerCmd(pCmd);
 					
 					//If we are really unlucky, the client can deconnect and an another one connect during this small code
 					if(m_pServer->m_aClients[m_ClientID].m_LogInstance != GetInstance())
 					{
 						m_pServer->m_aClients[m_ClientID].m_UserID = -1;
+						m_pServer->m_aClients[m_ClientID].m_UserLevel = SQL_USERLEVEL_NORMAL;
+					}
+					else
+					{
+						CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("You are now logged."));
+						m_pServer->AddGameServerCmd(pCmd);
 					}
 				}
 			}
 			else
 			{
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, "Wrong username/password.");
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("Wrong username/password."));
 				m_pServer->AddGameServerCmd(pCmd);
 			}
 		}
@@ -2804,6 +2839,64 @@ void CServer::Login(int ClientID, const char* pUsername, const char* pPassword)
 void CServer::Logout(int ClientID)
 {
 	m_aClients[ClientID].m_UserID = -1;
+	m_aClients[ClientID].m_UserLevel = SQL_USERLEVEL_NORMAL;
+}
+
+class CSqlJob_Server_SetEmail : public CSqlJob
+{
+private:
+	CServer* m_pServer;
+	int m_ClientID;
+	int m_UserID;
+	CSqlString<64> m_sEmail;
+	
+public:
+	CSqlJob_Server_SetEmail(CServer* pServer, int ClientID, int UserID, const char* pEmail)
+	{
+		m_pServer = pServer;
+		m_ClientID = ClientID;
+		m_UserID = UserID;
+		m_sEmail = CSqlString<64>(pEmail);
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[512];
+		
+		try
+		{
+			str_format(aBuf, sizeof(aBuf), 
+				"UPDATE %s_Users "
+				"SET Email = '%s' "
+				"WHERE UserId = '%d';"
+				, pSqlServer->GetPrefix(), m_sEmail.ClrStr(), m_UserID);
+			
+			pSqlServer->executeSqlQuery(aBuf);
+		}
+		catch (sql::SQLException &e)
+		{
+			CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("An error occured during the operation."));
+			m_pServer->AddGameServerCmd(pCmd);
+			dbg_msg("sql", "Can't change email (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+};
+
+void CServer::SetEmail(int ClientID, const char* pEmail)
+{
+	if(m_aClients[ClientID].m_UserID < 0 && m_pGameServer)
+	{
+		m_pGameServer->SendChatTarget_Localization(ClientID, CHATCATEGORY_DEFAULT, _("You must be logged for this operation"), NULL);
+	}
+	else
+	{
+		CSqlJob* pJob = new CSqlJob_Server_SetEmail(this, ClientID, m_aClients[ClientID].m_UserID, pEmail);
+		pJob->Start();
+	}
 }
 
 class CSqlJob_Server_Register : public CSqlJob
