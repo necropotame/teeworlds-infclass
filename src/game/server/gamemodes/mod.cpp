@@ -239,7 +239,7 @@ void CGameControllerMOD::Tick()
 		//If the infection started
 		if(m_RoundStartTick + Server()->TickSpeed()*10 <= Server()->Tick())
 		{
-			bool StartInfectionStrigger = (m_RoundStartTick + Server()->TickSpeed()*10 == Server()->Tick());
+			bool StartInfectionTrigger = (m_RoundStartTick + Server()->TickSpeed()*10 == Server()->Tick());
 			
 			GameServer()->EnableTargetToKill();
 			
@@ -253,7 +253,7 @@ void CGameControllerMOD::Tick()
 			{
 				if(Iter.Player()->GetClass() == PLAYERCLASS_NONE)
 				{
-					if(StartInfectionStrigger)
+					if(StartInfectionTrigger)
 					{
 						Iter.Player()->SetClass(ChooseHumanClass(Iter.Player()));
 						if(Iter.Player()->GetCharacter())

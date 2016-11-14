@@ -46,6 +46,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	
 	m_PrevTuningParams = *pGameServer->Tuning();
 	m_NextTuningParams = m_PrevTuningParams;
+	m_IsInGame = false;
 /* INFECTION MODIFICATION END *****************************************/
 }
 

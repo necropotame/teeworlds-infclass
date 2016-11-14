@@ -55,6 +55,7 @@ public:
 	int m_SpectatorID;
 
 	bool m_IsReady;
+	bool m_IsInGame;
 
 	//
 	int m_Vote;
@@ -208,7 +209,7 @@ public:
 			CPlayer* pPlayer = Player();
 			
 			if(!pPlayer) continue;
-			if((FLAGS & PLAYERITER_COND_READY) && (!pPlayer->m_IsReady)) continue;
+			if((FLAGS & PLAYERITER_COND_READY) && (!pPlayer->m_IsInGame)) continue;
 			if((FLAGS & PLAYERITER_COND_NOSPEC) && (pPlayer->GetTeam() == TEAM_SPECTATORS)) continue;
 			if((FLAGS & PLAYERITER_COND_SPEC) && (pPlayer->GetTeam() != TEAM_SPECTATORS)) continue;
 			
