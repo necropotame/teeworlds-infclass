@@ -633,13 +633,13 @@ void CCharacter::FireWeapon()
 				
 				if(pCurrentBomb)
 				{
-					if(distance(pCurrentBomb->m_Pos, m_Pos) < 120.0f)
+					if(pCurrentBomb->ReadyToExplode() || distance(pCurrentBomb->m_Pos, m_Pos) > 80.0f)
+						pCurrentBomb->Explode();
+					else
 					{
 						pCurrentBomb->IncreaseDamage();
 						GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
 					}
-					else
-						pCurrentBomb->Explode();
 				}
 				else
 				{
@@ -2392,6 +2392,17 @@ void CCharacter::Snap(int SnappingClient)
 				pP->m_Type = POWERUP_ARMOR;
 			pP->m_Subtype = 0;
 		}
+	}
+	else if((m_Armor + m_Health) < 10 && SnappingClient != m_pPlayer->GetCID() && IsInfected() && pClient->IsInfected())
+	{
+		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
+		if(!pP)
+			return;
+
+		pP->m_X = (int)m_Pos.x;
+		pP->m_Y = (int)m_Pos.y - 60.0;
+		pP->m_Type = POWERUP_HEALTH;
+		pP->m_Subtype = 0;
 	}
 	
 	if(pClient && !pClient->IsInfected() && GetClass() == PLAYERCLASS_ENGINEER && !m_FirstShot)

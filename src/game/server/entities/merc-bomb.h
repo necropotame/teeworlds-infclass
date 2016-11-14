@@ -16,17 +16,29 @@ public:
 		EFFECT_LOVE,
 	};
 	
-public:
-	CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner, int Type);
-
-	virtual void Snap(int SnappingClient);
-	void Reset();
-	void Explode();
-	void TickPaused();
-	void IncreaseDamage();
+	enum
+	{
+		NUM_SIDE = 12,
+		NUM_HINT = 12,
+		NUM_IDS = NUM_SIDE + NUM_HINT,
+	};
 	
 public:
-	int m_StartTick;
+	CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner, int Type);
+	~CMercenaryBomb();
+
+	virtual void Snap(int SnappingClient);
+	virtual void Tick();
+	virtual void Reset();
+	void Explode();
+	void IncreaseDamage();
+	bool ReadyToExplode();
+
+private:
+	int m_IDs[NUM_IDS];
+	
+public:
+	int m_LoadingTick;
 	int m_Owner;
 	int m_Damage;
 	int m_Type;

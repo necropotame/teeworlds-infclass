@@ -20,9 +20,9 @@ public:
 	virtual ~CScientistMine();
 
 	virtual void Snap(int SnappingClient);
-	void Reset();
-	void TickPaused();
-	void Tick();
+	virtual void Reset();
+	virtual void TickPaused();
+	virtual void Tick();
 
 	int GetOwner() const;
 	void Explode(int DetonatedBy);

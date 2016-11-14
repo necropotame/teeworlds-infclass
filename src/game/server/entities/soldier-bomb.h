@@ -13,10 +13,10 @@ public:
 	virtual ~CSoldierBomb();
 
 	virtual void Snap(int SnappingClient);
-	void Reset();
+	virtual void Reset();
+	virtual void TickPaused();
 	void Explode();
 	bool AddBomb();
-	void TickPaused();
 	int GetNbBombs() { return m_nbBomb; }
 
 private:
