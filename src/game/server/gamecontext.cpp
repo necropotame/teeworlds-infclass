@@ -1295,7 +1295,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			{
 				PrivateMessage(pMsg->m_pMessage+5, ClientID, (Team != CGameContext::CHAT_ALL));
 			}
-			if(str_comp_num(pMsg->m_pMessage, "/w ", 3) == 0)
+			else if(str_comp_num(pMsg->m_pMessage, "/w ", 3) == 0)
 			{
 				PrivateMessage(pMsg->m_pMessage+3, ClientID, (Team != CGameContext::CHAT_ALL));
 			}
@@ -2478,9 +2478,7 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 }
 
 bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
-{
-	dbg_msg("PrivateMessage", "%s", pStr);
-	
+{	
 	bool ArgumentFound = false;
 	const char* pArgumentIter = pStr;
 	while(*pArgumentIter)
@@ -2695,20 +2693,34 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			}
 			
 			FinalMessage.clear();
+			TextIter = 0;
 			if(i == ClientID)
 			{
-				TextIter = FinalMessage.append_at(TextIter, "(");
+				if(str_comp(aChatTitle, "private") == 0)
+				{
+					TextIter = FinalMessage.append_at(TextIter, aNameFound);
+					TextIter = FinalMessage.append_at(TextIter, " (");
+					TextIter = FinalMessage.append_at(TextIter, aChatTitle);
+					TextIter = FinalMessage.append_at(TextIter, "): ");
+				}
+				else
+				{
+					TextIter = FinalMessage.append_at(TextIter, "(");
+					TextIter = FinalMessage.append_at(TextIter, aChatTitle);
+					TextIter = FinalMessage.append_at(TextIter, "): ");
+				}
+				TextIter = FinalMessage.append_at(TextIter, Buffer.buffer());
 			}
 			else
 			{
 				TextIter = FinalMessage.append_at(TextIter, Server()->ClientName(i));
 				TextIter = FinalMessage.append_at(TextIter, " (");
+				TextIter = FinalMessage.append_at(TextIter, aChatTitle);
+				TextIter = FinalMessage.append_at(TextIter, "): ");
+				TextIter = FinalMessage.append_at(TextIter, Buffer.buffer());
 			}
-			TextIter = FinalMessage.append_at(TextIter, aChatTitle);
-			TextIter = FinalMessage.append_at(TextIter, "): ");
-			TextIter = FinalMessage.append_at(TextIter, Buffer.buffer());
 			Msg.m_pMessage = FinalMessage.buffer();
-			
+	
 			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
 				
 			NumPlayerFound++;
