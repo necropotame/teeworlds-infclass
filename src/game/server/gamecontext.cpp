@@ -1291,7 +1291,15 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			
 			
 /* INFECTION MODIFICATION START ***************************************/
-			if(pMsg->m_pMessage[0] == '/' || pMsg->m_pMessage[0] == '\\')
+			if(str_comp_num(pMsg->m_pMessage, "/msg ", 5) == 0)
+			{
+				PrivateMessage(pMsg->m_pMessage+5, ClientID, (Team != CGameContext::CHAT_ALL));
+			}
+			if(str_comp_num(pMsg->m_pMessage, "/w ", 3) == 0)
+			{
+				PrivateMessage(pMsg->m_pMessage+3, ClientID, (Team != CGameContext::CHAT_ALL));
+			}
+			else if(pMsg->m_pMessage[0] == '/' || pMsg->m_pMessage[0] == '\\')
 			{
 				switch(m_apPlayers[ClientID]->m_Authed)
 				{
@@ -2469,246 +2477,243 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
-bool CGameContext::ConPrivateMessage(IConsole::IResult *pResult, void *pUserData)
+bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 {
-	CGameContext* pThis = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	bool TeamChat = pResult->GetTeamChat();
+	dbg_msg("PrivateMessage", "%s", pStr);
 	
-	if(pResult->NumArguments() == 0)
+	bool ArgumentFound = false;
+	const char* pArgumentIter = pStr;
+	while(*pArgumentIter)
 	{
-		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "msg", "msg: Send a private message to a player or a group of players");
-		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "msg", "Usage: /msg <username or group> <message>");
-		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "msg", "Available groups: near, engineer, soldier, ...");
+		if(*pArgumentIter != ' ')
+		{
+			ArgumentFound = true;
+			break;
+		}
 		
-		return true;
+		pArgumentIter++;
 	}
 	
-	const char *pStr = pResult->GetString(0);
-	const char *pMessage = pResult->NumArguments()>1 ? pResult->GetString(1) : "";
-
-	//Inverse order and add ligature for arabic
-	const char* pChatName = 0;
-	
-	dynamic_string Buffer;
-	Buffer.copy(pMessage);
-	pThis->Server()->Localization()->ArabicShaping(Buffer);
-	
-	CNetMsg_Sv_Chat Msg;
-	Msg.m_Team = (TeamChat ? 1 : 0);
-	Msg.m_ClientID = ClientID;
-	Msg.m_pMessage = Buffer.buffer();
+	if(!ArgumentFound)
+	{
+		SendChatTarget(ClientID, "Usage: /msg <username or group> <message>");
+		SendChatTarget(ClientID, "Send a private message to a player or a group of players");
+		SendChatTarget(ClientID, "Available groups: #near, #engineer, #soldier, ...");
+		return true;
+	}
 	
 	dynamic_string FinalMessage;
 	int TextIter = 0;
 	
-	bool CheckName = false;
 	
 	bool CheckDistance = false;
 	vec2 CheckDistancePos = vec2(0.0f, 0.0f);
 	
-	bool CheckTeam = false;
-	int CheckTeamID = -1;
+	int CheckID = -1;
+	int CheckTeam = -1;
+	int CheckClass = -1;
 	
-	bool CheckClass = false;
-	int CheckClassID = -1;
-	
-	if(TeamChat && pThis->m_apPlayers[ClientID])
+	if(TeamChat && m_apPlayers[ClientID])
 	{
 		CheckTeam = true;
-		if(pThis->m_apPlayers[ClientID]->GetTeam() == TEAM_SPECTATORS)
-			CheckTeamID = TEAM_SPECTATORS;
-		if(pThis->m_apPlayers[ClientID]->IsInfected())
-			CheckTeamID = TEAM_RED;
+		if(m_apPlayers[ClientID]->GetTeam() == TEAM_SPECTATORS)
+			CheckTeam = TEAM_SPECTATORS;
+		if(m_apPlayers[ClientID]->IsInfected())
+			CheckTeam = TEAM_RED;
 		else
-			CheckTeamID = TEAM_BLUE;
+			CheckTeam = TEAM_BLUE;
 	}
 	
-	if(str_comp(pStr, "near") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckDistance = true;
-		CheckDistancePos = pThis->m_apPlayers[ClientID]->GetCharacter()->m_Pos;
-		pChatName = "near";
-	}
-	else if(str_comp(pStr, "engineer") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_ENGINEER;
-		pChatName = "engineer";
-	}
-	else if(str_comp(pStr, "soldier") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_SOLDIER;
-		pChatName = "soldier";
-	}
-	else if(str_comp(pStr, "scientist") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_SCIENTIST;
-		pChatName = "scientist";
-	}
-	else if(str_comp(pStr, "medic") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_MEDIC;
-		pChatName = "medic";
-	}
-	else if(str_comp(pStr, "hero") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_HERO;
-		pChatName = "hero";
-	}
-	else if(str_comp(pStr, "ninja") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_NINJA;
-		pChatName = "ninja";
-	}
-	else if(str_comp(pStr, "mercenary") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_MERCENARY;
-		pChatName = "mercenary";
-	}
-	else if(str_comp(pStr, "sniper") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_SNIPER;
-		pChatName = "sniper";
-	}
-	else if(str_comp(pStr, "smoker") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_SMOKER;
-		pChatName = "smoker";
-	}
-	else if(str_comp(pStr, "hunter") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_HUNTER;
-		pChatName = "hunter";
-	}
-	else if(str_comp(pStr, "boomer") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_BOOMER;
-		pChatName = "boomer";
-	}
-	else if(str_comp(pStr, "spider") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_SPIDER;
-		pChatName = "spider";
-	}
-	else if(str_comp(pStr, "ghost") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_GHOST;
-		pChatName = "ghost";
-	}
-	else if(str_comp(pStr, "ghoul") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_GHOUL;
-		pChatName = "ghoul";
-	}
-	else if(str_comp(pStr, "undead") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_UNDEAD;
-		pChatName = "undead";
-	}
-	else if(str_comp(pStr, "witch") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
-	{
-		CheckClass = true;
-		CheckClassID = PLAYERCLASS_WITCH;
-		pChatName = "witch";
-	}
-	else
-	{
-		CheckName = true;
-	}
+	char aNameFound[32];
+	aNameFound[0] = 0;
 	
-	int NumPlayerFound = 0;
-	bool SelfMessage = false;
-	for(int i=0; i<MAX_CLIENTS; i++)
+	char aChatTitle[32];
+	aChatTitle[0] = 0;
+	unsigned int c = 0;
+	for(; c<sizeof(aNameFound)-1; c++)
 	{
-		if(pThis->m_apPlayers[i])
+		if(pStr[c] == ' ' || pStr[c] == 0)
 		{
-			
-			if(CheckTeam)
+			if(str_comp(aNameFound, "#near") == 0)
 			{
-				if(CheckTeamID == TEAM_SPECTATORS && pThis->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
-					continue;
-				else if(CheckTeamID == TEAM_RED && !pThis->m_apPlayers[i]->IsInfected())
-					continue;
-				else if(CheckTeamID == TEAM_BLUE && pThis->m_apPlayers[i]->IsInfected())
-					continue;
-			}
-			
-			if(CheckName && !(str_comp(pThis->Server()->ClientName(i), pStr) == 0))
-				continue;
-			
-			if(CheckClass && !(pThis->m_apPlayers[i]->GetClass() == CheckClassID))
-				continue;
-			
-			if(CheckDistance && !(pThis->m_apPlayers[i]->GetCharacter() && distance(pThis->m_apPlayers[i]->GetCharacter()->m_Pos, CheckDistancePos) < 1000.0f))
-				continue;
-			
-			if(i != ClientID)
-			{
-				FinalMessage.clear();
-				TextIter = FinalMessage.append_at(TextIter, pThis->Server()->ClientName(i));
-				if(pChatName)
+				if(m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 				{
-					TextIter = FinalMessage.append_at(TextIter, " (");
-					TextIter = FinalMessage.append_at(TextIter, pChatName);
-					TextIter = FinalMessage.append_at(TextIter, "): ");
+					CheckDistance = true;
+					CheckDistancePos = m_apPlayers[ClientID]->GetCharacter()->m_Pos;
+					str_copy(aChatTitle, "near", sizeof(aChatTitle));
 				}
-				else
-					TextIter = FinalMessage.append_at(TextIter, " (private): ");
-				TextIter = FinalMessage.append_at(TextIter, Buffer.buffer());
-				Msg.m_pMessage = FinalMessage.buffer();
-				
-				pThis->Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+			}
+			else if(str_comp(aNameFound, "#engineer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_ENGINEER;
+				str_copy(aChatTitle, "engineer", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#soldier ") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SOLDIER;
+				str_copy(aChatTitle, "soldier", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#scientist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SCIENTIST;
+				str_copy(aChatTitle, "scientist", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#medic") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_MEDIC;
+				str_copy(aChatTitle, "medic", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#hero") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_HERO;
+				str_copy(aChatTitle, "hero", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#ninja") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_NINJA;
+				str_copy(aChatTitle, "ninja", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#mercenary") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_MERCENARY;
+				str_copy(aChatTitle, "mercenary", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#sniper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SNIPER;
+				str_copy(aChatTitle, "sniper", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#smoker") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SMOKER;
+				str_copy(aChatTitle, "smoker", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#hunter") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_HUNTER;
+				str_copy(aChatTitle, "hunter", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#boomer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_BOOMER;
+				str_copy(aChatTitle, "boomer", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#spider") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SPIDER;
+				str_copy(aChatTitle, "spider", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#ghost") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_GHOST;
+				str_copy(aChatTitle, "ghost", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#ghoul") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_GHOUL;
+				str_copy(aChatTitle, "ghoul", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#undead") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_UNDEAD;
+				str_copy(aChatTitle, "undead", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "#witch") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_WITCH;
+				str_copy(aChatTitle, "witch", sizeof(aChatTitle));
 			}
 			else
-				SelfMessage = true;
+			{
+				for(int i=0; i<MAX_CLIENTS; i++)
+				{
+					if(m_apPlayers[i] && str_comp(Server()->ClientName(i), aNameFound) == 0)
+					{
+						CheckID = i;
+						str_copy(aChatTitle, "private", sizeof(aChatTitle));
+						break;
+					}
+				}
+			}
+		}
+		
+		if(aChatTitle[0] || pStr[c] == 0)
+		{
+			aNameFound[c] = 0;
+			break;
+		}
+		else
+		{
+			aNameFound[c] = pStr[c];
+			aNameFound[c+1] = 0;
+		}
+	}
+		
+	if(!aChatTitle[0])
+	{
+		SendChatTarget_Localization(ClientID, CHATCATEGORY_DEFAULT, _("No player was found with this name"));
+		return true;
+	}
+	
+	pStr += c;
+	while(*pStr == ' ')
+		pStr++;
+	
+	dynamic_string Buffer;
+	Buffer.copy(pStr);
+	Server()->Localization()->ArabicShaping(Buffer);
+	
+	CNetMsg_Sv_Chat Msg;
+	Msg.m_Team = (TeamChat ? 1 : 0);
+	Msg.m_ClientID = ClientID;
+	
+	int NumPlayerFound = 0;
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{
+		if(m_apPlayers[i])
+		{
+			if(i != ClientID)
+			{
+				if(CheckTeam >= 0)
+				{
+					if(CheckTeam == TEAM_SPECTATORS && m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
+						continue;
+					else if(CheckTeam == TEAM_RED && !m_apPlayers[i]->IsInfected())
+						continue;
+					else if(CheckTeam == TEAM_BLUE && m_apPlayers[i]->IsInfected())
+						continue;
+				}
+				
+				if(CheckID >= 0 && !(i == CheckID))
+					continue;
+				
+				if(CheckClass >= 0 && !(m_apPlayers[i]->GetClass() == CheckClass))
+					continue;
+				
+				if(CheckDistance && !(m_apPlayers[i]->GetCharacter() && distance(m_apPlayers[i]->GetCharacter()->m_Pos, CheckDistancePos) < 1000.0f))
+					continue;
+			}
+			
+			FinalMessage.clear();
+			if(i == ClientID)
+			{
+				TextIter = FinalMessage.append_at(TextIter, "(");
+			}
+			else
+			{
+				TextIter = FinalMessage.append_at(TextIter, Server()->ClientName(i));
+				TextIter = FinalMessage.append_at(TextIter, " (");
+			}
+			TextIter = FinalMessage.append_at(TextIter, aChatTitle);
+			TextIter = FinalMessage.append_at(TextIter, "): ");
+			TextIter = FinalMessage.append_at(TextIter, Buffer.buffer());
+			Msg.m_pMessage = FinalMessage.buffer();
+			
+			Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+				
 			NumPlayerFound++;
 		}
 	}
-	
-	if(!NumPlayerFound)
-	{
-		FinalMessage.clear();
-		if(NumPlayerFound)
-		{
-			if(pChatName)
-			{
-				TextIter = FinalMessage.append_at(TextIter, "(");
-				TextIter = FinalMessage.append_at(TextIter, pChatName);
-				TextIter = FinalMessage.append_at(TextIter, "): ");
-			}
-			else
-			{
-				TextIter = FinalMessage.append_at(TextIter, pStr);
-				TextIter = FinalMessage.append_at(TextIter, " (private)");
-				TextIter = FinalMessage.append_at(TextIter, ": ");
-			}
-			TextIter = FinalMessage.append_at(TextIter, Buffer.buffer());
-		}
-		else if(SelfMessage)
-		{
-			Msg.m_pMessage = Buffer.buffer();
-		}
-		Msg.m_pMessage = FinalMessage.buffer();
-		
-		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "No player was found with this name");
-	}
-	else
-		pThis->Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
 	
 	return true;
 }
@@ -3327,6 +3332,8 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	Buffer.append(" ~~\n\n");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/alwaysrandom, /customskin, /help, /info, /language", NULL);
 	Buffer.append("\n\n");
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/msg", NULL);
+	Buffer.append("\n\n");
 #ifdef CONF_SQL
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/register, /login, /logout, /setemail", NULL);
 	Buffer.append("\n\n");
@@ -3377,7 +3384,6 @@ void CGameContext::OnConsoleInit()
 	
 	//Chat Command
 	Console()->Register("info", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChatInfo, this, "Display information about the mod");
-	Console()->Register("msg", "?s<username or group> ?r<message>", CFGFLAG_CHAT|CFGFLAG_USER, ConPrivateMessage, this, "Send a private message");
 #ifdef CONF_SQL
 	Console()->Register("register", "s<username> s<password> ?s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
 	Console()->Register("login", "s<username> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");

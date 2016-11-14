@@ -222,7 +222,7 @@ private:
 	static bool ConAlwaysRandom(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLanguage(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCmdList(IConsole::IResult *pResult, void *pUserData);
-	static bool ConPrivateMessage(IConsole::IResult *pResult, void *pUserData);
+	bool PrivateMessage(const char* pStr, int ClientID, bool TeamChat);
 	
 public:
 	virtual void OnSetAuthed(int ClientID,int Level);
