@@ -34,6 +34,7 @@ public:
 	protected:
 		unsigned m_NumArgs;
 		int m_ClientID;
+		bool m_TeamChat;
 		
 	public:
 		IResult() { m_NumArgs = 0; m_ClientID = -1; }
@@ -44,7 +45,10 @@ public:
 		virtual const char *GetString(unsigned Index) = 0;
 		
 		int GetClientID() { return m_ClientID; }
+		bool GetTeamChat() { return m_TeamChat; }
+		
 		void SetClientID(int ClientID) { m_ClientID = ClientID; }
+		void SetTeamChat(bool TeamChat) { m_TeamChat = TeamChat; }
 
 		int NumArguments() const { return m_NumArgs; }
 	};
@@ -84,9 +88,9 @@ public:
 	virtual void StoreCommands(bool Store) = 0;
 
 	virtual bool LineIsValid(const char *pStr) = 0;
-	virtual void ExecuteLine(const char *Sptr, int ClientID) = 0;
-	virtual void ExecuteLineFlag(const char *Sptr, int ClientID, int FlasgMask) = 0;
-	virtual void ExecuteLineStroked(int Stroke, const char *pStr, int ClientID) = 0;
+	virtual void ExecuteLine(const char *Sptr, int ClientID, bool TeamChat) = 0;
+	virtual void ExecuteLineFlag(const char *Sptr, int ClientID, bool TeamChat, int FlasgMask) = 0;
+	virtual void ExecuteLineStroked(int Stroke, const char *pStr, int ClientID, bool TeamChat) = 0;
 	virtual void ExecuteFile(const char *pFilename) = 0;
 
 	virtual int RegisterPrintCallback(int OutputLevel, FPrintCallback pfnPrintCallback, void *pUserData) = 0;

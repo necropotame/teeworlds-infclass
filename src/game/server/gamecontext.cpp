@@ -1078,7 +1078,7 @@ void CGameContext::OnTick()
 				}
 				
 				Server()->SetRconCID(IServer::RCON_CID_VOTE);
-				Console()->ExecuteLine(m_aVoteCommand, -1);
+				Console()->ExecuteLine(m_aVoteCommand, -1, false);
 				Server()->SetRconCID(IServer::RCON_CID_SERV);
 				EndVote();
 				SendChat(-1, CGameContext::CHAT_ALL, "Vote passed");
@@ -1306,7 +1306,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				}	
 				m_ChatResponseTargetID = ClientID;
 				
-				Console()->ExecuteLineFlag(pMsg->m_pMessage + 1, ClientID, CFGFLAG_CHAT);
+				Console()->ExecuteLineFlag(pMsg->m_pMessage + 1, ClientID, (Team != CGameContext::CHAT_ALL), CFGFLAG_CHAT);
 				
 				m_ChatResponseTargetID = -1;
 				Console()->SetAccessLevel(IConsole::ACCESS_LEVEL_ADMIN);
@@ -2285,7 +2285,7 @@ bool CGameContext::ConForceVote(IConsole::IResult *pResult, void *pUserData)
 			{
 				str_format(aBuf, sizeof(aBuf), "admin forced server option '%s' (%s)", pValue, pReason);
 				pSelf->SendChatTarget(-1, aBuf);
-				pSelf->Console()->ExecuteLine(pOption->m_aCommand, -1);
+				pSelf->Console()->ExecuteLine(pOption->m_aCommand, -1, false);
 				break;
 			}
 
@@ -2311,14 +2311,14 @@ bool CGameContext::ConForceVote(IConsole::IResult *pResult, void *pUserData)
 		if (!g_Config.m_SvVoteKickBantime)
 		{
 			str_format(aBuf, sizeof(aBuf), "kick %d %s", KickID, pReason);
-			pSelf->Console()->ExecuteLine(aBuf, -1);
+			pSelf->Console()->ExecuteLine(aBuf, -1, false);
 		}
 		else
 		{
 			char aAddrStr[NETADDR_MAXSTRSIZE] = {0};
 			pSelf->Server()->GetClientAddr(KickID, aAddrStr, sizeof(aAddrStr));
 			str_format(aBuf, sizeof(aBuf), "ban %s %d %s", aAddrStr, g_Config.m_SvVoteKickBantime, pReason);
-			pSelf->Console()->ExecuteLine(aBuf, -1);
+			pSelf->Console()->ExecuteLine(aBuf, -1, false);
 		}
 	}
 	else if(str_comp_nocase(pType, "spectate") == 0)
@@ -2333,7 +2333,7 @@ bool CGameContext::ConForceVote(IConsole::IResult *pResult, void *pUserData)
 		str_format(aBuf, sizeof(aBuf), "admin moved '%s' to spectator (%s)", pSelf->Server()->ClientName(SpectateID), pReason);
 		pSelf->SendChatTarget(-1, aBuf);
 		str_format(aBuf, sizeof(aBuf), "set_team %d -1 %d", SpectateID, g_Config.m_SvVoteSpectateRejoindelay);
-		pSelf->Console()->ExecuteLine(aBuf, -1);
+		pSelf->Console()->ExecuteLine(aBuf, -1, false);
 	}
 	
 	return true;
@@ -2461,6 +2461,250 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	Buffer.append("\n\n");
 	
 	pSelf->SendMOTD(ClientID, Buffer.buffer());
+	
+	return true;
+}
+
+bool CGameContext::ConPrivateMessage(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext* pThis = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	bool TeamChat = pResult->GetTeamChat();
+	
+	if(pResult->NumArguments() == 0)
+	{
+		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "msg", "msg: Send a private message to a player or a group of players");
+		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "msg", "Usage: /msg <username or group> <message>");
+		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "msg", "Available groups: near, engineer, soldier, ...");
+		
+		return true;
+	}
+	
+	const char *pStr = pResult->GetString(0);
+	const char *pMessage = pResult->NumArguments()>1 ? pResult->GetString(1) : "";
+
+	//Inverse order and add ligature for arabic
+	const char* pChatName = 0;
+	
+	dynamic_string Buffer;
+	Buffer.copy(pMessage);
+	pThis->Server()->Localization()->ArabicShaping(Buffer);
+	
+	CNetMsg_Sv_Chat Msg;
+	Msg.m_Team = (TeamChat ? 1 : 0);
+	Msg.m_ClientID = ClientID;
+	Msg.m_pMessage = Buffer.buffer();
+	
+	dynamic_string FinalMessage;
+	int TextIter = 0;
+	
+	bool CheckName = false;
+	
+	bool CheckDistance = false;
+	vec2 CheckDistancePos = vec2(0.0f, 0.0f);
+	
+	bool CheckTeam = false;
+	int CheckTeamID = -1;
+	
+	bool CheckClass = false;
+	int CheckClassID = -1;
+	
+	if(TeamChat && pThis->m_apPlayers[ClientID])
+	{
+		CheckTeam = true;
+		if(pThis->m_apPlayers[ClientID]->GetTeam() == TEAM_SPECTATORS)
+			CheckTeamID = TEAM_SPECTATORS;
+		if(pThis->m_apPlayers[ClientID]->IsInfected())
+			CheckTeamID = TEAM_RED;
+		else
+			CheckTeamID = TEAM_BLUE;
+	}
+	
+	if(str_comp(pStr, "near") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckDistance = true;
+		CheckDistancePos = pThis->m_apPlayers[ClientID]->GetCharacter()->m_Pos;
+		pChatName = "near";
+	}
+	else if(str_comp(pStr, "engineer") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_ENGINEER;
+		pChatName = "engineer";
+	}
+	else if(str_comp(pStr, "soldier") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_SOLDIER;
+		pChatName = "soldier";
+	}
+	else if(str_comp(pStr, "scientist") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_SCIENTIST;
+		pChatName = "scientist";
+	}
+	else if(str_comp(pStr, "medic") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_MEDIC;
+		pChatName = "medic";
+	}
+	else if(str_comp(pStr, "hero") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_HERO;
+		pChatName = "hero";
+	}
+	else if(str_comp(pStr, "ninja") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_NINJA;
+		pChatName = "ninja";
+	}
+	else if(str_comp(pStr, "mercenary") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_MERCENARY;
+		pChatName = "mercenary";
+	}
+	else if(str_comp(pStr, "sniper") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_SNIPER;
+		pChatName = "sniper";
+	}
+	else if(str_comp(pStr, "smoker") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_SMOKER;
+		pChatName = "smoker";
+	}
+	else if(str_comp(pStr, "hunter") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_HUNTER;
+		pChatName = "hunter";
+	}
+	else if(str_comp(pStr, "boomer") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_BOOMER;
+		pChatName = "boomer";
+	}
+	else if(str_comp(pStr, "spider") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_SPIDER;
+		pChatName = "spider";
+	}
+	else if(str_comp(pStr, "ghost") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_GHOST;
+		pChatName = "ghost";
+	}
+	else if(str_comp(pStr, "ghoul") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_GHOUL;
+		pChatName = "ghoul";
+	}
+	else if(str_comp(pStr, "undead") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_UNDEAD;
+		pChatName = "undead";
+	}
+	else if(str_comp(pStr, "witch") == 0 && pThis->m_apPlayers[ClientID] && pThis->m_apPlayers[ClientID]->GetCharacter())
+	{
+		CheckClass = true;
+		CheckClassID = PLAYERCLASS_WITCH;
+		pChatName = "witch";
+	}
+	else
+	{
+		CheckName = true;
+	}
+	
+	int NumPlayerFound = 0;
+	bool SelfMessage = false;
+	for(int i=0; i<MAX_CLIENTS; i++)
+	{
+		if(pThis->m_apPlayers[i])
+		{
+			
+			if(CheckTeam)
+			{
+				if(CheckTeamID == TEAM_SPECTATORS && pThis->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
+					continue;
+				else if(CheckTeamID == TEAM_RED && !pThis->m_apPlayers[i]->IsInfected())
+					continue;
+				else if(CheckTeamID == TEAM_BLUE && pThis->m_apPlayers[i]->IsInfected())
+					continue;
+			}
+			
+			if(CheckName && !(str_comp(pThis->Server()->ClientName(i), pStr) == 0))
+				continue;
+			
+			if(CheckClass && !(pThis->m_apPlayers[i]->GetClass() == CheckClassID))
+				continue;
+			
+			if(CheckDistance && !(pThis->m_apPlayers[i]->GetCharacter() && distance(pThis->m_apPlayers[i]->GetCharacter()->m_Pos, CheckDistancePos) < 1000.0f))
+				continue;
+			
+			if(i != ClientID)
+			{
+				FinalMessage.clear();
+				TextIter = FinalMessage.append_at(TextIter, pThis->Server()->ClientName(i));
+				if(pChatName)
+				{
+					TextIter = FinalMessage.append_at(TextIter, " (");
+					TextIter = FinalMessage.append_at(TextIter, pChatName);
+					TextIter = FinalMessage.append_at(TextIter, "): ");
+				}
+				else
+					TextIter = FinalMessage.append_at(TextIter, " (private): ");
+				TextIter = FinalMessage.append_at(TextIter, Buffer.buffer());
+				Msg.m_pMessage = FinalMessage.buffer();
+				
+				pThis->Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, i);
+			}
+			else
+				SelfMessage = true;
+			NumPlayerFound++;
+		}
+	}
+	
+	if(!NumPlayerFound)
+	{
+		FinalMessage.clear();
+		if(NumPlayerFound)
+		{
+			if(pChatName)
+			{
+				TextIter = FinalMessage.append_at(TextIter, "(");
+				TextIter = FinalMessage.append_at(TextIter, pChatName);
+				TextIter = FinalMessage.append_at(TextIter, "): ");
+			}
+			else
+			{
+				TextIter = FinalMessage.append_at(TextIter, pStr);
+				TextIter = FinalMessage.append_at(TextIter, " (private)");
+				TextIter = FinalMessage.append_at(TextIter, ": ");
+			}
+			TextIter = FinalMessage.append_at(TextIter, Buffer.buffer());
+		}
+		else if(SelfMessage)
+		{
+			Msg.m_pMessage = Buffer.buffer();
+		}
+		Msg.m_pMessage = FinalMessage.buffer();
+		
+		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "No player was found with this name");
+	}
+	else
+		pThis->Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, ClientID);
 	
 	return true;
 }
@@ -3092,36 +3336,6 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
-bool CGameContext::ConFriendlyBan(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	
-	const char *pPlayername = pResult->GetString(0);
-	int Minutes = pResult->NumArguments()>1 ? clamp(pResult->GetInteger(1), 0, 44640) : 30;
-	const char *pReason = pResult->NumArguments()>2 ? pResult->GetString(2) : "No reason given";
-	
-	bool PlayerBanned = false;
-	for(int i=0; i<MAX_CLIENTS; i++)
-	{
-		if(pSelf->m_apPlayers[i] && str_comp(pSelf->Server()->ClientName(i), pPlayername) == 0)
-		{
-			pSelf->Server()->Ban(i, Minutes*60, pReason);
-			PlayerBanned = true;
-		}
-	}
-	
-	if(!PlayerBanned)
-	{
-		int ClientID = pResult->GetClientID();
-		const char* pLanguage = pSelf->m_apPlayers[ClientID]->GetLanguage();
-		
-		const char* pTxt = pSelf->Server()->Localization()->Localize(pLanguage, _("No player was found with this name"));
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "fban", pTxt);
-	}
-	
-	return true;
-}
-
 /* INFECTION MODIFICATION END *****************************************/
 
 void CGameContext::OnConsoleInit()
@@ -3159,6 +3373,7 @@ void CGameContext::OnConsoleInit()
 	
 	//Chat Command
 	Console()->Register("info", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChatInfo, this, "Display information about the mod");
+	Console()->Register("msg", "?s<username or group> ?r<message>", CFGFLAG_CHAT|CFGFLAG_USER, ConPrivateMessage, this, "Send a private message");
 #ifdef CONF_SQL
 	Console()->Register("register", "s<username> s<password> ?s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
 	Console()->Register("login", "s<username> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
@@ -3175,8 +3390,6 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("alwaysrandom", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAlwaysRandom, this, "Display information about the mod");
 	Console()->Register("language", "s<fr|de|uk|ru|it|es|ar|hu|pl|nl|la>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
-	
-	Console()->Register("fban", "s<playername> ?i<minutes> ?r<reason>", CFGFLAG_CHAT, ConFriendlyBan, this, "Friendly version of ban cmd");
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);

@@ -308,7 +308,8 @@ protected:
 		str_format(pBuffer, BufferSize, "'%s' - '%s'", aAddrStr1, aAddrStr2);
 		return pBuffer;
 	}
-	
+
+public:
 	static bool StrAllnum(const char *pStr);
 };
 

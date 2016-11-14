@@ -191,7 +191,7 @@ void CServerBan::InitServerBan(IConsole *pConsole, IStorage *pStorage, CServer* 
 	m_pServer = pServer;
 
 	// overwrites base command, todo: improve this
-	Console()->Register("ban", "s?ir", CFGFLAG_SERVER|CFGFLAG_STORE, ConBanExt, this, "Ban player with ip/client id for x minutes for any reason");
+	Console()->Register("ban", "s<username or uid> ?i<minutes> ?r<reason>", CFGFLAG_CHAT|CFGFLAG_SERVER|CFGFLAG_STORE, ConBanExt, this, "Ban player with ip/client id for x minutes for any reason");
 }
 
 template<class T>
@@ -273,7 +273,7 @@ int CServerBan::BanRange(const CNetRange *pRange, int Seconds, const char *pReas
 
 bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 {
-	CServerBan *pThis = static_cast<CServerBan *>(pUser);
+	CServerBan *pThis = static_cast<CServerBan*>(pUser);
 
 	const char *pStr = pResult->GetString(0);
 	int Minutes = pResult->NumArguments()>1 ? clamp(pResult->GetInteger(1), 0, 44640) : 30;
@@ -290,7 +290,20 @@ bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 		}
 	}
 	else
-		ConBan(pResult, pUser);
+	{
+		int NumPlayerFound = 0;
+		for(int i=0; i<MAX_CLIENTS; i++)
+		{
+			if(pThis->m_pServer->m_aClients[i].m_State != CServer::CClient::STATE_EMPTY && str_comp(pThis->m_pServer->ClientName(i), pStr) == 0)
+			{
+				NumPlayerFound++;
+				pThis->BanAddr(pThis->Server()->m_NetServer.ClientAddr(i), Minutes*60, pReason);
+			}
+		}
+		
+		if(!NumPlayerFound)
+			ConBan(pResult, pUser);
+	}
 	
 	return true;
 }
@@ -383,6 +396,7 @@ CServer::~CServer()
 int CServer::TrySetClientName(int ClientID, const char *pName)
 {
 	char aTrimmedName[64];
+	char aTrimmedName2[64];
 
 	// trim the name
 	str_copy(aTrimmedName, StrLtrim(pName), sizeof(aTrimmedName));
@@ -392,29 +406,29 @@ int CServer::TrySetClientName(int ClientID, const char *pName)
 	if(!aTrimmedName[0])
 		return -1;
 
-	// check if new and old name are the same
-	if(m_aClients[ClientID].m_aName[0] && str_comp(m_aClients[ClientID].m_aName, aTrimmedName) == 0)
-		return 0;
-
-	char aBuf[256];
-	str_format(aBuf, sizeof(aBuf), "'%s' -> '%s'", pName, aTrimmedName);
-	Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBuf);
 	pName = aTrimmedName;
 
 	// make sure that two clients doesn't have the same name
 	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
 		if(i != ClientID && m_aClients[i].m_State >= CClient::STATE_READY)
 		{
-			if(str_comp(pName, ClientName(i)) == 0)
+			str_copy(aTrimmedName2, ClientName(i), sizeof(aTrimmedName2));
+			StrRtrim(aTrimmedName2);
+			
+			if(str_comp(pName, aTrimmedName2) == 0)
 				return -1;
 		}
+	}
 
+	// check if new and old name are the same
+	if(m_aClients[ClientID].m_aName[0] && str_comp(m_aClients[ClientID].m_aName, pName) == 0)
+		return 0;
+	
 	// set the client name
 	str_copy(m_aClients[ClientID].m_aName, pName, MAX_NAME_LENGTH);
 	return 0;
 }
-
-
 
 void CServer::SetClientName(int ClientID, const char *pName)
 {
@@ -1290,7 +1304,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 					default:
 						Console()->SetAccessLevel(IConsole::ACCESS_LEVEL_USER);
 				}	
-				Console()->ExecuteLineFlag(pCmd, ClientID, CFGFLAG_SERVER);
+				Console()->ExecuteLineFlag(pCmd, ClientID, false, CFGFLAG_SERVER);
 				Console()->SetAccessLevel(IConsole::ACCESS_LEVEL_ADMIN);
 				m_RconClientID = IServer::RCON_CID_SERV;
 				m_RconAuthLevel = AUTHED_ADMIN;
@@ -1975,6 +1989,25 @@ int CServer::Run()
 				m_CurrentGameTick++;
 				NewTicks++;
 
+				//Check for name collision. We add this because the login is in a different thread and can't check it himself.
+				for(int i=MAX_CLIENTS-1; i>=0; i--)
+				{
+					if(m_aClients[i].m_State >= CClient::STATE_READY && m_aClients[i].m_UserID < 0)
+					{
+						if(TrySetClientName(i, m_aClients[i].m_aName))
+						{
+							// auto rename
+							for(int j = 1;; j++)
+							{
+								char aNameTry[MAX_NAME_LENGTH];
+								str_format(aNameTry, sizeof(aNameTry), "(%d)%s", j, m_aClients[i].m_aName);
+								if(TrySetClientName(i, aNameTry) == 0)
+									break;
+							}
+						}
+					}
+				}
+				
 				for(int i=0; i<MAX_CLIENTS; i++)
 				{
 					if(m_aClients[i].m_WaitingTime > 0)
@@ -2104,14 +2137,36 @@ int CServer::Run()
 
 bool CServer::ConKick(IConsole::IResult *pResult, void *pUser)
 {
-	if(pResult->NumArguments() > 1)
+	CServer* pThis = (CServer *)pUser;
+	
+	char aBuf[128];
+	const char *pStr = pResult->GetString(0);
+	const char *pReason = pResult->NumArguments()>1 ? pResult->GetString(1) : "No reason given";
+	str_format(aBuf, sizeof(aBuf), "Kicked (%s)", pReason);
+
+	if(CNetDatabase::StrAllnum(pStr))
 	{
-		char aBuf[128];
-		str_format(aBuf, sizeof(aBuf), "Kicked (%s)", pResult->GetString(1));
-		((CServer *)pUser)->Kick(pResult->GetInteger(0), aBuf);
+		int ClientID = str_toint(pStr);
+		if(ClientID < 0 || ClientID >= MAX_CLIENTS || pThis->m_aClients[ClientID].m_State == CServer::CClient::STATE_EMPTY)
+			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "Invalid client id");
+		else
+			pThis->Kick(ClientID, aBuf);
 	}
 	else
-		((CServer *)pUser)->Kick(pResult->GetInteger(0), "Kicked by console");
+	{
+		int NumPlayerFound = 0;
+		for(int i=0; i<MAX_CLIENTS; i++)
+		{
+			if(pThis->m_aClients[i].m_State != CServer::CClient::STATE_EMPTY && str_comp(pThis->ClientName(i), pStr) == 0)
+			{
+				NumPlayerFound++;
+				pThis->Kick(i, aBuf);
+			}
+		}
+		
+		if(!NumPlayerFound)
+			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "No player was found with this name");
+	}
 	
 	return true;
 }
@@ -2400,7 +2455,7 @@ void CServer::RegisterCommands()
 	m_pStorage = Kernel()->RequestInterface<IStorage>();
 
 	// register console commands
-	Console()->Register("kick", "i?r", CFGFLAG_SERVER, ConKick, this, "Kick player with specified id for any reason");
+	Console()->Register("kick", "s<username or uid> ?r<reason>", CFGFLAG_CHAT|CFGFLAG_SERVER, ConKick, this, "Kick player with specified id for any reason");
 	Console()->Register("status", "", CFGFLAG_SERVER, ConStatus, this, "List players");
 	Console()->Register("shutdown", "", CFGFLAG_SERVER, ConShutdown, this, "Shut down");
 	Console()->Register("logout", "", CFGFLAG_SERVER, ConLogout, this, "Logout of rcon");
