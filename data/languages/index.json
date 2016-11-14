@@ -21,6 +21,11 @@
 		"parent": "en"
 	},
 	{
+		"file": "el",
+		"name": "ελληνικά",
+		"parent": "en"
+	},
+	{
 		"file": "es",
 		"name": "Español",
 		"parent": "en"

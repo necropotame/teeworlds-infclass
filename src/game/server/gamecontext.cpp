@@ -1702,6 +1702,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 756: //Switzerland
 						str_copy(m_VoteLanguage[ClientID], "de", sizeof(m_VoteLanguage[ClientID]));		
 						break;
+					/* el - Greek ***********************************/	
+					case 300: //Greece
+						str_copy(m_VoteLanguage[ClientID], "el", sizeof(m_VoteLanguage[ClientID]));
+						break;
 					/* es - Spanish ***********************************/	
 					case 32: //Argentina
 					case 68: //Bolivia
