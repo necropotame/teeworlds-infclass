@@ -2511,6 +2511,7 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 	int CheckID = -1;
 	int CheckTeam = -1;
 	int CheckClass = -1;
+	int CheckLevel = SQL_USERLEVEL_NORMAL;
 	
 	if(TeamChat && m_apPlayers[ClientID])
 	{
@@ -2533,7 +2534,7 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 	{
 		if(pStr[c] == ' ' || pStr[c] == 0)
 		{
-			if(str_comp(aNameFound, "#near") == 0)
+			if(str_comp(aNameFound, "!near") == 0)
 			{
 				if(m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 				{
@@ -2542,82 +2543,91 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 					str_copy(aChatTitle, "near", sizeof(aChatTitle));
 				}
 			}
-			else if(str_comp(aNameFound, "#engineer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!mod") == 0)
+			{
+				if(m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+				{
+					CheckLevel = SQL_USERLEVEL_MOD;
+					CheckDistancePos = m_apPlayers[ClientID]->GetCharacter()->m_Pos;
+					str_copy(aChatTitle, "moderators", sizeof(aChatTitle));
+				}
+			}
+			else if(str_comp(aNameFound, "!engineer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_ENGINEER;
 				str_copy(aChatTitle, "engineer", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#soldier ") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!soldier ") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_SOLDIER;
 				str_copy(aChatTitle, "soldier", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#scientist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!scientist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_SCIENTIST;
 				str_copy(aChatTitle, "scientist", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#medic") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!medic") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_MEDIC;
 				str_copy(aChatTitle, "medic", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#hero") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!hero") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_HERO;
 				str_copy(aChatTitle, "hero", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#ninja") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!ninja") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_NINJA;
 				str_copy(aChatTitle, "ninja", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#mercenary") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!mercenary") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_MERCENARY;
 				str_copy(aChatTitle, "mercenary", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#sniper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!sniper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_SNIPER;
 				str_copy(aChatTitle, "sniper", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#smoker") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!smoker") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_SMOKER;
 				str_copy(aChatTitle, "smoker", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#hunter") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!hunter") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_HUNTER;
 				str_copy(aChatTitle, "hunter", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#boomer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!boomer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_BOOMER;
 				str_copy(aChatTitle, "boomer", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#spider") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!spider") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_SPIDER;
 				str_copy(aChatTitle, "spider", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#ghost") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!ghost") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_GHOST;
 				str_copy(aChatTitle, "ghost", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#ghoul") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!ghoul") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_GHOUL;
 				str_copy(aChatTitle, "ghoul", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#undead") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!undead") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_UNDEAD;
 				str_copy(aChatTitle, "undead", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "#witch") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!witch") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_WITCH;
 				str_copy(aChatTitle, "witch", sizeof(aChatTitle));
@@ -2682,6 +2692,9 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 					else if(CheckTeam == TEAM_BLUE && m_apPlayers[i]->IsInfected())
 						continue;
 				}
+				
+				if(Server()->GetUserLevel(i) < CheckLevel)
+					continue;
 				
 				if(CheckID >= 0 && !(i == CheckID))
 					continue;

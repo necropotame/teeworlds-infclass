@@ -208,6 +208,7 @@ public:
 	virtual void ShowGoal(int ClientID, int ScoreType) = 0;
 #endif
 	virtual void Ban(int i, int Seconds, const char* pReason) = 0;
+	virtual int GetUserLevel(int ClientID) = 0;
 
 public:
 	virtual class CRoundStatistics* RoundStatistics() = 0;

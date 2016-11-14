@@ -334,6 +334,7 @@ public:
 	virtual void RefreshChallenge();
 #endif
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
+	virtual int GetUserLevel(int ClientID);
 private:
 	bool InitCaptcha();
 	

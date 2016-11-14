@@ -4049,5 +4049,14 @@ void CServer::RemoveAccusations(int ClientID)
 	m_aClients[ClientID].m_Accusation.m_Num = 0;
 }
 
+int CServer::GetUserLevel(int ClientID)
+{
+#ifdef CONF_SQL
+	return m_aClients[ClientID].m_UserLevel;
+#else
+	return SQL_USERLEVEL_NORMAL;
+#endif
+}
+
 /* INFECTION MODIFICATION END *****************************************/
 
