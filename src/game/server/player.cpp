@@ -124,6 +124,22 @@ void CPlayer::Tick()
 	if(m_MapMenu > 0)
 		m_MapMenuTick++;
  	
+	if(GetClass() == PLAYERCLASS_GHOUL)
+	{
+		if(m_GhoulLevel > 0)
+		{
+			m_GhoulLevelTick--;
+			
+			if(m_GhoulLevelTick <= 0)
+			{
+				m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
+				IncreaseGhoulLevel(-1);
+			}
+		}
+		
+		SetClassSkin(PLAYERCLASS_GHOUL, m_GhoulLevel);
+	}
+	
  	HandleTuningParams();
 }
 
@@ -679,6 +695,22 @@ void CPlayer::CloseMapMenu()
 bool CPlayer::MapMenuClickable()
 {
 	return (m_MapMenu > 0 && (m_MapMenuTick > Server()->TickSpeed()/2));
+}
+
+float CPlayer::GetGhoulPercent()
+{
+	return clamp(m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f);
+}
+
+void CPlayer::IncreaseGhoulLevel(int Diff)
+{
+	int NewGhoulLevel = m_GhoulLevel + Diff;
+	if(NewGhoulLevel < 0)
+		NewGhoulLevel = 0;
+	if(NewGhoulLevel > g_Config.m_InfGhoulStomachSize)
+		NewGhoulLevel = g_Config.m_InfGhoulStomachSize;
+	
+	m_GhoulLevel = NewGhoulLevel;
 }
 
 /* INFECTION MODIFICATION END *****************************************/

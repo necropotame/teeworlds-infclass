@@ -126,13 +126,13 @@ private:
 	int m_MapMenu;
 	int m_MapMenuTick;
 	
+	int m_GhoulLevel;
+	int m_GhoulLevelTick;
+	
 public:
 	int m_Authed;
 	int m_ScoreRound;
 	int m_HumanTime;
-	
-	int m_GhoulLevel;
-	int m_GhoulLevelTick;
 	
 	bool m_knownClass[NB_PLAYERCLASS];
 	int m_InfectionTick;
@@ -167,6 +167,10 @@ public:
 	void OpenMapMenu(int Menu);
 	void CloseMapMenu();
 	bool MapMenuClickable();
+	
+	float GetGhoulPercent();
+	void IncreaseGhoulLevel(int Diff);
+	inline int GetGhoulLevel() const { return m_GhoulLevel; }
 /* INFECTION MODIFICATION END *****************************************/
 };
 

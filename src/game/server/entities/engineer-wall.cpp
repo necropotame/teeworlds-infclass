@@ -79,7 +79,7 @@ void CEngineerWall::Tick()
 						
 						if(p->GetClass() == PLAYERCLASS_GHOUL)
 						{
-							float Factor = clamp(p->GetPlayer()->m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f);
+							float Factor = p->GetPlayer()->GetGhoulPercent();
 							LifeSpanReducer += Server()->TickSpeed() * 5.0f * Factor;
 						}
 						

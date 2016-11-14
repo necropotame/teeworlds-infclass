@@ -209,7 +209,6 @@ public:
 	bool FindPortalPosition(vec2 Pos, vec2& Res);
 	bool FindWitchSpawnPosition(vec2& Res);
 	void SaturateVelocity(vec2 Force, float MaxSpeed);
-	void IncreaseGhoulLevel(int Points);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

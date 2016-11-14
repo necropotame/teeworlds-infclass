@@ -476,7 +476,7 @@ void CCharacter::UpdateTuningParam()
 	
 	if(GetClass() == PLAYERCLASS_GHOUL)
 	{
-		float Factor = clamp(m_pPlayer->m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f);
+		float Factor = m_pPlayer->GetGhoulPercent();
 		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + 0.5f*Factor);
 		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + 0.5f*Factor);
 		pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f + 0.35f*Factor);
@@ -1142,7 +1142,7 @@ void CCharacter::HandleWeapons()
 				}
 				else if(GetClass() == PLAYERCLASS_GHOUL)
 				{
-					Rate = 0.25f + 0.75/(1.0f+m_pPlayer->m_GhoulLevel/2.0f);
+					Rate = 0.33f + 0.66f * (1.0f-m_pPlayer->GetGhoulPercent());
 				}
 				
 				if(m_HookDmgTick + Server()->TickSpeed()*Rate < Server()->Tick())
@@ -1253,22 +1253,6 @@ void CCharacter::Tick()
 	}
 	else
 		m_InWater = 0;
-	
-	if(GetClass() == PLAYERCLASS_GHOUL)
-	{
-		if(m_pPlayer->m_GhoulLevel > 0)
-		{
-			m_pPlayer->m_GhoulLevelTick--;
-			
-			if(m_pPlayer->m_GhoulLevelTick <= 0 &&  m_pPlayer->m_GhoulLevel > 0)
-			{
-				m_pPlayer->m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
-				m_pPlayer->m_GhoulLevel--;
-			}
-		}
-		
-		m_pPlayer->SetClassSkin(PLAYERCLASS_GHOUL, m_pPlayer->m_GhoulLevel);
-	}
 	
 	//Check is the character is in toxic gaz
 	if(m_Alive && GameServer()->Collision()->CheckZoneFlag(m_Pos, CCollision::ZONEFLAG_INFECTION))
@@ -1933,9 +1917,9 @@ void CCharacter::Tick()
 	}
 	else if(GetClass() == PLAYERCLASS_GHOUL)
 	{
-		if(m_pPlayer->m_GhoulLevel)
+		if(m_pPlayer->GetGhoulLevel())
 		{
-			float FodderInStomach = m_pPlayer->m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize);
+			float FodderInStomach = m_pPlayer->GetGhoulPercent();
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 				_("Stomach filled by {percent:FodderInStomach}"),
 				"FodderInStomach", &FodderInStomach,
@@ -2107,7 +2091,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	}
 	if(GetClass() == PLAYERCLASS_GHOUL)
 	{
-		IncreaseGhoulLevel(-15);
+		m_pPlayer->IncreaseGhoulLevel(-20);
 	}
 	
 	DestroyChildEntities();
@@ -2206,9 +2190,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(GetClass() == PLAYERCLASS_GHOUL)
 	{
 		int DamageAccepted = 0;
+		int GhoulDamageThreshold = 10 * m_pPlayer->GetGhoulPercent();
 		for(int i=0; i<Dmg; i++)
 		{
-			if(rand()%(g_Config.m_InfGhoulStomachSize) >= m_pPlayer->m_GhoulLevel/2)
+			if(rand()%20 >= GhoulDamageThreshold)
 				DamageAccepted++;
 		}
 		Dmg = DamageAccepted;
@@ -2893,16 +2878,6 @@ void CCharacter::SetClass(int ClassChoosed)
 bool CCharacter::IsInfected() const
 {
 	return m_pPlayer->IsInfected();
-}
-
-void CCharacter::IncreaseGhoulLevel(int Points)
-{
-	if(GetClass() == PLAYERCLASS_GHOUL && m_pPlayer->m_GhoulLevel < static_cast<float>(g_Config.m_InfGhoulStomachSize))
-	{
-		m_pPlayer->m_GhoulLevel += Points;
-		if(Points > 0)
-			m_pPlayer->m_GhoulLevelTick = (Server()->TickSpeed()*g_Config.m_InfGhoulDigestion);
-	}
 }
 
 void CCharacter::Love()

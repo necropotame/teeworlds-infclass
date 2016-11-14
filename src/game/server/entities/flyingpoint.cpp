@@ -23,7 +23,7 @@ void CFlyingPoint::Tick()
 		float Dist = distance(m_Pos, OwnerChar->m_Pos);
 		if(Dist < 24.0f)
 		{
-			OwnerChar->IncreaseGhoulLevel(m_Points);
+			OwnerChar->GetPlayer()->IncreaseGhoulLevel(m_Points);
 			GameServer()->m_World.DestroyEntity(this);
 		}
 		else
