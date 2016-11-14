@@ -38,7 +38,7 @@ void CMercenaryBomb::Explode()
 			new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 14.0f * Factor, GROWINGEXPLOSIONEFFECT_EXPLOSION_INFECTED);
 			break;
 		case EFFECT_LOVE:
-			new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 14.0f * Factor, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+			new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
 			break;
 		case EFFECT_SHOCKWAVE:
 			new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 14.0f * Factor, GROWINGEXPLOSIONEFFECT_SHOCKWAVE_INFECTED);

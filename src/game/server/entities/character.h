@@ -182,6 +182,7 @@ public:
 	int m_PositionLockTick;
 	bool m_PositionLocked;
 	int m_LoveTick;
+	int m_SlipperyTick;
 	int m_PoisonTick;
 	int m_Poison;
 	int m_PoisonFrom;
@@ -202,7 +203,8 @@ public:
 	bool IsFrozen() const;
 	void Unfreeze();
 	void Poison(int Count, int From);
-	void Love();
+	void LoveEffect();
+	void SlipperyEffect();
 	bool IsTeleportable();
 	int GetInfWeaponID(int WID);
 	void UpdateTuningParam();

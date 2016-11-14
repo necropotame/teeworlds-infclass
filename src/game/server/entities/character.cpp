@@ -171,6 +171,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
+	m_SlipperyTick = -1;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
 	m_Poison = 0;
@@ -459,6 +460,10 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_AirControlSpeed = 250.0f / Server()->TickSpeed();
 		pTuningParams->m_AirControlAccel = 1.5f;
 		pTuningParams->m_AirJumpImpulse = 0.0f;
+	}
+	if(m_SlipperyTick > 0)
+	{
+		pTuningParams->m_GroundFriction = 1.0f;
 	}
 	
 	if(NoActions)
@@ -1298,6 +1303,9 @@ void CCharacter::Tick()
 	
 	if(m_LoveTick > 0)
 		--m_LoveTick;
+	
+	if(m_SlipperyTick > 0)
+		--m_SlipperyTick;
 	
 	if(m_Poison > 0)
 	{
@@ -2880,10 +2888,16 @@ bool CCharacter::IsInfected() const
 	return m_pPlayer->IsInfected();
 }
 
-void CCharacter::Love()
+void CCharacter::LoveEffect()
 {
 	if(m_LoveTick <= 0)
 		m_LoveTick = Server()->TickSpeed()*5;
+}
+
+void CCharacter::SlipperyEffect()
+{
+	if(m_SlipperyTick <= 0)
+		m_SlipperyTick = Server()->TickSpeed()/2;
 }
 
 void CCharacter::Freeze(float Time, int Player, int Reason)

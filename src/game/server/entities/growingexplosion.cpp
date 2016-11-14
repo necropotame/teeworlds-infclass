@@ -299,13 +299,14 @@ void CGrowingExplosion::Tick()
 						break;
 					case GROWINGEXPLOSIONEFFECT_SHOCKWAVE_INFECTED:
 					{
+						p->SlipperyEffect();
 						vec2 Force = -m_pGrowingMapVec[tileY*m_GrowingMap_Length+tileX] * 20.0f;
 						p->m_Core.m_Vel += Force;
 						break;
 					}
 					case GROWINGEXPLOSIONEFFECT_LOVE_INFECTED:
 					{
-						p->Love();
+						p->LoveEffect();
 						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_HEARTS);
 						m_Hit[p->GetPlayer()->GetCID()] = true;
 						break;

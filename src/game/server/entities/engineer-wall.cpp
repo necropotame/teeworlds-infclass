@@ -108,11 +108,12 @@ void CEngineerWall::Snap(int SnappingClient)
 		if(!pObj)
 			return;
 
+
 		pObj->m_X = (int)m_Pos.x;
 		pObj->m_Y = (int)m_Pos.y;
 		pObj->m_FromX = (int)m_Pos2.x;
 		pObj->m_FromY = (int)m_Pos2.y;
-		pObj->m_StartTick = Server()->Tick();
+		pObj->m_StartTick = Server()->Tick()+Server()->TickSpeed() + Server()->TickSpeed();
 	}
 	{
 		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_EndPointID, sizeof(CNetObj_Laser)));
@@ -125,6 +126,6 @@ void CEngineerWall::Snap(int SnappingClient)
 		pObj->m_Y = (int)Pos.y;
 		pObj->m_FromX = (int)Pos.x;
 		pObj->m_FromY = (int)Pos.y;
-		pObj->m_StartTick = Server()->Tick();
+		pObj->m_StartTick = Server()->Tick()+Server()->TickSpeed() + Server()->TickSpeed();
 	}
 }
