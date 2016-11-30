@@ -331,7 +331,9 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_WasInfected = 0;
 		
 		m_UserID = -1;
+#ifdef CONF_SQL
 		m_UserLevel = SQL_USERLEVEL_NORMAL;
+#endif
 		m_LogInstance = -1;
 		
 		m_CustomSkin = 0;
@@ -978,7 +980,9 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 	pThis->m_aClients[ClientID].m_Snapshots.PurgeAll();
 	pThis->m_aClients[ClientID].m_WaitingTime = 0;
 	pThis->m_aClients[ClientID].m_UserID = -1;
+#ifdef CONF_SQL
 	pThis->m_aClients[ClientID].m_UserLevel = SQL_USERLEVEL_NORMAL;
+#endif
 	pThis->m_aClients[ClientID].m_LogInstance = -1;
 	pThis->m_aClients[ClientID].m_Quitting = false;
 	
@@ -1352,8 +1356,8 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 						char aBuf[256];
 						str_format(aBuf, sizeof(aBuf), "ClientID=%d authed (admin)", ClientID);
 						Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
-					}
 #ifdef CONF_SQL
+					}
 					else
 					{
 						SendRconLine(ClientID, "You are not admin.");
@@ -1379,8 +1383,8 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 						char aBuf[256];
 						str_format(aBuf, sizeof(aBuf), "ClientID=%d authed (moderator)", ClientID);
 						Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
-					}
 #ifdef CONF_SQL
+					}
 					else
 					{
 						SendRconLine(ClientID, "You are not moderator.");
@@ -4059,14 +4063,12 @@ void CServer::RemoveAccusations(int ClientID)
 	m_aClients[ClientID].m_Accusation.m_Num = 0;
 }
 
+#ifdef CONF_SQL
 int CServer::GetUserLevel(int ClientID)
 {
-#ifdef CONF_SQL
 	return m_aClients[ClientID].m_UserLevel;
-#else
-	return SQL_USERLEVEL_NORMAL;
-#endif
 }
+#endif
 
 /* INFECTION MODIFICATION END *****************************************/
 

@@ -2511,7 +2511,9 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 	int CheckID = -1;
 	int CheckTeam = -1;
 	int CheckClass = -1;
+#ifdef CONF_SQL
 	int CheckLevel = SQL_USERLEVEL_NORMAL;
+#endif
 	
 	if(TeamChat && m_apPlayers[ClientID])
 	{
@@ -2543,6 +2545,7 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 					str_copy(aChatTitle, "near", sizeof(aChatTitle));
 				}
 			}
+#ifdef CONF_SQL
 			else if(str_comp(aNameFound, "!mod") == 0)
 			{
 				if(m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
@@ -2552,6 +2555,7 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 					str_copy(aChatTitle, "moderators", sizeof(aChatTitle));
 				}
 			}
+#endif
 			else if(str_comp(aNameFound, "!engineer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_ENGINEER;
@@ -2694,8 +2698,10 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 						continue;
 				}
 				
+#ifdef CONF_SQL
 				if(Server()->GetUserLevel(i) < CheckLevel)
 					continue;
+#endif
 				
 				if(CheckID >= 0 && !(i == CheckID))
 					continue;

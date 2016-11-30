@@ -152,7 +152,9 @@ public:
 		//Login
 		int m_LogInstance;
 		int m_UserID;
+#ifdef CONF_SQL
 		int m_UserLevel;
+#endif
 		char m_aUsername[MAX_NAME_LENGTH];
 	};
 
@@ -332,9 +334,9 @@ public:
 	virtual void ShowRank(int ClientID, int ScoreType);
 	virtual void ShowGoal(int ClientID, int ScoreType);
 	virtual void RefreshChallenge();
+	virtual int GetUserLevel(int ClientID);
 #endif
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
-	virtual int GetUserLevel(int ClientID);
 private:
 	bool InitCaptcha();
 	
