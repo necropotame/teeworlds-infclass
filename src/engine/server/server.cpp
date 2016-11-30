@@ -3939,6 +3939,16 @@ public:
 void CServer::OnRoundEnd()
 {
 #ifdef CONF_SQL
+	if(     
+		str_comp(m_aCurrentMap, "infc_damascus") != 0 &&
+		str_comp(m_aCurrentMap, "infc_warehouse") != 0 &&
+		str_comp(m_aCurrentMap, "infc_newdust") != 0 &&
+		str_comp(m_aCurrentMap, "infc_skull") != 0 &&
+		str_comp(m_aCurrentMap, "infc_bamboo") != 0 &&
+		str_comp(m_aCurrentMap, "infc_eidalfitr") != 0
+	)
+		return;
+	
 	//Send round statistics
 	CSqlJob* pRoundJob = new CSqlJob_Server_SendRoundStatistics(this, RoundStatistics(), m_aCurrentMap);
 	pRoundJob->Start();

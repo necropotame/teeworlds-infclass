@@ -74,6 +74,10 @@
 		"value": "Vyber si sv\u00e9 povol\u00e1n\u00ed"
 	},
 	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laserov\u00e1 st\u011bna: {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "Jedna bomba zb\u00fdv\u00e1",
 		"few": "{int:NumBombs} bomby zb\u00fdvaj\u00ed",
@@ -81,21 +85,17 @@
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "Jedna mina je pr\u00e1v\u011b aktivn\u00ed",
-		"few": "{int:NumMines} miny jsou aktivn\u00ed",
-		"other": "{int:NumMines} miny jsou aktivn\u00ed",
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "P\u0159\u00ed\u0161t\u00ed vlajka se spawne za {sec:RemainingTime}"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Laserov\u00e1 st\u011bna: {sec:RemainingTime}"
+		"one": "",
+		"few": "",
+		"other": "",
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Znehybn\u011bn\u00ed: {sec:RemainingTime}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "P\u0159\u00ed\u0161t\u00ed vlajka se spawne za {sec:RemainingTime}"
 	},
 	{
 		"key": "Web mode enabled",
@@ -226,6 +226,10 @@
 		"value": "D\u011bkujeme {str:ListOfContributors}"
 	},
 	{
+		"key": "No player was found with this name",
+		"value": "Nebyl nalezen \u017e\u00e1dn\u00fd hr\u00e1\u010d s t\u00edmhle jm\u00e9nem"
+	},
+	{
 		"key": "Rules of the game",
 		"value": "Pravidla hry"
 	},
@@ -345,9 +349,9 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "Taky m\u016f\u017ee h\u00e1zet gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed 1 \u017eivot za vte\u0159inu",
-		"few": "Taky m\u016f\u017ee h\u00e1zet gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed 1 \u017eivot za vte\u0159inu",
-		"other": "Taky m\u016f\u017ee h\u00e1zet gran\u00e1ty, kter\u00e9 ud\u011bluj\u00ed {int:NumDamagePoints} \u00fato\u010dn\u00e9 body",
+		"one": "",
+		"few": "",
+		"other": "",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -438,12 +442,12 @@
 		"value": "M\u016f\u017ee ud\u011blit 1 \u00fato\u010dn\u00fd bod za sekundu zah\u00e1knut\u00edm \u010dlov\u011bka."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "Dostupn\u00e9 str\u00e1nky pomoci: {str:PageList}"
-	},
-	{
 		"key": "Choose a help page with /help <page>",
 		"value": "Vyber si str\u00e1nku pomoc\u00ed p\u0159\u00edkazu /help <\u010dislo-strany>"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Dostupn\u00e9 str\u00e1nky pomoci: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -468,10 +472,6 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Zm\u00e1\u010dkni <F3> nebo <F4> k aktivaci,  nebo deaktivaci h\u00e1kov\u00e9 ochrany"
-	},
-	{
-		"key": "No player was found with this name",
-		"value": "Nebyl nalezen \u017e\u00e1dn\u00fd hr\u00e1\u010d s t\u00edmhle jm\u00e9nem"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

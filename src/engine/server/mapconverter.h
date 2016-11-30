@@ -40,6 +40,7 @@ public:
 		MENUEFFECT_CANCEL = 0,
 		MENUEFFECT_EXPLOSION,
 		MENUEFFECT_LOVE,
+		//MENUEFFECT_HALLUCINATION,
 		MENUEFFECT_SHOCKWAVE,
 		NUM_MENUEFFECT,
 	};
@@ -88,7 +89,7 @@ protected:
 	void CopyGameLayer();
 	void CopyLayers();
 	
-	void AddImageQuad(const char* pName, int ImageID, int GridX, int GridY, int X, int Y, int Width, int Height, vec2 Pos, vec2 Size, int Env);
+	void AddImageQuad(const char* pName, int ImageID, int GridX, int GridY, int X, int Y, int Width, int Height, vec2 Pos, vec2 Size, vec4 Color, int Env);
 	void AddTeeLayer(const char* pName, int ImageID, vec2 Pos, float Size, int Env=-1, bool Black=false);
 	int AddExternalImage(const char* pImageName, int Width, int Height);
 	

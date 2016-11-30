@@ -25,12 +25,20 @@
 		"value": "Maleficam necavisti, +5 copiae"
 	},
 	{
+		"key": "You have eliminated your target, +3 points",
+		"value": "Scopum sustulisti, +3 copiae"
+	},
+	{
 		"key": "The undead is coming!",
 		"value": "Immortalis advenit!"
 	},
 	{
 		"key": "The witch is coming!",
 		"value": "Malefica advenit!"
+	},
+	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Gelatus es: {sec:EffectDuration}"
 	},
 	{
 		"key": "Random choice",
@@ -73,30 +81,70 @@
 		"value": "Classem elige"
 	},
 	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Bomba una reliqua",
-		"other": "{int:NumBombs} bombae reliquae",
+		"key": "Cancel",
+		"value": "Abruptio"
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "Mina una reliqua",
-		"other": "{int:NumMines} minae reliquae",
+		"key": "Explosion",
+		"value": "Displosio"
 	},
 	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Vexillum sequens post {sec:RemainingTime}"
+		"key": "Aphrodisiac",
+		"value": "Aphrodisiacum"
+	},
+	{
+		"key": "Hallucination",
+		"value": "Alucinatio"
+	},
+	{
+		"key": "Shockwave",
+		"value": "Fluctus expulsivus"
+	},
+	{
+		"key": "Choose bomb effect",
+		"value": "Consecutionem bombae selige"
 	},
 	{
 		"key": "Laser wall: {sec:RemainingTime}",
 		"value": "Vallum lasericum: {sec:RemainingTime}"
 	},
 	{
+		"key": "{int:NumBombs} bombs left",
+		"one": "Bomba una reliqua",
+		"other": "{int:NumBombs} bombae reliquae",
+	},
+	{
+		"key": "{int:NumMines} mines are actives",
+		"one": "Una mina reliqua",
+		"other": "{int:NumMines} minae reliquae",
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Scopus sequens post {sec:RemainingTime}"
+	},
+	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Scopus tollendus: {str:PlayerName}"
+	},
+	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Claustrum positionis: {sec:RemainingTime}"
 	},
 	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Vis displosiva: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Vexillum sequens post {sec:RemainingTime}"
+	},
+	{
 		"key": "Web mode enabled",
 		"value": "Modus retialis instructus"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Venter infertus {percent:FodderInStomach}"
 	},
 	{
 		"key": "The witch is dead",
@@ -167,6 +215,10 @@
 		"value": "Aranea"
 	},
 	{
+		"key": "Ghoul",
+		"value": "\u0120\u016bl"
+	},
+	{
 		"key": "Witch",
 		"value": "Malefica"
 	},
@@ -221,6 +273,10 @@
 	{
 		"key": "Thanks to {str:ListOfContributors}",
 		"value": "Grates {str:ListOfContributors}"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Arenarius huius nominis non repertus est."
 	},
 	{
 		"key": "Rules of the game",
@@ -338,6 +394,10 @@
 		"value": "Mercennarius sclopeto polybolico in aere volare potest."
 	},
 	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "Vasa displosiva consecutionum variarum convolvere et procul inardescere capax est."
+	},
+	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Ad hoc granatas veneficas iacere potest quae singulae plagam unam inponunt.",
 		"other": "Ad hoc granatas veneficas iacere potest quae singulae plagas {int:NumDamagePoints} inponunt.",
@@ -403,6 +463,18 @@
 		"value": "Uncus araneus (in modos ambobus) plagam 1 infligit et hominem secundas 2 tenet."
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "\u0120\u016bl malleo homines inficere infectosque sanare potest."
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Omnia circa eum mortua devorare potest, quo fortior, celerior firmiorque fiat."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Exinde pabulum digerit sensim ad statum vulgarem revolviens, ultro ei letum alimenta detrahit."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Immortalis malleo homines inficere infectosque sanare potest."
 	},
@@ -431,12 +503,32 @@
 		"value": "Plagam 1 quoque per secundam unco infligere potest."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "Paginae auxiliares promptae: {str:PageList}"
+		"key": "Targeted chat messages",
+		"value": "Nuntia colineata"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "Utere \u00bb/msg <Nomen arenarii> <Nuntium meum>\u00ab, ut nuntium privatum haec arenario emittas."
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Utere \u00bb/msg !<nomen classis> <Nuntium meum>\u00ab, ut nuntium ad arenarios classis specialis collineatum emittas."
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "Exemplum: \u00bb/msg !medic Vulneratus sum!\u00ab"
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "Utere \u00bb/msg !near\u00ab, ut nuntium collineatum ad arenarios propinquos emittas."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
 		"value": "Paginam auxiliarem iusso \u00bb/help <pagina>\u00ab eligas"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Paginae auxiliares promptae: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -463,8 +555,20 @@
 		"value": "Preme <F3> aut <F4> ad instructionem protectionis contra captionem"
 	},
 	{
-		"key": "No player was found with this name",
-		"value": "Arenarius huius nominis non repertus est."
+		"key": "You are now logged.",
+		"value": "Nunc conscriptus es."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Nomen falsum aut tessera falsa."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Error obvenit operatione."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Tibi conscriptum esse opus est, ut hanc operationem conficias."
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

@@ -25,12 +25,20 @@
 		"value": "Vous avez tu\u00e9 une Sorci\u00e8re ou un Sorcier, +5 points"
 	},
 	{
+		"key": "You have eliminated your target, +3 points",
+		"value": "Vous avez \u00e9limin\u00e9 votre cible, +3 points"
+	},
+	{
 		"key": "The undead is coming!",
 		"value": "Un\u00b7e Invincible arrive !"
 	},
 	{
 		"key": "The witch is coming!",
 		"value": "Un\u00b7e Sorcier\u00b7i\u00e8re arrive !"
+	},
+	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Vous \u00eates gel\u00e9s : {sec:EffectDuration}"
 	},
 	{
 		"key": "Random choice",
@@ -73,6 +81,34 @@
 		"value": "Choisissez votre classe"
 	},
 	{
+		"key": "Cancel",
+		"value": "Annuler"
+	},
+	{
+		"key": "Explosion",
+		"value": "Explosion"
+	},
+	{
+		"key": "Aphrodisiac",
+		"value": "Aphrodisiaque"
+	},
+	{
+		"key": "Hallucination",
+		"value": "Allucination"
+	},
+	{
+		"key": "Shockwave",
+		"value": "Onde de choc"
+	},
+	{
+		"key": "Choose bomb effect",
+		"value": "Choisissez l'effet de la bombe"
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Barri\u00e8re laser : {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "Une bombe restante",
 		"other": "{int:NumBombs} bombes restantes",
@@ -83,20 +119,32 @@
 		"other": "{int:NumMines} mines sont actives",
 	},
 	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Prochain drapeau dans {sec:RemainingTime}"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Prochaine cible dans {sec:RemainingTime}"
 	},
 	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Barri\u00e8re laser : {sec:RemainingTime}"
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Cible \u00e0 \u00e9liminer: {str:PlayerName}"
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Verrou de position : {sec:RemainingTime}"
 	},
 	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Puissance de l'explosion: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Prochain drapeau dans {sec:RemainingTime}"
+	},
+	{
 		"key": "Web mode enabled",
 		"value": "Mode toile activ\u00e9"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Estomac rempli \u00e0 {percent:FodderInStomach}"
 	},
 	{
 		"key": "The witch is dead",
@@ -167,6 +215,10 @@
 		"value": "Araign\u00e9e"
 	},
 	{
+		"key": "Ghoul",
+		"value": "Goule"
+	},
+	{
 		"key": "Witch",
 		"value": "Sorci\u00e8re/Sorcier"
 	},
@@ -221,6 +273,10 @@
 	{
 		"key": "Thanks to {str:ListOfContributors}",
 		"value": "Merci \u00e0 {str:ListOfContributors}"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Aucun joueur et aucune joueuse n'a \u00e9t\u00e9 trouv\u00e9 avec ce nom"
 	},
 	{
 		"key": "Rules of the game",
@@ -338,13 +394,17 @@
 		"value": "Les Mercenaires peuvent voler dans l'air \u00e0 l'aide de leur mitrailleuse."
 	},
 	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "Illes peuvent poser des bombes de divers effets et les faire exploser \u00e0 distance."
+	},
+	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent un point de d\u00e9g\u00e2t.",
-		"other": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent {int:NumDamagePoints} points de d\u00e9g\u00e2t.",
+		"one": "Illes peuvent aussi lancer des grenades empoisonn\u00e9es qui infligent un point de d\u00e9g\u00e2t.",
+		"other": "Illes peuvent aussi lancer des grenades empoisonn\u00e9es qui infligent {int:NumDamagePoints} points de d\u00e9g\u00e2t.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
-		"value": "Les Sniper peuvent verrouiller leur position dans l'air pendant 15 secondes avec leur marteau."
+		"value": "Les Snipers peuvent verrouiller leur position dans l'air pendant 15 secondes avec leur marteau."
 	},
 	{
 		"key": "He can jump two times in air.",
@@ -403,6 +463,18 @@
 		"value": "Le grappin de l'Araign\u00e9e (dans les deux modes) inflige 1 point de d\u00e9g\u00e2t par seconde et peut tirer un humain ou une humaine pendant 2 secondes."
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "Les Goules peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Elles d\u00e9vorent tous ceux et celles qui meurent pr\u00eat d'elles, ce qui les rends plus fortes, plus rapides et plus r\u00e9sistantes \u00e0 mesure que leur estomac se remplit."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Elles dig\u00e8rent progressivement et revient petit \u00e0 petit \u00e0 leur \u00e9tat normal. Lorsqu'elles meurent, elles conservent une partie de leur nourriture."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Les Invincibles peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
 	},
@@ -431,12 +503,32 @@
 		"value": "Illes peuvent aussi infliger 1 point de d\u00e9g\u00e2t par seconde en agrippant un humain ou une humaine."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "Pages d'aide disponibles : {str:PageList}"
+		"key": "Targeted chat messages",
+		"value": "Messages de chat cibl\u00e9s"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "Utilisez \"/msg <NomDUnJoueur> <Mon Message>\" pour envoyer un message priv\u00e9 \u00e0 ce ou cette joueuse"
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Utilisez \"/msg !<NomDeClasse> <Mon Message>\" pour envoyer un message priv\u00e9 \u00e0 tous les joueurs et les joueuses avec une classe sp\u00e9cifique."
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "Exemple : \"/msg !medic Je suis bless\u00e9 !\""
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "Utilisez \"/msg !near\" pour envoyer un message priv\u00e9 \u00e0 tous les joueurs et les joueuses proche de vous."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
 		"value": "Choisissez une page d'aide avec /help <page>"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Pages d'aide disponibles : {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -463,8 +555,20 @@
 		"value": "Appuyer sur <F3> or <F4> pour activer ou d\u00e9sactiver la protection contre le grapin"
 	},
 	{
-		"key": "No player was found with this name",
-		"value": "Aucun joueur et aucune joueuse n'a \u00e9t\u00e9 trouv\u00e9 avec ce nom"
+		"key": "You are now logged.",
+		"value": "Vous \u00eates connect\u00e9 \u00e0 votre compte."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "L'identifiant ou le mot de passe est incorrecte."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Une erreur s'est produite durant cette op\u00e9ration. "
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Vous devez \u00eatre connect\u00e9 pour effectuer cette op\u00e9ration."
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

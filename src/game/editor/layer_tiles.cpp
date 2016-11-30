@@ -10,8 +10,6 @@
 #include <game/client/render.h>
 #include "editor.h"
 
-#include <game/localization.h>
-
 CLayerTiles::CLayerTiles(int w, int h)
 {
 	m_Type = LAYERTYPE_TILES;

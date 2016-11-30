@@ -171,6 +171,12 @@ void CGrowingExplosion::Tick()
 								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, true);
 							}
 							break;
+						case GROWINGEXPLOSIONEFFECT_HALLUCINATION_INFECTED:
+							if(rand()%10 == 0)
+							{
+								GameServer()->CreatePlayerSpawn(TileCenter);
+							}
+							break;
 						case GROWINGEXPLOSIONEFFECT_LOVE_INFECTED:
 							if(rand()%5 == 0)
 							{
@@ -308,6 +314,13 @@ void CGrowingExplosion::Tick()
 					{
 						p->LoveEffect();
 						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_HEARTS);
+						m_Hit[p->GetPlayer()->GetCID()] = true;
+						break;
+					}
+					case GROWINGEXPLOSIONEFFECT_HALLUCINATION_INFECTED:
+					{
+						p->HallucinationEffect();
+						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_EXCLAMATION);
 						m_Hit[p->GetPlayer()->GetCID()] = true;
 						break;
 					}

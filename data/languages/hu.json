@@ -33,6 +33,10 @@
 		"value": "J\u00f6n a boszork\u00e1ny!"
 	},
 	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Lefagyt\u00e1l: {sec:EffectDuration}"
+	},
+	{
 		"key": "Random choice",
 		"value": "V\u00e9letlenszer\u0171"
 	},
@@ -73,26 +77,26 @@
 		"value": "V\u00e1lasztd ki az oszt\u00e1lyodat!"
 	},
 	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "L\u00e9zer-fal: {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "Egy bomb\u00e1d maradt.",
 		"other": "{int:NumBombs} bomb\u00e1d maradt.",
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "Egy akt\u00edv akn\u00e1d van.",
-		"other": "{int:NumMines} akt\u00edv akn\u00e1d van.",
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "K\u00f6vetkez\u0151 z\u00e1szl\u00f3 \u00e9rkezik: {sec:RemainingTime} m\u00e1sodperc"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "L\u00e9zer-fal: {sec:RemainingTime}"
+		"one": "",
+		"other": "",
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Hely-z\u00e1r: {sec:RemainingTime}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "K\u00f6vetkez\u0151 z\u00e1szl\u00f3 \u00e9rkezik: {sec:RemainingTime} m\u00e1sodperc"
 	},
 	{
 		"key": "Web mode enabled",
@@ -213,6 +217,10 @@
 	{
 		"key": "Thanks to {str:ListOfContributors}",
 		"value": "K\u00f6sz\u00f6net illeti: {str:ListOfContributors}"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Nincs j\u00e1t\u00e9kos ilyen n\u00e9ven"
 	},
 	{
 		"key": "Rules of the game",
@@ -421,10 +429,6 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Nyomd le az <F3>-at vagy <F4>-et, hogy enged\u00e9lyezd vagy letiltsd a horog-v\u00e9delmet"
-	},
-	{
-		"key": "No player was found with this name",
-		"value": "Nincs j\u00e1t\u00e9kos ilyen n\u00e9ven"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

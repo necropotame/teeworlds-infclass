@@ -25,12 +25,20 @@
 		"value": "Has matado a una bruja, +5 puntos"
 	},
 	{
+		"key": "You have eliminated your target, +3 points",
+		"value": "Has eliminado a tu objetivo, +3 points"
+	},
+	{
 		"key": "The undead is coming!",
 		"value": "\u00a1Que viene el muerto viviente!"
 	},
 	{
 		"key": "The witch is coming!",
 		"value": "\u00a1Que viene la bruja!"
+	},
+	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Est\u00e1s congelado: {sec:EffectDuration}"
 	},
 	{
 		"key": "Random choice",
@@ -73,30 +81,70 @@
 		"value": "Selecciona tu clase"
 	},
 	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "{int:NumBombs} bomba restantes",
-		"other": "{int:NumBombs} bombas restantes",
+		"key": "Cancel",
+		"value": "Cancelar"
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "{int:NumMines} mina activada",
-		"other": "{int:NumMines} minas activadas",
+		"key": "Explosion",
+		"value": "Explosi\u00f3n"
 	},
 	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Bandera siguiente en {sec:RemainingTime}"
+		"key": "Aphrodisiac",
+		"value": "Afrodis\u00edaco"
+	},
+	{
+		"key": "Hallucination",
+		"value": "Alucinaci\u00f3n"
+	},
+	{
+		"key": "Shockwave",
+		"value": "Onda de choque"
+	},
+	{
+		"key": "Choose bomb effect",
+		"value": "Escoge un efecto de bomba"
 	},
 	{
 		"key": "Laser wall: {sec:RemainingTime}",
 		"value": "Barrera: {sec:RemainingTime}"
 	},
 	{
+		"key": "{int:NumBombs} bombs left",
+		"one": "{int:NumBombs} bomba restantes",
+		"other": "{int:NumBombs} bombas restantes",
+	},
+	{
+		"key": "{int:NumMines} mines are actives",
+		"one": "Una mina activada",
+		"other": "{int:NumMines} minas activadas",
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Pr\u00f3ximo objetivo en {sec:RemainingTime}"
+	},
+	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Objetivo de eliminaci\u00f3n {str:PlayerName}"
+	},
+	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Posici\u00f3n bloqueada: {sec:RemainingTime}"
 	},
 	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Potencia explosiva: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Bandera siguiente en {sec:RemainingTime}"
+	},
+	{
 		"key": "Web mode enabled",
 		"value": "Modo telara\u00f1a activado"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Barriga rellenada por {percent:FodderInStomach}"
 	},
 	{
 		"key": "The witch is dead",
@@ -167,6 +215,10 @@
 		"value": "Ara\u00f1a"
 	},
 	{
+		"key": "Ghoul",
+		"value": "Gul"
+	},
+	{
 		"key": "Witch",
 		"value": "Bruja"
 	},
@@ -221,6 +273,10 @@
 	{
 		"key": "Thanks to {str:ListOfContributors}",
 		"value": "Agradecimientos a {str:ListOfContributors}"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Ning\u00fan jugador con ese nombre fue encontrado."
 	},
 	{
 		"key": "Rules of the game",
@@ -318,7 +374,7 @@
 	},
 	{
 		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
-		"value": "A la vez que recoge la bandera, ella distribue un punto de salud y cuatro puntos de armadura a cado uno de los humanos, les rellena la munici\u00f3n, y el H\u00e9roe es sanado completamente."
+		"value": "A la vez que recoge la bandera, ella le distribue un punto de salud y cuatro puntos de armadura a cado uno de los humanos, les rellena la munici\u00f3n, y el H\u00e9roe es sanado completamente."
 	},
 	{
 		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
@@ -326,7 +382,7 @@
 	},
 	{
 		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
-		"value": "El Ninja puede lanzar granadas destello, las cuales pueden congelar a los infectados durante tres segundos."
+		"value": "El Ninja puede lanzar granadas destello, las cuales pueden congelar a infectados durante tres segundos."
 	},
 	{
 		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
@@ -338,9 +394,13 @@
 		"value": "El mercenario vuela usando su metralleta."
 	},
 	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "Puede embobinar artilugios explosivos de efectos varios y encenderlos de manera remota."
+	},
+	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "\u00c9l tambi\u00e9n puede lanzar granadas de pociones que infligen {int:NumDamagePoints} punto de da\u00f1o.",
-		"other": "\u00c9l tambi\u00e9n puede lanzar granadas de pociones que infligen {int:NumDamagePoints} puntos de da\u00f1o.",
+		"one": "\u00c9l tambi\u00e9n puede lanzar granadas de ponzo\u00f1a que infligen un punto de da\u00f1o.",
+		"other": "\u00c9l tambi\u00e9n puede lanzar granadas de ponzo\u00f1a que infligen {int:NumDamagePoints} puntos de da\u00f1o.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -380,7 +440,7 @@
 	},
 	{
 		"key": "The Ghost can infect humans and heal infected with his hammer.",
-		"value": "El Fantasma puede infectar humanos y curar infectados con su martillo."
+		"value": "El Fantasma puede infectar a humanos y curar a otros infectados con su martillo."
 	},
 	{
 		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
@@ -388,7 +448,7 @@
 	},
 	{
 		"key": "The Spider can infect humans and heal infected with his hammer.",
-		"value": "La Ara\u00f1a puede infectar humanos y herir infectados con su martillo."
+		"value": "La Ara\u00f1a puede infectar a humanos y curar a otros infectados con su martillo."
 	},
 	{
 		"key": "When selecting any gun, his hook enter in web mode.",
@@ -403,6 +463,18 @@
 		"value": "El gancho de la ara\u00f1a (en ambos modos) inflinge 1 punto de da\u00f1o por segundo y puede agarrar a un humano durante 2 segundos."
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "El Gul puede infectar a humanos y curar a otros infectados con su martillo."
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Puede devorar todo que ha muerto cerca de \u00e9l, lo que lo hace m\u00e1s vigoroso, m\u00e1s r\u00e1pido y m\u00e1s resistente."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Seguidamente digiere su forraje poco a poco volviendo a su estado normal, y aparte de eso le quita alimento el fallecer."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "El Muerto viviente puede infectar a humanos y curar a otros infectados con su martillo."
 	},
@@ -412,7 +484,7 @@
 	},
 	{
 		"key": "If an infected heals him, the freeze effect disappear.",
-		"value": "Si un infectado le cura, el efecto de congelaci\u00f3n desaparece."
+		"value": "Si un infectado lo cura, el efecto de congelaci\u00f3n desaparece."
 	},
 	{
 		"key": "The Witch can infect humans and heal infected with his hammer.",
@@ -431,12 +503,32 @@
 		"value": "Tambi\u00e9n puede infligir 1 punto de da\u00f1o por segundo al enganchar a humanos."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "P\u00e1ginas de ayuda disponibles: {str:PageList}"
+		"key": "Targeted chat messages",
+		"value": "Mensajes de chat dirigidos"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "Usa \u00ab/msg <Nombre de jugador> <Mi mensaje>\u00bb para hacer llegar un mensaje privado a un jugador espec\u00edfico."
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Usa \u00ab/msg <Nombre de jugador> <Mi mensaje>\u00bb para hacer llegar un mensaje dirigido a los jugadores de una clase espec\u00edfico."
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "Ejemplo: \u00ab\u00a1Estoy herido!\u00bb"
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "Usa \u00ab/msg !near\u00bb para hacer llegar un mensaje dirigido a los jugadores en tu proximidad."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
 		"value": "Escoge una p\u00e1gina de ayuda con /help <p\u00e1gina>"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "P\u00e1ginas de ayuda disponibles: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -463,8 +555,20 @@
 		"value": "Pulsa <F3> o <F4> para activar o desactivar la protecci\u00f3n de gancho"
 	},
 	{
-		"key": "No player was found with this name",
-		"value": "Ning\u00fan jugador con ese nombre fue encontrado."
+		"key": "You are now logged.",
+		"value": "Ya te has conectado con tu cuenta."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Nombre de usuario err\u00f3neo/Contrase\u00f1a err\u00f3nea"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Se produjo un error en el curso de esa operaci\u00f3n."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Es menester que est\u00e9s conectado con tu cuenta para llevar a cabo esa operaci\u00f3n."
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

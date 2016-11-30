@@ -8,7 +8,6 @@
 #include "editor.h"
 #include <game/generated/client_data.h>
 #include <game/client/render.h>
-#include <game/localization.h>
 
 CLayerQuads::CLayerQuads()
 {

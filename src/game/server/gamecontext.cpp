@@ -2640,6 +2640,7 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 					{
 						CheckID = i;
 						str_copy(aChatTitle, "private", sizeof(aChatTitle));
+						CheckTeam = -1;
 						break;
 					}
 				}
@@ -2990,7 +2991,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append(" ~~\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Create an account on Transifex and join a translation team:"), NULL); 
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "https://transifex.com/teeuniverses/infclass", NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "https://transifex.com/teeuniverse/infclass", NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("For any question about the translation process, please contact us on IRC ({str:IRCAddress})"), "IRCAddress", "QuakeNet, #infclass", NULL);
 
@@ -3096,6 +3097,8 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append(" ~~\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Mercenary fly in air using his machine gun."), NULL);
 			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can coil and remotely ignite explosives of various effects with his hammer."), NULL);
+			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_LP(
 				Buffer, pLanguage, g_Config.m_InfPoisonDamage,
 				_P("He can also throw poison grenades that each deal one damage point.", "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points."),
@@ -3190,9 +3193,9 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append(" ~~\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Ghoul can infect humans and heal infected with his hammer."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He devores all that has died close to him, which makes him stronger, faster and more resistant."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can devore all that has died close to him, which makes him stronger, faster and more resistant."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thereupon he digests his fodder bit by bit going back to his normal state."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment."), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
@@ -3227,21 +3230,39 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
+		else if(str_comp_nocase(pHelpPage, "msg") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Targeted chat messages")); 
+			Buffer.append(" ~~\n\n");
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use \"/msg <PlayerName> <My Message>\" to send a private message to this player."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Example: \"/msg !medic I'm wounded!\""), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use \"/msg !near\" to send a private message to all players near you."), NULL);
+			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
 		else
 			pHelpPage = 0x0;
 	}
 	
 	if(!pHelpPage)
 	{
-		dynamic_string Buffer;
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", pSelf->Server()->Localization()->Localize(pLanguage, _("Choose a help page with /help <page>")));
 		
+		dynamic_string Buffer;
 		pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Available help pages: {str:PageList}"),
-			"PageList", "game, translate, engineer, soldier, scientist, hero, ghost, spider, undead, witch, medic, ninja, mercenary, sniper, smoker, hunter, boomer",
+			"PageList", "game, translate, msg",
 			NULL
 		);
-		
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", pSelf->Server()->Localization()->Localize(pLanguage, _("Choose a help page with /help <page>")));
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", Buffer.buffer());
+		
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, medic, hero, ninja, mercenary, sniper,");		
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "smoker, hunter, boomer, ghost, spider, ghoul, undead, witch.");		
 	}
 	
 	return true;

@@ -171,6 +171,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_IsFrozen = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
+	m_HallucinationTick = -1;
 	m_SlipperyTick = -1;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
@@ -1301,6 +1302,9 @@ void CCharacter::Tick()
 		}
 	}
 	
+	if(m_HallucinationTick > 0)
+		--m_HallucinationTick;
+	
 	if(m_LoveTick > 0)
 		--m_LoveTick;
 	
@@ -1734,6 +1738,10 @@ void CCharacter::Tick()
 					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Aphrodisiac"), NULL);
 					Broadcast = true;
 					break;
+				//case CMapConverter::MENUEFFECT_HALLUCINATION:
+				//	GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Hallucination"), NULL);
+				//	Broadcast = true;
+				//	break;
 				case CMapConverter::MENUEFFECT_SHOCKWAVE:
 					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Shockwave"), NULL);
 					Broadcast = true;
@@ -1761,6 +1769,9 @@ void CCharacter::Tick()
 				case CMapConverter::MENUEFFECT_LOVE:
 					BombType = CMercenaryBomb::EFFECT_LOVE;
 					break;
+				//case CMapConverter::MENUEFFECT_HALLUCINATION:
+				//	BombType = CMercenaryBomb::EFFECT_HALLUCINATION;
+				//	break;
 				case CMapConverter::MENUEFFECT_SHOCKWAVE:
 					BombType = CMercenaryBomb::EFFECT_SHOCKWAVE;
 					break;
@@ -2481,7 +2492,7 @@ void CCharacter::Snap(int SnappingClient)
 	int EmoteNormal = EMOTE_NORMAL;
 	if(IsInfected()) EmoteNormal = EMOTE_ANGRY;
 	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
-	if(m_LoveTick > 0) EmoteNormal = EMOTE_SURPRISE;
+	if(m_LoveTick > 0 || m_HallucinationTick > 0) EmoteNormal = EMOTE_SURPRISE;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
 	
 	// write down the m_Core
@@ -2903,6 +2914,12 @@ void CCharacter::LoveEffect()
 {
 	if(m_LoveTick <= 0)
 		m_LoveTick = Server()->TickSpeed()*5;
+}
+
+void CCharacter::HallucinationEffect()
+{
+	if(m_HallucinationTick <= 0)
+		m_HallucinationTick = Server()->TickSpeed()*5;
 }
 
 void CCharacter::SlipperyEffect()

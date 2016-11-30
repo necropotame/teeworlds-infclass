@@ -33,6 +33,10 @@
 		"value": "A bruxa est\u00e1 vindo!"
 	},
 	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Voc\u00ea est\u00e1 congelado: {sec:EffectDuration}"
+	},
+	{
 		"key": "Random choice",
 		"value": "Escolha aleat\u00f3ria"
 	},
@@ -73,26 +77,26 @@
 		"value": "Escolha a sua classe"
 	},
 	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Muro laser: {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "Uma bomba restando",
 		"other": "{int:NumBombs} bombas restando",
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "Uma mina est\u00e1 ativa",
-		"other": "{int:NumMines} minas est\u00e3o ativas",
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Pr\u00f3xima bandeira em {sec:RemainingTime}"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Muro laser: {sec:RemainingTime}"
+		"one": "",
+		"other": "",
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Posi\u00e7\u00e3o travada: {sec:RemainingTime}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Pr\u00f3xima bandeira em {sec:RemainingTime}"
 	},
 	{
 		"key": "Web mode enabled",
@@ -221,6 +225,10 @@
 	{
 		"key": "Thanks to {str:ListOfContributors}",
 		"value": "Obrigado \u00e0 {str:ListOfContributors}"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Nenhum jogador foi encontrado com esse nome"
 	},
 	{
 		"key": "Rules of the game",
@@ -431,12 +439,12 @@
 		"value": "Ela tamb\u00e9m pode causar 1 ponto de dano por segundo enganchando humanos."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "P\u00e1ginas de ajuda dispon\u00edveis: {str:PageList}"
-	},
-	{
 		"key": "Choose a help page with /help <page>",
 		"value": "Escolha uma p\u00e1gina de ajuda com /help <p\u00e1gina>"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "P\u00e1ginas de ajuda dispon\u00edveis: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -461,10 +469,6 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Pressione <F3> ou <F4> para ativar ou desativar a prote\u00e7\u00e3o contra o gancho "
-	},
-	{
-		"key": "No player was found with this name",
-		"value": "Nenhum jogador foi encontrado com esse nome"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

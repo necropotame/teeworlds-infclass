@@ -33,6 +33,10 @@
 		"value": "De heks komt eraan!"
 	},
 	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Je bent bevroren: {sec:EffectDuration}"
+	},
+	{
 		"key": "Random choice",
 		"value": "Willekeurige keuze"
 	},
@@ -73,26 +77,26 @@
 		"value": "Kies jouw klasse"
 	},
 	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laser muur: {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "E\u00e9n bom over",
 		"other": "{int:NumBombs} bommen over",
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "E\u00e9n mijn is actief",
-		"other": "{int:NumMines} mijnen zijn actief",
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Volgende vlag over {sec:RemainingTime}"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Laser muur: {sec:RemainingTime}"
+		"one": "",
+		"other": "",
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Vergrendelde positie: {sec:RemainingTime}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Volgende vlag over {sec:RemainingTime}"
 	},
 	{
 		"key": "Web mode enabled",
@@ -223,6 +227,10 @@
 		"value": "Dankzij {str:ListOfContributors}"
 	},
 	{
+		"key": "No player was found with this name",
+		"value": "Geen speler gevonden met deze naam"
+	},
+	{
 		"key": "Rules of the game",
 		"value": "Regels van het spel"
 	},
@@ -339,8 +347,8 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "Hij kan ook vergiftigde granaten werpen die elk \u00e9\u00e9n schade punt oplevert.",
-		"other": "Hij kan ook vergiftigde granaten werpen die elk {int:NumDamagePoints} schade punten oplevert.",
+		"one": "",
+		"other": "",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -431,12 +439,12 @@
 		"value": "Ze kan ook 1 schade punt aanrichten per seconde door het haken van mensen."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "Beschikbare help pagina's: {str:PageList}"
-	},
-	{
 		"key": "Choose a help page with /help <page>",
 		"value": "Kies een help pagina met /help <page>"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Beschikbare help pagina's: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -461,10 +469,6 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Druk op <F3> of <F4> voor het in- of uitschakelen van de bescherming van de haak"
-	},
-	{
-		"key": "No player was found with this name",
-		"value": "Geen speler gevonden met deze naam"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

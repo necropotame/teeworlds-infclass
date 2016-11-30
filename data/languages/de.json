@@ -25,12 +25,20 @@
 		"value": "Du hast eine Hexe get\u00f6tet, +5 Punkte"
 	},
 	{
+		"key": "You have eliminated your target, +3 points",
+		"value": "Du hast dein Ziel beseitigt, +3 Punkte."
+	},
+	{
 		"key": "The undead is coming!",
 		"value": "Der Untote ist da!"
 	},
 	{
 		"key": "The witch is coming!",
 		"value": "Die Hexe ist da!"
+	},
+	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Du bist eingefroren: {sec:EffectDuration}"
 	},
 	{
 		"key": "Random choice",
@@ -73,6 +81,34 @@
 		"value": "W\u00e4hle deine Klasse"
 	},
 	{
+		"key": "Cancel",
+		"value": "Abbrechen"
+	},
+	{
+		"key": "Explosion",
+		"value": "Sprengstoff"
+	},
+	{
+		"key": "Aphrodisiac",
+		"value": "Liebmacher"
+	},
+	{
+		"key": "Hallucination",
+		"value": "Sinnest\u00e4uscher"
+	},
+	{
+		"key": "Shockwave",
+		"value": "R\u00fcckschlag"
+	},
+	{
+		"key": "Choose bomb effect",
+		"value": "W\u00e4hle eine Wirkung"
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laser-Wand: {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "Eine verbleibende Bombe",
 		"other": "{int:NumBombs} verbleibende Bomben",
@@ -83,20 +119,32 @@
 		"other": "{int:NumMines} Minen sind scharf",
 	},
 	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "N\u00e4chste Flagge in {sec:RemainingTime}"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "N\u00e4chstes Ziel in {sec:RemainingTime}"
 	},
 	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Laser-Wand: {sec:RemainingTime}"
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Zu beseitigendes Ziel: {str:PlayerName}"
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Feste Aufstellung: {sec:RemainingTime}"
 	},
 	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Ladungsmenge: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "N\u00e4chste Flagge in {sec:RemainingTime}"
+	},
+	{
 		"key": "Web mode enabled",
 		"value": "Spinnennetz-Betrieb eingeschalten"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Wanstf\u00fcllung {percent:FodderInStomach}"
 	},
 	{
 		"key": "The witch is dead",
@@ -167,6 +215,10 @@
 		"value": "Spinne"
 	},
 	{
+		"key": "Ghoul",
+		"value": "\u0120ul"
+	},
+	{
 		"key": "Witch",
 		"value": "Hexe"
 	},
@@ -221,6 +273,10 @@
 	{
 		"key": "Thanks to {str:ListOfContributors}",
 		"value": "Dank an {str:ListOfContributors}"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Kein Spieler dieses Namen ist gefunden worden."
 	},
 	{
 		"key": "Rules of the game",
@@ -338,6 +394,10 @@
 		"value": "Der S\u00f6ldner ist mit einem Maschinengewehr ausgestattet, dessen R\u00fccksto\u00df ihn in die L\u00fcfte erhebt."
 	},
 	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "Er kann Sprengs\u00e4tze verschiedener Wirkung aufwinden und aus der Ferne z\u00fcnden."
+	},
+	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Er kann zudem Giftgranaten werfen, welche bei Z\u00fcndung jedem betroffenen Erkrankten einen Schadenspunkt zuf\u00fcgen.",
 		"other": "Er kann zudem Giftgranaten werfen, welche bei Z\u00fcndung jedem betroffenen Erkrankten {int:NumDamagePoints} Schadenspunkte zuf\u00fcgen.",
@@ -403,6 +463,18 @@
 		"value": "Die Ber\u00fchrung eines Spinnenfadens sowohl wie eines gemeinen Haken einer Spinne durch einen \u00dcberlebenden f\u00fcgt diesem einen Schadenspunkt je Sekunde zu und h\u00e4lt ihn zwei Sekunden lang am Haken fest."
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "Der \u0120ul kann unter Verwendung seines Hammers entweder Erkrankte heilen oder \u00dcberlebende anstecken. "
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Er hat die F\u00e4higkeit, alles zu verschlingen, was in seiner N\u00e4he gestorben ist, was ihn st\u00e4rker, schneller und widerst\u00e4ndiger macht,"
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Daraufhin verdaut er sein Futter nachgerade, zu seinem n\u00fcchternen Zustande zur\u00fcckkehrend, und \u00fcberdies erleichtert ihn der Tod seiner S\u00e4ttigung."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Der Untote kann unter Verwendung seines Hammers entweder Erkrankte heilen oder \u00dcberlebende anstecken."
 	},
@@ -431,12 +503,32 @@
 		"value": "Au\u00dferdem kann sie einem \u00dcberlebenden einen Schadenspunkt f\u00fcr jede Sekunde, in der sie sich an ihn klammert, zuf\u00fcgen."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "Verf\u00fcgbare Hilfeseiten: {str:PageList}"
+		"key": "Targeted chat messages",
+		"value": "Gezielte Chatansprachen"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "Nutze \u00bb/msg <Spielername> <Meine Nachricht>\u00ab, um eine Privatnachricht an den genannten Spieler zu schicken."
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Nutze \u00bb/msg !<Klassenname> <Meine Nachricht>\u00ab, um eine Nachricht beschr\u00e4nkt auf die Spieler einer Klasse auszusenden."
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "Beispiel: \u00bb/msg !medic Ich bin verwundet!\u00ab"
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "Nutze \u00bb/msg !near\u00ab, um eine Nachricht beschr\u00e4nkt auf alle Spieler in deiner N\u00e4he zu versenden."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
 		"value": "W\u00e4hle eine Hilfeseite durch /help <Seite>"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Verf\u00fcgbare Hilfeseiten: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -463,8 +555,20 @@
 		"value": "Dr\u00fccke <F3> oder <F4>, um den Verhakungsschutz an- oder auszuschalten"
 	},
 	{
-		"key": "No player was found with this name",
-		"value": "Kein Spieler dieses Namen ist gefunden worden."
+		"key": "You are now logged.",
+		"value": "Du bist nunmehr eingeloggt."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Falscher Nutzername/Falsches Pa\u00dfwort"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Ein Fehler ist w\u00e4hrend des Vorganges aufgetreten."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Du mu\u00dft f\u00fcr diesen Vorgang angemeldet sein"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

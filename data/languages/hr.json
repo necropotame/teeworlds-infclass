@@ -74,6 +74,10 @@
 		"value": "Izaberi svoju klasu"
 	},
 	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laserski zid: {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "Jedna bomba preostala",
 		"few": "{int:NumBombs} bombi preostalo",
@@ -81,21 +85,17 @@
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "Jedna mina je aktivna",
-		"few": "{int:NumMines} mine su aktivne",
-		"other": "{int:NumMines} mine su aktivne",
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Idu\u0107a zastava u {sec:RemainingTime}"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Laserski zid: {sec:RemainingTime}"
+		"one": "",
+		"few": "",
+		"other": "",
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Pozicija zaklju\u010dana: {sec:RemainingTime}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Idu\u0107a zastava u {sec:RemainingTime}"
 	},
 	{
 		"key": "Web mode enabled",
@@ -226,6 +226,10 @@
 		"value": "Zahvaljuju\u0107i {str:ListOfContributors}"
 	},
 	{
+		"key": "No player was found with this name",
+		"value": "Nije na\u0111en igra\u010d sa tim imenom."
+	},
+	{
 		"key": "Rules of the game",
 		"value": "Pravila igre"
 	},
@@ -345,9 +349,9 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "Mo\u017ee bacati otrovne granate od kojih svaka dijeli jedan damage bod.",
-		"few": "Mo\u017ee bacati otrovne granate od kojih svaka dijeli {int:NumDamagePoints} damage bodova.",
-		"other": "Mo\u017ee bacati otrovne granate od kojih svaka dijeli {int:NumDamagePoints} damage bodova.",
+		"one": "",
+		"few": "",
+		"other": "",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -438,12 +442,12 @@
 		"value": "Mo\u017ee nanijeniti 1 damage bod po sekundi kada huka ljude."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "Dostupne stranice za pomo\u0107: {str:PageList}"
-	},
-	{
 		"key": "Choose a help page with /help <page>",
 		"value": "Izaberi stranicu za pomo\u0107 upisivanjem /help <stranica>"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Dostupne stranice za pomo\u0107: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -468,10 +472,6 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Pritisni <F3> ili <F4> da bi dopustio ili zabranio za\u0161titu protiv hukanja"
-	},
-	{
-		"key": "No player was found with this name",
-		"value": "Nije na\u0111en igra\u010d sa tim imenom."
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

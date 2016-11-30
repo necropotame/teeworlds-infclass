@@ -34,6 +34,10 @@
 		"value": "Wied\u017ama nadchodzi !"
 	},
 	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Jeste\u015b zamro\u017cony na: {sec:EffectDuration}"
+	},
+	{
 		"key": "Random choice",
 		"value": "Przypadkowy wyb\u00f3r"
 	},
@@ -74,6 +78,10 @@
 		"value": "Wybierz swoj\u0105 ras\u0119"
 	},
 	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "\u015aciana laserowa : {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "Jedna bomba pozosta\u0142a",
 		"many": "{int:NumBombs} pozosta\u0142o bomb",
@@ -81,21 +89,17 @@
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "Jedna mina jest aktywna",
-		"many": "{int:NumMines} miny s\u0105 aktywne",
-		"other": "{int:NumMines} miny s\u0105 aktywne",
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Nast\u0119pna flaga za  {sec:RemainingTime}"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "\u015aciana laserowa : {sec:RemainingTime}"
+		"one": "",
+		"many": "",
+		"other": "",
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Pozycja zablokowana : {sec:RemainingTime}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Nast\u0119pna flaga za  {sec:RemainingTime}"
 	},
 	{
 		"key": "Web mode enabled",
@@ -226,6 +230,10 @@
 		"value": "Dzi\u0119kuje dla {str:ListOfContributors}"
 	},
 	{
+		"key": "No player was found with this name",
+		"value": "Gracz z takim imieniem nie zosta\u0142 odnaleziony"
+	},
+	{
 		"key": "Rules of the game",
 		"value": "Regu\u0142y gry"
 	},
@@ -345,9 +353,9 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, gdzie ka\u017cdy zabiera 1 punkt obra\u017ce\u0144.",
-		"many": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, gdzie ka\u017cdy zabiera {int:NumDamagePoints punkt\u00f3w obra\u017ce\u0144.",
-		"other": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, gdzie ka\u017cdy zabiera {int:NumDamagePoints punkt\u00f3w obra\u017ce\u0144.",
+		"one": "",
+		"many": "",
+		"other": "",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -438,12 +446,12 @@
 		"value": "Mo\u017ce r\u00f3wnie\u017c zabiera\u0107 1 punkt \u017cycia \u0142api\u0105c hakiem ludzi."
 	},
 	{
-		"key": "Available help pages: {str:PageList}",
-		"value": "Dost\u0119pne strony z pomoc\u0105: {str:PageList}"
-	},
-	{
 		"key": "Choose a help page with /help <page>",
 		"value": "Wybierz stron\u0119 pomocnicz\u0105 u\u017cywaj\u0105c /help <page>"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Dost\u0119pne strony z pomoc\u0105: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -468,10 +476,6 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Naci\u015bnij <f3> lub <f4> aby aktywowa\u0107 lub dezaktywowa\u0107 ochron\u0119 przed hakiem."
-	},
-	{
-		"key": "No player was found with this name",
-		"value": "Gracz z takim imieniem nie zosta\u0142 odnaleziony"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

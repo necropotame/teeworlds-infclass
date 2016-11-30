@@ -164,7 +164,7 @@ void CMapConverter::CreateCircle(array<CQuad>* pQuads, vec2 CenterPos, float Siz
 	}
 }
 
-void CMapConverter::AddImageQuad(const char* pName, int ImageID, int GridX, int GridY, int X, int Y, int Width, int Height, vec2 Pos, vec2 Size, int Env)
+void CMapConverter::AddImageQuad(const char* pName, int ImageID, int GridX, int GridY, int X, int Y, int Width, int Height, vec2 Pos, vec2 Size, vec4 Color, int Env)
 {
 	array<CQuad> aQuads;
 	CQuad Quad;
@@ -178,6 +178,10 @@ void CMapConverter::AddImageQuad(const char* pName, int ImageID, int GridX, int 
 	Quad.m_aTexcoords[1].x = Quad.m_aTexcoords[3].x = f2fx(StepX * (X + Width));
 	Quad.m_aTexcoords[0].y = Quad.m_aTexcoords[1].y = f2fx(StepY * Y);
 	Quad.m_aTexcoords[2].y = Quad.m_aTexcoords[3].y = f2fx(StepY * (Y + Height));
+	Quad.m_aColors[0].r = Quad.m_aColors[1].r = Quad.m_aColors[2].r = Quad.m_aColors[3].r = Color.r*255.0f;
+	Quad.m_aColors[0].g = Quad.m_aColors[1].g = Quad.m_aColors[2].g = Quad.m_aColors[3].g = Color.g*255.0f;
+	Quad.m_aColors[0].b = Quad.m_aColors[1].b = Quad.m_aColors[2].b = Quad.m_aColors[3].b = Color.b*255.0f;
+	Quad.m_aColors[0].a = Quad.m_aColors[1].a = Quad.m_aColors[2].a = Quad.m_aColors[3].a = Color.a*255.0f;
 	aQuads.add(Quad);
 	
 	CMapItemLayerQuads Item;
@@ -897,13 +901,16 @@ void CMapConverter::Finalize()
 							case MENUEFFECT_CANCEL:
 								break;
 							case MENUEFFECT_EXPLOSION:
-								AddImageQuad("Explosion", ParticlesImageID, 8, 8, 0, 4, 4, 4, ItemPos, vec2(68.0f, 68.0f), m_NumEnvs-1);
+								AddImageQuad("Explosion", ParticlesImageID, 8, 8, 0, 4, 4, 4, ItemPos, vec2(68.0f, 68.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), m_NumEnvs-1);
 								break;
 							case MENUEFFECT_LOVE:
-								AddImageQuad("Hearts", GameImageID, 32, 16, 10, 2, 2, 2, ItemPos, vec2(52.0f, 52.0f), m_NumEnvs-1);
+								AddImageQuad("Hearts", GameImageID, 32, 16, 10, 2, 2, 2, ItemPos, vec2(68.0f, 68.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), m_NumEnvs-1);
 								break;
+							//case MENUEFFECT_HALLUCINATION:
+							//	AddImageQuad("Hallucination", ParticlesImageID, 8, 8, 0, 2, 2, 2, ItemPos, vec2(68.0f, 68.0f), vec4(0xb5/255.0f, 0x50/255.0f, 0xcb/255.0f, 1.0f), m_NumEnvs-1);
+							//	break;
 							case MENUEFFECT_SHOCKWAVE:
-								AddImageQuad("Shockwave", GameImageID, 32, 16, 25, 0, 7, 4, ItemPos, vec2(68.0f, 38.86f), m_NumEnvs-1);
+								AddImageQuad("Shockwave", ParticlesImageID, 8, 8, 2, 2, 2, 2, ItemPos, vec2(68.0f, 68.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), m_NumEnvs-1);
 								break;
 						}
 					}
