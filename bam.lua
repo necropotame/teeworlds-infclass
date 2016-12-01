@@ -349,6 +349,8 @@ config.mysql:Apply(release_sql_settings)
 
 config.icu:Apply(debug_sql_settings)
 config.icu:Apply(release_sql_settings)
+config.icu:Apply(debug_settings)
+config.icu:Apply(release_settings)
 
 if platform == "macosx" then
 	debug_settings_ppc = debug_settings:Copy()
