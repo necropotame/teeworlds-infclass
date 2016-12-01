@@ -1,0 +1,14 @@
+language: c
+
+dist: trusty
+sudo: true
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y bam
+- if [ "$WITH_SQL" = "false" ] ; then sudo apt-get remove -y libmysqlclient-dev; fi
+
+script: bam server_release
+
+env:
+- WITH_SQL=true
+- WITH_SQL=false
