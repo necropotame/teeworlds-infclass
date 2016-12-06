@@ -1193,6 +1193,10 @@ void CGameContext::OnClientConnected(int ClientID)
 	const int StartTeam = g_Config.m_SvTournamentMode ? TEAM_SPECTATORS : m_pController->GetAutoTeam(ClientID);
 
 	m_apPlayers[ClientID] = new(ClientID) CPlayer(this, ClientID, StartTeam);
+	
+	//Thanks to Stitch
+	if(m_pController->IsInfectionStarted())
+        m_apPlayers[ClientID]->StartInfection();
 	//players[client_id].init(client_id);
 	//players[client_id].client_id = client_id;
 

@@ -237,7 +237,7 @@ void CGameControllerMOD::Tick()
 	if(m_GameOverTick == -1 && m_HumanCounter + m_InfectedCounter >= 2)
 	{
 		//If the infection started
-		if(m_RoundStartTick + Server()->TickSpeed()*10 <= Server()->Tick())
+		if(IsInfectionStarted())
 		{
 			bool StartInfectionTrigger = (m_RoundStartTick + Server()->TickSpeed()*10 == Server()->Tick());
 			
@@ -464,6 +464,11 @@ void CGameControllerMOD::Tick()
 		
 		m_RoundStartTick = Server()->Tick();
 	}
+}
+
+bool CGameControllerMOD::IsInfectionStarted()
+{
+	return (m_RoundStartTick + Server()->TickSpeed()*10 <= Server()->Tick());
 }
 
 void CGameControllerMOD::Snap(int SnappingClient)

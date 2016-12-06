@@ -151,6 +151,7 @@ public:
 	virtual bool IsChoosableClass(int PlayerClass);
 	virtual bool IsSpawnable(vec2 Position);
 	virtual void OnClientDrop(int ClientID, int Type) {};
+	virtual bool IsInfectionStarted() = 0;
 	
 	int GetRoundId() { return m_RoundId; }
 /* INFECTION MODIFICATION END *****************************************/
