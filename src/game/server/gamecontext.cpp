@@ -208,6 +208,44 @@ void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamag
 	}
 }
 
+//Tanks to Stitch for the idea
+void CGameContext::CreateExplosionDisk(vec2 Pos, float InnerRadius, float DamageRadius, int Damage, float Force, int Owner, int Weapon, int TakeDamageMode)
+{
+	if(Damage > 0)
+	{
+		// deal damage
+		CCharacter *apEnts[MAX_CLIENTS];
+		int Num = m_World.FindEntities(Pos, DamageRadius, (CEntity**)apEnts, MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
+		for(int i = 0; i < Num; i++)
+		{
+			vec2 Diff = apEnts[i]->m_Pos - Pos;
+			vec2 ForceDir(0,1);
+			float l = length(Diff);
+			l = 1-clamp((l-InnerRadius)/(DamageRadius-InnerRadius), 0.0f, 1.0f);
+			
+			if(l)
+				ForceDir = normalize(Diff);
+			
+			float DamageToDeal = 1 + ((Damage - 1) * l);
+			apEnts[i]->TakeDamage(ForceDir*Force*l, DamageToDeal, Owner, Weapon, TakeDamageMode);
+		}
+	}
+	
+	float CircleLength = 2.0*pi*max(DamageRadius-135.0f, 0.0f);
+	int NumSuroundingExplosions = CircleLength/32.0f;
+	float AngleStart = frandom()*pi*2.0f;
+	float AngleStep = pi*2.0f/static_cast<float>(NumSuroundingExplosions);
+	for(int i=0; i<NumSuroundingExplosions; i++)
+	{
+		CNetEvent_Explosion *pEvent = (CNetEvent_Explosion *)m_Events.Create(NETEVENTTYPE_EXPLOSION, sizeof(CNetEvent_Explosion));
+		if(pEvent)
+		{
+			pEvent->m_X = (int)Pos.x + (DamageRadius-135.0f) * cos(AngleStart + i*AngleStep);
+			pEvent->m_Y = (int)Pos.y + (DamageRadius-135.0f) * sin(AngleStart + i*AngleStep);
+		}
+	}
+}
+
 /*
 void create_smoke(vec2 Pos)
 {
