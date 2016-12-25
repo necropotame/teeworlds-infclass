@@ -596,6 +596,12 @@ void CLocalization::Format_V(dynamic_string& Buffer, const char* pLanguageCode, 
 			{
 				//Try to find an argument with this name
 				va_list VarArgsIter;
+
+				//windows
+				#if defined(CONF_FAMILY_WINDOWS)
+					#define va_copy(d,s) ((d) = (s))
+				#endif
+
 				va_copy(VarArgsIter, VarArgs);
 				pVarArgName = va_arg(VarArgsIter, const char*);
 				while(pVarArgName)
