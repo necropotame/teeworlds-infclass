@@ -786,19 +786,26 @@ void CCharacter::FireWeapon()
 								m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
 						}						
 					}
-					else if(GetClass() == PLAYERCLASS_MEDIC && !pTarget->IsInfected())
+					else if(GetClass() == PLAYERCLASS_MEDIC)
 					{
-						if(pTarget->GetClass() != PLAYERCLASS_HERO)
+						if (pTarget->IsInfected()) {
+							pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
+									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+						}
+						else
 						{
-							pTarget->IncreaseArmor(4);
-							if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
+							if(pTarget->GetClass() != PLAYERCLASS_HERO)
 							{
-								Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
-								GameServer()->SendScoreSound(GetPlayer()->GetCID());
-								pTarget->m_NeedFullHeal = false;
+								pTarget->IncreaseArmor(4);
+								if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
+								{
+									Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
+									GameServer()->SendScoreSound(GetPlayer()->GetCID());
+									pTarget->m_NeedFullHeal = false;
+								}
+								pTarget->m_EmoteType = EMOTE_HAPPY;
+								pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 							}
-							pTarget->m_EmoteType = EMOTE_HAPPY;
-							pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 						}
 					}
 					else
