@@ -808,11 +808,6 @@ void CCharacter::FireWeapon()
 							}
 						}
 					}
-					else if(GetClass() == PLAYERCLASS_MEDIC && pTarget->IsInfected())
-					{
-						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20,
-							m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
-					}
 					else
 					{
 						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
