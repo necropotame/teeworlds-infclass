@@ -2506,15 +2506,16 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	
 	dynamic_string Buffer;
 	
-	const char aContributors[] = "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, Socialdarwinist, FakeDeath, tee_to_F_U_UP!, Stitch626...";
+	const char aThanks[] = "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, Socialdarwinist, FakeDeath, tee_to_F_U_UP!, Stitch626, Denis, NanoSlime_, tria...";
+	const char aContributors[] = "necropotame, Stitch626";
 	
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("InfectionClass, by necropotame (version {str:VersionCode})"), "{str:VersionCode}", "2.0", NULL); 
 	Buffer.append("\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Based on Infection mod by Gravity"), NULL); 
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Based on the concept of Infection mod by Gravity"), NULL); 
 	Buffer.append("\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Windows compilation made possible by Stitch626"), NULL); 
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Main contributors: {str:ListOfContributors}"), "ListOfContributors", aContributors, NULL); 
 	Buffer.append("\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thanks to {str:ListOfContributors}"), "ListOfContributors", aContributors, NULL); 
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thanks to {str:ListOfContributors}"), "ListOfContributors", aThanks, NULL); 
 	Buffer.append("\n\n");
 	
 	pSelf->SendMOTD(ClientID, Buffer.buffer());
