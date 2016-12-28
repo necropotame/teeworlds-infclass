@@ -131,6 +131,7 @@ public:
 		int m_Country;
 		int m_Authed;
 		int m_AuthTries;
+		int m_NextMapChunk;
 
 		const IConsole::CCommandInfo *m_pRconCmdToSend;
 		
@@ -230,6 +231,7 @@ public:
 	static int DelClientCallback(int ClientID, int Type, const char *pReason, void *pUser);
 
 	void SendMap(int ClientID);
+	void SendMapData(int ClientID, int Chunk);
 	
 	void SendConnectionReady(int ClientID);
 	void SendRconLine(int ClientID, const char *pLine);
@@ -280,11 +282,6 @@ public:
 	void SnapSetStaticsize(int ItemType, int Size);
 	
 /* INFECTION MODIFICATION START ***************************************/
-protected:
-	int m_FastDownloadLastSent[MAX_CLIENTS];
-	int m_FastDownloadLastAsk[MAX_CLIENTS];
-	int m_FastDownloadLastAskTick[MAX_CLIENTS];
-
 public:
 	int m_InfClassChooser;
 	int m_InfAmmoRegenTime[NB_INFWEAPON];

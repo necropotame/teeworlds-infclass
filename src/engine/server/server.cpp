@@ -323,6 +323,7 @@ void CServer::CClient::Reset(bool ResetScore)
 	m_LastInputTick = -1;
 	m_Quitting = false;
 	m_SnapRate = CClient::SNAPRATE_INIT;
+	m_NextMapChunk = 0;
 	
 	if(ResetScore)
 	{
@@ -999,16 +1000,46 @@ int CServer::DelClientCallback(int ClientID, int Type, const char *pReason, void
 
 void CServer::SendMap(int ClientID)
 {
-	m_FastDownloadLastSent[ClientID] = 0;
-	m_FastDownloadLastAsk[ClientID] = 0;
-	m_FastDownloadLastAskTick[ClientID] = Tick();
-	
 	CMsgPacker Msg(NETMSG_MAP_CHANGE);
 	Msg.AddString(GetMapName(), 0);
 	Msg.AddInt(m_CurrentMapCrc);
 	Msg.AddInt(m_CurrentMapSize);
 	SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
+
+	m_aClients[ClientID].m_NextMapChunk = 0;
 }
+
+void CServer::SendMapData(int ClientID, int Chunk)
+{
+ 	unsigned int ChunkSize = 1024-128;
+ 	unsigned int Offset = Chunk * ChunkSize;
+ 	int Last = 0;
+ 
+ 	// drop faulty map data requests
+ 	if(Chunk < 0 || Offset > m_CurrentMapSize)
+ 		return;
+ 
+ 	if(Offset+ChunkSize >= m_CurrentMapSize)
+ 	{
+ 		ChunkSize = m_CurrentMapSize-Offset;
+ 		Last = 1;
+ 	}
+ 
+ 	CMsgPacker Msg(NETMSG_MAP_DATA);
+ 	Msg.AddInt(Last);
+ 	Msg.AddInt(m_CurrentMapCrc);
+ 	Msg.AddInt(Chunk);
+ 	Msg.AddInt(ChunkSize);
+ 	Msg.AddRaw(&m_pCurrentMapData[Offset], ChunkSize);
+ 	SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
+ 
+ 	if(g_Config.m_Debug)
+ 	{
+ 		char aBuf[256];
+ 		str_format(aBuf, sizeof(aBuf), "sending chunk %d with size %d", Chunk, ChunkSize);
+ 		Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "server", aBuf);
+ 	}
+ }
 
 void CServer::SendConnectionReady(int ClientID)
 {
@@ -1131,7 +1162,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 		// system message
 		if(Msg == NETMSG_INFO)
 		{
-			if(m_aClients[ClientID].m_State == CClient::STATE_AUTH)
+			if((pPacket->m_Flags&NET_CHUNKFLAG_VITAL) != 0 && m_aClients[ClientID].m_State == CClient::STATE_AUTH)
 			{
 				const char *pVersion = Unpacker.GetString(CUnpacker::SANITIZE_CC);
 				if(str_comp(pVersion, "0.6 626fce9a778df4d4") != 0 && str_comp(pVersion, GameServer()->NetVersion()) != 0)
@@ -1157,54 +1188,29 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 		}
 		else if(Msg == NETMSG_REQUEST_MAP_DATA)
 		{
-			if(m_aClients[ClientID].m_State < CClient::STATE_CONNECTING)
+			if((pPacket->m_Flags&NET_CHUNKFLAG_VITAL) == 0 || m_aClients[ClientID].m_State < CClient::STATE_CONNECTING)
 				return;
 
 			int Chunk = Unpacker.GetInt();
-			int ChunkSize = 1024-128;
-			int Offset = Chunk * ChunkSize;
-			int Last = 0;
+			if(Chunk != m_aClients[ClientID].m_NextMapChunk || !g_Config.m_InfFastDownload)
+			{
+				SendMapData(ClientID, Chunk);
+				return;
+			}
 
-			m_FastDownloadLastAsk[ClientID] = Chunk;
-			m_FastDownloadLastAskTick[ClientID] = Tick();
 			if(Chunk == 0)
 			{
-				m_FastDownloadLastSent[ClientID] = 0;
+				for(int i = 0; i < g_Config.m_InfMapWindow; i++)
+				{
+					SendMapData(ClientID, i);
+				}
 			}
-			
-			// drop faulty map data requests
-			if(Chunk < 0 || Offset > m_CurrentMapSize)
-				return;
-
-			if(Offset+ChunkSize >= m_CurrentMapSize)
-			{
-				ChunkSize = m_CurrentMapSize-Offset;
-				if(ChunkSize < 0)
-					ChunkSize = 0;
-				Last = 1;
-			}
-			
-			if (g_Config.m_InfFastDownload && m_FastDownloadLastSent[ClientID] < Chunk+g_Config.m_InfMapWindow)
-				return;
-
-			CMsgPacker Msg(NETMSG_MAP_DATA);
-			Msg.AddInt(Last);
-			Msg.AddInt(m_CurrentMapCrc);
-			Msg.AddInt(Chunk);
-			Msg.AddInt(ChunkSize);
-			Msg.AddRaw(&m_pCurrentMapData[Offset], ChunkSize);
-			SendMsgEx(&Msg, MSGFLAG_VITAL|MSGFLAG_FLUSH, ClientID, true);
-
-			if(g_Config.m_Debug)
-			{
-				char aBuf[256];
-				str_format(aBuf, sizeof(aBuf), "sending chunk %d with size %d", Chunk, ChunkSize);
-				Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "server", aBuf);
-			}
+			SendMapData(ClientID, g_Config.m_InfMapWindow + m_aClients[ClientID].m_NextMapChunk);
+			m_aClients[ClientID].m_NextMapChunk++;
 		}
 		else if(Msg == NETMSG_READY)
 		{
-			if(m_aClients[ClientID].m_State == CClient::STATE_CONNECTING)
+			if((pPacket->m_Flags&NET_CHUNKFLAG_VITAL) != 0 && m_aClients[ClientID].m_State == CClient::STATE_CONNECTING)
 			{
 				char aAddrStr[NETADDR_MAXSTRSIZE];
 				net_addr_str(m_NetServer.ClientAddr(ClientID), aAddrStr, sizeof(aAddrStr), true);
@@ -1218,7 +1224,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 		}
 		else if(Msg == NETMSG_ENTERGAME)
 		{
-			if(m_aClients[ClientID].m_State == CClient::STATE_READY && GameServer()->IsClientReady(ClientID))
+			if((pPacket->m_Flags&NET_CHUNKFLAG_VITAL) != 0 && m_aClients[ClientID].m_State == CClient::STATE_READY && GameServer()->IsClientReady(ClientID))
 			{
 				char aAddrStr[NETADDR_MAXSTRSIZE];
 				net_addr_str(m_NetServer.ClientAddr(ClientID), aAddrStr, sizeof(aAddrStr), true);
@@ -1290,7 +1296,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 		{
 			const char *pCmd = Unpacker.GetString();
 
-			if(Unpacker.Error() == 0 && m_aClients[ClientID].m_Authed)
+			if((pPacket->m_Flags&NET_CHUNKFLAG_VITAL) != 0 && Unpacker.Error() == 0 && m_aClients[ClientID].m_Authed)
 			{
 				char aBuf[256];
 				str_format(aBuf, sizeof(aBuf), "ClientID=%d rcon='%s'", ClientID, pCmd);
@@ -1320,7 +1326,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 			Unpacker.GetString(); // login name, not used
 			pPw = Unpacker.GetString(CUnpacker::SANITIZE_CC);
 
-			if(Unpacker.Error() == 0)
+			if((pPacket->m_Flags&NET_CHUNKFLAG_VITAL) != 0 && Unpacker.Error() == 0)
 			{
 				if(g_Config.m_SvRconPassword[0] == 0 && g_Config.m_SvRconModPassword[0] == 0)
 				{
@@ -1441,7 +1447,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 	else
 	{
 		// game message
-		if(m_aClients[ClientID].m_State >= CClient::STATE_READY)
+		if((pPacket->m_Flags&NET_CHUNKFLAG_VITAL) != 0 && m_aClients[ClientID].m_State >= CClient::STATE_READY)
 			GameServer()->OnMessage(Msg, &Unpacker, ClientID);
 	}
 }
@@ -1593,53 +1599,6 @@ void CServer::PumpNetwork()
 		}
 		else
 			ProcessClientPacket(&Packet);
-	}
-	
-	//Thanks, DDNet <3
-	if(g_Config.m_InfFastDownload)
-	{
-		for (int i=0;i<MAX_CLIENTS;i++)
-		{
-			if(m_aClients[i].m_State != CClient::STATE_CONNECTING)
-				continue;
-				
-			if(m_FastDownloadLastAskTick[i] < Tick()-TickSpeed())
-			{
-				m_FastDownloadLastSent[i] = m_FastDownloadLastAsk[i];
-				m_FastDownloadLastAskTick[i] = Tick();
-			}
-			if (m_FastDownloadLastAsk[i] < m_FastDownloadLastSent[i]-g_Config.m_InfMapWindow)
-				continue;
-
-			int Chunk = m_FastDownloadLastSent[i]++;
-			int ChunkSize = 1024-128;
-			int Offset = Chunk * ChunkSize;
-			int Last = 0;
-
-			// drop faulty map data requests
-			if(Chunk < 0 || Offset > m_CurrentMapSize)
-				continue;
-			if(Offset+ChunkSize >= m_CurrentMapSize)
-			{
-				ChunkSize = m_CurrentMapSize-Offset;
-				Last = 1;
-			}
-
-			CMsgPacker Msg(NETMSG_MAP_DATA);
-			Msg.AddInt(Last);
-			Msg.AddInt(m_CurrentMapCrc);
-			Msg.AddInt(Chunk);
-			Msg.AddInt(ChunkSize);
-			Msg.AddRaw(&m_pCurrentMapData[Offset], ChunkSize);
-			SendMsgEx(&Msg, MSGFLAG_FLUSH, i, true);
-
-			if(g_Config.m_Debug)
-			{
-				char aBuf[256];
-				str_format(aBuf, sizeof(aBuf), "sending chunk %d with size %d", Chunk, ChunkSize);
-				Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "server", aBuf);
-			}
-		}
 	}
 
 	m_ServerBan.Update();

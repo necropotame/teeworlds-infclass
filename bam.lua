@@ -2,7 +2,6 @@ CheckVersion("0.4")
 
 Import("configure.lua")
 Import("other/sdl/sdl.lua")
-Import("other/icu/icu.lua")
 Import("other/freetype/freetype.lua")
 Import("other/mysql/mysql.lua")
 
@@ -14,7 +13,6 @@ config:Add(OptTestCompileC("minmacosxsdk", "int main(){return 0;}", "-mmacosx-ve
 config:Add(OptTestCompileC("macosxppc", "int main(){return 0;}", "-arch ppc"))
 config:Add(OptLibrary("zlib", "zlib.h", false))
 config:Add(SDL.OptFind("sdl", true))
-config:Add(ICU.OptFind("icu", true))
 config:Add(FreeType.OptFind("freetype", true))
 config:Add(Mysql.OptFind("mysql", false))
 config:Finalize("config.lua")
@@ -116,6 +114,7 @@ nethash = CHash("src/game/generated/nethash.cpp", "src/engine/shared/protocol.h"
 
 client_link_other = {}
 client_depends = {}
+icu_depends = {}
 server_link_other = {}
 server_sql_depends = {}
 
@@ -123,9 +122,19 @@ if family == "windows" then
 	if platform == "win32" then
 		table.insert(client_depends, CopyToDirectory(".", "other\\freetype\\lib32\\freetype.dll"))
 		table.insert(client_depends, CopyToDirectory(".", "other\\sdl\\lib32\\SDL.dll"))
+
+		-- Add ICU because its a HAVE to
+		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib32/icudt57.dll"))
+		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib32/icuin57.dll"))
+		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib32/icuuc57.dll"))
 	else
 		table.insert(client_depends, CopyToDirectory(".", "other\\freetype\\lib64\\freetype.dll"))
 		table.insert(client_depends, CopyToDirectory(".", "other\\sdl\\lib64\\SDL.dll"))
+
+		-- Add ICU because its a HAVE to
+		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib64/icudt57.dll"))
+		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib64/icuin57.dll"))
+		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib64/icuuc57.dll"))
 	end
 	table.insert(server_sql_depends, CopyToDirectory(".", "other/mysql/vc2005libs/mysqlcppconn.dll"))
 	table.insert(server_sql_depends, CopyToDirectory(".", "other/mysql/vc2005libs/libmysql.dll"))
@@ -179,6 +188,13 @@ function build(settings)
 			settings.link.frameworks:Add("AppKit")
 		else
 			settings.link.libs:Add("pthread")
+
+			-- add ICU for linux
+			if ExecuteSilent("pkg-config icu-uc icu-i18n") == 0 then
+			end
+
+			settings.cc.flags:Add("`pkg-config --cflags icu-uc icu-i18n`")
+			settings.link.flags:Add("`pkg-config --libs icu-uc icu-i18n`")
 		end
 		
 		if platform == "solaris" then
@@ -191,6 +207,10 @@ function build(settings)
 		settings.link.libs:Add("ws2_32")
 		settings.link.libs:Add("ole32")
 		settings.link.libs:Add("shell32")
+		settings.link.libs:Add("advapi32")
+
+		-- add ICU also here
+		settings.cc.includes:Add("other\\icu\\include")
 	end
 
 	-- compile zlib if needed
@@ -242,6 +262,19 @@ function build(settings)
 		if string.find(settings.config_name, "sql") then
 			server_settings.link.libpath:Add("other/mysql/vc2005libs")
 			server_settings.link.libs:Add("mysqlcppconn")
+		end
+
+		-- Add ICU because its a HAVE to
+		if platform == "win32" then
+			server_settings.link.libpath:Add("other/icu/lib32")
+			server_settings.link.libs:Add("icudt")
+			server_settings.link.libs:Add("icuin")
+			server_settings.link.libs:Add("icuuc")
+		else
+			server_settings.link.libpath:Add("other/icu/lib64")
+			server_settings.link.libs:Add("icudt")
+			server_settings.link.libs:Add("icuin")
+			server_settings.link.libs:Add("icuuc")
 		end
 	end
 
@@ -299,11 +332,11 @@ function build(settings)
 		engine, zlib, md5)
 
 	-- make targets
-	c = PseudoTarget("client".."_"..settings.config_name, client_exe, client_depends)
+	c = PseudoTarget("client".."_"..settings.config_name, client_exe, client_depends, icu_depends)
 	if string.find(settings.config_name, "sql") then
-		s = PseudoTarget("server".."_"..settings.config_name, server_exe, serverlaunch, server_sql_depends)
+		s = PseudoTarget("server".."_"..settings.config_name, server_exe, serverlaunch, server_sql_depends, icu_depends)
 	else
-		s = PseudoTarget("server".."_"..settings.config_name, server_exe, serverlaunch)
+		s = PseudoTarget("server".."_"..settings.config_name, server_exe, serverlaunch, icu_depends)
 	end
 	g = PseudoTarget("game".."_"..settings.config_name, client_exe, server_exe)
 
@@ -346,11 +379,6 @@ release_sql_settings.cc.defines:Add("CONF_RELEASE", "CONF_SQL")
 
 config.mysql:Apply(debug_sql_settings)
 config.mysql:Apply(release_sql_settings)
-
-config.icu:Apply(debug_sql_settings)
-config.icu:Apply(release_sql_settings)
-config.icu:Apply(debug_settings)
-config.icu:Apply(release_settings)
 
 if platform == "macosx" then
 	debug_settings_ppc = debug_settings:Copy()
