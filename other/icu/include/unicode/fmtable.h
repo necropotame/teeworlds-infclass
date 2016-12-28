@@ -1,6 +1,6 @@
 /*
 ********************************************************************************
-*   Copyright (C) 1997-2014, International Business Machines
+*   Copyright (C) 1997-2013, International Business Machines
 *   Corporation and others.  All Rights Reserved.
 ********************************************************************************
 *
@@ -598,12 +598,13 @@ public:
      */
     static UClassID U_EXPORT2 getStaticClassID();
 
+#ifndef U_HIDE_DRAFT_API
     /**
      * Convert the UFormattable to a Formattable.  Internally, this is a reinterpret_cast.
      * @param fmt a valid UFormattable
      * @return the UFormattable as a Formattable object pointer.  This is an alias to the original
      * UFormattable, and so is only valid while the original argument remains in scope.
-     * @stable ICU 52
+     * @draft ICU 52
      */
     static inline Formattable *fromUFormattable(UFormattable *fmt);
 
@@ -612,7 +613,7 @@ public:
      * @param fmt a valid UFormattable
      * @return the UFormattable as a Formattable object pointer.  This is an alias to the original
      * UFormattable, and so is only valid while the original argument remains in scope.
-     * @stable ICU 52
+     * @draft ICU 52
      */
     static inline const Formattable *fromUFormattable(const UFormattable *fmt);
 
@@ -620,7 +621,7 @@ public:
      * Convert this object pointer to a UFormattable.
      * @return this object as a UFormattable pointer.   This is an alias to this object,
      * and so is only valid while this object remains in scope.
-     * @stable ICU 52
+     * @draft ICU 52
      */
     inline UFormattable *toUFormattable();
 
@@ -628,9 +629,10 @@ public:
      * Convert this object pointer to a UFormattable.
      * @return this object as a UFormattable pointer.   This is an alias to this object,
      * and so is only valid while this object remains in scope.
-     * @stable ICU 52
+     * @draft ICU 52
      */
     inline const UFormattable *toUFormattable() const;
+#endif  /* U_HIDE_DRAFT_API */
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -736,6 +738,7 @@ inline int32_t Formattable::getLong(UErrorCode* status) const {
 }
 #endif  /* U_HIDE_DEPRECATED_API */
 
+#ifndef U_HIDE_DRAFT_API
 inline UFormattable* Formattable::toUFormattable() {
   return reinterpret_cast<UFormattable*>(this);
 }
@@ -751,6 +754,7 @@ inline Formattable* Formattable::fromUFormattable(UFormattable *fmt) {
 inline const Formattable* Formattable::fromUFormattable(const UFormattable *fmt) {
   return reinterpret_cast<const Formattable *>(fmt);
 }
+#endif  /* U_HIDE_DRAFT_API */
 
 U_NAMESPACE_END
 

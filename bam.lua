@@ -124,17 +124,29 @@ if family == "windows" then
 		table.insert(client_depends, CopyToDirectory(".", "other\\sdl\\lib32\\SDL.dll"))
 
 		-- Add ICU because its a HAVE to
-		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib32/icudt57.dll"))
-		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib32/icuin57.dll"))
-		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib32/icuuc57.dll"))
+		if config.compiler.driver == "cl" then
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/vc/lib32/icudt53.dll"))
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/vc/lib32/icuin53.dll"))
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/vc/lib32/icuuc53.dll"))
+		elseif config.compiler.driver == "gcc" then
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/gcc/lib32/icudt53.dll"))
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/gcc/lib32/icuin53.dll"))
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/gcc/lib32/icuuc53.dll"))
+		end
 	else
 		table.insert(client_depends, CopyToDirectory(".", "other\\freetype\\lib64\\freetype.dll"))
 		table.insert(client_depends, CopyToDirectory(".", "other\\sdl\\lib64\\SDL.dll"))
 
 		-- Add ICU because its a HAVE to
-		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib64/icudt57.dll"))
-		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib64/icuin57.dll"))
-		table.insert(icu_depends, CopyToDirectory(".", "other/icu/lib64/icuuc57.dll"))
+		if config.compiler.driver == "cl" then
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/vc/lib64/icudt53.dll"))
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/vc/lib64/icuin53.dll"))
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/vc/lib64/icuuc53.dll"))
+		elseif config.compiler.driver == "gcc" then
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/gcc/lib64/icudt53.dll"))
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/gcc/lib64/icuin53.dll"))
+			table.insert(icu_depends, CopyToDirectory(".", "other/icu/gcc/lib64/icuuc53.dll"))
+		end
 	end
 	table.insert(server_sql_depends, CopyToDirectory(".", "other/mysql/vc2005libs/mysqlcppconn.dll"))
 	table.insert(server_sql_depends, CopyToDirectory(".", "other/mysql/vc2005libs/libmysql.dll"))
@@ -266,12 +278,20 @@ function build(settings)
 
 		-- Add ICU because its a HAVE to
 		if platform == "win32" then
-			server_settings.link.libpath:Add("other/icu/lib32")
+			if config.compiler.driver == "cl" then
+				server_settings.link.libpath:Add("other/icu/vc/lib32")
+			elseif config.compiler.driver == "gcc" then
+				server_settings.link.libpath:Add("other/icu/gcc/lib32")
+			end
 			server_settings.link.libs:Add("icudt")
 			server_settings.link.libs:Add("icuin")
 			server_settings.link.libs:Add("icuuc")
 		else
-			server_settings.link.libpath:Add("other/icu/lib64")
+			if config.compiler.driver == "cl" then
+				server_settings.link.libpath:Add("other/icu/vc/lib64")
+			elseif config.compiler.driver == "gcc" then
+				server_settings.link.libpath:Add("other/icu/gcc/lib64")
+			end
 			server_settings.link.libs:Add("icudt")
 			server_settings.link.libs:Add("icuin")
 			server_settings.link.libs:Add("icuuc")

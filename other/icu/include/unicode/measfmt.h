@@ -1,6 +1,6 @@
 /*
 **********************************************************************
-* Copyright (c) 2004-2016, International Business Machines
+* Copyright (c) 2004-2014, International Business Machines
 * Corporation and others.  All Rights Reserved.
 **********************************************************************
 * Author: Alan Liu
@@ -12,6 +12,7 @@
 #define MEASUREFORMAT_H
 
 #include "unicode/utypes.h"
+#include "unicode/measure.h"
 
 #if !UCONFIG_NO_FORMATTING
 
@@ -23,62 +24,60 @@
  * \brief C++ API: Formatter for measure objects.
  */
 
+#ifndef U_HIDE_DRAFT_API
 /**
  * Constants for various widths.
- * There are 4 widths: Wide, Short, Narrow, Numeric.
+ * There are 3 widths: Wide, Short, Narrow.
  * For example, for English, when formatting "3 hours"
- * Wide is "3 hours"; short is "3 hrs"; narrow is "3h";
- * formatting "3 hours 17 minutes" as numeric give "3:17"
- * @stable ICU 53
+ * Wide is "3 hours"; short is "3 hrs"; narrow is "3h"
+ * @draft ICU 53
  */
 enum UMeasureFormatWidth {
 
     // Wide, short, and narrow must be first and in this order.
     /**
      * Spell out measure units.
-     * @stable ICU 53 
+     * @draft ICU 53 
      */
     UMEASFMT_WIDTH_WIDE,
  
     /**
      * Abbreviate measure units.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     UMEASFMT_WIDTH_SHORT,
 
     /**
      * Use symbols for measure units when possible.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     UMEASFMT_WIDTH_NARROW,
 
     /**
      * Completely omit measure units when possible. For example, format
      * '5 hours, 37 minutes' as '5:37'
-     * @stable ICU 53
+     * @draft ICU 53
      */
     UMEASFMT_WIDTH_NUMERIC,
 
     /**
      * Count of values in this enum.
-     * @stable ICU 53
+     * @draft ICU 53
      */
-    UMEASFMT_WIDTH_COUNT = 4
+    UMEASFMT_WIDTH_COUNT
 };
-/** @stable ICU 53 */
+/** @draft ICU 53 */
 typedef enum UMeasureFormatWidth UMeasureFormatWidth; 
+#endif /* U_HIDE_DRAFT_API */
 
 U_NAMESPACE_BEGIN
 
-class Measure;
-class MeasureUnit;
 class NumberFormat;
 class PluralRules;
 class MeasureFormatCacheData;
 class SharedNumberFormat;
 class SharedPluralRules;
 class QuantityFormatter;
-class SimpleFormatter;
 class ListFormatter;
 class DateFormat;
 
@@ -95,32 +94,34 @@ class U_I18N_API MeasureFormat : public Format {
     using Format::parseObject;
     using Format::format;
 
+#ifndef U_HIDE_DRAFT_API
     /**
      * Constructor.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     MeasureFormat(
             const Locale &locale, UMeasureFormatWidth width, UErrorCode &status);
 
     /**
      * Constructor.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     MeasureFormat(
             const Locale &locale,
             UMeasureFormatWidth width,
             NumberFormat *nfToAdopt,
             UErrorCode &status);
+#endif /* U_HIDE_DRAFT_API */
 
     /**
      * Copy constructor.
-     * @stable ICU 3.0
+     * @draft ICU 53
      */
     MeasureFormat(const MeasureFormat &other);
 
     /**
      * Assignment operator.
-     * @stable ICU 3.0
+     * @draft ICU 53
      */
     MeasureFormat &operator=(const MeasureFormat &rhs);
 
@@ -132,19 +133,19 @@ class U_I18N_API MeasureFormat : public Format {
 
     /**
      * Return true if given Format objects are semantically equal.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     virtual UBool operator==(const Format &other) const;
 
     /**
      * Clones this object polymorphically.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     virtual Format *clone() const;
 
     /**
      * Formats object to produce a string.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     virtual UnicodeString &format(
             const Formattable &obj,
@@ -163,6 +164,7 @@ class U_I18N_API MeasureFormat : public Format {
             Formattable &reslt,
             ParsePosition &pos) const;
 
+#ifndef U_HIDE_DRAFT_API
     /**
      * Formats measure objects to produce a string. An example of such a
      * formatted string is 3 meters, 3.5 centimeters. Measure objects appear
@@ -177,7 +179,7 @@ class U_I18N_API MeasureFormat : public Format {
      * @param status the error.
      * @return appendTo reference
      *
-     * @stable ICU 53
+     * @draft ICU 53
      */
     UnicodeString &formatMeasures(
             const Measure *measures,
@@ -185,26 +187,7 @@ class U_I18N_API MeasureFormat : public Format {
             UnicodeString &appendTo,
             FieldPosition &pos,
             UErrorCode &status) const;
-
-    /**
-     * Formats a single measure per unit. An example of such a
-     * formatted string is 3.5 meters per second.
-     * @param measure The measure object. In above example, 3.5 meters.
-     * @param perUnit The per unit. In above example, it is
-     *        *MeasureUnit::createSecond(status).
-     * @param appendTo formatted string appended here.
-     * @param pos the field position.
-     * @param status the error.
-     * @return appendTo reference
-     *
-     * @stable ICU 55
-     */
-    UnicodeString &formatMeasurePerUnit(
-            const Measure &measure,
-            const MeasureUnit &perUnit,
-            UnicodeString &appendTo,
-            FieldPosition &pos,
-            UErrorCode &status) const;
+#endif  /* U_HIDE_DRAFT_API */
 
 
     /**
@@ -236,7 +219,7 @@ class U_I18N_API MeasureFormat : public Format {
      * .       erived::getStaticClassID()) ...
      * </pre>
      * @return          The class ID for all objects of this class.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     static UClassID U_EXPORT2 getStaticClassID(void);
 
@@ -249,7 +232,7 @@ class U_I18N_API MeasureFormat : public Format {
      * @return          The class ID for this object. All objects of a
      *                  given class have the same class ID.  Objects of
      *                  other classes have different class IDs.
-     * @stable ICU 53
+     * @draft ICU 53
      */
     virtual UClassID getDynamicClassID(void) const;
 
@@ -262,6 +245,7 @@ class U_I18N_API MeasureFormat : public Format {
 
 #ifndef U_HIDE_INTERNAL_API 
 
+#ifndef U_HIDE_DRAFT_API
     /**
      * ICU use only.
      * Initialize or change MeasureFormat class from subclass.
@@ -272,6 +256,7 @@ class U_I18N_API MeasureFormat : public Format {
             UMeasureFormatWidth width,
             NumberFormat *nfToAdopt,
             UErrorCode &status);
+#endif
     /**
      * ICU use only.
      * Allows subclass to change locale. Note that this method also changes
@@ -318,33 +303,19 @@ class U_I18N_API MeasureFormat : public Format {
     const MeasureFormatCacheData *cache;
     const SharedNumberFormat *numberFormat;
     const SharedPluralRules *pluralRules;
+#ifndef U_HIDE_DRAFT_API
     UMeasureFormatWidth width;    
+#endif
 
     // Declared outside of MeasureFormatSharedData because ListFormatter
     // objects are relatively cheap to copy; therefore, they don't need to be
     // shared across instances.
     ListFormatter *listFormatter;
 
-    const SimpleFormatter *getFormatterOrNull(
-            const MeasureUnit &unit, UMeasureFormatWidth width, int32_t index) const;
-
-    const SimpleFormatter *getFormatter(
-            const MeasureUnit &unit, UMeasureFormatWidth width, int32_t index,
-            UErrorCode &errorCode) const;
-
-    const SimpleFormatter *getPluralFormatter(
-            const MeasureUnit &unit, UMeasureFormatWidth width, int32_t index,
-            UErrorCode &errorCode) const;
-
-    const SimpleFormatter *getPerFormatter(
-            UMeasureFormatWidth width,
+    const QuantityFormatter *getQuantityFormatter(
+            int32_t index,
+            int32_t widthIndex,
             UErrorCode &status) const;
-
-    int32_t withPerUnitAndAppend(
-        const UnicodeString &formatted,
-        const MeasureUnit &perUnit,
-        UnicodeString &appendTo,
-        UErrorCode &status) const;
 
     UnicodeString &formatMeasure(
         const Measure &measure,

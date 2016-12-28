@@ -1,6 +1,6 @@
 /*
 *******************************************************************************
-* Copyright (C) 2007-2014, International Business Machines Corporation and
+* Copyright (C) 2007-2013, International Business Machines Corporation and
 * others. All Rights Reserved.
 *******************************************************************************
 *
@@ -28,7 +28,6 @@
 U_NAMESPACE_BEGIN
 
 class Hashtable;
-class NFRule;
 
 /**
  * <p>
@@ -600,11 +599,7 @@ private:
          const MessagePattern& pattern, int32_t partIndex,
          const PluralSelector& selector, void *context, double number, UErrorCode& ec); /**< @internal */
 
-    void parseType(const UnicodeString& source, const NFRule *rbnfLenientScanner,
-        Formattable& result, FieldPosition& pos) const;
-
     friend class MessageFormat;
-    friend class NFRule;
 };
 
 U_NAMESPACE_END

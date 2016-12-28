@@ -1,5 +1,5 @@
 /*************************************************************************
-* Copyright (c) 1997-2016, International Business Machines Corporation
+* Copyright (c) 1997-2014, International Business Machines Corporation
 * and others. All Rights Reserved.
 **************************************************************************
 *
@@ -66,8 +66,8 @@ class StringEnumeration;
  * TimeZone *tz = TimeZone::createTimeZone("America/Los_Angeles");
  * </pre>
  * \htmlonly</blockquote>\endhtmlonly
- * You can use the <code>createEnumeration</code> method to iterate through
- * all the supported time zone IDs, or the <code>getCanonicalID</code> method to check
+ * You can use <code>getAvailableIDs</code> method to iterate through
+ * all the supported time zone IDs, or getCanonicalID method to check
  * if a time zone ID is supported or not.  You can then choose a
  * supported ID to get a <code>TimeZone</code>.
  * If the time zone you want is not represented by one of the
@@ -274,21 +274,6 @@ public:
                                                int32_t index);
 
     /**
-     * Creates an instance of TimeZone detected from the current host
-     * system configuration. Note that ICU4C does not change the default
-     * time zone unless TimeZone::adoptDefault(TimeZone*) or
-     * TimeZone::setDefault(const TimeZone&) is explicitly called by a
-     * user. This method does not update the current ICU's default,
-     * and may return a different TimeZone from the one returned by
-     * TimeZone::createDefault().
-     *
-     * @return  A new instance of TimeZone detected from the current host system
-     *          configuration.
-     * @stable ICU 55
-     */
-    static TimeZone* U_EXPORT2 detectHostTimeZone();
-
-    /**
      * Creates a new copy of the default TimeZone for this host. Unless the default time
      * zone has already been set using adoptDefault() or setDefault(), the default is
      * determined by querying the system using methods in TPlatformUtilities. If the
@@ -373,6 +358,7 @@ public:
     static UnicodeString& U_EXPORT2 getCanonicalID(const UnicodeString& id,
         UnicodeString& canonicalID, UBool& isSystemID, UErrorCode& status);
 
+#ifndef U_HIDE_DRAFT_API
     /**
     * Converts a system time zone ID to an equivalent Windows time zone ID. For example,
     * Windows time zone ID "Pacific Standard Time" is returned for input "America/Los_Angeles".
@@ -393,7 +379,7 @@ public:
     * @return          A reference to the result (<code>winid</code>).
     * @see getIDForWindowsID
     *
-    * @stable ICU 52
+    * @draft ICU 52
     */
     static UnicodeString& U_EXPORT2 getWindowsID(const UnicodeString& id,
         UnicodeString& winid, UErrorCode& status);
@@ -422,10 +408,12 @@ public:
     * @return          A reference to the result (<code>id</code>).
     * @see getWindowsID
     *
-    * @stable ICU 52
+    * @draft ICU 52
     */
     static UnicodeString& U_EXPORT2 getIDForWindowsID(const UnicodeString& winid, const char* region,
         UnicodeString& id, UErrorCode& status);
+
+#endif /* U_HIDE_DRAFT_API */
 
     /**
      * Returns true if the two TimeZones are equal.  (The TimeZone version only compares
