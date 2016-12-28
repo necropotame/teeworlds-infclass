@@ -842,7 +842,7 @@ void CCharacter::FireWeapon()
 				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
 					Msg.AddInt(((int *)&p)[i]);
 
-				Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
+				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 				
 				float MaxSpeed = GameServer()->Tuning()->m_GroundControlSpeed*1.7f;
 				vec2 Recoil = Direction*(-MaxSpeed/5.0f);
@@ -868,7 +868,7 @@ void CCharacter::FireWeapon()
 				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
 					Msg.AddInt(((int *)&p)[i]);
 
-				Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
+				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
@@ -910,7 +910,7 @@ void CCharacter::FireWeapon()
 					Msg.AddInt(((int *)&p)[i]);
 			}
 
-			Server()->SendMsg(&Msg, 0,m_pPlayer->GetCID());
+			Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 
 			GameServer()->CreateSound(m_Pos, SOUND_SHOTGUN_FIRE);
 		} break;
@@ -947,7 +947,7 @@ void CCharacter::FireWeapon()
 
 						for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
 							Msg.AddInt(((int *)&p)[i]);
-						Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
+						Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 					}
 
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
@@ -1004,7 +1004,7 @@ void CCharacter::FireWeapon()
 				Msg.AddInt(1);
 				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
 					Msg.AddInt(((int *)&p)[i]);
-				Server()->SendMsg(&Msg, 0, m_pPlayer->GetCID());
+				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 
 				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 			}

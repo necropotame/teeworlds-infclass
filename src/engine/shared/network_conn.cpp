@@ -250,6 +250,19 @@ int CNetConnection::SimulateConnexionWithInfo(NETADDR *pAddr)
 
 int CNetConnection::Feed(CNetPacketConstruct *pPacket, NETADDR *pAddr)
 {
+	// check if actual ack value is valid(own sequence..latest peer ack)
+ 	if(m_Sequence >= m_PeerAck)
+ 	{
+ 		if(pPacket->m_Ack < m_PeerAck || pPacket->m_Ack > m_Sequence)
+ 			return 0;
+ 	}
+ 	else
+ 	{
+ 		if(pPacket->m_Ack < m_PeerAck && pPacket->m_Ack > m_Sequence)
+ 			return 0;
+ 	}
+ 	m_PeerAck = pPacket->m_Ack;
+
 	int64 Now = time_get();
 
 	// check if resend is requested
