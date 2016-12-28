@@ -1,6 +1,6 @@
 /*
 ******************************************************************************
-* Copyright (C) 2001-2014, International Business Machines
+* Copyright (C) 2001-2013, International Business Machines
 *                Corporation and others. All Rights Reserved.
 ******************************************************************************
 *   file name:  uclean.h
@@ -151,7 +151,6 @@ u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMem
                     UErrorCode *status);
 
 
-#ifndef U_HIDE_DEPRECATED_API
 /*********************************************************************************
  *
  * Deprecated Functions
@@ -252,7 +251,6 @@ U_DEPRECATED void U_EXPORT2
 u_setAtomicIncDecFunctions(const void *context, UMtxAtomicFn *inc, UMtxAtomicFn *dec,
                     UErrorCode *status);
 
-#endif  /* U_HIDE_DEPRECATED_API */
 #endif  /* U_HIDE_SYSTEM_API */
 
 #endif

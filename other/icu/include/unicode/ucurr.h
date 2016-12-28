@@ -1,6 +1,6 @@
 /*
 **********************************************************************
-* Copyright (c) 2002-2016, International Business Machines
+* Copyright (c) 2002-2013, International Business Machines
 * Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
@@ -13,7 +13,11 @@
 /**
  * \file 
  * \brief C API: Encapsulates information about a currency.
- *
+ */
+
+#if !UCONFIG_NO_FORMATTING
+
+/**
  * The ucurr API encapsulates information about a currency, as defined by
  * ISO 4217.  A currency is represented by a 3-character string
  * containing its ISO 4217 code.  This API can return various data
@@ -29,34 +33,6 @@
  * @author Alan Liu
  * @since ICU 2.2
  */
-
-#if !UCONFIG_NO_FORMATTING
-
-/**
- * Currency Usage used for Decimal Format
- * @stable ICU 54
- */
-enum UCurrencyUsage {
-    /**
-     * a setting to specify currency usage which determines currency digit
-     * and rounding for standard usage, for example: "50.00 NT$"
-     * used as DEFAULT value
-     * @stable ICU 54
-     */
-    UCURR_USAGE_STANDARD=0,
-    /**
-     * a setting to specify currency usage which determines currency digit
-     * and rounding for cash usage, for example: "50 NT$"
-     * @stable ICU 54
-     */
-    UCURR_USAGE_CASH=1,
-    /**
-     * One higher than the last enum UCurrencyUsage constant.
-     * @stable ICU 54
-     */
-    UCURR_USAGE_COUNT=2
-};
-typedef enum UCurrencyUsage UCurrencyUsage; 
 
 /**
  * Finds a currency code for the given locale.
@@ -189,7 +165,6 @@ ucurr_getPluralName(const UChar* currency,
 /**
  * Returns the number of the number of fraction digits that should
  * be displayed for the given currency.
- * This is equivalent to ucurr_getDefaultFractionDigitsForUsage(currency,UCURR_USAGE_STANDARD,ec);
  * @param currency null-terminated 3-letter ISO 4217 code
  * @param ec input-output error code
  * @return a non-negative number of fraction digits to be
@@ -201,24 +176,8 @@ ucurr_getDefaultFractionDigits(const UChar* currency,
                                UErrorCode* ec);
 
 /**
- * Returns the number of the number of fraction digits that should
- * be displayed for the given currency with usage.
- * @param currency null-terminated 3-letter ISO 4217 code
- * @param usage enum usage for the currency
- * @param ec input-output error code
- * @return a non-negative number of fraction digits to be
- * displayed, or 0 if there is an error
- * @stable ICU 54
- */
-U_STABLE int32_t U_EXPORT2
-ucurr_getDefaultFractionDigitsForUsage(const UChar* currency, 
-                                       const UCurrencyUsage usage,
-                                       UErrorCode* ec);
-
-/**
  * Returns the rounding increment for the given currency, or 0.0 if no
  * rounding is done by the currency.
- * This is equivalent to ucurr_getRoundingIncrementForUsage(currency,UCURR_USAGE_STANDARD,ec);
  * @param currency null-terminated 3-letter ISO 4217 code
  * @param ec input-output error code
  * @return the non-negative rounding increment, or 0.0 if none,
@@ -228,21 +187,6 @@ ucurr_getDefaultFractionDigitsForUsage(const UChar* currency,
 U_STABLE double U_EXPORT2
 ucurr_getRoundingIncrement(const UChar* currency,
                            UErrorCode* ec);
-
-/**
- * Returns the rounding increment for the given currency, or 0.0 if no
- * rounding is done by the currency given usage.
- * @param currency null-terminated 3-letter ISO 4217 code
- * @param usage enum usage for the currency
- * @param ec input-output error code
- * @return the non-negative rounding increment, or 0.0 if none,
- * or 0.0 if there is an error
- * @stable ICU 54
- */
-U_STABLE double U_EXPORT2
-ucurr_getRoundingIncrementForUsage(const UChar* currency,
-                                   const UCurrencyUsage usage,
-                                   UErrorCode* ec);
 
 /**
  * Selector constants for ucurr_openCurrencies().
