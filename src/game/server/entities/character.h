@@ -204,6 +204,7 @@ public:
 	bool IsFrozen() const;
 	void Unfreeze();
 	void Poison(int Count, int From);
+	bool IsInLove() const;
 	void LoveEffect();
 	void HallucinationEffect();
 	void SlipperyEffect();

@@ -717,7 +717,7 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_BOOMER)
 			{
-				if(!IsFrozen())
+				if(!IsFrozen() && !IsInLove())
 				{
 					Die(m_pPlayer->GetCID(), WEAPON_SELF);
 				}
@@ -2198,7 +2198,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected())
 		Dmg = 12;
 	
-	if(pKillerPlayer && pKillerPlayer->GetCharacter() && pKillerPlayer->GetCharacter()->m_LoveTick > 0)
+	if(pKillerPlayer && pKillerPlayer->GetCharacter() && pKillerPlayer->GetCharacter()->IsInLove())
 	{
 		Dmg = 0;
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
@@ -2911,6 +2911,11 @@ void CCharacter::SetClass(int ClassChoosed)
 bool CCharacter::IsInfected() const
 {
 	return m_pPlayer->IsInfected();
+}
+
+bool CCharacter::IsInLove() const
+{
+    return m_pPlayer->GetCharacter()->m_LoveTick > 0;
 }
 
 void CCharacter::LoveEffect()
