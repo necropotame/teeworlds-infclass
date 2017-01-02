@@ -38,6 +38,8 @@ void CEngineerWall::Reset()
 
 void CEngineerWall::Tick()
 {
+	if(m_MarkedForDestroy) return;
+
 	m_LifeSpan--;
 	
 	if(m_LifeSpan < 0)

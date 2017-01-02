@@ -100,6 +100,8 @@ void CScientistMine::Snap(int SnappingClient)
 
 void CScientistMine::Tick()
 {
+	if(m_MarkedForDestroy) return;
+
 	// Find other players
 	bool MustExplode = false;
 	int DetonatedBy;
