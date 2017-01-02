@@ -356,17 +356,21 @@ int CNetServer::Recv(CNetChunk *pChunk)
 				
 		// check if we just should drop the packet
 		char aBuf[128];
-		if(NetBan() && NetBan()->IsBanned(&Addr, aBuf, sizeof(aBuf)))
+		/* if(NetBan() && NetBan()->IsBanned(&Addr, aBuf, sizeof(aBuf)))
 		{
 			// banned, reply with a message
 			CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, str_length(aBuf)+1, NET_SECURITY_TOKEN_UNSUPPORTED);
 			continue;
-		}
+		} */
 				
 		if(CNetBase::UnpackPacket(m_RecvUnpacker.m_aBuffer, Bytes, &m_RecvUnpacker.m_Data) == 0)
 		{
 			if(m_RecvUnpacker.m_Data.m_Flags&NET_PACKETFLAG_CONNLESS)
 			{
+				//refuse server info for banned clients (vanilla behavior)
+				if(NetBan() && NetBan()->IsBanned(&Addr, aBuf, sizeof(aBuf)))
+					continue;
+
 				pChunk->m_Flags = NETSENDFLAG_CONNLESS;
 				pChunk->m_ClientID = -1;
 				pChunk->m_Address = Addr;
@@ -401,6 +405,14 @@ int CNetServer::Recv(CNetChunk *pChunk)
 				else
 				{
 					// not found, client that wants to connect
+
+					//refuse connect for banned clients
+					if(NetBan() && NetBan()->IsBanned(&Addr, aBuf, sizeof(aBuf)))
+					{
+						// banned, reply with a message
+						CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, str_length(aBuf)+1, NET_SECURITY_TOKEN_UNSUPPORTED);
+						continue;
+ 					}
 
 					if(m_RecvUnpacker.m_Data.m_Flags&NET_PACKETFLAG_CONTROL &&
 						m_RecvUnpacker.m_Data.m_DataSize > 1)
