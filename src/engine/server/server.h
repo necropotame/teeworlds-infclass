@@ -63,6 +63,8 @@ public:
 	virtual int BanRange(const CNetRange *pRange, int Seconds, const char *pReason);
 
 	static bool ConBanExt(class IConsole::IResult *pResult, void *pUser);
+
+	int m_BanID;
 };
 
 

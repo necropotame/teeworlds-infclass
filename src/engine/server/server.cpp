@@ -191,7 +191,7 @@ void CServerBan::InitServerBan(IConsole *pConsole, IStorage *pStorage, CServer* 
 	m_pServer = pServer;
 
 	// overwrites base command, todo: improve this
-	Console()->Register("ban", "s<username or uid> ?i<minutes> ?r<reason>", CFGFLAG_CHAT|CFGFLAG_SERVER|CFGFLAG_STORE, ConBanExt, this, "Ban player with ip/client id for x minutes for any reason");
+	Console()->Register("ban", "s<username or clientid> ?i<minutes> ?r<reason>", CFGFLAG_CHAT|CFGFLAG_SERVER|CFGFLAG_STORE, ConBanExt, this, "Ban player with ip/client id for x minutes for any reason");
 }
 
 template<class T>
@@ -245,6 +245,9 @@ int CServerBan::BanExt(T *pBanPool, const typename T::CDataType *pData, int Seco
 		if(Server()->m_aClients[i].m_State == CServer::CClient::STATE_EMPTY)
 			continue;
 
+		if(m_BanID != i) // don't drop it like that. just kick the desired guy
+			continue;
+
 		if(NetMatch(&Data, Server()->m_NetServer.ClientAddr(i)))
 		{
 			CNetHash NetHash(&Data);
@@ -278,6 +281,7 @@ bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 	const char *pStr = pResult->GetString(0);
 	int Minutes = pResult->NumArguments()>1 ? clamp(pResult->GetInteger(1), 0, 44640) : 30;
 	const char *pReason = pResult->NumArguments()>2 ? pResult->GetString(2) : "No reason given";
+	pThis->m_BanID = -1;
 
 	if(StrAllnum(pStr))
 	{
@@ -286,6 +290,7 @@ bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "net_ban", "ban error (invalid client id)");
 		else
 		{
+			pThis->m_BanID = ClientID; //to ban the right guy, not his brother or so :P
 			pThis->BanAddr(pThis->Server()->m_NetServer.ClientAddr(ClientID), Minutes*60, pReason);
 		}
 	}
@@ -298,6 +303,7 @@ bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 			{
 				NumPlayerFound++;
 				pThis->BanAddr(pThis->Server()->m_NetServer.ClientAddr(i), Minutes*60, pReason);
+				pThis->m_BanID = i;
 			}
 		}
 		
