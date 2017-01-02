@@ -18,3 +18,4 @@ src/game/generated
 /versionsrv*
 /infclass_client*
 /infclass_srv*
+/infclass_editor*
