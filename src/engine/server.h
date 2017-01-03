@@ -254,6 +254,8 @@ public:
 	virtual const char *Version() = 0;
 	virtual const char *NetVersion() = 0;
 	
+	virtual class CLayers *Layers() = 0;
+	
 /* INFECTION MODIFICATION START ***************************************/
 	virtual void ClearBroadcast(int To, int Priority) = 0;
 	virtual void SendBroadcast_Localization(int To, int Priority, int LifeSpan, const char* pText, ...) = 0;

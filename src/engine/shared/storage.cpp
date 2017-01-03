@@ -162,7 +162,7 @@ public:
 	void FindDatadir(const char *pArgv0)
 	{
 		// 1) use data-dir in PWD if present
-		if(fs_is_dir("data/mapres"))
+		if(fs_is_dir("data/maps"))
 		{
 			str_copy(m_aDatadir, "data", sizeof(m_aDatadir));
 			return;

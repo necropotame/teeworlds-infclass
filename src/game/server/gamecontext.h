@@ -91,12 +91,18 @@ class CGameContext : public IGameServer
 	void Construct(int Resetting);
 
 	bool m_Resetting;
+
+public:
+	int m_ZoneHandle_Damage;
+	int m_ZoneHandle_Teleport;
+
 public:
 	IServer *Server() const { return m_pServer; }
 	IStorage *Storage() const { return m_pStorage; }
 	class IConsole *Console() { return m_pConsole; }
 	CCollision *Collision() { return &m_Collision; }
 	CTuningParams *Tuning() { return &m_Tuning; }
+	virtual class CLayers *Layers() { return &m_Layers; }
 
 	CGameContext();
 	~CGameContext();

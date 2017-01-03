@@ -123,12 +123,13 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 	}
 }
 
-bool CGameControllerMOD::OnEntity(int Index, vec2 Pos)
+bool CGameControllerMOD::OnEntity(const char* pName, vec2 Pivot, vec2 P0, vec2 P1, vec2 P2, vec2 P3, int PosEnv)
 {
-	bool res = IGameController::OnEntity(Index, Pos);
+	bool res = IGameController::OnEntity(pName, Pivot, P0, P1, P2, P3, PosEnv);
 
-	if(Index == TILE_ENTITY_SPAWN_RED)
+	if(str_comp(pName, "icInfected") == 0)
 	{
+		vec2 Pos = (P0 + P1 + P2 + P3)/4.0f;
 		int SpawnX = static_cast<int>(Pos.x)/32.0f;
 		int SpawnY = static_cast<int>(Pos.y)/32.0f;
 		
@@ -137,12 +138,13 @@ bool CGameControllerMOD::OnEntity(int Index, vec2 Pos)
 			m_GrowingMap[SpawnY*m_MapWidth+SpawnX] = 6;
 		}
 	}
-	else if(Index == TILE_ENTITY_FLAGSTAND_BLUE)
+	else if(str_comp(pName, "icHeroFlag") == 0)
 	{
 		//Add hero flag
 		if(!m_pHeroFlag)
 			m_pHeroFlag = new CHeroFlag(&GameServer()->m_World);
 		
+		vec2 Pos = (P0 + P1 + P2 + P3)/4.0f;
 		m_HeroFlagPositions.add(Pos);
 	}
 
@@ -672,7 +674,7 @@ void CGameControllerMOD::DoWincheck()
 	
 }
 
-bool CGameControllerMOD::IsSpawnable(vec2 Pos)
+bool CGameControllerMOD::IsSpawnable(vec2 Pos, int TeleZoneIndex)
 {
 	//First check if there is a tee too close
 	CCharacter *aEnts[MAX_CLIENTS];
@@ -685,7 +687,8 @@ bool CGameControllerMOD::IsSpawnable(vec2 Pos)
 	}
 	
 	//Check the center
-	if(GameServer()->Collision()->CheckPoint(Pos) || GameServer()->Collision()->CheckZoneFlag(Pos, CCollision::ZONEFLAG_NOSPAWN))
+	int TeleIndex = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Teleport, Pos);
+	if(GameServer()->Collision()->CheckPoint(Pos) || TeleIndex == TeleZoneIndex)
 		return false;
 	
 	//Check the border of the tee. Kind of extrem, but more precise
@@ -693,7 +696,8 @@ bool CGameControllerMOD::IsSpawnable(vec2 Pos)
 	{
 		float Angle = i * (2.0f * pi / 16.0f);
 		vec2 CheckPos = Pos + vec2(cos(Angle), sin(Angle)) * 30.0f;
-		if(GameServer()->Collision()->CheckPoint(CheckPos) || GameServer()->Collision()->CheckZoneFlag(CheckPos, CCollision::ZONEFLAG_NOSPAWN))
+		TeleIndex = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Teleport, CheckPos);
+		if(GameServer()->Collision()->CheckPoint(CheckPos) || TeleIndex == TeleZoneIndex)
 			return false;
 	}
 	

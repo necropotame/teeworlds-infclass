@@ -123,14 +123,21 @@ bool IGameController::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 /* INFECTION MODIFICATION END *****************************************/
 
 
-bool IGameController::OnEntity(int Index, vec2 Pos)
+bool IGameController::OnEntity(const char* pName, vec2 Pivot, vec2 P0, vec2 P1, vec2 P2, vec2 P3, int PosEnv)
 {
-	if(Index == TILE_ENTITY_SPAWN_RED)
+	vec2 Pos = (P0 + P1 + P2 + P3)/4.0f;
+	
+	if(str_comp(pName, "icInfected") == 0)
 		m_aaSpawnPoints[0][m_aNumSpawnPoints[0]++] = Pos;
-	else if(Index == TILE_ENTITY_SPAWN_BLUE)
+	else if(str_comp(pName, "icHuman") == 0)
 		m_aaSpawnPoints[1][m_aNumSpawnPoints[1]++] = Pos;
 	
 	return false;
+}
+
+double IGameController::GetTime()
+{
+	return static_cast<double>(Server()->Tick() - m_RoundStartTick)/Server()->TickSpeed();
 }
 
 void IGameController::EndRound()
@@ -748,7 +755,7 @@ bool IGameController::IsChoosableClass(int PlayerClass)
 	return false;
 }
 
-bool IGameController::IsSpawnable(vec2 Position)
+bool IGameController::IsSpawnable(vec2 Position, int TeleZoneType)
 {
 	return true;
 }

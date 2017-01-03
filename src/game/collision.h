@@ -4,6 +4,7 @@
 #define GAME_COLLISION_H
 
 #include <base/vmath.h>
+#include <base/tl/array.h>
 
 class CCollision
 {
@@ -11,11 +12,11 @@ class CCollision
 	int m_PhysicsWidth;
 	int m_PhysicsHeight;
 	
-	int *m_pZoneTiles;
-	int m_ZoneWidth;
-	int m_ZoneHeight;
-	
 	class CLayers *m_pLayers;
+	
+	double m_Time;
+	
+	array< array<int> > m_Zones;
 
 	bool IsTileSolid(int x, int y);
 	int GetTile(int x, int y);
@@ -46,9 +47,15 @@ public:
 	void MoveBox(vec2 *pInoutPos, vec2 *pInoutVel, vec2 Size, float Elasticity);
 	bool TestBox(vec2 Pos, vec2 Size);
 	
+	void SetTime(double Time) { m_Time = Time; }
+	
+	//This function return an Handle to access all zone layers with the name "pName"
+	int GetZoneHandle(const char* pName);
+	int GetZoneValueAt(int ZoneHandle, float x, float y);
+	int GetZoneValueAt(int ZoneHandle, vec2 Pos) { return GetZoneValueAt(ZoneHandle, Pos.x, Pos.y); }
+	
 /* INFECTION MODIFICATION START ***************************************/
 	bool CheckPhysicsFlag(vec2 Pos, int Flag);
-	bool CheckZoneFlag(vec2 Pos, int Flag);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

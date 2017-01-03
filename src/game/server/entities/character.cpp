@@ -97,13 +97,13 @@ bool CCharacter::FindWitchSpawnPosition(vec2& Pos)
 		TestAngle = Angle + i * (pi / 32.0f);
 		Pos = m_Pos + vec2(cos(TestAngle), sin(TestAngle)) * 84.0f;
 		
-		if(GameServer()->m_pController->IsSpawnable(Pos))
+		if(GameServer()->m_pController->IsSpawnable(Pos, ZONE_TELE_NOWITCH))
 			return true;
 		
 		TestAngle = Angle - i * (pi / 32.0f);
 		Pos = m_Pos + vec2(cos(TestAngle), sin(TestAngle)) * 84.0f;
 		
-		if(GameServer()->m_pController->IsSpawnable(Pos))
+		if(GameServer()->m_pController->IsSpawnable(Pos, ZONE_TELE_NOWITCH))
 			return true;
 	}
 	
@@ -123,7 +123,7 @@ bool CCharacter::FindPortalPosition(vec2 Pos, vec2& Res)
 		PortalShift = PortalDir * Iterator;
 		vec2 PortalPos = m_Pos + PortalShift;
 	
-		if(GameServer()->m_pController->IsSpawnable(PortalPos))
+		if(GameServer()->m_pController->IsSpawnable(PortalPos, ZONE_TELE_NOSCIENTIST))
 		{
 			Res = PortalPos;
 			return true;
@@ -571,7 +571,8 @@ void CCharacter::FireWeapon()
 					bool isAccepted = true;
 					for(int i=0; i<15; i++)
 					{
-						if(GameServer()->Collision()->CheckZoneFlag(m_FirstShotCoord + (m_Pos - m_FirstShotCoord)*(static_cast<float>(i)/14.0f), CCollision::ZONEFLAG_INFECTION))
+						vec2 TestPos = m_FirstShotCoord + (m_Pos - m_FirstShotCoord)*(static_cast<float>(i)/14.0f);
+						if(GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Damage, TestPos) == ZONE_DAMAGE_INFECTION)
 						{
 							isAccepted = false;
 						}
@@ -1252,35 +1253,50 @@ void CCharacter::ResetInput()
 void CCharacter::Tick()
 {
 /* INFECTION MODIFICATION START ***************************************/
-	if(GameServer()->Collision()->CheckPhysicsFlag(m_Core.m_Pos, CCollision::COLFLAG_WATER))
-	{
-		if(m_InWater == 0)
-		{
-			m_InWater = 1;
-			m_Core.m_Vel /= 2.0f;
-			m_WaterJumpLifeSpan = 0;
-			
-			if(length(m_Core.m_Vel) > 10.0f)
-				GameServer()->CreateDeath(m_Core.m_Pos, m_pPlayer->GetCID());
-		}
-	}
-	else
-		m_InWater = 0;
+	//~ if(GameServer()->Collision()->CheckPhysicsFlag(m_Core.m_Pos, CCollision::COLFLAG_WATER))
+	//~ {
+		//~ if(m_InWater == 0)
+		//~ {
+			//~ m_InWater = 1;
+			//~ m_Core.m_Vel /= 2.0f;
+			//~ m_WaterJumpLifeSpan = 0;
+		//~ }
+	//~ }
+	//~ else
+		//~ m_InWater = 0;
 	
-	//Check is the character is in toxic gaz
-	if(m_Alive && GameServer()->Collision()->CheckZoneFlag(m_Pos, CCollision::ZONEFLAG_INFECTION))
 	{
-		if(IsInfected())
+		int Index0 = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Damage, m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f);
+		int Index1 = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Damage, m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f);
+		int Index2 = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Damage, m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f);
+		int Index3 = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Damage, m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f);
+		
+		if(Index0 == ZONE_DAMAGE_DEATH || Index1 == ZONE_DAMAGE_DEATH || Index2 == ZONE_DAMAGE_DEATH || Index3 == ZONE_DAMAGE_DEATH)
 		{
-			if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/3))
-			{
-				m_HealTick = Server()->Tick();
-				if(m_Health < 10) m_Health++;
-			}
+			Die(m_pPlayer->GetCID(), WEAPON_WORLD);
 		}
-		else
+		else if(GetClass() != PLAYERCLASS_UNDEAD && (Index0 == ZONE_DAMAGE_DEATH_NOUNDEAD || Index1 == ZONE_DAMAGE_DEATH_NOUNDEAD || Index2 == ZONE_DAMAGE_DEATH_NOUNDEAD || Index3 == ZONE_DAMAGE_DEATH_NOUNDEAD))
 		{
-			m_pPlayer->StartInfection();
+			Die(m_pPlayer->GetCID(), WEAPON_WORLD);
+		}
+		else if(IsInfected() && (Index0 == ZONE_DAMAGE_DEATH_INFECTED || Index1 == ZONE_DAMAGE_DEATH_INFECTED || Index2 == ZONE_DAMAGE_DEATH_INFECTED || Index3 == ZONE_DAMAGE_DEATH_INFECTED))
+		{
+			Die(m_pPlayer->GetCID(), WEAPON_WORLD);
+		}
+		else if(m_Alive && (Index0 == ZONE_DAMAGE_INFECTION || Index1 == ZONE_DAMAGE_INFECTION || Index2 == ZONE_DAMAGE_INFECTION || Index3 == ZONE_DAMAGE_INFECTION))
+		{
+			if(IsInfected())
+			{
+				if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/3))
+				{
+					m_HealTick = Server()->Tick();
+					if(m_Health < 10) m_Health++;
+				}
+			}
+			else
+			{
+				m_pPlayer->StartInfection();
+			}
 		}
 	}
 	
@@ -1550,23 +1566,7 @@ void CCharacter::Tick()
 			}
 		}
 	}
-/* INFECTION MODIFICATION END *****************************************/
 	
-
-	// handle death-tiles and leaving gamelayer
-	if(
-		GameServer()->Collision()->CheckZoneFlag(vec2(m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f), CCollision::ZONEFLAG_DEATH) ||
-		GameServer()->Collision()->CheckZoneFlag(vec2(m_Pos.x-m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f), CCollision::ZONEFLAG_DEATH) ||
-		GameServer()->Collision()->CheckZoneFlag(vec2(m_Pos.x+m_ProximityRadius/3.f, m_Pos.y+m_ProximityRadius/3.f), CCollision::ZONEFLAG_DEATH) ||
-		GameServer()->Collision()->CheckZoneFlag(vec2(m_Pos.x-m_ProximityRadius/3.f, m_Pos.y+m_ProximityRadius/3.f), CCollision::ZONEFLAG_DEATH) ||
-		GameLayerClipped(m_Pos)
-	)
-	{
-		Die(m_pPlayer->GetCID(), WEAPON_WORLD);
-	}
-
-	// handle Weapons
-/* INFECTION MODIFICATION START ***************************************/
 	HandleWaterJump();
 	HandleWeapons();
 

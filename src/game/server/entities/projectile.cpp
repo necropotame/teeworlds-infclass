@@ -100,7 +100,7 @@ void CProjectile::Tick()
 				static_cast<float>(static_cast<int>(round(CheckPos.x))/32)*32.0,
 				static_cast<float>(static_cast<int>(round(CheckPos.y))/32)*32.0);
 				
-				if(GameServer()->m_pController->IsSpawnable(PortalPos))
+				if(GameServer()->m_pController->IsSpawnable(PortalPos, ZONE_TELE_NOSCIENTIST))
 				{
 					CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 					if(OwnerChar)

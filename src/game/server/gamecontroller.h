@@ -117,7 +117,7 @@ public:
 		Returns:
 			bool?
 	*/
-	virtual bool OnEntity(int Index, vec2 Pos);
+	virtual bool OnEntity(const char* pName, vec2 Pivot, vec2 P0, vec2 P1, vec2 P2, vec2 P3, int PosEnv);
 
 	/*
 		Function: on_CCharacter_spawn
@@ -149,7 +149,7 @@ public:
 	virtual int ChooseHumanClass(CPlayer* pPlayer);
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
 	virtual bool IsChoosableClass(int PlayerClass);
-	virtual bool IsSpawnable(vec2 Position);
+	virtual bool IsSpawnable(vec2 Position, int TeleZoneIndex);
 	virtual void OnClientDrop(int ClientID, int Type) {};
 	virtual bool IsInfectionStarted() = 0;
 	
@@ -167,6 +167,7 @@ public:
 	int ClampTeam(int Team);
 
 	virtual void PostReset();
+	double GetTime();
 };
 
 #endif
