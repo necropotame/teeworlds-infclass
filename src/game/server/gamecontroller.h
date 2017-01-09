@@ -22,7 +22,7 @@ protected:
 
 /* INFECTION MODIFICATION START ***************************************/
 	array<vec2> m_HeroFlagPositions;
-	vec2 m_aaSpawnPoints[2][64];
+	array<vec2> m_SpawnPoints[2];
 	int m_aNumSpawnPoints[2];
 	int m_RoundId;
 	
@@ -30,28 +30,7 @@ public:
 	inline const array<vec2>& HeroFlagPositions() const { return m_HeroFlagPositions; }
 /* INFECTION MODIFICATION START ***************************************/
 
-public:
-	struct CSpawnEval
-	{
-		CSpawnEval()
-		{
-			m_Got = false;
-			m_FriendlyTeam = -1;
-			m_Pos = vec2(100,100);
-		}
-
-		vec2 m_Pos;
-		bool m_Got;
-		int m_FriendlyTeam;
-		float m_Score;
-	};
-	
-	void EvaluateSpawnType(CSpawnEval *pEval, int Type);
-	
-
 protected:
-	float EvaluateSpawnPos(CSpawnEval *pEval, vec2 Pos);
-
 	void CycleMap(bool Forced = false);
 	void ResetGame();
 

@@ -688,7 +688,9 @@ bool CGameControllerMOD::IsSpawnable(vec2 Pos, int TeleZoneIndex)
 	
 	//Check the center
 	int TeleIndex = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Teleport, Pos);
-	if(GameServer()->Collision()->CheckPoint(Pos) || TeleIndex == TeleZoneIndex)
+	if(GameServer()->Collision()->CheckPoint(Pos))
+		return false;
+	if(TeleZoneIndex && TeleIndex == TeleZoneIndex)
 		return false;
 	
 	//Check the border of the tee. Kind of extrem, but more precise
@@ -697,7 +699,9 @@ bool CGameControllerMOD::IsSpawnable(vec2 Pos, int TeleZoneIndex)
 		float Angle = i * (2.0f * pi / 16.0f);
 		vec2 CheckPos = Pos + vec2(cos(Angle), sin(Angle)) * 30.0f;
 		TeleIndex = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Teleport, CheckPos);
-		if(GameServer()->Collision()->CheckPoint(CheckPos) || TeleIndex == TeleZoneIndex)
+		if(GameServer()->Collision()->CheckPoint(CheckPos))
+			return false;
+		if(TeleZoneIndex && TeleIndex == TeleZoneIndex)
 			return false;
 	}
 	
@@ -711,13 +715,9 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 		return false;
 	
 	if(m_InfectedStarted)
-	{
 		pPlayer->StartInfection();
-	}
 	else
-	{
 		pPlayer->m_WasHumanThisRound = true;
-	}
 		
 	if(pPlayer->IsInfected() && m_ExplosionStarted)
 		return false;
@@ -740,15 +740,21 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 		}
 	}
 			
-	CSpawnEval Eval;
-	int Team = (pPlayer->IsInfected() ? TEAM_RED : TEAM_BLUE);
-	Eval.m_FriendlyTeam = Team;
+	int Type = (pPlayer->IsInfected() ? 0 : 1);
 
-	// first try own team spawn, then normal spawn and then enemy
-	EvaluateSpawnType(&Eval, Team);
-
-	*pOutPos = Eval.m_Pos;
-	return Eval.m_Got;
+	// get spawn point
+	int RandomShift = rand()%m_SpawnPoints[Type].size();
+	for(int i = 0; i < m_SpawnPoints[Type].size(); i++)
+	{
+		int I = (i + RandomShift)%m_SpawnPoints[Type].size();
+		if(IsSpawnable(m_SpawnPoints[Type][I], 0))
+		{
+			*pOutPos = m_SpawnPoints[Type][I];
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 bool CGameControllerMOD::PickupAllowed(int Index)
