@@ -2100,6 +2100,7 @@ void CCharacter::Die(int Killer, int Weapon)
 		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 		{
 			if(p->GetClass() != PLAYERCLASS_GHOUL || p == this) continue;
+			if(p->GetPlayer() && p->GetPlayer()->GetGhoulPercent() >= 1.0f) continue;
 
 			float Len = distance(p->m_Pos, m_Pos);
 			if(MinLen > Len)
