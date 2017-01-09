@@ -191,7 +191,7 @@ void CServerBan::InitServerBan(IConsole *pConsole, IStorage *pStorage, CServer* 
 	m_pServer = pServer;
 
 	// overwrites base command, todo: improve this
-	Console()->Register("ban", "s<username or clientid> ?i<minutes> ?r<reason>", CFGFLAG_CHAT|CFGFLAG_SERVER|CFGFLAG_STORE, ConBanExt, this, "Ban player with ip/client id for x minutes for any reason");
+	Console()->Register("ban", "s<clientid> ?i<minutes> ?r<reason>", CFGFLAG_CHAT|CFGFLAG_SERVER|CFGFLAG_STORE, ConBanExt, this, "Ban player with ip/client id for x minutes for any reason");
 }
 
 template<class T>
@@ -295,21 +295,7 @@ bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 		}
 	}
 	else
-	{
-		int NumPlayerFound = 0;
-		for(int i=0; i<MAX_CLIENTS; i++)
-		{
-			if(pThis->m_pServer->m_aClients[i].m_State != CServer::CClient::STATE_EMPTY && str_comp(pThis->m_pServer->ClientName(i), pStr) == 0)
-			{
-				NumPlayerFound++;
-				pThis->BanAddr(pThis->Server()->m_NetServer.ClientAddr(i), Minutes*60, pReason);
-				pThis->m_BanID = i;
-			}
-		}
-		
-		if(!NumPlayerFound)
-			ConBan(pResult, pUser);
-	}
+		ConBan(pResult, pUser);
 	
 	return true;
 }
