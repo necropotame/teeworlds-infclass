@@ -362,6 +362,8 @@ public:
 	int m_ChallengeType;
 #endif
 
+	int m_TimeShiftUnit;
+
 public:
 	void AddGameServerCmd(CGameServerCmd* pCmd);
 	
@@ -378,6 +380,8 @@ public:
 	virtual void AddAccusation(int From, int To, const char* pReason);
 	virtual bool ClientShouldBeBanned(int ClientID);
 	virtual void RemoveAccusations(int ClientID);
+	
+	virtual int GetTimeShiftUnit() const { return m_TimeShiftUnit; } //In ms
 /* INFECTION MODIFICATION END *****************************************/
 };
 

@@ -17,6 +17,7 @@ CMapConverter::~CMapConverter()
 
 bool CMapConverter::Load()
 {
+	m_AnimationCycle = 1;
 	m_MenuPosition = vec2(0.0f, 0.0f);
 	
 	//Find GameLayer	
@@ -78,6 +79,39 @@ bool CMapConverter::Load()
 			m_pTiles[j*m_Width+i].m_Skip = Skip;
 			i += Skip;
 		}
+	}
+	
+	//Get the animation cycle
+	CEnvPoint* pEnvPoints = NULL;
+	{
+		int Start, Num;
+		Map()->GetType(MAPITEMTYPE_ENVPOINTS, &Start, &Num);
+		pEnvPoints = (CEnvPoint *)Map()->GetItem(Start, 0, 0);
+	}
+					
+	if(pEnvPoints)
+	{
+		int Start, Num;
+		Map()->GetType(MAPITEMTYPE_ENVELOPE, &Start, &Num);
+		for(int i = 0; i < Num; i++)
+		{
+			CMapItemEnvelope *pItem = (CMapItemEnvelope *)Map()->GetItem(Start+i, 0, 0);
+			if(pItem->m_NumPoints > 0)
+			{
+				int Duration = pEnvPoints[pItem->m_StartPoint + pItem->m_NumPoints - 1].m_Time - pEnvPoints[pItem->m_StartPoint].m_Time;
+				if(Duration)
+				{
+					dbg_msg("DEBUG", "Duration found: %d", m_AnimationCycle);
+					m_AnimationCycle *= Duration;
+					dbg_msg("DEBUG", "Duration found: %d", m_AnimationCycle);
+				}
+			}
+		}
+		
+		if(m_AnimationCycle)
+			m_TimeShiftUnit = m_AnimationCycle*((60*1000 / m_AnimationCycle)+1);
+		else
+			m_TimeShiftUnit = 60*1000;
 	}
 	
 	return true;
@@ -344,6 +378,37 @@ void CMapConverter::CopyImages()
 	}
 }
 
+void CMapConverter::CopyAnimations()
+{
+	int NumEnvPoints = 0;
+	CEnvPoint* pEnvPoints = NULL;
+	{
+		int Start, Num;
+		Map()->GetType(MAPITEMTYPE_ENVPOINTS, &Start, &Num);
+		pEnvPoints = (CEnvPoint *)Map()->GetItem(Start, 0, 0);
+	}
+	
+	if(pEnvPoints)
+	{
+		int Start, Num;
+		Map()->GetType(MAPITEMTYPE_ENVELOPE, &Start, &Num);
+		for(int i = 0; i < Num; i++)
+		{
+			CMapItemEnvelope *pItem = (CMapItemEnvelope *)Map()->GetItem(Start+i, 0, 0);
+			CMapItemEnvelope Item = *pItem;
+			m_DataFile.AddItem(MAPITEMTYPE_ENVELOPE, m_NumEnvs++, sizeof(Item), &Item);
+			
+			if(pItem->m_NumPoints > 0)
+				NumEnvPoints = max(NumEnvPoints, pItem->m_StartPoint + pItem->m_NumPoints);
+		}
+		
+		for(int i=0; i<NumEnvPoints; i++)
+		{
+			m_lEnvPoints.add(pEnvPoints[i]);
+		}
+	}
+}
+
 void CMapConverter::CopyGameLayer()
 {
 	CMapItemLayerTilemap Item;
@@ -593,7 +658,7 @@ void CMapConverter::Finalize()
 						}	
 						{
 							CEnvPoint Point;
-							Point.m_Time = TIMESHIFT_MENUCLASS*60*1000;
+							Point.m_Time = TIMESHIFT_MENUCLASS*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = NormalValues[0];
 							Point.m_aValues[1] = NormalValues[1];
@@ -610,7 +675,7 @@ void CMapConverter::Finalize()
 							{
 								{
 									CEnvPoint Point;
-									Point.m_Time = (TIMESHIFT_MENUCLASS+(i+1)+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+(i+1)+j*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
 									Point.m_Curvetype = 0;
 									Point.m_aValues[0] = HighlightValues[0];
 									Point.m_aValues[1] = HighlightValues[1];
@@ -621,7 +686,7 @@ void CMapConverter::Finalize()
 								}
 								{
 									CEnvPoint Point;
-									Point.m_Time = (TIMESHIFT_MENUCLASS+(i+2)+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+(i+2)+j*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
 									Point.m_Curvetype = 0;
 									Point.m_aValues[0] = NormalValues[0];
 									Point.m_aValues[1] = NormalValues[1];
@@ -635,7 +700,7 @@ void CMapConverter::Finalize()
 							{
 								{
 									CEnvPoint Point;
-									Point.m_Time = (TIMESHIFT_MENUCLASS+j*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+j*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
 									Point.m_Curvetype = 0;
 									Point.m_aValues[0] = HiddenValues[0];
 									Point.m_aValues[1] = HiddenValues[1];
@@ -646,7 +711,7 @@ void CMapConverter::Finalize()
 								}
 								{
 									CEnvPoint Point;
-									Point.m_Time = (TIMESHIFT_MENUCLASS+(j+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+(j+1)*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
 									Point.m_Curvetype = 0;
 									Point.m_aValues[0] = NormalValues[0];
 									Point.m_aValues[1] = NormalValues[1];
@@ -659,7 +724,7 @@ void CMapConverter::Finalize()
 						}
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000;
+							Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = NormalValues[0];
 							Point.m_aValues[1] = NormalValues[1];
@@ -670,7 +735,7 @@ void CMapConverter::Finalize()
 						}
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*60*1000+1000;
+							Point.m_Time = (1+TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = HiddenValues[0];
 							Point.m_aValues[1] = HiddenValues[1];
@@ -833,7 +898,7 @@ void CMapConverter::Finalize()
 						}	
 						{
 							CEnvPoint Point;
-							Point.m_Time = TIMESHIFT_MENUEFFECT*60*1000;
+							Point.m_Time = TIMESHIFT_MENUEFFECT*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = NormalValues[0];
 							Point.m_aValues[1] = NormalValues[1];
@@ -845,7 +910,7 @@ void CMapConverter::Finalize()
 				
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+(i+1))*60*1000;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+(i+1))*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = HighlightValues[0];
 							Point.m_aValues[1] = HighlightValues[1];
@@ -856,7 +921,7 @@ void CMapConverter::Finalize()
 						}
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+(i+2))*60*1000;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+(i+2))*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = NormalValues[0];
 							Point.m_aValues[1] = NormalValues[1];
@@ -867,7 +932,7 @@ void CMapConverter::Finalize()
 						}
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+(NUM_MENUEFFECT+2))*60*1000;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+(NUM_MENUEFFECT+2))*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = HiddenValues[0];
 							Point.m_aValues[1] = HiddenValues[1];
@@ -932,10 +997,6 @@ void CMapConverter::Finalize()
 			}
 		}
 	}
-	
-	m_DataFile.AddItem(MAPITEMTYPE_ENVPOINTS, 0, m_lEnvPoints.size()*sizeof(CEnvPoint), m_lEnvPoints.base_ptr());
-	
-	m_DataFile.Finish();
 }
 
 bool CMapConverter::CreateMap(const char* pFilename)
@@ -953,6 +1014,7 @@ bool CMapConverter::CreateMap(const char* pFilename)
 	CopyVersion();
 	CopyMapInfo();
 	CopyImages();
+	CopyAnimations();
 	
 	//Game Group
 	{
@@ -977,6 +1039,9 @@ bool CMapConverter::CreateMap(const char* pFilename)
 	CopyLayers();
 	
 	Finalize();
+	
+	m_DataFile.AddItem(MAPITEMTYPE_ENVPOINTS, 0, m_lEnvPoints.size()*sizeof(CEnvPoint), m_lEnvPoints.base_ptr());
+	m_DataFile.Finish();
 	
 	Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "infclass", "highres map created");
 	return true;

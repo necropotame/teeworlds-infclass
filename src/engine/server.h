@@ -222,6 +222,8 @@ public:
 	virtual void AddAccusation(int From, int To, const char* pReason) = 0;
 	virtual bool ClientShouldBeBanned(int ClientID) = 0;
 	virtual void RemoveAccusations(int ClientID) = 0;
+	
+	virtual int GetTimeShiftUnit() const = 0; //In ms
 /* INFECTION MODIFICATION END *****************************************/
 };
 

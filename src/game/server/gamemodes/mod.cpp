@@ -189,7 +189,9 @@ void CGameControllerMOD::UpdatePlayerCounter(int ClientException)
 		else m_HumanCounter++;
 	}
 	
-	if(m_HumanCounter + m_InfectedCounter < 4)
+	if(m_HumanCounter + m_InfectedCounter < 2)
+		m_NumFirstInfected = 0;
+	else if(m_HumanCounter + m_InfectedCounter < 4)
 		m_NumFirstInfected = 1;
 	else
 		m_NumFirstInfected = 2;
@@ -236,7 +238,7 @@ void CGameControllerMOD::Tick()
 	m_InfectedStarted = false;
 	
 	//If the game can start ...
-	if(m_GameOverTick == -1 && m_HumanCounter + m_InfectedCounter >= 2)
+	if(m_GameOverTick == -1 && m_HumanCounter + m_InfectedCounter >= g_Config.m_InfMinPlayers)
 	{
 		//If the infection started
 		if(IsInfectionStarted())
@@ -541,20 +543,26 @@ void CGameControllerMOD::Snap(int SnappingClient)
 	
 	if(GameServer()->m_apPlayers[SnappingClient])
 	{
+		int Page = -1;
+		
 		if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 1)
 		{
 			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
-			int Timer = ((CMapConverter::TIMESHIFT_MENUCLASS + (Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK)*60 + 30)*Server()->TickSpeed();
-			
-			pGameInfoObj->m_RoundStartTick = Server()->Tick() - Timer;
-			pGameInfoObj->m_TimeLimit = 0;
+			Page = CMapConverter::TIMESHIFT_MENUCLASS + (Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK;
 		}
 		else if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 2)
 		{
 			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
-			int Timer = ((CMapConverter::TIMESHIFT_MENUEFFECT + (Item+1))*60 + 30)*Server()->TickSpeed();
+			Page = CMapConverter::TIMESHIFT_MENUEFFECT + (Item+1);
+		}
+		
+		if(Page >= 0)
+		{
+			double PageShift = static_cast<double>(Page * Server()->GetTimeShiftUnit())/1000.0f;
+			double CycleShift = fmod(static_cast<double>(Server()->Tick() - pGameInfoObj->m_RoundStartTick)/Server()->TickSpeed(), Server()->GetTimeShiftUnit()/1000.0);
+			int TimeShift = (PageShift + CycleShift)*Server()->TickSpeed();
 			
-			pGameInfoObj->m_RoundStartTick = Server()->Tick() - Timer;
+			pGameInfoObj->m_RoundStartTick = Server()->Tick() - TimeShift;
 			pGameInfoObj->m_TimeLimit = 0;
 		}
 	}

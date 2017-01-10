@@ -1644,6 +1644,12 @@ int CServer::LoadMap(const char *pMapName)
 		char aClientMapName[256];
 		str_format(aClientMapName, sizeof(aClientMapName), "clientmaps/%s_%08x/tw06-highres.map", pMapName, ServerMapCrc);
 		
+		CMapConverter MapConverter(Storage(), m_pMap, Console());
+		if(!MapConverter.Load())
+			return 0;
+		
+		m_TimeShiftUnit = MapConverter.GetTimeShiftUnit();
+		
 		CDataFileReader dfClientMap;
 		//The map is already converted
 		if(dfClientMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL))
@@ -1663,14 +1669,10 @@ int CServer::LoadMap(const char *pMapName)
 			{
 				dbg_msg("infclass", "Can't create the directory '%s'", aClientMapDir);
 			}
-			
-			CMapConverter MapConverter(Storage(), m_pMap, Console());
-			if(!MapConverter.Load())
-				return 0;
 				
 			if(!MapConverter.CreateMap(aClientMapName))
 				return 0;
-				
+			
 			CDataFileReader dfGeneratedMap;
 			dfGeneratedMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL);
 			m_CurrentMapCrc = dfGeneratedMap.Crc();

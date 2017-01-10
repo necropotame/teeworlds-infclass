@@ -49,7 +49,7 @@ public:
 	{
 		TIMESHIFT_MENUCLASS = 60,
 		TIMESHIFT_MENUCLASS_MASK = NUM_MENUCLASS+1,
-		TIMESHIFT_MENUEFFECT = TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK,
+		TIMESHIFT_MENUEFFECT = TIMESHIFT_MENUCLASS*2+(MASK_ALL+2)*TIMESHIFT_MENUCLASS_MASK,
 	};
 
 protected:
@@ -70,6 +70,8 @@ protected:
 	array<CEnvPoint> m_lEnvPoints;
 	
 	vec2 m_MenuPosition;
+	int m_AnimationCycle;
+	int m_TimeShiftUnit;
 
 protected:	
 	IEngineMap* Map() { return m_pMap; };
@@ -88,6 +90,7 @@ protected:
 	void CopyImages();
 	void CopyGameLayer();
 	void CopyLayers();
+	void CopyAnimations();
 	
 	void AddImageQuad(const char* pName, int ImageID, int GridX, int GridY, int X, int Y, int Width, int Height, vec2 Pos, vec2 Size, vec4 Color, int Env);
 	void AddTeeLayer(const char* pName, int ImageID, vec2 Pos, float Size, int Env=-1, bool Black=false);
@@ -101,6 +104,8 @@ public:
 	
 	bool Load();
 	bool CreateMap(const char* pFilename);
+	
+	inline int GetTimeShiftUnit() const { return m_TimeShiftUnit; }
 };
 
 #endif
