@@ -400,6 +400,10 @@ int CServer::TrySetClientName(int ClientID, const char *pName)
 	// check for empty names
 	if(!aTrimmedName[0])
 		return -1;
+		
+	// name not allowed to start with '/'
+	if(aTrimmedName[0] == '/')
+		return -1;
 
 	pName = aTrimmedName;
 
