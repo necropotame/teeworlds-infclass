@@ -112,8 +112,8 @@ void CEngineerWall::Snap(int SnappingClient)
 	else if (m_LifeSpan < 7*Server()->TickSpeed()) LifeDiff = (rand()%3)+1;
 	else if (m_LifeSpan < 9*Server()->TickSpeed()) LifeDiff = (rand()%3);
 	else if (m_LifeSpan < 11*Server()->TickSpeed()) LifeDiff = (rand()%2);
-	else if (m_LifeSpan < 13*Server()->TickSpeed()) { if (rand()%2 == 0) LifeDiff = (rand()%2); }
-	else if (m_LifeSpan < 15*Server()->TickSpeed()) { if (rand()%3 == 0) LifeDiff = (rand()%2); }
+	else if (m_LifeSpan < 13*Server()->TickSpeed()) { if (min(1, rand()%4) == 1) LifeDiff = 1; }
+	else if (m_LifeSpan < 15*Server()->TickSpeed()) { if (min(1, rand()%6) == 1) LifeDiff = 1; }
 	else LifeDiff = 0;
 	
 	{
