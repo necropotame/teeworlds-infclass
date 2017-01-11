@@ -105,17 +105,29 @@ void CEngineerWall::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient))
 		return;
 
+	int lifeDiff = 0;
+	if (m_LifeSpan < 1*Server()->TickSpeed()) lifeDiff = -(rand()%3)-5;
+	if (m_LifeSpan < 3*Server()->TickSpeed()) lifeDiff = -(rand()%3)-3;
+	else if (m_LifeSpan < 5*Server()->TickSpeed()) lifeDiff = -(rand()%3)-2;
+	else if (m_LifeSpan < 7*Server()->TickSpeed()) lifeDiff = -(rand()%3)-1;
+	else if (m_LifeSpan < 9*Server()->TickSpeed()) lifeDiff = -(rand()%3);
+	else if (m_LifeSpan < 11*Server()->TickSpeed()) lifeDiff = -(rand()%2);
+	else if (m_LifeSpan < 13*Server()->TickSpeed()) if (rand()%2 == 0) lifeDiff = -(rand()%2);
+	else if (m_LifeSpan < 15*Server()->TickSpeed()) if (rand()%3 == 0) lifeDiff = -(rand()%2);
+	else lifeDiff = 0;
+	
 	{
 		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));
 		if(!pObj)
 			return;
 
 
+
 		pObj->m_X = (int)m_Pos.x;
 		pObj->m_Y = (int)m_Pos.y;
 		pObj->m_FromX = (int)m_Pos2.x;
 		pObj->m_FromY = (int)m_Pos2.y;
-		pObj->m_StartTick = Server()->Tick()+Server()->TickSpeed() + Server()->TickSpeed();
+		pObj->m_StartTick = Server()->Tick()+lifeDiff;
 	}
 	{
 		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_EndPointID, sizeof(CNetObj_Laser)));
@@ -128,6 +140,6 @@ void CEngineerWall::Snap(int SnappingClient)
 		pObj->m_Y = (int)Pos.y;
 		pObj->m_FromX = (int)Pos.x;
 		pObj->m_FromY = (int)Pos.y;
-		pObj->m_StartTick = Server()->Tick()+Server()->TickSpeed() + Server()->TickSpeed();
+		pObj->m_StartTick = Server()->Tick()+lifeDiff;
 	}
 }
