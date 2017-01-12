@@ -2939,7 +2939,7 @@ void CCharacter::SlipperyEffect()
 
 void CCharacter::Freeze(float Time, int Player, int Reason)
 {
-	if(m_IsFrozen)
+	if(m_FreezeReason == FREEZEREASON_UNDEAD)
 		return;
 	
 	m_IsFrozen = true;
