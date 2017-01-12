@@ -548,12 +548,12 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 1)
 		{
 			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
-			Page = CMapConverter::TIMESHIFT_MENUCLASS + (Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK;
+			Page = CMapConverter::TIMESHIFT_MENUCLASS + 3*((Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK) + 1;
 		}
 		else if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 2)
 		{
 			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
-			Page = CMapConverter::TIMESHIFT_MENUEFFECT + (Item+1);
+			Page = CMapConverter::TIMESHIFT_MENUEFFECT + 3*(Item+1) + 2;
 		}
 		
 		if(Page >= 0)
@@ -563,7 +563,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			int TimeShift = (PageShift + CycleShift)*Server()->TickSpeed();
 			
 			pGameInfoObj->m_RoundStartTick = Server()->Tick() - TimeShift;
-			pGameInfoObj->m_TimeLimit = 0;
+			pGameInfoObj->m_TimeLimit += (TimeShift/Server()->TickSpeed())/60;
 		}
 	}
 

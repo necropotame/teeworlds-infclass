@@ -586,7 +586,7 @@ void CMapConverter::Finalize()
 			Item.m_ClipY = 0;
 			Item.m_ClipW = 0;
 			Item.m_ClipH = 0;
-			StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Class Menu");
+			StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "#Generated");
 			
 			m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
 		}
@@ -675,7 +675,7 @@ void CMapConverter::Finalize()
 							{
 								{
 									CEnvPoint Point;
-									Point.m_Time = (TIMESHIFT_MENUCLASS+(i+1)+j*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+3*((i+1)+j*TIMESHIFT_MENUCLASS_MASK))*m_TimeShiftUnit;
 									Point.m_Curvetype = 0;
 									Point.m_aValues[0] = HighlightValues[0];
 									Point.m_aValues[1] = HighlightValues[1];
@@ -686,7 +686,7 @@ void CMapConverter::Finalize()
 								}
 								{
 									CEnvPoint Point;
-									Point.m_Time = (TIMESHIFT_MENUCLASS+(i+2)+j*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+3*((i+2)+j*TIMESHIFT_MENUCLASS_MASK))*m_TimeShiftUnit;
 									Point.m_Curvetype = 0;
 									Point.m_aValues[0] = NormalValues[0];
 									Point.m_aValues[1] = NormalValues[1];
@@ -700,7 +700,7 @@ void CMapConverter::Finalize()
 							{
 								{
 									CEnvPoint Point;
-									Point.m_Time = (TIMESHIFT_MENUCLASS+j*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+3*(j*TIMESHIFT_MENUCLASS_MASK))*m_TimeShiftUnit;
 									Point.m_Curvetype = 0;
 									Point.m_aValues[0] = HiddenValues[0];
 									Point.m_aValues[1] = HiddenValues[1];
@@ -711,7 +711,7 @@ void CMapConverter::Finalize()
 								}
 								{
 									CEnvPoint Point;
-									Point.m_Time = (TIMESHIFT_MENUCLASS+(j+1)*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
+									Point.m_Time = (TIMESHIFT_MENUCLASS+3*((j+1)*TIMESHIFT_MENUCLASS_MASK))*m_TimeShiftUnit;
 									Point.m_Curvetype = 0;
 									Point.m_aValues[0] = NormalValues[0];
 									Point.m_aValues[1] = NormalValues[1];
@@ -724,7 +724,7 @@ void CMapConverter::Finalize()
 						}
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
+							Point.m_Time = (TIMESHIFT_MENUCLASS+3*((MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK))*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = NormalValues[0];
 							Point.m_aValues[1] = NormalValues[1];
@@ -735,7 +735,7 @@ void CMapConverter::Finalize()
 						}
 						{
 							CEnvPoint Point;
-							Point.m_Time = (1+TIMESHIFT_MENUCLASS+(MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK)*m_TimeShiftUnit;
+							Point.m_Time = (1+TIMESHIFT_MENUCLASS+3*((MASK_ALL+1)*TIMESHIFT_MENUCLASS_MASK))*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = HiddenValues[0];
 							Point.m_aValues[1] = HiddenValues[1];
@@ -832,7 +832,7 @@ void CMapConverter::Finalize()
 			Item.m_ClipY = 0;
 			Item.m_ClipW = 0;
 			Item.m_ClipH = 0;
-			StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Effect Menu");
+			StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "#Generated");
 			
 			m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
 		}
@@ -910,7 +910,7 @@ void CMapConverter::Finalize()
 				
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+(i+1))*m_TimeShiftUnit;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+3*(i+1))*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = HighlightValues[0];
 							Point.m_aValues[1] = HighlightValues[1];
@@ -921,7 +921,7 @@ void CMapConverter::Finalize()
 						}
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+(i+2))*m_TimeShiftUnit;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+3*(i+2))*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = NormalValues[0];
 							Point.m_aValues[1] = NormalValues[1];
@@ -932,7 +932,7 @@ void CMapConverter::Finalize()
 						}
 						{
 							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+(NUM_MENUEFFECT+2))*m_TimeShiftUnit;
+							Point.m_Time = (TIMESHIFT_MENUEFFECT+3*(NUM_MENUEFFECT+2))*m_TimeShiftUnit;
 							Point.m_Curvetype = 0;
 							Point.m_aValues[0] = HiddenValues[0];
 							Point.m_aValues[1] = HiddenValues[1];
