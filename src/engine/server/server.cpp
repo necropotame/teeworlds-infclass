@@ -239,6 +239,8 @@ int CServerBan::BanExt(T *pBanPool, const typename T::CDataType *pData, int Seco
 		return Result;
 
 	// drop banned clients
+
+	// don't drop it like that. just kick the desired guy
 	typename T::CDataType Data = *pData;
 	for(int i = 0; i < MAX_CLIENTS; ++i)
 	{
