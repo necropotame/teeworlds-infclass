@@ -3592,6 +3592,9 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 
 void CGameContext::OnShutdown()
 {
+	//reset votes.
+	EndVote();
+
 	delete m_pController;
 	m_pController = 0;
 	Clear();
