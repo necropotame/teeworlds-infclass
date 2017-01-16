@@ -2916,7 +2916,7 @@ bool CCharacter::IsInfected() const
 
 bool CCharacter::IsInLove() const
 {
-    return m_pPlayer->GetCharacter()->m_LoveTick > 0;
+    return m_LoveTick > 0;
 }
 
 void CCharacter::LoveEffect()
