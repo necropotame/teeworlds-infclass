@@ -3207,6 +3207,10 @@ public:
 					str_copy(pMOTD, "== Best Spider ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
+				case SQL_SCORETYPE_GHOUL_SCORE:
+					str_copy(pMOTD, "== Best Ghoul ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
 				case SQL_SCORETYPE_UNDEAD_SCORE:
 					str_copy(pMOTD, "== Best Undead ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
