@@ -1266,7 +1266,7 @@ void CCharacter::Tick()
 	//~ else
 		//~ m_InWater = 0;
 	
-	if(!IsInfected() && IsAlive())
+	if(!IsInfected() && IsAlive() && GameServer()->m_pController->IsInfectionStarted())
 	{
 		int Index = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Bonus, m_Pos.x, m_Pos.y);
 		if(Index == ZONE_BONUS_BONUS)
