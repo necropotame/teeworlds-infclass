@@ -235,8 +235,8 @@ int CServerBan::BanExt(T *pBanPool, const typename T::CDataType *pData, int Seco
 	}
 
 	int Result = Ban(pBanPool, pData, Seconds, pReason);
-	if(Result != 0)
-		return Result;
+	//if(Result != 0)
+	//	return Result;
 
 	// drop banned clients
 
@@ -293,7 +293,8 @@ bool CServerBan::ConBanExt(IConsole::IResult *pResult, void *pUser)
 		else
 		{
 			pThis->m_BanID = ClientID; //to ban the right guy, not his brother or so :P
-			pThis->BanAddr(pThis->Server()->m_NetServer.ClientAddr(ClientID), Minutes*60, pReason);
+			if(pThis->BanAddr(pThis->Server()->m_NetServer.ClientAddr(ClientID), Minutes*60, pReason) != 0) //error occured
+				pThis->Server()->Kick(ClientID, pReason);
 		}
 	}
 	else
