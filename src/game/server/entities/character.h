@@ -162,6 +162,7 @@ private:
 	int m_InvisibleTick;
 	bool m_IsInvisible;
 	int m_HealTick;
+	int m_BonusTick;
 	
 	int m_FlagID;
 	int m_HeartID;

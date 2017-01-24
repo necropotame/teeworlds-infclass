@@ -95,6 +95,7 @@ class CGameContext : public IGameServer
 public:
 	int m_ZoneHandle_Damage;
 	int m_ZoneHandle_Teleport;
+	int m_ZoneHandle_Bonus;
 
 public:
 	IServer *Server() const { return m_pServer; }

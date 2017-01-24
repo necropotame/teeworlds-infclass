@@ -82,6 +82,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_HealTick = 0;
 	m_InAirTick = 0;
 	m_InWater = 0;
+	m_BonusTick = 0;
 	m_WaterJumpLifeSpan = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -1264,6 +1265,25 @@ void CCharacter::Tick()
 	//~ }
 	//~ else
 		//~ m_InWater = 0;
+	
+	if(!IsInfected() && IsAlive())
+	{
+		int Index = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Bonus, m_Pos.x, m_Pos.y);
+		if(Index == ZONE_BONUS_BONUS)
+		{
+			m_BonusTick++;
+			if(m_BonusTick > Server()->TickSpeed()*60)
+			{
+				m_BonusTick = 0;
+				
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("You hold a bonus area for one minute, +5 points"), NULL);
+				Server()->RoundStatistics()->OnScoreEvent(m_pPlayer->GetCID(), SCOREEVENT_BONUS, GetClass());
+				GameServer()->SendScoreSound(m_pPlayer->GetCID());
+			}
+		}
+	}
+	else
+		m_BonusTick = 0;
 	
 	{
 		int Index0 = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Damage, m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f);

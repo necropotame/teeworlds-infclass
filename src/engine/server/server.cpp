@@ -235,8 +235,8 @@ int CServerBan::BanExt(T *pBanPool, const typename T::CDataType *pData, int Seco
 	}
 
 	int Result = Ban(pBanPool, pData, Seconds, pReason);
-	//if(Result != 0)
-	//	return Result;
+	if(Result != 0)
+		return Result;
 
 	// drop banned clients
 

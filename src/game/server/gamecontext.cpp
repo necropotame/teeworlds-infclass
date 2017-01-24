@@ -3535,6 +3535,7 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	//Get zones
 	m_ZoneHandle_Damage = m_Collision.GetZoneHandle("icDamage");
 	m_ZoneHandle_Teleport = m_Collision.GetZoneHandle("icTele");
+	m_ZoneHandle_Bonus = m_Collision.GetZoneHandle("icBonus");
 
 	// reset everything here
 	//world = new GAMEWORLD;
