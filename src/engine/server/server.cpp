@@ -341,6 +341,7 @@ void CServer::CClient::Reset(bool ResetScore)
 		
 		m_Session.m_RoundId = -1;
 		m_Session.m_Class = PLAYERCLASS_NONE;
+		m_Session.m_MuteTick = 0;
 		
 		m_Accusation.m_Num = 0;
 	}
@@ -1956,6 +1957,9 @@ int CServer::Run()
 				//Check for name collision. We add this because the login is in a different thread and can't check it himself.
 				for(int i=MAX_CLIENTS-1; i>=0; i--)
 				{
+					if(m_aClients[i].m_State >= CClient::STATE_READY && m_aClients[i].m_Session.m_MuteTick > 0)
+						m_aClients[i].m_Session.m_MuteTick--;
+					
 					if(m_aClients[i].m_State >= CClient::STATE_READY && m_aClients[i].m_UserID < 0)
 					{
 						if(TrySetClientName(i, m_aClients[i].m_aName))
@@ -2099,6 +2103,52 @@ int CServer::Run()
 	return 0;
 }
 
+bool CServer::ConUnmute(IConsole::IResult *pResult, void *pUser)
+{
+	CServer* pThis = (CServer *)pUser;
+	
+	const char *pStr = pResult->GetString(0);
+	
+	if(CNetDatabase::StrAllnum(pStr))
+	{
+		int ClientID = str_toint(pStr);
+		if(ClientID < 0 || ClientID >= MAX_CLIENTS || pThis->m_aClients[ClientID].m_State == CServer::CClient::STATE_EMPTY)
+			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "Invalid client id");
+		else
+			pThis->m_aClients[ClientID].m_Session.m_MuteTick = 0;
+	}
+	else
+		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "Invalid client id");
+	
+	return true;
+}
+
+bool CServer::ConMute(IConsole::IResult *pResult, void *pUser)
+{
+	CServer* pThis = (CServer *)pUser;
+	
+	const char *pStr = pResult->GetString(0);
+	int Minutes = pResult->NumArguments()>1 ? clamp(pResult->GetInteger(1), 0, 44640) : 5;
+	const char *pReason = pResult->NumArguments()>2 ? pResult->GetString(2) : "No reason given";
+	
+	if(CNetDatabase::StrAllnum(pStr))
+	{
+		int ClientID = str_toint(pStr);
+		if(ClientID < 0 || ClientID >= MAX_CLIENTS || pThis->m_aClients[ClientID].m_State == CServer::CClient::STATE_EMPTY)
+			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "Invalid client id");
+		else
+		{
+			int Time = 60*Minutes;
+			pThis->m_aClients[ClientID].m_Session.m_MuteTick = pThis->TickSpeed()*60*Minutes;
+			pThis->GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_ACCUSATION, _("{str:Victim} has been muted for {sec:Duration} ({str:Reason})"), "Victim", pThis->ClientName(ClientID) ,"Duration", &Time, "Reason", pReason, NULL);
+		}
+	}
+	else
+		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "Invalid client id");
+	
+	return true;
+}
+
 bool CServer::ConKick(IConsole::IResult *pResult, void *pUser)
 {
 	CServer* pThis = (CServer *)pUser;
@@ -2117,20 +2167,7 @@ bool CServer::ConKick(IConsole::IResult *pResult, void *pUser)
 			pThis->Kick(ClientID, aBuf);
 	}
 	else
-	{
-		int NumPlayerFound = 0;
-		for(int i=0; i<MAX_CLIENTS; i++)
-		{
-			if(pThis->m_aClients[i].m_State != CServer::CClient::STATE_EMPTY && str_comp(pThis->ClientName(i), pStr) == 0)
-			{
-				NumPlayerFound++;
-				pThis->Kick(i, aBuf);
-			}
-		}
-		
-		if(!NumPlayerFound)
-			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "No player was found with this name");
-	}
+		pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", "Invalid client id");
 	
 	return true;
 }
@@ -2419,7 +2456,7 @@ void CServer::RegisterCommands()
 	m_pStorage = Kernel()->RequestInterface<IStorage>();
 
 	// register console commands
-	Console()->Register("kick", "s<username or uid> ?r<reason>", CFGFLAG_CHAT|CFGFLAG_SERVER, ConKick, this, "Kick player with specified id for any reason");
+	Console()->Register("kick", "s<username or uid> ?r<reason>", CFGFLAG_SERVER, ConKick, this, "Kick player with specified id for any reason");
 	Console()->Register("status", "", CFGFLAG_SERVER, ConStatus, this, "List players");
 	Console()->Register("shutdown", "", CFGFLAG_SERVER, ConShutdown, this, "Shut down");
 	Console()->Register("logout", "", CFGFLAG_SERVER, ConLogout, this, "Logout of rcon");
@@ -2436,6 +2473,9 @@ void CServer::RegisterCommands()
 	Console()->Chain("mod_command", ConchainModCommandUpdate, this);
 	Console()->Chain("console_output_level", ConchainConsoleOutputLevelUpdate, this);
 
+	Console()->Register("mute", "s<clientid> ?i<minutes> ?r<reason>", CFGFLAG_SERVER, ConMute, this, "Mute player with specified id for x minutes for any reason");
+	Console()->Register("unmute", "s<clientid>", CFGFLAG_SERVER, ConUnmute, this, "Unmute player with specified id");
+	
 /* INFECTION MODIFICATION START ***************************************/
 #ifdef CONF_SQL
 	Console()->Register("inf_add_sqlserver", "ssssssi?i", CFGFLAG_SERVER, ConAddSqlServer, this, "add a sqlserver");

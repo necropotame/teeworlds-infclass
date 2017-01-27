@@ -268,6 +268,9 @@ public:
 	static bool ConchainModCommandUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 	static bool ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
+	static bool ConMute(class IConsole::IResult *pResult, void *pUser);
+	static bool ConUnmute(class IConsole::IResult *pResult, void *pUser);
+	
 /* DDNET MODIFICATION START *******************************************/
 	static bool ConAddSqlServer(IConsole::IResult *pResult, void *pUserData);
 	static bool ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData);

@@ -1366,11 +1366,19 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			}
 			else
 			{
-				//Inverse order and add ligature for arabic
-				dynamic_string Buffer;
-				Buffer.copy(pMsg->m_pMessage);
-				Server()->Localization()->ArabicShaping(Buffer);
-				SendChat(ClientID, Team, Buffer.buffer());
+				if(Server()->GetClientSession(ClientID) && Server()->GetClientSession(ClientID)->m_MuteTick > 0)
+				{
+					int Time = Server()->GetClientSession(ClientID)->m_MuteTick/Server()->TickSpeed();
+					SendChatTarget_Localization(-1, CHATCATEGORY_ACCUSATION, _("You are muted for {sec:Duration}"), "Duration", &Time, NULL);
+				}
+				else
+				{
+					//Inverse order and add ligature for arabic
+					dynamic_string Buffer;
+					Buffer.copy(pMsg->m_pMessage);
+					Server()->Localization()->ArabicShaping(Buffer);
+					SendChat(ClientID, Team, Buffer.buffer());
+				}
 			}
 /* INFECTION MODIFICATION END *****************************************/
 		}
@@ -2527,6 +2535,13 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 
 bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 {	
+	if(Server()->GetClientSession(ClientID) && Server()->GetClientSession(ClientID)->m_MuteTick > 0)
+	{
+		int Time = Server()->GetClientSession(ClientID)->m_MuteTick/Server()->TickSpeed();
+		SendChatTarget_Localization(-1, CHATCATEGORY_ACCUSATION, _("You are muted for {sec:Duration}"), "Duration", &Time, NULL);
+		return false;
+	}
+	
 	bool ArgumentFound = false;
 	const char* pArgumentIter = pStr;
 	while(*pArgumentIter)

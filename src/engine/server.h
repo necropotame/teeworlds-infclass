@@ -108,6 +108,7 @@ public:
 	{
 		int m_RoundId;
 		int m_Class;
+		int m_MuteTick;
 	};
 	
 	struct CClientAccusation
