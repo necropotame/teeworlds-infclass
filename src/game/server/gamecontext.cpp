@@ -1369,7 +1369,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				if(Server()->GetClientSession(ClientID) && Server()->GetClientSession(ClientID)->m_MuteTick > 0)
 				{
 					int Time = Server()->GetClientSession(ClientID)->m_MuteTick/Server()->TickSpeed();
-					SendChatTarget_Localization(-1, CHATCATEGORY_ACCUSATION, _("You are muted for {sec:Duration}"), "Duration", &Time, NULL);
+					SendChatTarget_Localization(ClientID, CHATCATEGORY_ACCUSATION, _("You are muted for {sec:Duration}"), "Duration", &Time, NULL);
 				}
 				else
 				{
@@ -2538,7 +2538,7 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 	if(Server()->GetClientSession(ClientID) && Server()->GetClientSession(ClientID)->m_MuteTick > 0)
 	{
 		int Time = Server()->GetClientSession(ClientID)->m_MuteTick/Server()->TickSpeed();
-		SendChatTarget_Localization(-1, CHATCATEGORY_ACCUSATION, _("You are muted for {sec:Duration}"), "Duration", &Time, NULL);
+		SendChatTarget_Localization(ClientID, CHATCATEGORY_ACCUSATION, _("You are muted for {sec:Duration}"), "Duration", &Time, NULL);
 		return false;
 	}
 	
