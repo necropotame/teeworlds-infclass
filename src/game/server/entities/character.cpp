@@ -2233,10 +2233,9 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(GetClass() == PLAYERCLASS_GHOUL)
 	{
 		int DamageAccepted = 0;
-		int GhoulDamageThreshold = 10 * m_pPlayer->GetGhoulPercent();
 		for(int i=0; i<Dmg; i++)
 		{
-			if(random_prob(GhoulDamageThreshold/2.0f))
+			if(random_prob(m_pPlayer->GetGhoulPercent()/2.0f))
 				DamageAccepted++;
 		}
 		Dmg = DamageAccepted;
