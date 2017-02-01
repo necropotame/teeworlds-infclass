@@ -1795,7 +1795,7 @@ int CServer::Run()
 			}
 		}
 		
-		int MapPos = (rand()+g_Config.m_SvPort+time_get())%nbMaps;
+		int MapPos = random_int(0, nbMaps-1);
 		char aBuf[512] = {0};
 		
 		{

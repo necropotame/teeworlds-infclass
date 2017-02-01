@@ -273,7 +273,7 @@ void CGameControllerMOD::Tick()
 			while(m_InfectedCounter < NumNeededInfection)
 			{
 				float InfectionProb = 1.0/static_cast<float>(m_HumanCounter);
-				float random = frandom();
+				float random = random_float();
 				
 				//Fair infection
 				bool FairInfectionFound = false;
@@ -386,7 +386,7 @@ void CGameControllerMOD::Tick()
 						NewExplosion = true;
 						m_GrowingMap[j*m_MapWidth+i] |= 8;
 						m_GrowingMap[j*m_MapWidth+i] &= ~1;
-						if(rand()%10 == 0)
+						if(random_prob(0.1f))
 						{
 							vec2 TilePos = vec2(16.0f, 16.0f) + vec2(i*32.0f, j*32.0f);
 							GameServer()->CreateExplosion(TilePos, -1, WEAPON_GAME, true);
@@ -730,7 +730,7 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	if(pPlayer->IsInfected() && m_ExplosionStarted)
 		return false;
 		
-	if(m_InfectedStarted && pPlayer->IsInfected() && rand()%3 > 0)
+	if(m_InfectedStarted && pPlayer->IsInfected() && random_prob(0.66f))
 	{
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
@@ -751,7 +751,7 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	int Type = (pPlayer->IsInfected() ? 0 : 1);
 
 	// get spawn point
-	int RandomShift = rand()%m_SpawnPoints[Type].size();
+	int RandomShift = random_int(0, m_SpawnPoints[Type].size()-1);
 	for(int i = 0; i < m_SpawnPoints[Type].size(); i++)
 	{
 		int I = (i + RandomShift)%m_SpawnPoints[Type].size();
@@ -776,7 +776,7 @@ bool CGameControllerMOD::PickupAllowed(int Index)
 
 int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 {
-	float random = frandom();
+	float random = random_float();
 	float TotalProbHumanClass = m_TotalProbHumanClass;
 	
 	//Get information about existing infected
@@ -905,7 +905,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 
 int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 {
-	float random = frandom();
+	float random = random_float();
 	float TotalProbInfectedClass = m_TotalProbInfectedClass;
 	
 	//Get information about existing infected

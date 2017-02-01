@@ -946,7 +946,7 @@ void CCharacter::FireWeapon()
 					
 					for(int i = -ShotSpread; i <= ShotSpread; ++i)
 					{
-						float a = GetAngle(Direction) + ((float)rand()/(float)RAND_MAX)/5.0f;
+						float a = GetAngle(Direction) + random_float()/5.0f;
 						
 						CMercenaryGrenade *pProj = new CMercenaryGrenade(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
 
@@ -1028,7 +1028,7 @@ void CCharacter::FireWeapon()
 				if(m_PositionLocked)
 					Damage = 30;
 				else
-					Damage = min(10, 9 + rand()%4);
+					Damage = min(10, 9 + random_int(0, 3));
 			}
 			
 			if(GetClass() == PLAYERCLASS_SCIENTIST)
@@ -1449,7 +1449,7 @@ void CCharacter::Tick()
 									(y < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[(y+1)*GHOST_SEARCHMAP_SIZE+x] & 0x1))
 								) ||
 								(
-									(rand()%4 == 0) && (
+									(random_prob(0.25f)) && (
 										(x > 0 && y > 0 && (m_GhostSearchMap[(y-1)*GHOST_SEARCHMAP_SIZE+x-1] & 0x1)) ||
 										(x > 0 && y < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[(y+1)*GHOST_SEARCHMAP_SIZE+x-1] & 0x1)) ||
 										(x < GHOST_SEARCHMAP_SIZE-1 && y > 0 && (m_GhostSearchMap[(y-1)*GHOST_SEARCHMAP_SIZE+x+1] & 0x1)) ||
@@ -2236,7 +2236,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		int GhoulDamageThreshold = 10 * m_pPlayer->GetGhoulPercent();
 		for(int i=0; i<Dmg; i++)
 		{
-			if(rand()%20 >= GhoulDamageThreshold)
+			if(random_prob(GhoulDamageThreshold/2.0f))
 				DamageAccepted++;
 		}
 		Dmg = DamageAccepted;
@@ -2251,8 +2251,8 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 				//Heal and unfreeze
 				if(pKillerPlayer->GetClass() == PLAYERCLASS_BOOMER && Weapon == WEAPON_HAMMER)
 				{
-					IncreaseHealth(4+rand()%6);
-					IncreaseArmor(4+rand()%6);
+					IncreaseHealth(4+random_int(0, 5));
+					IncreaseArmor(4+random_int(0, 5));
 					if(IsFrozen())
 						Unfreeze();
 						

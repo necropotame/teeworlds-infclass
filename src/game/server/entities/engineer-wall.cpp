@@ -107,18 +107,30 @@ void CEngineerWall::Snap(int SnappingClient)
 
 	// Laser dieing animation
 	int LifeDiff = 0;
-	if (m_LifeSpan < 1*Server()->TickSpeed()) LifeDiff = (rand()%2)+4;
-	else if (m_LifeSpan < 2*Server()->TickSpeed()) LifeDiff = (rand()%3)+3;
-	else if (m_LifeSpan < 3*Server()->TickSpeed()) LifeDiff = (rand()%3)+2;
-	else if (m_LifeSpan < 4*Server()->TickSpeed()) LifeDiff = (rand()%3)+1;
-	else if (m_LifeSpan < 5*Server()->TickSpeed()) LifeDiff = (rand()%3);
-	else if (m_LifeSpan < 6*Server()->TickSpeed()) LifeDiff = (rand()%2);
-	else if (m_LifeSpan < 7*Server()->TickSpeed()) { if (min(1, rand()%4) == 1) LifeDiff = 1; else LifeDiff = 0; } 
-	else if (m_LifeSpan < 8*Server()->TickSpeed()) { if (min(1, rand()%6) == 1) LifeDiff = 1; else LifeDiff = 0; } 
-	else if (m_LifeSpan < 9*Server()->TickSpeed()) { if (min(1, rand()%8) == 1) LifeDiff = 0; else LifeDiff = -1; } 
-	else if (m_LifeSpan < 10*Server()->TickSpeed()) { if (min(1, rand()%12) == 1) LifeDiff = 0; else LifeDiff = -1; } 
-	else if (m_LifeSpan < 11*Server()->TickSpeed()) { if (min(1, rand()%12) == 1) LifeDiff = -1; else LifeDiff = -Server()->TickSpeed()*2; } 
-	else LifeDiff = -Server()->TickSpeed()*2;
+	if (m_LifeSpan < 1*Server()->TickSpeed())
+		LifeDiff = random_int(4, 5);
+	else if (m_LifeSpan < 2*Server()->TickSpeed())
+		LifeDiff = random_int(3, 5);
+	else if (m_LifeSpan < 3*Server()->TickSpeed())
+		LifeDiff = random_int(2, 4);
+	else if (m_LifeSpan < 4*Server()->TickSpeed())
+		LifeDiff = random_int(1, 3);
+	else if (m_LifeSpan < 5*Server()->TickSpeed())
+		LifeDiff = random_int(0, 2);
+	else if (m_LifeSpan < 6*Server()->TickSpeed())
+		LifeDiff = random_int(0, 1);
+	else if (m_LifeSpan < 7*Server()->TickSpeed())
+		LifeDiff = (random_prob(3.0f/4.0f)) ? 1 : 0;
+	else if (m_LifeSpan < 8*Server()->TickSpeed())
+		LifeDiff = (random_prob(5.0f/6.0f)) ? 1 : 0;
+	else if (m_LifeSpan < 9*Server()->TickSpeed())
+		LifeDiff = (random_prob(5.0f/6.0f)) ? 0 : -1;
+	else if (m_LifeSpan < 10*Server()->TickSpeed())
+		LifeDiff = (random_prob(5.0f/6.0f)) ? 0 : -1;
+	else if (m_LifeSpan < 11*Server()->TickSpeed())
+		LifeDiff = (random_prob(5.0f/6.0f)) ? -1 : -Server()->TickSpeed()*2;
+	else
+		LifeDiff = -Server()->TickSpeed()*2;
 	
 	{
 		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));

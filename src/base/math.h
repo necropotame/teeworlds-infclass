@@ -4,6 +4,7 @@
 #define BASE_MATH_H
 
 #include <stdlib.h>
+#include <random>
 
 template <typename T>
 inline T clamp(T val, T min, T max)
@@ -33,7 +34,25 @@ inline T mix(const T a, const T b, TB amount)
 	return a + (b-a)*amount;
 }
 
-inline float frandom() { return rand()/(float)(RAND_MAX); }
+static std::random_device RandomDevice;
+static std::mt19937 RandomEngine(RandomDevice());
+
+inline float random_float()
+{
+	std::uniform_real_distribution<float> Distribution(0.0f, 1.0f);
+	return Distribution(RandomEngine);
+}
+
+inline bool random_prob(float f)
+{
+	return (random_float() < f);
+}
+
+inline int random_int(int Min, int Max)
+{
+	std::uniform_int_distribution<int> Distribution(Min, Max);
+	return Distribution(RandomEngine);
+}
 
 // float to fixed
 inline int f2fx(float v) { return (int)(v*(float)(1<<10)); }

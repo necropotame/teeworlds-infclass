@@ -68,25 +68,25 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 	switch(m_ExplosionEffect)
 	{
 		case GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED:
-			if(rand()%10 == 0)
+			if(random_prob(0.1f))
 			{
 				GameServer()->CreateHammerHit(m_SeedPos);
 			}
 			break;
 		case GROWINGEXPLOSIONEFFECT_POISON_INFECTED:
-			if(rand()%10 == 0)
+			if(random_prob(0.1f))
 			{
 				GameServer()->CreateDeath(m_SeedPos, m_Owner);
 			}
 			break;
 		case GROWINGEXPLOSIONEFFECT_EXPLOSION_INFECTED:
-			if(rand()%5 == 0)
+			if(random_prob(0.2f))
 			{
 				GameServer()->CreateDeath(m_SeedPos, m_Owner);
 			}
 			break;
 		case GROWINGEXPLOSIONEFFECT_SHOCKWAVE_INFECTED:
-			if(rand()%5 == 0)
+			if(random_prob(0.2f))
 			{
 				GameServer()->CreateDeath(m_SeedPos, m_Owner);
 			}
@@ -96,7 +96,7 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 			{
 				//~ GameServer()->CreateHammerHit(m_SeedPos);
 					
-				vec2 EndPoint = m_SeedPos + vec2(-16.0f + frandom()*32.0f, -16.0f + frandom()*32.0f);
+				vec2 EndPoint = m_SeedPos + vec2(-16.0f + random_float()*32.0f, -16.0f + random_float()*32.0f);
 				m_pGrowingMapVec[m_MaxGrowing*m_GrowingMap_Length+m_MaxGrowing] = EndPoint;
 			}					
 			break;
@@ -150,41 +150,41 @@ void CGrowingExplosion::Tick()
 				{
 					m_pGrowingMap[j*m_GrowingMap_Length+i] = tick;
 					NewTile = true;
-					vec2 TileCenter = m_SeedPos + vec2(32.0f*(i-m_MaxGrowing) - 16.0f + frandom()*32.0f, 32.0f*(j-m_MaxGrowing) - 16.0f + frandom()*32.0f);
+					vec2 TileCenter = m_SeedPos + vec2(32.0f*(i-m_MaxGrowing) - 16.0f + random_float()*32.0f, 32.0f*(j-m_MaxGrowing) - 16.0f + random_float()*32.0f);
 					switch(m_ExplosionEffect)
 					{
 						case GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED:
-							if(rand()%10 == 0)
+							if(random_prob(0.1f))
 							{
 								GameServer()->CreateHammerHit(TileCenter);
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_POISON_INFECTED:
-							if(rand()%10 == 0)
+							if(random_prob(0.1f))
 							{
 								GameServer()->CreateDeath(TileCenter, m_Owner);
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_EXPLOSION_INFECTED:
-							if(rand()%5 == 0)
+							if(random_prob(0.1f))
 							{
 								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, true);
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_HALLUCINATION_INFECTED:
-							if(rand()%10 == 0)
+							if(random_prob(0.1f))
 							{
 								GameServer()->CreatePlayerSpawn(TileCenter);
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_LOVE_INFECTED:
-							if(rand()%5 == 0)
+							if(random_prob(0.2f))
 							{
 								GameServer()->CreateLoveEvent(TileCenter);
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_SHOCKWAVE_INFECTED:
-							if(rand()%5 == 0)
+							if(random_prob(0.2f))
 							{
 								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, true);
 							}
@@ -208,7 +208,7 @@ void CGrowingExplosion::Tick()
 							break;
 						case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
 							{
-								vec2 EndPoint = m_SeedPos + vec2(32.0f*(i-m_MaxGrowing) - 16.0f + frandom()*32.0f, 32.0f*(j-m_MaxGrowing) - 16.0f + frandom()*32.0f);
+								vec2 EndPoint = m_SeedPos + vec2(32.0f*(i-m_MaxGrowing) - 16.0f + random_float()*32.0f, 32.0f*(j-m_MaxGrowing) - 16.0f + random_float()*32.0f);
 								m_pGrowingMapVec[j*m_GrowingMap_Length+i] = EndPoint;
 								
 								int NumPossibleStartPoint = 0;
@@ -237,12 +237,12 @@ void CGrowingExplosion::Tick()
 								
 								if(NumPossibleStartPoint > 0)
 								{
-									int randNb = rand()%NumPossibleStartPoint;
+									int randNb = random_int(0, NumPossibleStartPoint-1);
 									vec2 StartPoint = PossibleStartPoint[randNb];
 									GameServer()->CreateLaserDotEvent(StartPoint, EndPoint, Server()->TickSpeed()/6);
 								}
 								
-								if(rand()%10 == 0)
+								if(random_prob(0.1f))
 								{
 									GameServer()->CreateSound(EndPoint, SOUND_RIFLE_BOUNCE);
 								}
@@ -259,7 +259,7 @@ void CGrowingExplosion::Tick()
 		switch(m_ExplosionEffect)
 		{
 			case GROWINGEXPLOSIONEFFECT_POISON_INFECTED:
-				if(rand()%10 == 0)
+				if(random_prob(0.1f))
 				{
 					GameServer()->CreateSound(m_Pos, SOUND_PLAYER_DIE);
 				}

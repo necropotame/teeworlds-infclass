@@ -233,7 +233,7 @@ void CGameContext::CreateExplosionDisk(vec2 Pos, float InnerRadius, float Damage
 	
 	float CircleLength = 2.0*pi*max(DamageRadius-135.0f, 0.0f);
 	int NumSuroundingExplosions = CircleLength/32.0f;
-	float AngleStart = frandom()*pi*2.0f;
+	float AngleStart = random_float()*pi*2.0f;
 	float AngleStep = pi*2.0f/static_cast<float>(NumSuroundingExplosions);
 	for(int i=0; i<NumSuroundingExplosions; i++)
 	{
@@ -846,7 +846,7 @@ void CGameContext::OnTick()
 		}
 		
 		if(NbTargets > 1)
-			m_TargetToKill = m_aTargetList[rand()%NbTargets];
+			m_TargetToKill = m_aTargetList[random_int(0, NbTargets-1)];
 	}
 	
 	//Check for banvote
@@ -2159,7 +2159,7 @@ bool CGameContext::ConShuffleTeams(IConsole::IResult *pResult, void *pUserData)
 				pSelf->m_apPlayers[i]->SetTeam(TEAM_RED, false);
 			else
 			{	
-				if(rand() % 2)
+				if(random_prob(0.5f))
 				{
 					pSelf->m_apPlayers[i]->SetTeam(TEAM_BLUE, false);
 					++CounterBlue;

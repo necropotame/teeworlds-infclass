@@ -30,7 +30,7 @@ void CHeroFlag::Show()
 void CHeroFlag::FindPosition()
 {
 	int NbPos = GameServer()->m_pController->HeroFlagPositions().size();
-	int Index = rand()%NbPos;
+	int Index = random_int(0, NbPos-1);
 	
 	m_Pos = GameServer()->m_pController->HeroFlagPositions()[Index];
 }
