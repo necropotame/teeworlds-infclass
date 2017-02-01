@@ -775,16 +775,18 @@ bool CGameControllerMOD::PickupAllowed(int Index)
 }
 
 int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
-{
-	float random = random_float();
-	float TotalProbHumanClass = m_TotalProbHumanClass;
-	
+{	
 	//Get information about existing infected
 	int nbSupport = 0;
 	int nbHero = 0;
 	int nbMedic = 0;
 	int nbDefender = 0;
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+	
+	double Probability[NB_HUMANCLASS];
+	for(int i=0; i<NB_HUMANCLASS; i++)
+		Probability[i] = m_ClassProbability[START_HUMANCLASS+i+1];
+	
 	while(Iter.Next())
 	{
 		switch(Iter.Player()->GetClass())
@@ -808,99 +810,31 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		}
 	}
 	
-	bool defenderEnabled = true;
 	if(nbDefender >= g_Config.m_InfDefenderLimit)
 	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_ENGINEER];
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SOLDIER];
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SCIENTIST];
-		defenderEnabled = false;
+		Probability[PLAYERCLASS_ENGINEER - START_HUMANCLASS - 1] = 0.0f;
+		Probability[PLAYERCLASS_SOLDIER - START_HUMANCLASS - 1] = 0.0f;
+		Probability[PLAYERCLASS_SCIENTIST - START_HUMANCLASS - 1] = 0.0f;
 	}
 	
-	bool supportEnabled = true;
 	if(nbSupport >= g_Config.m_InfSupportLimit)
 	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_NINJA];
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MERCENARY];
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_SNIPER];
-		supportEnabled = false;
+		Probability[PLAYERCLASS_NINJA - START_HUMANCLASS - 1] = 0.0f;
+		Probability[PLAYERCLASS_MERCENARY - START_HUMANCLASS - 1] = 0.0f;
+		Probability[PLAYERCLASS_SNIPER - START_HUMANCLASS - 1] = 0.0f;
 	}
 	
-	bool medicEnabled = true;
 	if(nbMedic >= g_Config.m_InfMedicLimit)
 	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_MEDIC];
-		medicEnabled = false;
+		Probability[PLAYERCLASS_MEDIC - START_HUMANCLASS - 1] = 0.0f;
 	}
 	
-	bool heroEnabled = true;
 	if(nbHero >= g_Config.m_InfHeroLimit)
 	{
-		TotalProbHumanClass -= m_ClassProbability[PLAYERCLASS_HERO];
-		heroEnabled = false;
+		Probability[PLAYERCLASS_HERO - START_HUMANCLASS - 1] = 0.0f;
 	}
 	
-	if(defenderEnabled)
-	{
-		random -= m_ClassProbability[PLAYERCLASS_ENGINEER]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_ENGINEER;
-		}
-		
-		random -= m_ClassProbability[PLAYERCLASS_SOLDIER]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_SOLDIER;
-		}
-		
-		random -= m_ClassProbability[PLAYERCLASS_SCIENTIST]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_SCIENTIST;
-		}
-	}
-	
-	if(medicEnabled)
-	{
-		random -= m_ClassProbability[PLAYERCLASS_MEDIC]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_MEDIC;
-		}
-	}
-	
-	if(heroEnabled)
-	{
-		random -= m_ClassProbability[PLAYERCLASS_HERO]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_HERO;
-		}
-	}
-	
-	if(supportEnabled)
-	{
-		random -= m_ClassProbability[PLAYERCLASS_NINJA]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_NINJA;
-		}
-		
-		random -= m_ClassProbability[PLAYERCLASS_MERCENARY]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_MERCENARY;
-		}
-		
-		random -= m_ClassProbability[PLAYERCLASS_SNIPER]/TotalProbHumanClass;
-		if(random < 0.0f)
-		{
-			return PLAYERCLASS_SNIPER;
-		}
-	}
-	
-	return PLAYERCLASS_ENGINEER;
+	return START_HUMANCLASS + 1 + random_distribution(Probability, Probability + NB_HUMANCLASS);
 }
 
 int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
