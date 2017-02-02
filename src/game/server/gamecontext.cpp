@@ -3717,7 +3717,7 @@ void CGameContext::TargetKilled()
 	m_TargetToKill = -1;
 	
 	int PlayerCounter = 0;
-	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+	CPlayerIterator<PLAYERITER_INGAME> Iter(m_apPlayers);
 	while(Iter.Next())
 		PlayerCounter++;
 	
