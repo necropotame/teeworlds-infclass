@@ -182,6 +182,7 @@ private:
 public:
 	int m_PositionLockTick;
 	bool m_PositionLocked;
+	bool m_PositionLockAvailable;
 	int m_LoveTick;
 	int m_HallucinationTick;
 	int m_SlipperyTick;

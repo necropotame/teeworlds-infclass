@@ -78,6 +78,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_InvisibleTick = 0;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
+	m_PositionLockAvailable = false;
 	m_PoisonTick = 0;
 	m_HealTick = 0;
 	m_InAirTick = 0;
@@ -611,14 +612,16 @@ void CCharacter::FireWeapon()
 			{
 				if(m_Pos.y > -600.0)
 				{
-					if(m_PositionLockTick < -2*Server()->TickSpeed())
+					if(m_PositionLockTick <= 0 && m_PositionLockAvailable)
 					{
 						m_PositionLockTick = Server()->TickSpeed()*15;
 						m_PositionLocked = true;
+						m_PositionLockAvailable = false;
 					}
-					else if(m_PositionLockTick > Server()->TickSpeed())
+					else
 					{
-						m_PositionLockTick = Server()->TickSpeed();
+						m_PositionLockTick = 0;
+						m_PositionLocked = false;
 					}
 				}
 			}
@@ -1265,6 +1268,13 @@ void CCharacter::Tick()
 	//~ }
 	//~ else
 		//~ m_InWater = 0;
+	if(GetClass() == PLAYERCLASS_SNIPER && m_PositionLocked)
+	{
+		if(m_Input.m_Jump)
+		{
+			m_PositionLocked = false;
+		}
+	}
 	
 	if(!IsInfected() && IsAlive() && GameServer()->m_pController->IsInfectionStarted())
 	{
@@ -1325,10 +1335,6 @@ void CCharacter::Tick()
 		--m_PositionLockTick;
 		if(m_PositionLockTick <= 0)
 			m_PositionLocked = false;
-	}
-	else
-	{
-		--m_PositionLockTick;
 	}
 	
 	--m_FrozenTime;
@@ -1536,6 +1542,10 @@ void CCharacter::Tick()
 	if(GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_DartLifeSpan <= 0)
 	{
 		m_DartLeft = g_Config.m_InfNinjaJump;
+	}
+	if(GetClass() == PLAYERCLASS_SNIPER && m_InAirTick <= 0)
+	{
+		m_PositionLockAvailable = true;
 	}
 	
 	if(m_IsFrozen)
@@ -2914,7 +2924,8 @@ void CCharacter::DestroyChildEntities()
 	m_FirstShot = true;
 	m_HookMode = 0;
 	m_PositionLockTick = 0;
-	m_PositionLocked = 0;
+	m_PositionLocked = false;
+	m_PositionLockAvailable = false;
 }
 
 void CCharacter::SetClass(int ClassChoosed)
