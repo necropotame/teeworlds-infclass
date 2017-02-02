@@ -172,6 +172,8 @@ public:
 	float GetGhoulPercent();
 	void IncreaseGhoulLevel(int Diff);
 	inline int GetGhoulLevel() const { return m_GhoulLevel; }
+	
+	int m_LastHumanClasses[2];
 /* INFECTION MODIFICATION END *****************************************/
 };
 

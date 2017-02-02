@@ -47,6 +47,9 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_PrevTuningParams = *pGameServer->Tuning();
 	m_NextTuningParams = m_PrevTuningParams;
 	m_IsInGame = false;
+	
+	for(unsigned int i=0; i<sizeof(m_LastHumanClasses)/sizeof(int); i++)
+		m_LastHumanClasses[i] = -1;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -617,7 +620,25 @@ void CPlayer::SetClass(int newClass)
 {	
 	if(m_class == newClass)
 		return;
-		
+	
+	if(newClass > START_HUMANCLASS && newClass < END_HUMANCLASS)
+	{
+		bool ClassFound = false;
+		for(unsigned int i=0; i<sizeof(m_LastHumanClasses)/sizeof(int); i++)
+		{
+			if(m_LastHumanClasses[i] == newClass)
+				ClassFound = true;
+		}
+		if(!ClassFound)
+		{
+			for(unsigned int i=0; i<sizeof(m_LastHumanClasses)/sizeof(int)-1; i++)
+			{
+				m_LastHumanClasses[i] = m_LastHumanClasses[i+1];
+			}
+			m_LastHumanClasses[sizeof(m_LastHumanClasses)/sizeof(int)-1] = newClass;
+		}
+	}
+	
 	m_GhoulLevel = 0;
 	m_GhoulLevelTick = 0;
 	

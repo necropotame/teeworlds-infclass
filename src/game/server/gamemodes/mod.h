@@ -39,11 +39,7 @@ private:
 	bool IsSpawnable(vec2 Pos, int TeleZoneIndex);
 	void UpdatePlayerCounter(int ClientException = -1);
 	
-private:
-	float m_ClassProbability[NB_PLAYERCLASS];
-	float m_TotalProbInfectedClass;
-	float m_TotalProbHumanClass;
-	
+private:	
 	int m_MapWidth;
 	int m_MapHeight;
 	int* m_GrowingMap;
