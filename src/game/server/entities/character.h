@@ -200,7 +200,7 @@ public:
 	int m_HookMode;
 	int m_InWater;
 	int m_NinjaVelocityBuff;
-	int m_NinjaStrenghBuff;
+	int m_NinjaStrengthBuff;
 	int m_NinjaAmmoBuff;
 
 public:

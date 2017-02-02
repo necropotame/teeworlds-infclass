@@ -86,7 +86,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_BonusTick = 0;
 	m_WaterJumpLifeSpan = 0;
 	m_NinjaVelocityBuff = 0;
-	m_NinjaStrenghBuff = 0;
+	m_NinjaStrengthBuff = 0;
 	m_NinjaAmmoBuff = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
@@ -345,7 +345,7 @@ void CCharacter::HandleNinja()
 				if(m_NumObjectsHit < 10)
 					m_apHitObjects[m_NumObjectsHit++] = aEnts[i];
 
-				aEnts[i]->TakeDamage(vec2(0, -10.0f), min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_NinjaStrenghBuff, 20), m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+				aEnts[i]->TakeDamage(vec2(0, -10.0f), min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_NinjaStrengthBuff, 20), m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
 	}
@@ -2685,12 +2685,15 @@ void CCharacter::GiveNinjaBuf()
 	{
 		case 0: //Velocity Buff
 			m_NinjaVelocityBuff++;
+			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("Sword velocity increased"), NULL);
 			break;
-		case 1: //Strengh Buff
-			m_NinjaStrenghBuff++;
+		case 1: //Strength Buff
+			m_NinjaStrengthBuff++;
+			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("Sword strength increased"), NULL);
 			break;
 		case 2: //Ammo Buff
 			m_NinjaAmmoBuff++;
+			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("Grenade ammo limit increased"), NULL);
 			break;
 	}
 }
@@ -2969,7 +2972,7 @@ void CCharacter::ClassSpawnAttributes()
 void CCharacter::DestroyChildEntities()
 {
 	m_NinjaVelocityBuff = 0;
-	m_NinjaStrenghBuff = 0;
+	m_NinjaStrengthBuff = 0;
 	m_NinjaAmmoBuff = 0;
 	
 	for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
