@@ -31,6 +31,11 @@ enum
 	TAKEDAMAGEMODE_NOINFECTION=0,
 	TAKEDAMAGEMODE_INFECTION,
 };
+
+enum
+{
+	GIFT_HEROFLAG=0,
+};
 /* INFECTION MODIFICATION END *****************************************/
 
 class CCharacter : public CEntity
@@ -216,6 +221,7 @@ public:
 	bool FindPortalPosition(vec2 Pos, vec2& Res);
 	bool FindWitchSpawnPosition(vec2& Res);
 	void SaturateVelocity(vec2 Force, float MaxSpeed);
+	void GiveGift(int GiftType);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

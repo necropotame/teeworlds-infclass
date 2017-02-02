@@ -1287,6 +1287,9 @@ void CCharacter::Tick()
 				m_BonusTick = 0;
 				
 				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("You hold a bonus area for one minute, +5 points"), NULL);
+				GameServer()->SendEmoticon(m_pPlayer->GetCID(), EMOTICON_MUSIC);
+				SetEmote(EMOTE_HAPPY, Server()->Tick() + Server()->TickSpeed());
+				GiveGift(GIFT_HEROFLAG);
 				Server()->RoundStatistics()->OnScoreEvent(m_pPlayer->GetCID(), SCOREEVENT_BONUS, GetClass());
 				GameServer()->SendScoreSound(m_pPlayer->GetCID());
 			}
@@ -1989,6 +1992,42 @@ void CCharacter::Tick()
 	m_PrevInput = m_Input;
 	
 	return;
+}
+
+void CCharacter::GiveGift(int GiftType)
+{
+	IncreaseHealth(1);
+	IncreaseArmor(4);
+	
+	switch(GetClass())
+	{
+		case PLAYERCLASS_ENGINEER:
+			GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_RIFLE)));
+			break;
+		case PLAYERCLASS_SOLDIER:
+			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GRENADE)));
+			break;
+		case PLAYERCLASS_SCIENTIST:
+			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GRENADE)));
+			GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_RIFLE)));
+			break;
+		case PLAYERCLASS_MEDIC:
+			GiveWeapon(WEAPON_SHOTGUN, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_SHOTGUN)));
+			break;
+		case PLAYERCLASS_HERO:
+			GiveWeapon(WEAPON_SHOTGUN, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_SHOTGUN)));
+			break;
+		case PLAYERCLASS_NINJA:
+			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GRENADE)));
+			break;
+		case PLAYERCLASS_SNIPER:
+			GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_RIFLE)));
+			break;
+		case PLAYERCLASS_MERCENARY:
+			GiveWeapon(WEAPON_GUN, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GUN)));
+			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GRENADE)));
+			break;
+	}
 }
 
 void CCharacter::TickDefered()

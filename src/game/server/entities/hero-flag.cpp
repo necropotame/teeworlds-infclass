@@ -48,6 +48,7 @@ void CHeroFlag::GiveGift(CCharacter* pHero)
 			continue;
 		
 		p->SetEmote(EMOTE_HAPPY, Server()->Tick() + Server()->TickSpeed());
+		GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_MUSIC);
 		
 		if(p == pHero)
 		{
@@ -56,39 +57,7 @@ void CHeroFlag::GiveGift(CCharacter* pHero)
 		}
 		else
 		{
-			p->IncreaseHealth(1);
-			p->IncreaseArmor(4);
-			
-			//Special gift
-			switch(p->GetClass())
-			{
-				case PLAYERCLASS_ENGINEER:
-					p->GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_RIFLE)));
-					break;
-				case PLAYERCLASS_SOLDIER:
-					p->GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_GRENADE)));
-					break;
-				case PLAYERCLASS_SCIENTIST:
-					p->GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_GRENADE)));
-					p->GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_RIFLE)));
-					break;
-				case PLAYERCLASS_MEDIC:
-					p->GiveWeapon(WEAPON_SHOTGUN, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_SHOTGUN)));
-					break;
-				case PLAYERCLASS_HERO:
-					p->GiveWeapon(WEAPON_SHOTGUN, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_SHOTGUN)));
-					break;
-				case PLAYERCLASS_NINJA:
-					p->GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_GRENADE)));
-					break;
-				case PLAYERCLASS_SNIPER:
-					p->GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_RIFLE)));
-					break;
-				case PLAYERCLASS_MERCENARY:
-					p->GiveWeapon(WEAPON_GUN, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_GUN)));
-					p->GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(p->GetInfWeaponID(WEAPON_GRENADE)));
-					break;
-			}
+			p->GiveGift(GIFT_HEROFLAG);
 		}
 	}
 }
