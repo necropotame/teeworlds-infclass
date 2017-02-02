@@ -1285,7 +1285,7 @@ void CCharacter::Tick()
 		//~ m_InWater = 0;
 	if(GetClass() == PLAYERCLASS_SNIPER && m_PositionLocked)
 	{
-		if(m_Input.m_Jump)
+		if(m_Input.m_Jump && !m_PrevInput.m_Jump)
 		{
 			m_PositionLocked = false;
 		}
@@ -1561,7 +1561,7 @@ void CCharacter::Tick()
 	{
 		m_DartLeft = g_Config.m_InfNinjaJump;
 	}
-	if(GetClass() == PLAYERCLASS_SNIPER && m_InAirTick <= 0)
+	if(GetClass() == PLAYERCLASS_SNIPER && m_InAirTick <= Server()->TickSpeed())
 	{
 		m_PositionLockAvailable = true;
 	}
@@ -2693,7 +2693,7 @@ void CCharacter::GiveNinjaBuf()
 			break;
 		case 2: //Ammo Buff
 			m_NinjaAmmoBuff++;
-			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("Grenade ammo limit increased"), NULL);
+			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("Grenade limit increased"), NULL);
 			break;
 	}
 }
