@@ -570,23 +570,34 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		{
 			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_HUMAN_SUICIDE, pKiller->GetClass());
 		}
-		if(pVictim->GetClass() == PLAYERCLASS_WITCH)
+		else
 		{
-			GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have killed a witch, +5 points"), NULL);
-			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_WITCH, pKiller->GetClass());
-			GameServer()->SendScoreSound(pKiller->GetCID());
-		}
-		else if(pKiller->GetClass() == PLAYERCLASS_NINJA && pVictim->GetPlayer()->GetCID() == GameServer()->GetTargetToKill())
-		{
-			GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have eliminated your target, +3 points"), NULL);
-			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_TARGET, pKiller->GetClass());
-			GameServer()->SendScoreSound(pKiller->GetCID());
-			GameServer()->TargetKilled();
-		}
-		else if(pVictim->IsInfected())
-		{
-			Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_INFECTED, pKiller->GetClass());
-			GameServer()->SendScoreSound(pKiller->GetCID());
+			if(pVictim->GetClass() == PLAYERCLASS_WITCH)
+			{
+				GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have killed a witch, +5 points"), NULL);
+				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_WITCH, pKiller->GetClass());
+				GameServer()->SendScoreSound(pKiller->GetCID());
+			}
+			else if(pVictim->IsInfected())
+			{
+				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_INFECTED, pKiller->GetClass());
+				GameServer()->SendScoreSound(pKiller->GetCID());
+			}
+		
+			if(pKiller->GetClass() == PLAYERCLASS_NINJA && pVictim->GetPlayer()->GetCID() == GameServer()->GetTargetToKill())
+			{
+				GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have eliminated your target, +2 points"), NULL);
+				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_TARGET, pKiller->GetClass());
+				GameServer()->SendScoreSound(pKiller->GetCID());
+				GameServer()->TargetKilled();
+				
+				if(pKiller->GetCharacter())
+				{
+					pKiller->GetCharacter()->GiveNinjaBuf();
+					pKiller->GetCharacter()->SetEmote(EMOTE_HAPPY, Server()->Tick() + Server()->TickSpeed());
+					GameServer()->SendEmoticon(pKiller->GetCID(), EMOTICON_MUSIC);
+				}
+			}
 		}
 	}
 		

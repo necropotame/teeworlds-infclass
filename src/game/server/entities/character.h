@@ -85,6 +85,8 @@ public:
 
 	bool IsAlive() const { return m_Alive; }
 	class CPlayer *GetPlayer() { return m_pPlayer; }
+	
+	void GiveNinjaBuf();
 
 private:
 	// player controlling this character
@@ -197,6 +199,9 @@ public:
 	int m_LastFreezer;
 	int m_HookMode;
 	int m_InWater;
+	int m_NinjaVelocityBuff;
+	int m_NinjaStrenghBuff;
+	int m_NinjaAmmoBuff;
 
 public:
 	void DestroyChildEntities();

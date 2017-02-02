@@ -85,6 +85,9 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_InWater = 0;
 	m_BonusTick = 0;
 	m_WaterJumpLifeSpan = 0;
+	m_NinjaVelocityBuff = 0;
+	m_NinjaStrenghBuff = 0;
+	m_NinjaAmmoBuff = 0;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -177,6 +180,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_SlipperyTick = -1;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
 	m_PositionLocked = false;
+	m_PositionLockAvailable = false;
 	m_Poison = 0;
 
 	ClassSpawnAttributes();
@@ -300,7 +304,8 @@ void CCharacter::HandleNinja()
 	if (m_DartLifeSpan > 0)
 	{
 		// Set velocity
-		m_Core.m_Vel = m_DartDir * g_pData->m_Weapons.m_Ninja.m_Velocity;
+		float VelocityBuff = min(1.0f + static_cast<float>(m_NinjaVelocityBuff)/10.0f, 2.0f);
+		m_Core.m_Vel = m_DartDir * g_pData->m_Weapons.m_Ninja.m_Velocity * VelocityBuff;
 		vec2 OldPos = m_Pos;
 		GameServer()->Collision()->MoveBox(&m_Core.m_Pos, &m_Core.m_Vel, vec2(m_ProximityRadius, m_ProximityRadius), 0.f);
 
@@ -340,7 +345,7 @@ void CCharacter::HandleNinja()
 				if(m_NumObjectsHit < 10)
 					m_apHitObjects[m_NumObjectsHit++] = aEnts[i];
 
-				aEnts[i]->TakeDamage(vec2(0, -10.0f), g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+				aEnts[i]->TakeDamage(vec2(0, -10.0f), min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_NinjaStrenghBuff, 20), m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
 	}
@@ -1118,6 +1123,9 @@ void CCharacter::HandleWeapons()
 		int AmmoRegenTime = Server()->GetAmmoRegenTime(InfWID);
 		int MaxAmmo = Server()->GetMaxAmmo(GetInfWeaponID(i));
 		
+		if(InfWID == INFWEAPON_NINJA_GRENADE)
+			MaxAmmo = min(MaxAmmo + m_NinjaAmmoBuff, 10);
+		
 		if(InfWID == INFWEAPON_MERCENARY_GUN)
 		{
 			if(m_InAirTick > Server()->TickSpeed()*4)
@@ -1192,7 +1200,14 @@ void CCharacter::RemoveAllGun()
 
 bool CCharacter::GiveWeapon(int Weapon, int Ammo)
 {
-	int MaxAmmo = Server()->GetMaxAmmo(GetInfWeaponID(Weapon));
+	int InfWID = GetInfWeaponID(Weapon);
+	int MaxAmmo = Server()->GetMaxAmmo(InfWID);
+	
+	if(InfWID == INFWEAPON_NINJA_GRENADE)
+		MaxAmmo = min(MaxAmmo + m_NinjaAmmoBuff, 10);
+	
+	if(Ammo < 0)
+		Ammo = MaxAmmo;
 	
 	if(m_aWeapons[Weapon].m_Ammo < MaxAmmo || !m_aWeapons[Weapon].m_Got)
 	{
@@ -2002,30 +2017,30 @@ void CCharacter::GiveGift(int GiftType)
 	switch(GetClass())
 	{
 		case PLAYERCLASS_ENGINEER:
-			GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_RIFLE)));
+			GiveWeapon(WEAPON_RIFLE, -1);
 			break;
 		case PLAYERCLASS_SOLDIER:
-			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GRENADE)));
+			GiveWeapon(WEAPON_GRENADE, -1);
 			break;
 		case PLAYERCLASS_SCIENTIST:
-			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GRENADE)));
-			GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_RIFLE)));
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
 			break;
 		case PLAYERCLASS_MEDIC:
-			GiveWeapon(WEAPON_SHOTGUN, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_SHOTGUN)));
+			GiveWeapon(WEAPON_SHOTGUN, -1);
 			break;
 		case PLAYERCLASS_HERO:
-			GiveWeapon(WEAPON_SHOTGUN, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_SHOTGUN)));
+			GiveWeapon(WEAPON_SHOTGUN, -1);
 			break;
 		case PLAYERCLASS_NINJA:
-			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GRENADE)));
+			GiveWeapon(WEAPON_GRENADE, -1);
 			break;
 		case PLAYERCLASS_SNIPER:
-			GiveWeapon(WEAPON_RIFLE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_RIFLE)));
+			GiveWeapon(WEAPON_RIFLE, -1);
 			break;
 		case PLAYERCLASS_MERCENARY:
-			GiveWeapon(WEAPON_GUN, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GUN)));
-			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(GetInfWeaponID(WEAPON_GRENADE)));
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
 			break;
 	}
 }
@@ -2661,6 +2676,25 @@ int CCharacter::GetClass()
 		return m_pPlayer->GetClass();
 }
 
+void CCharacter::GiveNinjaBuf()
+{
+	if(GetClass() != PLAYERCLASS_NINJA)
+		return;
+	
+	switch(random_int(0, 2))
+	{
+		case 0: //Velocity Buff
+			m_NinjaVelocityBuff++;
+			break;
+		case 1: //Strengh Buff
+			m_NinjaStrenghBuff++;
+			break;
+		case 2: //Ammo Buff
+			m_NinjaAmmoBuff++;
+			break;
+	}
+}
+
 void CCharacter::ClassSpawnAttributes()
 {
 	switch(GetClass())
@@ -2671,8 +2705,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
-			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_RIFLE, 10);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
 			m_ActiveWeapon = WEAPON_RIFLE;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_ENGINEER);
@@ -2688,8 +2722,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
-			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_GRENADE, 10);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
 			m_ActiveWeapon = WEAPON_GRENADE;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SOLDIER);
@@ -2705,8 +2739,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
-			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(INFWEAPON_MERCENARY_GRENADE));
-			GiveWeapon(WEAPON_GUN, Server()->GetMaxAmmo(INFWEAPON_MERCENARY_GUN));
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_GUN, -1);
 			m_ActiveWeapon = WEAPON_GUN;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MERCENARY);
@@ -2722,8 +2756,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
-			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_RIFLE, 10);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
 			m_ActiveWeapon = WEAPON_RIFLE;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SNIPER);
@@ -2739,9 +2773,9 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
-			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_RIFLE, 10);
-			GiveWeapon(WEAPON_GRENADE, Server()->GetMaxAmmo(INFWEAPON_SCIENTIST_GRENADE));
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
 			m_ActiveWeapon = WEAPON_GRENADE;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SCIENTIST);
@@ -2757,8 +2791,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
-			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_SHOTGUN, 10);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
 			m_ActiveWeapon = WEAPON_SHOTGUN;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MEDIC);
@@ -2773,10 +2807,10 @@ void CCharacter::ClassSpawnAttributes()
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = false;
-			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_SHOTGUN, 10);
-			GiveWeapon(WEAPON_RIFLE, 10);
-			GiveWeapon(WEAPON_GRENADE, 10);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
 			m_ActiveWeapon = WEAPON_GRENADE;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_HERO);
@@ -2791,8 +2825,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
-			GiveWeapon(WEAPON_GUN, 10);
-			GiveWeapon(WEAPON_GRENADE, 5);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_NINJA);
@@ -2934,6 +2968,10 @@ void CCharacter::ClassSpawnAttributes()
 
 void CCharacter::DestroyChildEntities()
 {
+	m_NinjaVelocityBuff = 0;
+	m_NinjaStrenghBuff = 0;
+	m_NinjaAmmoBuff = 0;
+	
 	for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
 	{
 		if(pWall->m_Owner != m_pPlayer->GetCID()) continue;
