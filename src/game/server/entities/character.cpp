@@ -2299,7 +2299,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		int DamageAccepted = 0;
 		for(int i=0; i<Dmg; i++)
 		{
-			if(random_prob(m_pPlayer->GetGhoulPercent()/2.0f))
+			if(random_prob(1.0f - m_pPlayer->GetGhoulPercent()/2.0f))
 				DamageAccepted++;
 		}
 		Dmg = DamageAccepted;
