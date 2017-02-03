@@ -588,7 +588,6 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			{
 				GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have eliminated your target, +2 points"), NULL);
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_TARGET, pKiller->GetClass());
-				GameServer()->SendScoreSound(pKiller->GetCID());
 				GameServer()->TargetKilled();
 				
 				if(pKiller->GetCharacter())
@@ -609,6 +608,20 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		{
 			Server()->RoundStatistics()->OnScoreEvent(pFreezer->GetCID(), SCOREEVENT_HELP_FREEZE, pFreezer->GetClass());
 			GameServer()->SendScoreSound(pFreezer->GetCID());
+			
+			if(pVictim->GetPlayer()->GetCID() == GameServer()->GetTargetToKill())
+			{
+				GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have eliminated your target, +2 points"), NULL);
+				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_TARGET, pKiller->GetClass());
+				GameServer()->TargetKilled();
+				
+				if(pFreezer->GetCharacter())
+				{
+					pFreezer->GetCharacter()->GiveNinjaBuf();
+					pFreezer->GetCharacter()->SetEmote(EMOTE_HAPPY, Server()->Tick() + Server()->TickSpeed());
+					GameServer()->SendEmoticon(pFreezer->GetCID(), EMOTICON_MUSIC);
+				}
+			}
 		}
 	}
 	
