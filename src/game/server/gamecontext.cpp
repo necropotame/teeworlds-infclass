@@ -3721,7 +3721,7 @@ void CGameContext::TargetKilled()
 	while(Iter.Next())
 		PlayerCounter++;
 	
-	m_TargetToKillCoolDown = Server()->TickSpeed()*10 + 3*max(0, 16 - PlayerCounter);
+	m_TargetToKillCoolDown = Server()->TickSpeed()*(10 + 3*max(0, 16 - PlayerCounter));
 }
 
 void CGameContext::OnPreSnap() {}
