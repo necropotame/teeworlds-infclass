@@ -3033,7 +3033,7 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 		else if(str_comp_nocase(pArg, "ghoul") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_GHOUL_SCORE);
 		else if(str_comp_nocase(pArg, "slug") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_GHOUL_SLUG);
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SLUG_SCORE);
 		else if(str_comp_nocase(pArg, "undead") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
 		else if(str_comp_nocase(pArg, "witch") == 0)
