@@ -25,6 +25,7 @@ private:
 	vec2 m_Direction;
 	int m_StartTick;
 	int m_LifeSpan;
+	int m_BounceLeft;
 };
 
 #endif

@@ -17,6 +17,7 @@ CBouncingBullet::CBouncingBullet(CGameWorld *pGameWorld, int Owner, vec2 Pos, ve
 	m_Owner = Owner;
 	m_StartTick = Server()->Tick();
 	m_LifeSpan = Server()->TickSpeed()*2;
+	m_BounceLeft = 2;
 	
 	GameWorld()->InsertEntity(this);
 }
@@ -49,7 +50,7 @@ void CBouncingBullet::Tick()
 	m_ActualPos = CurPos;
 	m_ActualDir = normalize(CurPos - PrevPos);
 
-	if(GameLayerClipped(CurPos) || m_LifeSpan < 0)
+	if(GameLayerClipped(CurPos) || m_LifeSpan < 0 || m_BounceLeft < 0)
 	{
 		GameServer()->m_World.DestroyEntity(this);
 		return;
@@ -64,9 +65,9 @@ void CBouncingBullet::Tick()
 		if(OwnerChar)
 		{
 			if(!OwnerChar->IsInfected() && !TargetChr->IsInfected())
-				TargetChr->TakeDamage(m_Direction * 0.001f, 1, m_Owner, WEAPON_SHOTGUN, TAKEDAMAGEMODE_NOINFECTION);
+				TargetChr->TakeDamage(m_Direction * 0.001f, (random_prob(0.33f) ? 2 : 1), m_Owner, WEAPON_SHOTGUN, TAKEDAMAGEMODE_NOINFECTION);
 			else
-				TargetChr->TakeDamage(m_Direction * max(0.001f, 2.0f), 1, m_Owner, WEAPON_SHOTGUN, TAKEDAMAGEMODE_NOINFECTION);
+				TargetChr->TakeDamage(m_Direction * max(0.001f, 2.0f), (random_prob(0.33f) ? 2 : 1), m_Owner, WEAPON_SHOTGUN, TAKEDAMAGEMODE_NOINFECTION);
 		}
 
 		GameServer()->m_World.DestroyEntity(this);
@@ -113,6 +114,7 @@ void CBouncingBullet::Tick()
 			m_StartTick = Server()->Tick();
 			
 			m_ActualDir = normalize(m_Direction);
+			m_BounceLeft--;
 		}
 	}
 }

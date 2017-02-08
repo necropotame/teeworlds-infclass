@@ -947,7 +947,9 @@ void CCharacter::FireWeapon()
 		case WEAPON_SHOTGUN:
 		{
 			int ShotSpread = 3;
-
+			if(GetClass() == PLAYERCLASS_BIOLOGIST)
+				ShotSpread = 1;
+			
 			CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
 			Msg.AddInt(ShotSpread*2+1);
 
