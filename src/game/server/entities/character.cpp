@@ -21,9 +21,12 @@
 #include "soldier-bomb.h"
 #include "scientist-laser.h"
 #include "scientist-mine.h"
+#include "biologist-mine.h"
+#include "bouncing-bullet.h"
 #include "merc-grenade.h"
 #include "merc-bomb.h"
 #include "hero-flag.h"
+#include "slug-slime.h"
 
 //input count
 struct CInputCount
@@ -499,6 +502,15 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f + 0.5f*Factor);
 		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + 0.5f*Factor);
 	}
+	else if(GetClass() == PLAYERCLASS_BIOLOGIST)
+	{
+		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + 0.5f);
+		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + 0.5f);
+		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * (1.0f + 0.5f);
+		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f + 0.5f);
+		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f + 0.5f);
+		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + 0.5f);
+	}
 }
 
 void CCharacter::FireWeapon()
@@ -541,6 +553,17 @@ void CCharacter::FireWeapon()
 
 	// check for ammo
 	if(!m_aWeapons[m_ActiveWeapon].m_Ammo && (GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_MERCENARY_GRENADE))
+	{
+		// 125ms is a magical limit of how fast a human can click
+		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
+		if(m_LastNoAmmoSound+Server()->TickSpeed() <= Server()->Tick())
+		{
+			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_NOAMMO);
+			m_LastNoAmmoSound = Server()->Tick();
+		}
+		return;
+	}
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_BIOLOGIST_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 10)
 	{
 		// 125ms is a magical limit of how fast a human can click
 		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
@@ -654,7 +677,8 @@ void CCharacter::FireWeapon()
 				}
 				else
 				{
-					m_pPlayer->OpenMapMenu(2);
+					new CMercenaryBomb(GameWorld(), m_Pos, m_pPlayer->GetCID());
+					GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
 				}
 				
 				m_ReloadTimer = Server()->TickSpeed()/4;
@@ -796,9 +820,18 @@ void CCharacter::FireWeapon()
 								m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
 						}						
 					}
+					else if(GetClass() == PLAYERCLASS_BIOLOGIST)
+					{
+						if (pTarget->IsInfected())
+						{
+							pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
+									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+						}
+					}
 					else if(GetClass() == PLAYERCLASS_MEDIC)
 					{
-						if (pTarget->IsInfected()) {
+						if (pTarget->IsInfected())
+						{
 							pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 						}
@@ -831,6 +864,26 @@ void CCharacter::FireWeapon()
 				if(Hits)
 				{
 					m_ReloadTimer = Server()->TickSpeed()/3;
+				}
+				else if(GetClass() == PLAYERCLASS_SLUG)
+				{
+					vec2 CheckPos = m_Pos + Direction * 64.0f;
+					if(GameServer()->Collision()->IntersectLine(m_Pos, CheckPos, 0x0, &CheckPos))
+					{
+						float Distance = 99999999.0f;
+						for(CSlugSlime* pSlime = (CSlugSlime*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SLUG_SLIME); pSlime; pSlime = (CSlugSlime*) pSlime->TypeNext())
+						{
+							if(distance(pSlime->m_Pos, m_Pos) < Distance)
+							{
+								Distance = distance(pSlime->m_Pos, m_Pos);
+							}
+						}
+						
+						if(Distance > 84.0f)
+						{
+							new CSlugSlime(GameWorld(), CheckPos, m_pPlayer->GetCID());
+						}
+					}
 				}
 					
 /* INFECTION MODIFICATION START ***************************************/
@@ -912,19 +965,32 @@ void CCharacter::FireWeapon()
 				
 				float LifeTime = GameServer()->Tuning()->m_ShotgunLifetime + 0.1f*static_cast<float>(m_aWeapons[WEAPON_SHOTGUN].m_Ammo)/10.0f;
 				
-				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_SHOTGUN,
-					m_pPlayer->GetCID(),
-					ProjStartPos,
-					vec2(cosf(a), sinf(a))*Speed,
-					(int)(Server()->TickSpeed()*LifeTime),
-					1, 0, Force, -1, WEAPON_SHOTGUN);
+				if(GetClass() == PLAYERCLASS_BIOLOGIST)
+				{
+					CBouncingBullet *pProj = new CBouncingBullet(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(a), sinf(a))*Speed);
 
-				// pack the Projectile and send it to the client Directly
-				CNetObj_Projectile p;
-				pProj->FillInfo(&p);
+					// pack the Projectile and send it to the client Directly
+					CNetObj_Projectile p;
+					pProj->FillInfo(&p);
+					for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+						Msg.AddInt(((int *)&p)[i]);
+				}
+				else
+				{
+					CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_SHOTGUN,
+						m_pPlayer->GetCID(),
+						ProjStartPos,
+						vec2(cosf(a), sinf(a))*Speed,
+						(int)(Server()->TickSpeed()*LifeTime),
+						1, 0, Force, -1, WEAPON_SHOTGUN);
 
-				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-					Msg.AddInt(((int *)&p)[i]);
+					// pack the Projectile and send it to the client Directly
+					CNetObj_Projectile p;
+					pProj->FillInfo(&p);
+					for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+						Msg.AddInt(((int *)&p)[i]);
+				}
+				
 			}
 
 			Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
@@ -1029,25 +1095,46 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_RIFLE:
 		{
-			int Damage = GameServer()->Tuning()->m_LaserDamage;
-			
-			if(GetClass() == PLAYERCLASS_SNIPER)
+			if(GetClass() == PLAYERCLASS_BIOLOGIST)
 			{
-				if(m_PositionLocked)
-					Damage = 30;
+				for(CBiologistMine* pMine = (CBiologistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BIOLOGIST_MINE); pMine; pMine = (CBiologistMine*) pMine->TypeNext())
+				{
+					if(pMine->m_Owner != m_pPlayer->GetCID()) continue;
+						GameServer()->m_World.DestroyEntity(pMine);
+				}
+				
+				vec2 To = m_Pos + Direction*400.0f;
+				if(GameServer()->Collision()->IntersectLine(m_Pos, To, 0x0, &To))
+				{
+					new CBiologistMine(GameWorld(), m_Pos, To, m_pPlayer->GetCID());
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
+				}
 				else
-					Damage = min(10, 9 + random_int(0, 3));
-			}
-			
-			if(GetClass() == PLAYERCLASS_SCIENTIST)
-			{
-				new CScientistLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.6f, m_pPlayer->GetCID(), Damage);
-				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					return;
 			}
 			else
 			{
-				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
-				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				int Damage = GameServer()->Tuning()->m_LaserDamage;
+				
+				if(GetClass() == PLAYERCLASS_SNIPER)
+				{
+					if(m_PositionLocked)
+						Damage = 30;
+					else
+						Damage = min(10, 9 + random_int(0, 3));
+				}
+				
+				if(GetClass() == PLAYERCLASS_SCIENTIST)
+				{
+					new CScientistLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.6f, m_pPlayer->GetCID(), Damage);
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				}
+				else
+				{
+					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				}
 			}
 		} break;
 	}
@@ -1674,6 +1761,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_BIOLOGIST:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_BIOLOGIST))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Biologist"), NULL);
+							Broadcast = true;
+						}
+						break;
 					case CMapConverter::MENUCLASS_MEDIC:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
 						{
@@ -1753,6 +1847,9 @@ void CCharacter::Tick()
 					case CMapConverter::MENUCLASS_SCIENTIST:
 						NewClass = PLAYERCLASS_SCIENTIST;
 						break;
+					case CMapConverter::MENUCLASS_BIOLOGIST:
+						NewClass = PLAYERCLASS_BIOLOGIST;
+						break;
 				}
 				
 				if(NewClass >= 0 && GameServer()->m_pController->IsChoosableClass(NewClass))
@@ -1764,80 +1861,6 @@ void CCharacter::Tick()
 					if(Bonus)
 						IncreaseArmor(10);
 				}
-			}
-		}
-	}
-	else if(m_pPlayer->MapMenu() == 2)
-	{
-		vec2 CursorPos = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
-		
-		bool Broadcast = false;
-
-		if(length(CursorPos) > 100.0f)
-		{
-			float Angle = 2.0f*pi+atan2(CursorPos.x, -CursorPos.y);
-			float AngleStep = 2.0f*pi/static_cast<float>(CMapConverter::NUM_MENUEFFECT);
-			m_pPlayer->m_MapMenuItem = ((int)((Angle+AngleStep/2.0f)/AngleStep))%CMapConverter::NUM_MENUEFFECT;
-			
-			switch(m_pPlayer->m_MapMenuItem)
-			{
-				case CMapConverter::MENUEFFECT_CANCEL:
-					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Cancel"), NULL);
-					Broadcast = true;
-					break;
-				case CMapConverter::MENUEFFECT_EXPLOSION:
-					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Explosion"), NULL);
-					Broadcast = true;
-					break;
-				case CMapConverter::MENUEFFECT_LOVE:
-					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Aphrodisiac"), NULL);
-					Broadcast = true;
-					break;
-				//case CMapConverter::MENUEFFECT_HALLUCINATION:
-				//	GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Hallucination"), NULL);
-				//	Broadcast = true;
-				//	break;
-				case CMapConverter::MENUEFFECT_SHOCKWAVE:
-					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Shockwave"), NULL);
-					Broadcast = true;
-					break;
-			}
-		}
-		
-		if(!Broadcast)
-		{
-			m_pPlayer->m_MapMenuItem = -1;
-			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Choose bomb effect"), NULL);
-		}
-		
-		if(m_Input.m_Fire&1 && m_pPlayer->m_MapMenuItem >= 0 && m_pPlayer->MapMenuClickable())
-		{
-			int BombType = -1;
-			switch(m_pPlayer->m_MapMenuItem)
-			{
-				case CMapConverter::MENUEFFECT_CANCEL:
-					m_pPlayer->CloseMapMenu();
-					break;
-				case CMapConverter::MENUEFFECT_EXPLOSION:
-					BombType = CMercenaryBomb::EFFECT_EXPLOSION;
-					break;
-				case CMapConverter::MENUEFFECT_LOVE:
-					BombType = CMercenaryBomb::EFFECT_LOVE;
-					break;
-				//case CMapConverter::MENUEFFECT_HALLUCINATION:
-				//	BombType = CMercenaryBomb::EFFECT_HALLUCINATION;
-				//	break;
-				case CMapConverter::MENUEFFECT_SHOCKWAVE:
-					BombType = CMercenaryBomb::EFFECT_SHOCKWAVE;
-					break;
-			}
-			
-			if(BombType >= 0)
-			{
-				new CMercenaryBomb(GameWorld(), m_Pos, m_pPlayer->GetCID(), BombType);
-				GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
-				
-				m_pPlayer->CloseMapMenu();
 			}
 		}
 	}
@@ -2025,6 +2048,10 @@ void CCharacter::GiveGift(int GiftType)
 		case PLAYERCLASS_SCIENTIST:
 			GiveWeapon(WEAPON_GRENADE, -1);
 			GiveWeapon(WEAPON_RIFLE, -1);
+			break;
+		case PLAYERCLASS_BIOLOGIST:
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
 			break;
 		case PLAYERCLASS_MEDIC:
 			GiveWeapon(WEAPON_SHOTGUN, -1);
@@ -2788,6 +2815,24 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_SCIENTIST] = true;
 			}
 			break;
+		case PLAYERCLASS_BIOLOGIST:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
+			m_ActiveWeapon = WEAPON_SHOTGUN;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_BIOLOGIST);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BIOLOGIST))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "biologist", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_BIOLOGIST] = true;
+			}
+			break;
 		case PLAYERCLASS_MEDIC:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
@@ -2936,6 +2981,21 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_GHOUL] = true;
 			}
 			break;
+		case PLAYERCLASS_SLUG:
+			m_Health = 10;
+			m_Armor = 0;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SLUG);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_SLUG))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type \"/help {str:ClassName}\" for more information about your class"), "ClassName", "slug", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_SLUG] = true;
+			}
+			break;
 		case PLAYERCLASS_UNDEAD:
 			m_Health = 10;
 			m_Armor = 0;
@@ -2999,6 +3059,16 @@ void CCharacter::DestroyChildEntities()
 	{
 		if(pMine->m_Owner != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pMine);
+	}
+	for(CBiologistMine* pMine = (CBiologistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BIOLOGIST_MINE); pMine; pMine = (CBiologistMine*) pMine->TypeNext())
+	{
+		if(pMine->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pMine);
+	}
+	for(CSlugSlime* pSlime = (CSlugSlime*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SLUG_SLIME); pSlime; pSlime = (CSlugSlime*) pSlime->TypeNext())
+	{
+		if(pSlime->GetOwner() != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pSlime);
 	}
 			
 	m_FirstShot = true;
@@ -3118,6 +3188,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_MEDIC_SHOTGUN;
 			case PLAYERCLASS_HERO:
 				return INFWEAPON_HERO_SHOTGUN;
+			case PLAYERCLASS_BIOLOGIST:
+				return INFWEAPON_BIOLOGIST_SHOTGUN;
 			default:
 				return INFWEAPON_SHOTGUN;
 		}
@@ -3152,6 +3224,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_SNIPER_RIFLE;
 			case PLAYERCLASS_HERO:
 				return INFWEAPON_HERO_RIFLE;
+			case PLAYERCLASS_BIOLOGIST:
+				return INFWEAPON_BIOLOGIST_RIFLE;
 			default:
 				return INFWEAPON_RIFLE;
 		}

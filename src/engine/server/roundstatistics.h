@@ -30,6 +30,7 @@ public:
 		int m_EngineerScore;
 		int m_SoldierScore;
 		int m_ScientistScore;
+		int m_BiologistScore;
 		int m_MedicScore;
 		int m_HeroScore;
 		int m_NinjaScore;
@@ -42,6 +43,7 @@ public:
 		int m_GhostScore;
 		int m_SpiderScore;
 		int m_GhoulScore;
+		int m_SlugScore;
 		int m_UndeadScore;
 		int m_WitchScore;
 		

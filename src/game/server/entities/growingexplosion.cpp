@@ -79,19 +79,6 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 				GameServer()->CreateDeath(m_SeedPos, m_Owner);
 			}
 			break;
-		case GROWINGEXPLOSIONEFFECT_EXPLOSION_INFECTED:
-			if(random_prob(0.2f))
-			{
-				GameServer()->CreateDeath(m_SeedPos, m_Owner);
-			}
-			break;
-		case GROWINGEXPLOSIONEFFECT_SHOCKWAVE_INFECTED:
-			if(random_prob(0.2f))
-			{
-				GameServer()->CreateDeath(m_SeedPos, m_Owner);
-			}
-			m_pGrowingMapVec[m_MaxGrowing*m_GrowingMap_Length+m_MaxGrowing] = vec2(0.0f, 0.0f);
-			break;
 		case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
 			{
 				//~ GameServer()->CreateHammerHit(m_SeedPos);
@@ -165,45 +152,10 @@ void CGrowingExplosion::Tick()
 								GameServer()->CreateDeath(TileCenter, m_Owner);
 							}
 							break;
-						case GROWINGEXPLOSIONEFFECT_EXPLOSION_INFECTED:
-							if(random_prob(0.1f))
-							{
-								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, true);
-							}
-							break;
-						case GROWINGEXPLOSIONEFFECT_HALLUCINATION_INFECTED:
-							if(random_prob(0.1f))
-							{
-								GameServer()->CreatePlayerSpawn(TileCenter);
-							}
-							break;
 						case GROWINGEXPLOSIONEFFECT_LOVE_INFECTED:
 							if(random_prob(0.2f))
 							{
 								GameServer()->CreateLoveEvent(TileCenter);
-							}
-							break;
-						case GROWINGEXPLOSIONEFFECT_SHOCKWAVE_INFECTED:
-							if(random_prob(0.2f))
-							{
-								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, true);
-							}
-							
-							{
-								vec2 Dir = vec2(0.0f, 0.0f);
-								
-								if(FromLeft)
-									Dir += m_pGrowingMapVec[j*m_GrowingMap_Length+i-1] + vec2(-1.0f, 0.0f);
-								if(FromRight)
-									Dir += m_pGrowingMapVec[j*m_GrowingMap_Length+i+1] + vec2(1.0f, 0.0f);
-								if(FromTop)
-									Dir += m_pGrowingMapVec[(j-1)*m_GrowingMap_Length+i] + vec2(0.0f, -1.0f);
-								if(FromBottom)
-									Dir += m_pGrowingMapVec[(j+1)*m_GrowingMap_Length+i+1] + vec2(0.0f, 1.0f);
-								
-								Dir = normalize(Dir);
-								
-								m_pGrowingMapVec[j*m_GrowingMap_Length+i] = Dir;
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
@@ -299,28 +251,10 @@ void CGrowingExplosion::Tick()
 						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_DROP);
 						m_Hit[p->GetPlayer()->GetCID()] = true;
 						break;
-					case GROWINGEXPLOSIONEFFECT_EXPLOSION_INFECTED:
-						p->TakeDamage(vec2(0.0f, 0.0f), 9, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
-						m_Hit[p->GetPlayer()->GetCID()] = true;
-						break;
-					case GROWINGEXPLOSIONEFFECT_SHOCKWAVE_INFECTED:
-					{
-						p->SlipperyEffect();
-						vec2 Force = -m_pGrowingMapVec[tileY*m_GrowingMap_Length+tileX] * 20.0f;
-						p->m_Core.m_Vel += Force;
-						break;
-					}
 					case GROWINGEXPLOSIONEFFECT_LOVE_INFECTED:
 					{
 						p->LoveEffect();
 						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_HEARTS);
-						m_Hit[p->GetPlayer()->GetCID()] = true;
-						break;
-					}
-					case GROWINGEXPLOSIONEFFECT_HALLUCINATION_INFECTED:
-					{
-						p->HallucinationEffect();
-						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_EXCLAMATION);
 						m_Hit[p->GetPlayer()->GetCID()] = true;
 						break;
 					}

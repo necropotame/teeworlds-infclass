@@ -90,6 +90,8 @@ static inline int ChallengeTypeToScoreType(int ChallengeType)
 			return SQL_SCORETYPE_MEDIC_SCORE;
 		case 7:
 			return SQL_SCORETYPE_HERO_SCORE;
+		case 8:
+			return SQL_SCORETYPE_BIOLOGIST_SCORE;
 	}
 	
 	return SQL_SCORETYPE_ROUND_SCORE;
@@ -549,6 +551,8 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_SCIENTIST_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_MEDIC_SHOTGUN, 250);
 	SetFireDelay(INFWEAPON_HERO_SHOTGUN, 250);
+	SetFireDelay(INFWEAPON_BIOLOGIST_SHOTGUN, 250);
+	SetFireDelay(INFWEAPON_BIOLOGIST_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_HERO_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_HERO_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_SNIPER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
@@ -578,6 +582,8 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_MERCENARY_GUN, 125);
 	SetAmmoRegenTime(INFWEAPON_NINJA_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_NINJA_GRENADE, 15000);
+	SetAmmoRegenTime(INFWEAPON_BIOLOGIST_RIFLE, 250);
+	SetAmmoRegenTime(INFWEAPON_BIOLOGIST_SHOTGUN, 750);
 	
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
@@ -599,6 +605,8 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_NINJA_GRENADE, 5);
 	SetMaxAmmo(INFWEAPON_MERCENARY_GRENADE, 8);
 	SetMaxAmmo(INFWEAPON_MERCENARY_GUN, 40);
+	SetMaxAmmo(INFWEAPON_BIOLOGIST_RIFLE, 10);
+	SetMaxAmmo(INFWEAPON_BIOLOGIST_SHOTGUN, 10);
 	
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
@@ -608,12 +616,14 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_MEDIC, 2);
 	SetClassAvailability(PLAYERCLASS_HERO, 2);
 	SetClassAvailability(PLAYERCLASS_SCIENTIST, 2);
+	SetClassAvailability(PLAYERCLASS_BIOLOGIST, 2);
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
 	SetClassAvailability(PLAYERCLASS_GHOST, 1);
 	SetClassAvailability(PLAYERCLASS_SPIDER, 1);
 	SetClassAvailability(PLAYERCLASS_GHOUL, 1);
+	SetClassAvailability(PLAYERCLASS_SLUG, 1);
 	SetClassAvailability(PLAYERCLASS_BOOMER, 1);
 	SetClassAvailability(PLAYERCLASS_UNDEAD, 1);
 	SetClassAvailability(PLAYERCLASS_WITCH, 1);
@@ -1502,6 +1512,9 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token)
 					break;
 				case SQL_SCORETYPE_SCIENTIST_SCORE:
 					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "ScientistOfTheDay", m_aChallengeWinner);
+					break;
+				case SQL_SCORETYPE_BIOLOGIST_SCORE:
+					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "BiologistOfTheDay", m_aChallengeWinner);
 					break;
 				case SQL_SCORETYPE_NINJA_SCORE:
 					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "NinjaOfTheDay", m_aChallengeWinner);
@@ -3208,6 +3221,10 @@ public:
 					str_copy(pMOTD, "== Best Scientist ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
+				case SQL_SCORETYPE_BIOLOGIST_SCORE:
+					str_copy(pMOTD, "== Best Biologist ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
 				case SQL_SCORETYPE_MEDIC_SCORE:
 					str_copy(pMOTD, "== Best Medic ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
@@ -3250,6 +3267,10 @@ public:
 					break;
 				case SQL_SCORETYPE_GHOUL_SCORE:
 					str_copy(pMOTD, "== Best Ghoul ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
+				case SQL_SCORETYPE_SLUG_SCORE:
+					str_copy(pMOTD, "== Best Slug ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
 				case SQL_SCORETYPE_UNDEAD_SCORE:
@@ -3355,6 +3376,9 @@ public:
 						break;
 					case SQL_SCORETYPE_SCIENTIST_SCORE:
 						str_copy(pMOTD, "== Scientist of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+						break;
+					case SQL_SCORETYPE_BIOLOGIST_SCORE:
+						str_copy(pMOTD, "== Biologist of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
 						break;
 					case SQL_SCORETYPE_MEDIC_SCORE:
 						str_copy(pMOTD, "== Medic of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
@@ -3882,6 +3906,8 @@ public:
 				UpdateScore(pSqlServer, SQL_SCORETYPE_SOLDIER_SCORE, m_PlayerStatistics.m_SoldierScore, "Soldier");
 			if(m_PlayerStatistics.m_ScientistScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_SCIENTIST_SCORE, m_PlayerStatistics.m_ScientistScore, "Scientist");
+			if(m_PlayerStatistics.m_BiologistScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_BIOLOGIST_SCORE, m_PlayerStatistics.m_BiologistScore, "Biologist");
 			if(m_PlayerStatistics.m_MedicScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_MEDIC_SCORE, m_PlayerStatistics.m_MedicScore, "Medic");
 			if(m_PlayerStatistics.m_HeroScore > 0)
@@ -3905,6 +3931,8 @@ public:
 				UpdateScore(pSqlServer, SQL_SCORETYPE_SPIDER_SCORE, m_PlayerStatistics.m_SpiderScore, "Spider");
 			if(m_PlayerStatistics.m_GhoulScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_GHOUL_SCORE, m_PlayerStatistics.m_GhoulScore, "Ghoul");
+			if(m_PlayerStatistics.m_SlugScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SLUG_SCORE, m_PlayerStatistics.m_SlugScore, "Slug");
 			if(m_PlayerStatistics.m_UndeadScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_UNDEAD_SCORE, m_PlayerStatistics.m_UndeadScore, "Undead");
 			if(m_PlayerStatistics.m_WitchScore > 0)

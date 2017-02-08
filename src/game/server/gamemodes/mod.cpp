@@ -466,6 +466,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_ENGINEER:
 				case PLAYERCLASS_SOLDIER:
 				case PLAYERCLASS_SCIENTIST:
+				case PLAYERCLASS_BIOLOGIST:
 					Defender++;
 					break;
 				case PLAYERCLASS_MEDIC:
@@ -496,11 +497,6 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		{
 			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
 			Page = CMapConverter::TIMESHIFT_MENUCLASS + 3*((Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK) + 1;
-		}
-		else if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 2)
-		{
-			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
-			Page = CMapConverter::TIMESHIFT_MENUEFFECT + 3*(Item+1) + 2;
 		}
 		
 		if(Page >= 0)
@@ -772,6 +768,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 			case PLAYERCLASS_ENGINEER:
 			case PLAYERCLASS_SOLDIER:
 			case PLAYERCLASS_SCIENTIST:
+			case PLAYERCLASS_BIOLOGIST:
 				nbDefender++;
 				break;
 		}
@@ -782,6 +779,7 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	Probability[PLAYERCLASS_ENGINEER - START_HUMANCLASS - 1] = (nbDefender < g_Config.m_InfDefenderLimit) ? 1.0f : 0.0f;
 	Probability[PLAYERCLASS_SOLDIER - START_HUMANCLASS - 1] = (nbDefender < g_Config.m_InfDefenderLimit) ? 1.0f : 0.0f;
 	Probability[PLAYERCLASS_SCIENTIST - START_HUMANCLASS - 1] = (nbDefender < g_Config.m_InfDefenderLimit) ? 1.0f : 0.0f;
+	Probability[PLAYERCLASS_BIOLOGIST - START_HUMANCLASS - 1] = (nbDefender < g_Config.m_InfDefenderLimit) ? 1.0f : 0.0f;
 	
 	Probability[PLAYERCLASS_MERCENARY - START_HUMANCLASS - 1] = (nbSupport < g_Config.m_InfSupportLimit) ? 1.0f : 0.0f;
 	Probability[PLAYERCLASS_SNIPER - START_HUMANCLASS - 1] = (nbSupport < g_Config.m_InfSupportLimit) ? 1.0f : 0.0f;
@@ -826,6 +824,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	Probability[PLAYERCLASS_GHOST - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_GHOST)) ? 0.25f : 0.0f;
 	Probability[PLAYERCLASS_SPIDER - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_SPIDER)) ? 0.25f : 0.0f;
 	Probability[PLAYERCLASS_GHOUL - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_GHOUL)) ? 0.25f : 0.0f;
+	Probability[PLAYERCLASS_SLUG - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_SLUG)) ? 0.25f : 0.0f;
 	
 	Probability[PLAYERCLASS_WITCH - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_WITCH) && nbInfected > 2 && !thereIsAWitch) ? 0.25f : 0.0f;
 	Probability[PLAYERCLASS_UNDEAD - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) && nbInfected > 2 && !thereIsAnUndead) ? 0.20f : 0.0f;
@@ -859,6 +858,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_ENGINEER:
 			case PLAYERCLASS_SOLDIER:
 			case PLAYERCLASS_SCIENTIST:
+			case PLAYERCLASS_BIOLOGIST:
 				nbDefender++;
 				break;
 		}
@@ -869,6 +869,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_ENGINEER:
 		case PLAYERCLASS_SOLDIER:
 		case PLAYERCLASS_SCIENTIST:
+		case PLAYERCLASS_BIOLOGIST:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
 		case PLAYERCLASS_MEDIC:
 			return (nbMedic < g_Config.m_InfMedicLimit);

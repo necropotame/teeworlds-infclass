@@ -56,6 +56,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_SCIENTIST:
 			m_ScientistScore += Points;
 			break;
+		case PLAYERCLASS_BIOLOGIST:
+			m_BiologistScore += Points;
+			break;
 		case PLAYERCLASS_MEDIC:
 			m_MedicScore += Points;
 			break;
@@ -88,6 +91,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 			break;
 		case PLAYERCLASS_GHOUL:
 			m_GhoulScore += Points;
+			break;
+		case PLAYERCLASS_SLUG:
+			m_SlugScore += Points;
 			break;
 		case PLAYERCLASS_UNDEAD:
 			m_UndeadScore += Points;

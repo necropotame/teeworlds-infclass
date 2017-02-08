@@ -555,13 +555,12 @@ void CMapConverter::Finalize()
 	int EngineerImageID = AddExternalImage("../skins/limekitty", 256, 128);
 	int SoldierImageID = AddExternalImage("../skins/brownbear", 256, 128);
 	int ScientistImageID = AddExternalImage("../skins/toptri", 256, 128);
+	int BiologistImageID = AddExternalImage("../skins/twintri", 256, 128);
 	int MedicImageID = AddExternalImage("../skins/twinbop", 256, 128);
 	int HeroImageID = AddExternalImage("../skins/redstripe", 256, 128);
 	int NinjaImageID = AddExternalImage("../skins/x_ninja", 256, 128);
 	int MercenaryImageID = AddExternalImage("../skins/bluestripe", 256, 128);
 	int SniperImageID = AddExternalImage("../skins/warpaint", 256, 128);
-	int GameImageID = AddExternalImage("../game", 1024, 512);
-	int ParticlesImageID = AddExternalImage("../particles", 512, 512);
 	
 	//Menu
 	
@@ -580,7 +579,7 @@ void CMapConverter::Finalize()
 			Item.m_OffsetX = 0;
 			Item.m_OffsetY = 0;
 			Item.m_StartLayer = m_NumLayers;
-			Item.m_NumLayers = 10;
+			Item.m_NumLayers = 11;
 			Item.m_UseClipping = 0;
 			Item.m_ClipX = 0;
 			Item.m_ClipY = 0;
@@ -777,6 +776,9 @@ void CMapConverter::Finalize()
 							case MENUCLASS_SCIENTIST:
 								AddTeeLayer("Scientist", ScientistImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
+							case MENUCLASS_BIOLOGIST:
+								AddTeeLayer("Biologist", BiologistImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
 							case MENUCLASS_MEDIC:
 								AddTeeLayer("Medic", MedicImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
@@ -791,191 +793,6 @@ void CMapConverter::Finalize()
 								break;
 							case MENUCLASS_SNIPER:
 								AddTeeLayer("Sniper", SniperImageID, Pos, 64.0f, m_NumEnvs-1);
-								break;
-						}
-					}
-				}
-			
-				if(pass == 0)
-				{
-					CMapItemLayerQuads Item;
-					Item.m_Version = 2;
-					Item.m_Layer.m_Flags = 0;
-					Item.m_Layer.m_Type = LAYERTYPE_QUADS;
-					Item.m_Image = -1;
-					Item.m_NumQuads = aQuads.size();
-					StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "UIQuads");
-					Item.m_Data = m_DataFile.AddDataSwapped(aQuads.size()*sizeof(CQuad), aQuads.base_ptr());
-					
-					m_DataFile.AddItem(MAPITEMTYPE_LAYER, m_NumLayers++, sizeof(Item), &Item);
-				}
-			}
-		}
-	}
-	
-	//Effect menu
-	{
-		const float MenuAngleStep = 2.0f*pi/static_cast<float>(NUM_MENUEFFECT);
-		
-			//Menu Group
-		{
-			CMapItemGroup Item;
-			Item.m_Version = CMapItemGroup::CURRENT_VERSION;
-			Item.m_ParallaxX = 0;
-			Item.m_ParallaxY = 0;
-			Item.m_OffsetX = 0;
-			Item.m_OffsetY = 0;
-			Item.m_StartLayer = m_NumLayers;
-			Item.m_NumLayers = 4;
-			Item.m_UseClipping = 0;
-			Item.m_ClipX = 0;
-			Item.m_ClipY = 0;
-			Item.m_ClipW = 0;
-			Item.m_ClipH = 0;
-			StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "#Generated");
-			
-			m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
-		}
-		
-			//Menu Layers
-		{
-			array<CQuad> aQuads;
-			
-			int HiddenValues[4];
-			int NormalValues[4];
-			int HighlightValues[4];
-			
-			HiddenValues[0] = 0;
-			HiddenValues[1] = 0;
-			HiddenValues[2] = 0;
-			HiddenValues[3] = 0;
-				
-			//Two passes: one for circles, one for effects
-			for(int pass=0; pass<2; pass++)
-			{
-				if(pass == 0)
-				{
-					NormalValues[0] = 0;
-					NormalValues[1] = 0;
-					NormalValues[2] = 0;
-					NormalValues[3] = 500;
-					
-					HighlightValues[0] = 1000;
-					HighlightValues[1] = 1000;
-					HighlightValues[2] = 1000;
-					HighlightValues[3] = 500;
-				}
-				else
-				{
-					NormalValues[0] = 1000;
-					NormalValues[1] = 1000;
-					NormalValues[2] = 1000;
-					NormalValues[3] = 1000;
-					
-					HighlightValues[0] = 1000;
-					HighlightValues[1] = 1000;
-					HighlightValues[2] = 1000;
-					HighlightValues[3] = 1000;
-				}
-				
-				for(int i=0; i<NUM_MENUEFFECT; i++) 
-				{
-					//Create Animation for enable/disable simulation
-					{
-						int StartPoint = m_lEnvPoints.size();
-						int NbPoints = 0;
-						
-						{
-							CEnvPoint Point;
-							Point.m_Time = 0;
-							Point.m_Curvetype = 0;
-							Point.m_aValues[0] = HiddenValues[0];
-							Point.m_aValues[1] = HiddenValues[1];
-							Point.m_aValues[2] = HiddenValues[2];
-							Point.m_aValues[3] = HiddenValues[3];
-							m_lEnvPoints.add(Point);
-							NbPoints++;
-						}	
-						{
-							CEnvPoint Point;
-							Point.m_Time = TIMESHIFT_MENUEFFECT*m_TimeShiftUnit;
-							Point.m_Curvetype = 0;
-							Point.m_aValues[0] = NormalValues[0];
-							Point.m_aValues[1] = NormalValues[1];
-							Point.m_aValues[2] = NormalValues[2];
-							Point.m_aValues[3] = NormalValues[3];
-							m_lEnvPoints.add(Point);
-							NbPoints++;
-						}
-				
-						{
-							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+3*(i+1))*m_TimeShiftUnit;
-							Point.m_Curvetype = 0;
-							Point.m_aValues[0] = HighlightValues[0];
-							Point.m_aValues[1] = HighlightValues[1];
-							Point.m_aValues[2] = HighlightValues[2];
-							Point.m_aValues[3] = HighlightValues[3];
-							m_lEnvPoints.add(Point);
-							NbPoints++;
-						}
-						{
-							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+3*(i+2))*m_TimeShiftUnit;
-							Point.m_Curvetype = 0;
-							Point.m_aValues[0] = NormalValues[0];
-							Point.m_aValues[1] = NormalValues[1];
-							Point.m_aValues[2] = NormalValues[2];
-							Point.m_aValues[3] = NormalValues[3];
-							m_lEnvPoints.add(Point);
-							NbPoints++;
-						}
-						{
-							CEnvPoint Point;
-							Point.m_Time = (TIMESHIFT_MENUEFFECT+3*(NUM_MENUEFFECT+2))*m_TimeShiftUnit;
-							Point.m_Curvetype = 0;
-							Point.m_aValues[0] = HiddenValues[0];
-							Point.m_aValues[1] = HiddenValues[1];
-							Point.m_aValues[2] = HiddenValues[2];
-							Point.m_aValues[3] = HiddenValues[3];
-							m_lEnvPoints.add(Point);
-							NbPoints++;
-						}
-						
-						CMapItemEnvelope Item;
-						Item.m_Version = CMapItemEnvelope::CURRENT_VERSION;
-						Item.m_Channels = 4;
-						Item.m_StartPoint = StartPoint;
-						Item.m_NumPoints = NbPoints;
-						Item.m_Synchronized = 1;
-						StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "MenuEffectPages");
-						m_DataFile.AddItem(MAPITEMTYPE_ENVELOPE, m_NumEnvs++, sizeof(Item), &Item);
-					}
-					
-					vec2 ItemPos = m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i);
-				
-					//Create Circle
-					if(pass == 0)
-					{
-						CreateCircle(&aQuads, m_MenuPosition+rotate(vec2(MenuRadius, 0.0f), MenuAngleStart+MenuAngleStep*i), 96.0f, vec4(1.0f, 1.0f, 1.0f, 0.5f), m_NumEnvs-1);
-					}
-					else
-					{
-						switch(i)
-						{
-							case MENUEFFECT_CANCEL:
-								break;
-							case MENUEFFECT_EXPLOSION:
-								AddImageQuad("Explosion", ParticlesImageID, 8, 8, 0, 4, 4, 4, ItemPos, vec2(68.0f, 68.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), m_NumEnvs-1);
-								break;
-							case MENUEFFECT_LOVE:
-								AddImageQuad("Hearts", GameImageID, 32, 16, 10, 2, 2, 2, ItemPos, vec2(68.0f, 68.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), m_NumEnvs-1);
-								break;
-							//case MENUEFFECT_HALLUCINATION:
-							//	AddImageQuad("Hallucination", ParticlesImageID, 8, 8, 0, 2, 2, 2, ItemPos, vec2(68.0f, 68.0f), vec4(0xb5/255.0f, 0x50/255.0f, 0xcb/255.0f, 1.0f), m_NumEnvs-1);
-							//	break;
-							case MENUEFFECT_SHOCKWAVE:
-								AddImageQuad("Shockwave", ParticlesImageID, 8, 8, 2, 2, 2, 2, ItemPos, vec2(68.0f, 68.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), m_NumEnvs-1);
 								break;
 						}
 					}

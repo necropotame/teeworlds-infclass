@@ -568,6 +568,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 		case PLAYERCLASS_SCIENTIST:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Scientist"));
 			break;
+		case PLAYERCLASS_BIOLOGIST:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Biologist"));
+			break;
 		case PLAYERCLASS_SMOKER:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Smoker"));
 			break;
@@ -585,6 +588,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 			break;
 		case PLAYERCLASS_GHOUL:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Ghoul"));
+			break;
+		case PLAYERCLASS_SLUG:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Slug"));
 			break;
 		case PLAYERCLASS_WITCH:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Witch"));
@@ -2467,6 +2473,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	if(str_comp(pClassName, "engineer") == 0) pPlayer->SetClass(PLAYERCLASS_ENGINEER);
 	else if(str_comp(pClassName, "soldier") == 0) pPlayer->SetClass(PLAYERCLASS_SOLDIER);
 	else if(str_comp(pClassName, "scientist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIENTIST);
+	else if(str_comp(pClassName, "biologist") == 0) pPlayer->SetClass(PLAYERCLASS_BIOLOGIST);
 	else if(str_comp(pClassName, "medic") == 0) pPlayer->SetClass(PLAYERCLASS_MEDIC);
 	else if(str_comp(pClassName, "hero") == 0) pPlayer->SetClass(PLAYERCLASS_HERO);
 	else if(str_comp(pClassName, "ninja") == 0) pPlayer->SetClass(PLAYERCLASS_NINJA);
@@ -2478,6 +2485,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "ghost") == 0) pPlayer->SetClass(PLAYERCLASS_GHOST);
 	else if(str_comp(pClassName, "spider") == 0) pPlayer->SetClass(PLAYERCLASS_SPIDER);
 	else if(str_comp(pClassName, "ghoul") == 0) pPlayer->SetClass(PLAYERCLASS_GHOUL);
+	else if(str_comp(pClassName, "slug") == 0) pPlayer->SetClass(PLAYERCLASS_SLUG);
 	else if(str_comp(pClassName, "undead") == 0) pPlayer->SetClass(PLAYERCLASS_UNDEAD);
 	else if(str_comp(pClassName, "witch") == 0) pPlayer->SetClass(PLAYERCLASS_WITCH);
 	else if(str_comp(pClassName, "none") == 0)
@@ -2628,6 +2636,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 				CheckClass = PLAYERCLASS_SCIENTIST;
 				str_copy(aChatTitle, "scientist", sizeof(aChatTitle));
 			}
+			else if(str_comp(aNameFound, "!biologist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_BIOLOGIST;
+				str_copy(aChatTitle, "biologist", sizeof(aChatTitle));
+			}
 			else if(str_comp(aNameFound, "!medic") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_MEDIC;
@@ -2682,6 +2695,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_GHOUL;
 				str_copy(aChatTitle, "ghoul", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!slug") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SLUG;
+				str_copy(aChatTitle, "slug", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!undead") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
@@ -2886,6 +2904,8 @@ bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
 		else if(str_comp_nocase(pArg, "scientist") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
+		else if(str_comp_nocase(pArg, "biologist") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
 		else if(str_comp_nocase(pArg, "medic") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
 		else if(str_comp_nocase(pArg, "hero") == 0)
@@ -2908,6 +2928,8 @@ bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
 		else if(str_comp_nocase(pArg, "ghoul") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_GHOUL_SCORE);
+		else if(str_comp_nocase(pArg, "slug") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SLUG_SCORE);
 		else if(str_comp_nocase(pArg, "undead") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
 		else if(str_comp_nocase(pArg, "witch") == 0)
@@ -2934,6 +2956,8 @@ bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
 		else if(str_comp_nocase(pArg, "scientist") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
+		else if(str_comp_nocase(pArg, "biologist") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
 		else if(str_comp_nocase(pArg, "medic") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
 		else if(str_comp_nocase(pArg, "hero") == 0)
@@ -2956,6 +2980,8 @@ bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
 		else if(str_comp_nocase(pArg, "ghoul") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_GHOUL_SCORE);
+		else if(str_comp_nocase(pArg, "slug") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SLUG_SCORE);
 		else if(str_comp_nocase(pArg, "undead") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
 		else if(str_comp_nocase(pArg, "witch") == 0)
@@ -2982,6 +3008,8 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
 		else if(str_comp_nocase(pArg, "scientist") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
+		else if(str_comp_nocase(pArg, "biologist") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
 		else if(str_comp_nocase(pArg, "medic") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
 		else if(str_comp_nocase(pArg, "hero") == 0)
@@ -3004,6 +3032,8 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
 		else if(str_comp_nocase(pArg, "ghoul") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_GHOUL_SCORE);
+		else if(str_comp_nocase(pArg, "slug") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_GHOUL_SLUG);
 		else if(str_comp_nocase(pArg, "undead") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
 		else if(str_comp_nocase(pArg, "witch") == 0)

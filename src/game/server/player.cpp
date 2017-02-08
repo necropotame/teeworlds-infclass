@@ -262,6 +262,9 @@ void CPlayer::Snap(int SnappingClient)
 				case PLAYERCLASS_SCIENTIST:
 					str_format(aClanName, sizeof(aClanName), "%sScientist", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
+				case PLAYERCLASS_BIOLOGIST:
+					str_format(aClanName, sizeof(aClanName), "%sBiologist", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					break;
 				case PLAYERCLASS_MEDIC:
 					str_format(aClanName, sizeof(aClanName), "%sMedic", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
@@ -288,6 +291,9 @@ void CPlayer::Snap(int SnappingClient)
 					break;
 				case PLAYERCLASS_GHOUL:
 					str_format(aClanName, sizeof(aClanName), "%sGhoul", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					break;
+				case PLAYERCLASS_SLUG:
+					str_format(aClanName, sizeof(aClanName), "%sSlug", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_UNDEAD:
 					str_format(aClanName, sizeof(aClanName), "%sUndead", Server()->IsClientLogged(GetCID()) ? "@" : " ");
@@ -544,6 +550,10 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
 			break;
+		case PLAYERCLASS_BIOLOGIST:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
+			break;
 		case PLAYERCLASS_MEDIC:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
@@ -595,6 +605,12 @@ void CPlayer::SetClassSkin(int newClass, int State)
 				int Hue = 58 * (1.0f - clamp(State/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f));
 				m_TeeInfos.m_ColorBody = (Hue<<16) + (255<<8);
 			}
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_SLUG:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "coala", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
 			break;
 		case PLAYERCLASS_UNDEAD:

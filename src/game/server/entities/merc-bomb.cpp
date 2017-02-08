@@ -5,7 +5,7 @@
 #include "growingexplosion.h"
 #include "merc-bomb.h"
 
-CMercenaryBomb::CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner, int Type)
+CMercenaryBomb::CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_MERCENARY_BOMB)
 {
 	m_Pos = Pos;
@@ -13,7 +13,6 @@ CMercenaryBomb::CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner, int 
 	m_LoadingTick = Server()->TickSpeed();
 	m_Owner = Owner;
 	m_Damage = 6;
-	m_Type = Type;
 	
 	for(int i=0; i<NUM_IDS; i++)
 	{
@@ -43,29 +42,35 @@ void CMercenaryBomb::IncreaseDamage()
 
 void CMercenaryBomb::Tick()
 {
+	if(m_MarkedForDestroy) return;
+	
 	if(m_Damage >= g_Config.m_InfMercBombs && m_LoadingTick > 0)
 		m_LoadingTick--;
+	
+	// Find other players
+	bool MustExplode = false;
+	for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+	{
+		if(!p->IsInfected()) continue;
+		if(p->GetClass() == PLAYERCLASS_UNDEAD && p->IsFrozen()) continue;
+
+		float Len = distance(p->m_Pos, m_Pos);
+		if(Len < p->m_ProximityRadius+80.0f)
+		{
+			MustExplode = true;
+			break;
+		}
+	}
+	
+	if(MustExplode)
+		Explode();
 }
 
 void CMercenaryBomb::Explode()
 {
 	float Factor = static_cast<float>(m_Damage)/g_Config.m_InfMercBombs;
 	
-	switch(m_Type)
-	{
-		case EFFECT_EXPLOSION:
-			new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 14.0f * Factor, GROWINGEXPLOSIONEFFECT_EXPLOSION_INFECTED);
-			break;
-		case EFFECT_LOVE:
-			new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
-			break;
-		case EFFECT_HALLUCINATION:
-			new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_HALLUCINATION_INFECTED);
-			break;
-		case EFFECT_SHOCKWAVE:
-			new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 14.0f * Factor, GROWINGEXPLOSIONEFFECT_SHOCKWAVE_INFECTED);
-			break;
-	}
+	new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
 				
 	GameServer()->m_World.DestroyEntity(this);
 }
@@ -97,7 +102,7 @@ void CMercenaryBomb::Snap(int SnappingClient)
 
 		pP->m_X = (int)PosStart.x;
 		pP->m_Y = (int)PosStart.y;
-		pP->m_Type = POWERUP_ARMOR;
+		pP->m_Type = POWERUP_HEALTH;
 		pP->m_Subtype = 0;
 	}
 	
