@@ -633,11 +633,24 @@ void CMapConverter::Finalize()
 				for(int i=0; i<NUM_MENUCLASS; i++) 
 				{
 					int ClassMask = 0;
-					if(i == MENUCLASS_RANDOM) ClassMask = -1;
-					else if(i <= MENUCLASS_SCIENTIST) ClassMask = MASK_DEFENDER;
-					else if(i == MENUCLASS_MEDIC) ClassMask = MASK_MEDIC;
-					else if(i == MENUCLASS_HERO) ClassMask = MASK_HERO;
-					else ClassMask = MASK_SUPPORT;
+					
+					switch(i)
+					{
+						case MENUCLASS_ENGINEER:
+						case MENUCLASS_SOLDIER:
+						case MENUCLASS_SCIENTIST:
+						case MENUCLASS_BIOLOGIST:
+							ClassMask = MASK_DEFENDER;
+							break;
+						case MENUCLASS_MEDIC:
+							ClassMask = MASK_MEDIC;
+							break;
+						case MENUCLASS_HERO:
+							ClassMask = MASK_HERO;
+							break;
+						default:
+							ClassMask = MASK_SUPPORT;
+					}
 					
 					//Create Animation for enable/disable simulation
 					{
