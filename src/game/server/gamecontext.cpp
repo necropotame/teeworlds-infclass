@@ -3141,6 +3141,16 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
+		else if(str_comp_nocase(pHelpPage, "biologist") == 0)
+		{
+
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Biologist"), NULL); 
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle."), NULL);
+			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
 		else if(str_comp_nocase(pHelpPage, "medic") == 0)
 		{
 			Buffer.append("~~ ");
@@ -3289,6 +3299,19 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can devore all that has died close to him, which makes him stronger, faster and more resistant."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment."), NULL);
+			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "slug") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Slug"), NULL);
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Slug can infect humans and heal infected with his hammer."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can make the ground and walls toxic by spreading slime with his hammer."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Touching the slime inflicts three damage points in three seconds on a human."), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
