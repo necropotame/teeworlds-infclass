@@ -12,7 +12,7 @@ CMercenaryBomb::CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 	GameWorld()->InsertEntity(this);
 	m_LoadingTick = Server()->TickSpeed();
 	m_Owner = Owner;
-	m_Damage = 6;
+	m_Damage = 0;
 	
 	for(int i=0; i<NUM_IDS; i++)
 	{
@@ -70,7 +70,10 @@ void CMercenaryBomb::Explode()
 {
 	float Factor = static_cast<float>(m_Damage)/g_Config.m_InfMercBombs;
 	
-	new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	if(m_Damage > 1)
+	{
+		new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	}
 				
 	GameServer()->m_World.DestroyEntity(this);
 }
