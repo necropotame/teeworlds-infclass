@@ -1925,6 +1925,23 @@ void CCharacter::Tick()
 			);
 		}
 	}
+	else if(GetClass() == PLAYERCLASS_BIOLOGIST)
+	{
+		int NumMines = 0;
+		for(CBiologistMine *pMine = (CBiologistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BIOLOGIST_MINE); pMine; pMine = (CBiologistMine*) pMine->TypeNext())
+		{
+			if(pMine->m_Owner == m_pPlayer->GetCID())
+				NumMines++;
+		}
+		
+		if(NumMines > 0)
+		{
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Mine activated"),
+				NULL
+			);
+		}
+	}
 	else if(GetClass() == PLAYERCLASS_NINJA)
 	{
 		int TargetID = GameServer()->GetTargetToKill();
