@@ -10,7 +10,8 @@
 	{
 		"key": "{int:NumHumans} humans won the round",
 		"one": "Jeden cz\u0142owiek wygra\u0142 rund\u0119",
-		"many": "{int:NumHumans} Ludzie wygrali rund\u0119",
+		"few": "{int:NumHumans} Ludzie wygrali rund\u0119",
+		"many": "{int:NumHumans} Ludzie wygrali rund\u0119 ",
 		"other": "{int:NumHumans} Ludzie wygrali rund\u0119 ",
 	},
 	{
@@ -24,6 +25,10 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "Zabi\u0142e\u015b wied\u017am\u0119, +5 points"
+	},
+	{
+		"key": "You have eliminated your target, +3 points",
+		"value": "Wyeliminowa\u0142e\u015b sw\u00f3j cel, +3 punkty"
 	},
 	{
 		"key": "The undead is coming!",
@@ -78,24 +83,62 @@
 		"value": "Wybierz swoj\u0105 ras\u0119"
 	},
 	{
+		"key": "Cancel",
+		"value": "Odrzucenie"
+	},
+	{
+		"key": "Explosion",
+		"value": "Wybuch"
+	},
+	{
+		"key": "Aphrodisiac",
+		"value": "Afrodyzjak"
+	},
+	{
+		"key": "Hallucination",
+		"value": "Halucynacje"
+	},
+	{
+		"key": "Shockwave",
+		"value": "Elektrowstrz\u0105s"
+	},
+	{
+		"key": "Choose bomb effect",
+		"value": "Wybierz typ bomby"
+	},
+	{
 		"key": "Laser wall: {sec:RemainingTime}",
 		"value": "\u015aciana laserowa : {sec:RemainingTime}"
 	},
 	{
 		"key": "{int:NumBombs} bombs left",
 		"one": "Jedna bomba pozosta\u0142a",
+		"few": "{int:NumBombs} pozosta\u0142o bomb",
 		"many": "{int:NumBombs} pozosta\u0142o bomb",
 		"other": "{int:NumBombs} pozosta\u0142o bomb",
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "",
-		"many": "",
-		"other": "",
+		"one": "Jedna mina jest aktywna",
+		"few": "{int:NumMines} min jest aktywnych",
+		"many": "{int:NumMines} min jest aktywnych",
+		"other": "{int:NumMines} min jest aktywnych",
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Nast\u0119pny cel za {sec:RemainingTime}"
+	},
+	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Cel do wyeliminowania: {str:PlayerName}"
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Pozycja zablokowana : {sec:RemainingTime}"
+	},
+	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Pole wybuchu: {percent:BombLevel}"
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -104,6 +147,10 @@
 	{
 		"key": "Web mode enabled",
 		"value": "Tryb sieci aktywowany"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Brzuch wype\u0142niony w {percent:FodderInStomach}"
 	},
 	{
 		"key": "The witch is dead",
@@ -172,6 +219,10 @@
 	{
 		"key": "Spider",
 		"value": "Paj\u0105k"
+	},
+	{
+		"key": "Ghoul",
+		"value": "Ghul"
 	},
 	{
 		"key": "Witch",
@@ -288,6 +339,7 @@
 	{
 		"key": "Each bomb can explode {int:NumBombs} times.",
 		"one": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 raz.",
+		"few": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 {int:NumBombs} razy",
 		"many": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 {int:NumBombs} razy",
 		"other": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 {int:NumBombs} razy",
 	},
@@ -306,6 +358,7 @@
 	{
 		"key": "Mines are limited to {int:NumMines} per player at the same time.",
 		"one": "Miny s\u0105 limitowane dla ka\u017cdego gracza w jednym momencie.",
+		"few": "Miny s\u0105 limitowane {int:NumMines} dla ka\u017cdego gracza w jednym momencie.",
 		"many": "Miny s\u0105 limitowane {int:NumMines} dla ka\u017cdego gracza w jednym momencie.",
 		"other": "Miny s\u0105 limitowane {int:NumMines} dla ka\u017cdego gracza w jednym momencie.",
 	},
@@ -344,6 +397,7 @@
 	{
 		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
 		"one": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 raz przed dotkni\u0119ciem ziemi.",
+		"few": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 {int:NinjaJump}  razy przed dotkni\u0119ciem ziemi.",
 		"many": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 {int:NinjaJump}  razy przed dotkni\u0119ciem ziemi.",
 		"other": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 {int:NinjaJump}  razy przed dotkni\u0119ciem ziemi.",
 	},
@@ -352,10 +406,15 @@
 		"value": "Najemnik mo\u017ce lata\u0107 u\u017cywaj\u0105c swojego pistelotu maszynowego."
 	},
 	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "Mo\u017ce na\u0142adowa\u0107 pole ekslozji lub innych efekt\u00f3w swoim m\u0142otem."
+	},
+	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "",
-		"many": "",
-		"other": "",
+		"one": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 jeden punkt \u017cycia.",
+		"few": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkt\u00f3w \u017cycia.",
+		"many": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkt\u00f3w \u017cycia.",
+		"other": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkt\u00f3w \u017cycia.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -418,6 +477,18 @@
 		"value": "Hak paj\u0105ka (w obu trybach) zabiera 1 punkt \u017cycia na sekund\u0119 i mo\u017ce \u0142apa\u0107 cz\u0142owieka na 2 sekundy."
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "Ghul mo\u017ce zara\u017ca\u0107 ludzi swoim m\u0142otem."
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Mo\u017ce pobiera\u0107 tych, kt\u00f3rzy umarli blisko niego, co czyni go silniejszym , szynszym i bardziej odpornym."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Jednakowo\u017c je\u017celi nie czerpie, kawa\u0142ek po kawa\u0142ku b\u0119dzie wraca\u0142 do normalno\u015bci, albo gdy zginie."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Nieumar\u0142y mo\u017ce zara\u017ca\u0107 ludzi i leczy\u0107 zara\u017conych swoim m\u0142otem."
 	},
@@ -444,6 +515,26 @@
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Mo\u017ce r\u00f3wnie\u017c zabiera\u0107 1 punkt \u017cycia \u0142api\u0105c hakiem ludzi."
+	},
+	{
+		"key": "Targeted chat messages",
+		"value": "Znaczone wiadomo\u015bci czatu"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "U\u017cyj  \"/msg <PlayerName> <My Message>\" aby wys\u0142a\u0107 prywatn\u0105 wiadomo\u015b\u0107 temu graczowi."
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Uzyj  \"/msg !<ClassName> <My Message>\" aby wys\u0142a\u0107 prywatn\u0105 wiadomo\u015b\u0107 wszystkim graczom z konkretn\u0105 ras\u0105."
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "Przyk\u0142ad \"/msg !medyk jestem ranny!\""
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "U\u017cyj \"/msg !near\" aby wys\u0142a\u0107 wiadomo\u015bc wszystkim graczom w pobli\u017cu."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -476,6 +567,22 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Naci\u015bnij <f3> lub <f4> aby aktywowa\u0107 lub dezaktywowa\u0107 ochron\u0119 przed hakiem."
+	},
+	{
+		"key": "You are now logged.",
+		"value": "Jeste\u015b zalogowany."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "B\u0142\u0119dne has\u0142o/nazwa u\u017cytkownika"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Wyst\u0105pi\u0142 b\u0142\u0105d podczas operacji."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Musisz by\u0107 zalogowany na t\u0119 operacj\u0119."
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

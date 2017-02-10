@@ -25,6 +25,10 @@
 		"value": "Je hebt een heks vermoord, +5 punten"
 	},
 	{
+		"key": "You have eliminated your target, +3 points",
+		"value": "Je hebt je doel ge\u00eblimineerd, +3 punten "
+	},
+	{
 		"key": "The undead is coming!",
 		"value": "De ondode komt eraan!"
 	},
@@ -77,6 +81,30 @@
 		"value": "Kies jouw klasse"
 	},
 	{
+		"key": "Cancel",
+		"value": "Annuleer"
+	},
+	{
+		"key": "Explosion",
+		"value": "Explosie"
+	},
+	{
+		"key": "Aphrodisiac",
+		"value": "Verdovingsmiddel"
+	},
+	{
+		"key": "Hallucination",
+		"value": "Hallucinatie"
+	},
+	{
+		"key": "Shockwave",
+		"value": "Schokgolf"
+	},
+	{
+		"key": "Choose bomb effect",
+		"value": "Kies bom effect"
+	},
+	{
 		"key": "Laser wall: {sec:RemainingTime}",
 		"value": "Laser muur: {sec:RemainingTime}"
 	},
@@ -87,12 +115,24 @@
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "",
-		"other": "",
+		"one": "E\u00e9n mijn is actief",
+		"other": "{int:NumMines} mijnen zijn actief",
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Volgende doelwit in {sec:RemainingTime}"
+	},
+	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Target te elimineren: {str:PlayerName}"
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Vergrendelde positie: {sec:RemainingTime}"
+	},
+	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Explosieve opbrengst: {percent:BombLevel}"
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -101,6 +141,10 @@
 	{
 		"key": "Web mode enabled",
 		"value": "Web-modus geactiveerd"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Maag gevuld voor {percent:FodderInStomach}"
 	},
 	{
 		"key": "The witch is dead",
@@ -169,6 +213,10 @@
 	{
 		"key": "Spider",
 		"value": "Spin"
+	},
+	{
+		"key": "Ghoul",
+		"value": "Ghoul"
 	},
 	{
 		"key": "Witch",
@@ -346,9 +394,13 @@
 		"value": "De huurling kan in de lucht vliegen met zijn machinegeweer."
 	},
 	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "Hij kan explosieven van verschillende effecten opwinden en op afstand ontsteken met zijn hamer."
+	},
+	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "",
-		"other": "",
+		"one": "Hij kan ook gif granaten gooien die \u00e9\u00e9n schade punt oplevert.",
+		"other": "Hij kan ook gif granaten gooien die {int:NumDamagePoints} schade punten oplevert.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -411,6 +463,18 @@
 		"value": "De haak van een spin (in beide modus) levert 1 schade punt op per seconde en kan een mens grijpen gedurende 2 seconden."
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "De Ghoul kan mensen infecteren en ge\u00efnfecteerden genezen met zijn hamer."
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Hij kan al die dicht bij hem is overleden verslinden, dat maakt hem sterker, sneller en meer resistent."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Daarop verteert hij zijn voeder beetje bij beetje en gaat hij terug naar zijn normale toestand, en bovendien, de dood berooft hem van zijn voeding."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "De ondode kan mensen infecteren en mensen genezen met zijn hamer."
 	},
@@ -437,6 +501,26 @@
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Ze kan ook 1 schade punt aanrichten per seconde door het haken van mensen."
+	},
+	{
+		"key": "Targeted chat messages",
+		"value": "Gerichte chatberichten"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "Gebruik \"/msg <PlayerName> <My Message>\" om een priv\u00e9 bericht te sturen naar deze speler."
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Gebruik \"/msg !<ClassName> <My Message>\" om een priv\u00e9 bericht te sturen naar alle spelers met een specifieke klas."
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "Voorbeeld: \"/msg !medic Ik ben gewond!\""
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "Gebruik \"/msg !near\" om een priv\u00e9 bericht te sturen naar alle spelers rondom jou."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -469,6 +553,22 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Druk op <F3> of <F4> voor het in- of uitschakelen van de bescherming van de haak"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "Je bent nu ingelogd."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Verkeerde gebruikersnaam/wachtwoord"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Er is een fout is opgetreden tijdens de actie"
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Je moet ingelogd zijn voor deze actie"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",

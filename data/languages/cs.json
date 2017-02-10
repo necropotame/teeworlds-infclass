@@ -26,12 +26,20 @@
 		"value": "Zabil jsi \u010darod\u011bjnici, +5 bod\u016f"
 	},
 	{
+		"key": "You have eliminated your target, +3 points",
+		"value": "Zavra\u017edil jsi sv\u016fj c\u00edl +3 body"
+	},
+	{
 		"key": "The undead is coming!",
 		"value": "Nemrtv\u00fd p\u0159ich\u00e1z\u00ed!"
 	},
 	{
 		"key": "The witch is coming!",
 		"value": "\u010carod\u011bjnice p\u0159ich\u00e1z\u00ed!"
+	},
+	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Jsi zmra\u017een\u00fd:  {sec:EffectDuration}"
 	},
 	{
 		"key": "Random choice",
@@ -74,6 +82,30 @@
 		"value": "Vyber si sv\u00e9 povol\u00e1n\u00ed"
 	},
 	{
+		"key": "Cancel",
+		"value": "Zav\u0159\u00edt"
+	},
+	{
+		"key": "Explosion",
+		"value": "Exploze"
+	},
+	{
+		"key": "Aphrodisiac",
+		"value": "Afrodisiakum"
+	},
+	{
+		"key": "Hallucination",
+		"value": "Halucinace"
+	},
+	{
+		"key": "Shockwave",
+		"value": "R\u00e1zov\u00e1 vlna"
+	},
+	{
+		"key": "Choose bomb effect",
+		"value": "Vyber si efekt "
+	},
+	{
 		"key": "Laser wall: {sec:RemainingTime}",
 		"value": "Laserov\u00e1 st\u011bna: {sec:RemainingTime}"
 	},
@@ -85,13 +117,25 @@
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
-		"one": "",
-		"few": "",
-		"other": "",
+		"one": "Jedna mina je aktivn\u00ed",
+		"few": "{int:NumMines} miny jsou aktivn\u00ed",
+		"other": "{int:NumMines} miny jsou aktivn\u00ed",
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "P\u0159\u00ed\u0161t\u00ed c\u00edl za {sec:RemainingTime}"
+	},
+	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Ter\u010d k zavra\u017ed\u011bn\u00ed: {str:PlayerName}"
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Znehybn\u011bn\u00ed: {sec:RemainingTime}"
+	},
+	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Explosivn\u00ed efekt: {percent:BombLevel}"
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -100,6 +144,10 @@
 	{
 		"key": "Web mode enabled",
 		"value": "Pavu\u010dinov\u00fd m\u00f3d aktivov\u00e1n"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "\u017daludek napln\u011bn za {percent:FodderInStomach}"
 	},
 	{
 		"key": "The witch is dead",
@@ -168,6 +216,10 @@
 	{
 		"key": "Spider",
 		"value": "Pavouk"
+	},
+	{
+		"key": "Ghoul",
+		"value": "Gh\u016fl"
 	},
 	{
 		"key": "Witch",
@@ -348,10 +400,14 @@
 		"value": "\u017doldn\u00e9\u0159 l\u00e9t\u00e1 ve vzduchu pomoc\u00ed jeho pistole."
 	},
 	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "M\u016f\u017ee sv\u00fdm kladivem tvo\u0159it exploze s r\u016fzn\u00fdmi efekty"
+	},
+	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "",
-		"few": "",
-		"other": "",
+		"one": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b 1 \u017eivot",
+		"few": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b  {int:NumDamagePoints} \u017eivoty",
+		"other": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b {int:NumDamagePoints} \u017eivot\u016f",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -414,6 +470,18 @@
 		"value": "H\u00e1k pavouka ud\u011bluje 1 \u00fato\u010dn\u00fd bod(v jak\u00e9moliv m\u00f3du) za sekundu a \u010dlov\u011bka m\u016f\u017ee dr\u017eet 2 sekundy."
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "Gh\u016fl m\u016f\u017ee nakazit lidi a l\u00e9\u010dit naka\u017een\u00e9 kladivem"
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "M\u016f\u017ee absorbovat naka\u017een\u00e9, kter\u00e9 um\u0159eli bl\u00edzko n\u011bho,  co\u017e ho pot\u00e9 d\u011bl\u00e1 odoln\u011bj\u0161\u00edm a rychlej\u0161\u00edm."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Pot\u00e9 se postupn\u011b vrac\u00ed do sv\u00e9ho norm\u00e1ln\u00edho stavu.\nKdy\u017e um\u0159e, instantn\u011b ztrat\u00ed \u010d\u00e1st toho co absorboval"
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Nemrtv\u00fd m\u016f\u017ee infikovat lidi a l\u00e9\u010dit naka\u017een\u00e9."
 	},
@@ -440,6 +508,26 @@
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "M\u016f\u017ee ud\u011blit 1 \u00fato\u010dn\u00fd bod za sekundu zah\u00e1knut\u00edm \u010dlov\u011bka."
+	},
+	{
+		"key": "Targeted chat messages",
+		"value": "C\u00edlen\u00e9 zpr\u00e1vy chatu"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "Pokud chce\u0161 napsat zpr\u00e1vu jin\u00e9mu hr\u00e1\u010di pou\u017eij \"/msg <Jm\u00e9noHr\u00e1\u010de> \"<Zpr\u00e1va> "
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Kdy\u017e chce\u0161 poslat zpr\u00e1vu specifick\u00e9 t\u0159\u00edd\u011b, pou\u017eij \"/msg!<Jm\u00e9noT\u0159\u00eddy> <Zpr\u00e1va>"
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "P\u0159\u00edklad :\"/msg !medic Jsem zran\u011bn\u00fd\""
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "Pou\u017eij \"/msg !mear\" K naps\u00e1n\u00ed zpr\u00e1vy v\u0161em hr\u00e1\u010d\u016fm bl\u00edzko tebe"
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -472,6 +560,22 @@
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Zm\u00e1\u010dkni <F3> nebo <F4> k aktivaci,  nebo deaktivaci h\u00e1kov\u00e9 ochrany"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "Jsi p\u0159\u00edhl\u00e1\u0161en/a"
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "\u0160patn\u00e9 jm\u00e9no. nebo heslo"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "B\u011bhem operace se stala chyba"
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "K tomuto \u00fakonu mus\u00ed\u0161 b\u00fdt p\u0159ihl\u00e1\u0161en"
 	},
 	{
 		"key": "Please wait 5 minutes before create an another account",
