@@ -1792,6 +1792,11 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 862: //Venezuela
 						str_copy(m_VoteLanguage[ClientID], "es", sizeof(m_VoteLanguage[ClientID]));
 						break;	
+					/* fa - Farsi ************************************/
+					case 364: //Islamic Republic of Iran
+					case 4: //Afghanistan
+						str_copy(m_VoteLanguage[ClientID], "fa", sizeof(m_VoteLanguage[ClientID]));
+						break;	
 					/* fr - French ************************************/							
 					case 204: //Benin
 					case 854: //Burkina Faso
