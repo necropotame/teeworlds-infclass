@@ -391,7 +391,7 @@
 	},
 	{
 		"key": "The Mercenary fly in air using his machine gun.",
-		"value": "The Mercenary fly in air using his machine gun."
+		"value": "The Mercenary flies in the air using his machine gun."
 	},
 	{
 		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
@@ -399,8 +399,8 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "He can also throw poison grenades that deals one damage point.",
-		"other": "He can also throw poison grenades that deals {int:NumDamagePoints} damage points.",
+		"one": "He can also throw poison grenades that deal one damage point.",
+		"other": "He can also throw poison grenades that deal {int:NumDamagePoints} damage points.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",

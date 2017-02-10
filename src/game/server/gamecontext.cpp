@@ -1766,6 +1766,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						break;
 					/* el - Greek ***********************************/	
 					case 300: //Greece
+					case 196: //Cyprus
 						str_copy(m_VoteLanguage[ClientID], "el", sizeof(m_VoteLanguage[ClientID]));
 						break;
 					/* es - Spanish ***********************************/	
@@ -1801,7 +1802,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 204: //Benin
 					case 854: //Burkina Faso
 					case 178: //Republic of the Congo
-					case 384: //Cote d'Ivoire
+					case 384: //Cote d’Ivoire
 					case 266: //Gabon
 					case 324: //Ginea
 					case 466: //Mali
@@ -1812,8 +1813,9 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 492: //Monaco
 						str_copy(m_VoteLanguage[ClientID], "fr", sizeof(m_VoteLanguage[ClientID]));					
 						break;
-					/* hu - Croatian **********************************/	
+					/* hr - Croatian **********************************/	
 					case 191: //Croatia
+					case 70: //Bosnia and Hercegovina
 						str_copy(m_VoteLanguage[ClientID], "hr", sizeof(m_VoteLanguage[ClientID]));		
 						break;
 					/* hu - Hungarian *********************************/	
@@ -1834,7 +1836,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						break;
 					/* nl - Dutch *************************************/
 					case 533: //Aruba
-					case 531: //Curacao
+					case 531: //Curaçao
 					case 534: //Sint Maarten
 					case 528: //Netherland
 					case 740: //Suriname
@@ -1853,19 +1855,20 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					//case 446: //Macao: official language, but spoken by less than 1% of the population
 					case 508: //Mozambique
 					case 626: //Timor-Leste
-					case 678: //Sao Tome and Principe
+					case 678: //São Tomé and Príncipe
 						str_copy(m_VoteLanguage[ClientID], "pt", sizeof(m_VoteLanguage[ClientID]));		
 						break;
 					/* ru - Russian ***********************************/	
 					case 112: //Belarus
 					case 643: //Russia
+					case 398: // Kazakhstan
 						str_copy(m_VoteLanguage[ClientID], "ru", sizeof(m_VoteLanguage[ClientID]));
 						break;
-					/* sk - Slovak ************************************/
+					/* sk - Slovak (will fit to Czech as long as there is no dedicated translation) ************************************/
 					case 703: //Slovakia
-						str_copy(m_VoteLanguage[ClientID], "sk", sizeof(m_VoteLanguage[ClientID]));		
+						str_copy(m_VoteLanguage[ClientID], "cs", sizeof(m_VoteLanguage[ClientID]));		
 						break;
-					/* uk - Ukranian **********************************/	
+					/* uk - Ukrainian **********************************/	
 					case 804: //Ukraine
 						str_copy(m_VoteLanguage[ClientID], "uk", sizeof(m_VoteLanguage[ClientID]));
 						break;
@@ -3566,7 +3569,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
 	Console()->Register("alwaysrandom", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAlwaysRandom, this, "Display information about the mod");
-	Console()->Register("language", "s<fr|de|uk|ru|it|es|ar|hu|pl|nl|la>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
+	Console()->Register("language", "s<en|fr|nl|de|hr|cs|pl|hu|uk|ru|el|la|it|es|pt|ar|hu|fa|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
 /* INFECTION MODIFICATION END *****************************************/
 
