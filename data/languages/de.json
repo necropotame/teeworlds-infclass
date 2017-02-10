@@ -1,5 +1,57 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} ist stummgeschalten worden f\u00fcr {sec:Duration} ({str:Reason})"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "Du bist nunmehr eingeloggt."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Falscher Nutzername/Falsches Pa\u00dfwort"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Ein Fehler ist w\u00e4hrend des Vorganges aufgetreten."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Du mu\u00dft f\u00fcr diesen Vorgang angemeldet sein"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Warte bitte 5 Minuten, bevor du ein neues Konto erstellst"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Ein Fehler ist w\u00e4hrend der Erstellung deines Kontos aufgetreten."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Dieser Nutzername findet bereits Verwendung durch ein Konto"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Dein Konto ist erstellt worden und du bist nunmehr angemeldet."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Du mu\u00df angemeldet sein, um deinen Rang zu sehen"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Du mu\u00dft angemeldet sein, um deine Zielpunktzahl zu sehen"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Du hast bereits verlautbart, da\u00df {str:PlayerName} gebannt geh\u00f6re"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} verlangt nach einem Bann f\u00fcr {str:VictimName} ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} ist angesteckt worden"
 	},
@@ -25,142 +77,8 @@
 		"value": "Du hast eine Hexe get\u00f6tet, +5 Punkte"
 	},
 	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "Du hast dein Ziel beseitigt, +3 Punkte."
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "Der Untote ist da!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "Die Hexe ist da!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Du bist eingefroren: {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "Zuf\u00e4llige Auswahl"
-	},
-	{
-		"key": "Engineer",
-		"value": "Ingenieur"
-	},
-	{
-		"key": "Soldier",
-		"value": "Soldat"
-	},
-	{
-		"key": "Scientist",
-		"value": "Wissenschaftler"
-	},
-	{
-		"key": "Medic",
-		"value": "Arzt"
-	},
-	{
-		"key": "Hero",
-		"value": "Recke"
-	},
-	{
-		"key": "Ninja",
-		"value": "Ninja"
-	},
-	{
-		"key": "Mercenary",
-		"value": "S\u00f6ldner"
-	},
-	{
-		"key": "Sniper",
-		"value": "Scharfsch\u00fctze"
-	},
-	{
-		"key": "Choose your class",
-		"value": "W\u00e4hle deine Klasse"
-	},
-	{
-		"key": "Cancel",
-		"value": "Abbrechen"
-	},
-	{
-		"key": "Explosion",
-		"value": "Sprengstoff"
-	},
-	{
-		"key": "Aphrodisiac",
-		"value": "Liebmacher"
-	},
-	{
-		"key": "Hallucination",
-		"value": "Sinnest\u00e4uscher"
-	},
-	{
-		"key": "Shockwave",
-		"value": "R\u00fcckschlag"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "W\u00e4hle eine Wirkung"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Laser-Wand: {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Eine verbleibende Bombe",
-		"other": "{int:NumBombs} verbleibende Bomben",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "Eine Mine ist scharf",
-		"other": "{int:NumMines} Minen sind scharf",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "N\u00e4chstes Ziel in {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "Zu beseitigendes Ziel: {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Feste Aufstellung: {sec:RemainingTime}"
-	},
-	{
-		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Ladungsmenge: {percent:BombLevel}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "N\u00e4chste Flagge in {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Spinnennetz-Betrieb eingeschalten"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "Wanstf\u00fcllung {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "Die Hexe ist tot"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "Der Untote ist nun endg\u00fcltig tot"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Gib \u00bb/help {str:ClassName}\u00ab ein f\u00fcr zus\u00e4tzliche Angaben in betreff auf deine Klasse"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "Der Recke hat die Flagge gefunden!"
+		"key": "You have eliminated your target, +2 points",
+		"value": "Du hast dein Ziel beseitigt, +2 Punkte."
 	},
 	{
 		"key": "Hook protection enabled",
@@ -195,6 +113,42 @@
 		"value": "{str:PlayerName} ist dem Spiele beigetreten"
 	},
 	{
+		"key": "Engineer",
+		"value": "Ingenieur"
+	},
+	{
+		"key": "Soldier",
+		"value": "Soldat"
+	},
+	{
+		"key": "Medic",
+		"value": "Arzt"
+	},
+	{
+		"key": "Hero",
+		"value": "Recke"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "S\u00f6ldner"
+	},
+	{
+		"key": "Sniper",
+		"value": "Scharfsch\u00fctze"
+	},
+	{
+		"key": "Scientist",
+		"value": "Wissenschaftler"
+	},
+	{
+		"key": "Biologist",
+		"value": "Lebenskundler"
+	},
+	{
 		"key": "Smoker",
 		"value": "Smoker"
 	},
@@ -217,6 +171,10 @@
 	{
 		"key": "Ghoul",
 		"value": "\u0120ul"
+	},
+	{
+		"key": "Slug",
+		"value": "Schnecke"
 	},
 	{
 		"key": "Witch",
@@ -243,6 +201,10 @@
 		"value": "{str:PlayerName} hat den Server und das Spiel betreten"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "Du bist f\u00fcr {sec:Duration} stummgeschalten worden."
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "Du kannst gerade nicht zuschauen"
 	},
@@ -267,8 +229,12 @@
 		"value": "InfectionClass, von necropotame (Version {str:VersionCode})"
 	},
 	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Fu\u00dfend auf der Infection-Mod von Gravity"
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Fu\u00dfend auf dem Einfalle der Infection-Mod von Gravity"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Vornehmlichste Beitr\u00e4ger: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -355,6 +321,10 @@
 	{
 		"key": "He has also grenades that teleport him.",
 		"value": "Er besitzt dar\u00fcberhinaus Granaten, die ihn teleportieren."
+	},
+	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "Der Biologe hat eine Schrotflinte mit abprallenden Kugeln und kann eine Selbstschu\u00dflaserfalle durch Schu\u00df mit seinem Gewehr errichten."
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
@@ -475,6 +445,18 @@
 		"value": "Daraufhin verdaut er sein Futter nachgerade, zu seinem n\u00fcchternen Zustande zur\u00fcckkehrend, und \u00fcberdies erleichtert ihn der Tod seiner S\u00e4ttigung."
 	},
 	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "Die Schnecke kann unter Verwendung ihres Hammers entweder Erkrankte heilen oder \u00dcberlebende anstecken."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "Er kann Boden und W\u00e4nde verseuchen, indem er mittels seines Hammers Schleim auf ihnen ausbreitet."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Den Schleim zu ber\u00fchren, f\u00fcgt einem Menschen drei Schadenspunkte in drei Sekunden zu."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Der Untote kann unter Verwendung seines Hammers entweder Erkrankte heilen oder \u00dcberlebende anstecken."
 	},
@@ -555,51 +537,93 @@
 		"value": "Dr\u00fccke <F3> oder <F4>, um den Verhakungsschutz an- oder auszuschalten"
 	},
 	{
-		"key": "You are now logged.",
-		"value": "Du bist nunmehr eingeloggt."
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "Du hast einen Gutschriftg\u00fcrtel der Karte f\u00fcr eine Minute gehalten, +5 Punkte"
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "Falscher Nutzername/Falsches Pa\u00dfwort"
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Du bist eingefroren: {sec:EffectDuration}"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "Ein Fehler ist w\u00e4hrend des Vorganges aufgetreten."
+		"key": "Random choice",
+		"value": "Zuf\u00e4llige Auswahl"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "Du mu\u00dft f\u00fcr diesen Vorgang angemeldet sein"
+		"key": "Choose your class",
+		"value": "W\u00e4hle deine Klasse"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Warte bitte 5 Minuten, bevor du ein neues Konto erstellst"
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laser-Wand: {sec:RemainingTime}"
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "Ein Fehler ist w\u00e4hrend der Erstellung deines Kontos aufgetreten."
+		"key": "{int:NumBombs} bombs left",
+		"one": "Eine verbleibende Bombe",
+		"other": "{int:NumBombs} verbleibende Bomben",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "Dieser Nutzername findet bereits Verwendung durch ein Konto"
+		"key": "{int:NumMines} mines are actives",
+		"one": "Eine Mine ist scharf",
+		"other": "{int:NumMines} Minen sind scharf",
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Dein Konto ist erstellt worden und du bist nunmehr angemeldet."
+		"key": "Mine activated",
+		"value": "Mine aufgesetzt"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "Du mu\u00df angemeldet sein, um deinen Rang zu sehen"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "N\u00e4chstes Ziel in {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "Du mu\u00dft angemeldet sein, um deine Zielpunktzahl zu sehen"
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Zu beseitigendes Ziel: {str:PlayerName}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Du hast bereits verlautbart, da\u00df {str:PlayerName} gebannt geh\u00f6re"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Feste Aufstellung: {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} verlangt nach einem Bann f\u00fcr {str:VictimName} ({str:Reason})"
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Ladungsmenge: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "N\u00e4chste Flagge in {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Spinnennetz-Betrieb eingeschalten"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Wanstf\u00fcllung {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "Die Hexe ist tot"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Der Untote ist nun endg\u00fcltig tot"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Schwertschnelligkeit erh\u00f6ht"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "Schwertst\u00e4rke erh\u00f6ht"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Granatenh\u00f6chstzahl erh\u00f6ht"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Gib \u00bb/help {str:ClassName}\u00ab ein f\u00fcr zus\u00e4tzliche Angaben in betreff auf deine Klasse"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Der Recke hat die Flagge gefunden!"
 	},
 ]}

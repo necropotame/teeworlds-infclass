@@ -1,5 +1,53 @@
 {"translation":[
 	{
+		"key": "You are now logged.",
+		"value": "Jeste\u015b zalogowany."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "B\u0142\u0119dne has\u0142o/nazwa u\u017cytkownika"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Wyst\u0105pi\u0142 b\u0142\u0105d podczas operacji."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Musisz by\u0107 zalogowany na t\u0119 operacj\u0119."
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Prosz\u0119 poczekaj 5 minut przed utworzeniem nast\u0119pnego konta"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Wyst\u0105pi\u0142 b\u0142\u0105d podczas tworzenia twojego konta."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Nazwa u\u017cytkownika jest zaj\u0119ta przez istniej\u0105ce konto"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Twoje konto zosta\u0142o utworzone i jeste\u015b zalogowany."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Musisz by\u0107 zalogowany by zobaczy\u0107 sw\u00f3j ranking"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Musisz by\u0107 zalogowany by zobaczy\u0107 sw\u00f3j gol"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Ju\u017c zg\u0142osi\u0142e\u015b, to \u017ce {str:PlayerName} musi by\u0107 zbanowany"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} chce {str:VictimName} aby by\u0142 zbanowany ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} Zosta\u0142 zainfekowany"
 	},
@@ -25,148 +73,6 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "Zabi\u0142e\u015b wied\u017am\u0119, +5 points"
-	},
-	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "Wyeliminowa\u0142e\u015b sw\u00f3j cel, +3 punkty"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "Nieumar\u0142y nadchodzi !"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "Wied\u017ama nadchodzi !"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Jeste\u015b zamro\u017cony na: {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "Przypadkowy wyb\u00f3r"
-	},
-	{
-		"key": "Engineer",
-		"value": "In\u017cynier"
-	},
-	{
-		"key": "Soldier",
-		"value": "\u017bo\u0142nierz"
-	},
-	{
-		"key": "Scientist",
-		"value": "Naukowiec"
-	},
-	{
-		"key": "Medic",
-		"value": "Orvos"
-	},
-	{
-		"key": "Hero",
-		"value": "Bohater"
-	},
-	{
-		"key": "Ninja",
-		"value": "Ninja"
-	},
-	{
-		"key": "Mercenary",
-		"value": "Najemnik"
-	},
-	{
-		"key": "Sniper",
-		"value": "Snajper"
-	},
-	{
-		"key": "Choose your class",
-		"value": "Wybierz swoj\u0105 ras\u0119"
-	},
-	{
-		"key": "Cancel",
-		"value": "Odrzucenie"
-	},
-	{
-		"key": "Explosion",
-		"value": "Wybuch"
-	},
-	{
-		"key": "Aphrodisiac",
-		"value": "Afrodyzjak"
-	},
-	{
-		"key": "Hallucination",
-		"value": "Halucynacje"
-	},
-	{
-		"key": "Shockwave",
-		"value": "Elektrowstrz\u0105s"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "Wybierz typ bomby"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "\u015aciana laserowa : {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Jedna bomba pozosta\u0142a",
-		"few": "{int:NumBombs} pozosta\u0142o bomb",
-		"many": "{int:NumBombs} pozosta\u0142o bomb",
-		"other": "{int:NumBombs} pozosta\u0142o bomb",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "Jedna mina jest aktywna",
-		"few": "{int:NumMines} min jest aktywnych",
-		"many": "{int:NumMines} min jest aktywnych",
-		"other": "{int:NumMines} min jest aktywnych",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "Nast\u0119pny cel za {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "Cel do wyeliminowania: {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Pozycja zablokowana : {sec:RemainingTime}"
-	},
-	{
-		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Pole wybuchu: {percent:BombLevel}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Nast\u0119pna flaga za  {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Tryb sieci aktywowany"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "Brzuch wype\u0142niony w {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "Wied\u017ama nie \u017cyje "
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "Nieumar\u0142y jest wreszcie martwy"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Wpisz \"/help {str:ClassName}\" by uzyska\u0107 wi\u0119cej informacji o swojej rasie"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "Bohater znalaz\u0142 flag\u0119!"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -199,6 +105,38 @@
 	{
 		"key": "{str:PlayerName} joined the game",
 		"value": "{str:PlayerName} Do\u0142\u0105czy\u0142 do gry"
+	},
+	{
+		"key": "Engineer",
+		"value": "In\u017cynier"
+	},
+	{
+		"key": "Soldier",
+		"value": "\u017bo\u0142nierz"
+	},
+	{
+		"key": "Medic",
+		"value": "Orvos"
+	},
+	{
+		"key": "Hero",
+		"value": "Bohater"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Najemnik"
+	},
+	{
+		"key": "Sniper",
+		"value": "Snajper"
+	},
+	{
+		"key": "Scientist",
+		"value": "Naukowiec"
 	},
 	{
 		"key": "Smoker",
@@ -271,10 +209,6 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, od necropotame (version {str:VersionCode})"
-	},
-	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Bazowana na Infekcji, od Gravity"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -412,9 +346,8 @@
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 jeden punkt \u017cycia.",
-		"few": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkt\u00f3w \u017cycia.",
-		"many": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkt\u00f3w \u017cycia.",
-		"other": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkt\u00f3w \u017cycia.",
+		"few": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkty \u017cycia.",
+		"many": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punktu \u017cycia.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -569,51 +502,76 @@
 		"value": "Naci\u015bnij <f3> lub <f4> aby aktywowa\u0107 lub dezaktywowa\u0107 ochron\u0119 przed hakiem."
 	},
 	{
-		"key": "You are now logged.",
-		"value": "Jeste\u015b zalogowany."
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Jeste\u015b zamro\u017cony na: {sec:EffectDuration}"
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "B\u0142\u0119dne has\u0142o/nazwa u\u017cytkownika"
+		"key": "Random choice",
+		"value": "Przypadkowy wyb\u00f3r"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "Wyst\u0105pi\u0142 b\u0142\u0105d podczas operacji."
+		"key": "Choose your class",
+		"value": "Wybierz swoj\u0105 ras\u0119"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "Musisz by\u0107 zalogowany na t\u0119 operacj\u0119."
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "\u015aciana laserowa : {sec:RemainingTime}"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Prosz\u0119 poczekaj 5 minut przed utworzeniem nast\u0119pnego konta"
+		"key": "{int:NumBombs} bombs left",
+		"one": "Jedna bomba pozosta\u0142a",
+		"few": "{int:NumBombs} pozosta\u0142o bomb",
+		"many": "{int:NumBombs} pozosta\u0142o bomb",
+		"other": "{int:NumBombs} pozosta\u0142o bomb",
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "Wyst\u0105pi\u0142 b\u0142\u0105d podczas tworzenia twojego konta."
+		"key": "{int:NumMines} mines are actives",
+		"one": "Jedna mina jest aktywna",
+		"few": "{int:NumMines} miny jest aktywne",
+		"many": "{int:NumMines} miny jest aktywnej",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "Nazwa u\u017cytkownika jest zaj\u0119ta przez istniej\u0105ce konto"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Nast\u0119pny cel za {sec:RemainingTime}"
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Twoje konto zosta\u0142o utworzone i jeste\u015b zalogowany."
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Cel do wyeliminowania: {str:PlayerName}"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "Musisz by\u0107 zalogowany by zobaczy\u0107 sw\u00f3j ranking"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Pozycja zablokowana : {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "Musisz by\u0107 zalogowany by zobaczy\u0107 sw\u00f3j gol"
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Pole wybuchu: {percent:BombLevel}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Ju\u017c zg\u0142osi\u0142e\u015b, to \u017ce {str:PlayerName} musi by\u0107 zbanowany"
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Nast\u0119pna flaga za  {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} chce {str:VictimName} aby by\u0142 zbanowany ({str:Reason})"
+		"key": "Web mode enabled",
+		"value": "Tryb sieci aktywowany"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Brzuch wype\u0142niony w {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "Wied\u017ama nie \u017cyje "
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Nieumar\u0142y jest wreszcie martwy"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Wpisz \"/help {str:ClassName}\" by uzyska\u0107 wi\u0119cej informacji o swojej rasie"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Bohater znalaz\u0142 flag\u0119!"
 	},
 ]}

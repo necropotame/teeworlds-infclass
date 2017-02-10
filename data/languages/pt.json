@@ -1,5 +1,37 @@
 {"translation":[
 	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Por favor espere 5 minutos antes de criar outra conta"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Um erro ocorreu durante a cria\u00e7\u00e3o da sua conta."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Esse nome de usu\u00e1rio j\u00e1 est\u00e1 em uso por uma conta existente."
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Sua conta foi criada e agora voc\u00ea est\u00e1 logado."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Voc\u00ea precisa fazer login para ver seu rank."
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Voc\u00ea precisa fazer login para ver sua meta"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Voc\u00ea j\u00e1 prop\u00f4s que {str:PlayerName} deve ser banido"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} quer que {str:VictimName} seja banido ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} foi infectado"
 	},
@@ -23,100 +55,6 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "Voc\u00ea matou a bruxa, +5 pontos"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "O Morto Vivo est\u00e1 vindo!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "A bruxa est\u00e1 vindo!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Voc\u00ea est\u00e1 congelado: {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "Escolha aleat\u00f3ria"
-	},
-	{
-		"key": "Engineer",
-		"value": "Engenheiro"
-	},
-	{
-		"key": "Soldier",
-		"value": "Soldado"
-	},
-	{
-		"key": "Scientist",
-		"value": "Cientista"
-	},
-	{
-		"key": "Medic",
-		"value": "M\u00e9dico"
-	},
-	{
-		"key": "Hero",
-		"value": "Her\u00f3i"
-	},
-	{
-		"key": "Ninja",
-		"value": "Ninja"
-	},
-	{
-		"key": "Mercenary",
-		"value": "Mercen\u00e1rio"
-	},
-	{
-		"key": "Sniper",
-		"value": "Sniper"
-	},
-	{
-		"key": "Choose your class",
-		"value": "Escolha a sua classe"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Muro laser: {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Uma bomba restando",
-		"other": "{int:NumBombs} bombas restando",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "",
-		"other": "",
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Posi\u00e7\u00e3o travada: {sec:RemainingTime}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Pr\u00f3xima bandeira em {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Modo Teia ativado"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "A bruxa est\u00e1 morta"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "O Morto Vivo finalmente est\u00e1 morto"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Digite \"/help {str:ClassName}\" para mais informa\u00e7\u00f5es sobre sua classe."
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "O Her\u00f3i achou a bandeira!"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -149,6 +87,38 @@
 	{
 		"key": "{str:PlayerName} joined the game",
 		"value": "{str:PlayerName} entrou no jogo"
+	},
+	{
+		"key": "Engineer",
+		"value": "Engenheiro"
+	},
+	{
+		"key": "Soldier",
+		"value": "Soldado"
+	},
+	{
+		"key": "Medic",
+		"value": "M\u00e9dico"
+	},
+	{
+		"key": "Hero",
+		"value": "Her\u00f3i"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Mercen\u00e1rio"
+	},
+	{
+		"key": "Sniper",
+		"value": "Sniper"
+	},
+	{
+		"key": "Scientist",
+		"value": "Cientista"
 	},
 	{
 		"key": "Smoker",
@@ -217,10 +187,6 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, por necropotame (vers\u00e3o {str:VersionCode})"
-	},
-	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Baseado no mod Infection por Gravity"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -471,35 +437,57 @@
 		"value": "Pressione <F3> ou <F4> para ativar ou desativar a prote\u00e7\u00e3o contra o gancho "
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Por favor espere 5 minutos antes de criar outra conta"
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Voc\u00ea est\u00e1 congelado: {sec:EffectDuration}"
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "Um erro ocorreu durante a cria\u00e7\u00e3o da sua conta."
+		"key": "Random choice",
+		"value": "Escolha aleat\u00f3ria"
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "Esse nome de usu\u00e1rio j\u00e1 est\u00e1 em uso por uma conta existente."
+		"key": "Choose your class",
+		"value": "Escolha a sua classe"
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Sua conta foi criada e agora voc\u00ea est\u00e1 logado."
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Muro laser: {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "Voc\u00ea precisa fazer login para ver seu rank."
+		"key": "{int:NumBombs} bombs left",
+		"one": "Uma bomba restando",
+		"other": "{int:NumBombs} bombas restando",
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "Voc\u00ea precisa fazer login para ver sua meta"
+		"key": "{int:NumMines} mines are actives",
+		"one": "Uma mina est\u00e1 ativa",
+		"other": "{int:NumMines} minas est\u00e3o ativas",
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Voc\u00ea j\u00e1 prop\u00f4s que {str:PlayerName} deve ser banido"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Posi\u00e7\u00e3o travada: {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} quer que {str:VictimName} seja banido ({str:Reason})"
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Pr\u00f3xima bandeira em {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Modo Teia ativado"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "A bruxa est\u00e1 morta"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "O Morto Vivo finalmente est\u00e1 morto"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Digite \"/help {str:ClassName}\" para mais informa\u00e7\u00f5es sobre sua classe."
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "O Her\u00f3i achou a bandeira!"
 	},
 ]}

@@ -1,5 +1,9 @@
 {"translation":[
 	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "K\u00e9rj\u00fck v\u00e1rj 5 percet miel\u0151tt l\u00e9trehozol egy m\u00e1sik felhaszn\u00e1l\u00f3t"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName}-t megfert\u0151zt\u00e9k"
 	},
@@ -23,100 +27,6 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "Meg\u00f6lted a boszork\u00e1nyt, +5 pont"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "J\u00f6n az \u00e9l\u0151halott!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "J\u00f6n a boszork\u00e1ny!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Lefagyt\u00e1l: {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "V\u00e9letlenszer\u0171"
-	},
-	{
-		"key": "Engineer",
-		"value": "M\u00e9rn\u00f6k"
-	},
-	{
-		"key": "Soldier",
-		"value": "K\u00f6zkatona"
-	},
-	{
-		"key": "Scientist",
-		"value": "Tud\u00f3s"
-	},
-	{
-		"key": "Medic",
-		"value": "Orvos"
-	},
-	{
-		"key": "Hero",
-		"value": "H\u0151s"
-	},
-	{
-		"key": "Ninja",
-		"value": "Nindzsa"
-	},
-	{
-		"key": "Mercenary",
-		"value": "Zsoldos"
-	},
-	{
-		"key": "Sniper",
-		"value": "Mesterl\u00f6v\u00e9sz"
-	},
-	{
-		"key": "Choose your class",
-		"value": "V\u00e1lasztd ki az oszt\u00e1lyodat!"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "L\u00e9zer-fal: {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Egy bomb\u00e1d maradt.",
-		"other": "{int:NumBombs} bomb\u00e1d maradt.",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "",
-		"other": "",
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Hely-z\u00e1r: {sec:RemainingTime}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "K\u00f6vetkez\u0151 z\u00e1szl\u00f3 \u00e9rkezik: {sec:RemainingTime} m\u00e1sodperc"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "H\u00e1l\u00f3 m\u00f3d bekapcsolva"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "A boszork\u00e1ny meghalt"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "Az \u00e9l\u0151halott v\u00e9gre meghalt"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "\u00cdrd be, hogy \"/help {str:ClassName}\", hogy t\u00f6bbet megtudhass az oszt\u00e1lyodr\u00f3l"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "A H\u0151s megtal\u00e1lta a z\u00e1szl\u00f3t!"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -149,6 +59,38 @@
 	{
 		"key": "{str:PlayerName} joined the game",
 		"value": "{str:PlayerName} csatlakozott a j\u00e1t\u00e9khoz"
+	},
+	{
+		"key": "Engineer",
+		"value": "M\u00e9rn\u00f6k"
+	},
+	{
+		"key": "Soldier",
+		"value": "K\u00f6zkatona"
+	},
+	{
+		"key": "Medic",
+		"value": "Orvos"
+	},
+	{
+		"key": "Hero",
+		"value": "H\u0151s"
+	},
+	{
+		"key": "Ninja",
+		"value": "Nindzsa"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Zsoldos"
+	},
+	{
+		"key": "Sniper",
+		"value": "Mesterl\u00f6v\u00e9sz"
+	},
+	{
+		"key": "Scientist",
+		"value": "Tud\u00f3s"
 	},
 	{
 		"key": "Smoker",
@@ -209,10 +151,6 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, k\u00e9sz\u00edtette: necropotame (version {str:VersionCode})"
-	},
-	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Gravity Infection nev\u0171 j\u00e1t\u00e9km\u00f3dja alapj\u00e1n"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -431,7 +369,57 @@
 		"value": "Nyomd le az <F3>-at vagy <F4>-et, hogy enged\u00e9lyezd vagy letiltsd a horog-v\u00e9delmet"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "K\u00e9rj\u00fck v\u00e1rj 5 percet miel\u0151tt l\u00e9trehozol egy m\u00e1sik felhaszn\u00e1l\u00f3t"
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Lefagyt\u00e1l: {sec:EffectDuration}"
+	},
+	{
+		"key": "Random choice",
+		"value": "V\u00e9letlenszer\u0171"
+	},
+	{
+		"key": "Choose your class",
+		"value": "V\u00e1lasztd ki az oszt\u00e1lyodat!"
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "L\u00e9zer-fal: {sec:RemainingTime}"
+	},
+	{
+		"key": "{int:NumBombs} bombs left",
+		"one": "Egy bomb\u00e1d maradt.",
+		"other": "{int:NumBombs} bomb\u00e1d maradt.",
+	},
+	{
+		"key": "{int:NumMines} mines are actives",
+		"one": "",
+		"other": "",
+	},
+	{
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Hely-z\u00e1r: {sec:RemainingTime}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "K\u00f6vetkez\u0151 z\u00e1szl\u00f3 \u00e9rkezik: {sec:RemainingTime} m\u00e1sodperc"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "H\u00e1l\u00f3 m\u00f3d bekapcsolva"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "A boszork\u00e1ny meghalt"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Az \u00e9l\u0151halott v\u00e9gre meghalt"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "\u00cdrd be, hogy \"/help {str:ClassName}\", hogy t\u00f6bbet megtudhass az oszt\u00e1lyodr\u00f3l"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "A H\u0151s megtal\u00e1lta a z\u00e1szl\u00f3t!"
 	},
 ]}

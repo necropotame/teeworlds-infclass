@@ -1,5 +1,53 @@
 {"translation":[
 	{
+		"key": "You are now logged.",
+		"value": "Je bent nu ingelogd."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Verkeerde gebruikersnaam/wachtwoord"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Er is een fout is opgetreden tijdens de actie"
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Je moet ingelogd zijn voor deze actie"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Gelieve 5 minuten te wachten voordat je een ander account aanmaakt."
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Er is een fout opgetreden tijdens het aanmaken van je account."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Deze gebruikersnaam is al gebruikt door een bestaand account."
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Je account is aangemaakt en je bent nu ingelogd."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Je moet ingelogd zijn om je rang te zien."
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Je moet ingelogd zijn om je doel te zien"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Je hebt al gemeld dat {str:PlayerName} verbannen moet worden."
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} wil {str:VictimName} verbannen ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} is ge\u00efnfecteerd"
 	},
@@ -23,144 +71,6 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "Je hebt een heks vermoord, +5 punten"
-	},
-	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "Je hebt je doel ge\u00eblimineerd, +3 punten "
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "De ondode komt eraan!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "De heks komt eraan!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Je bent bevroren: {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "Willekeurige keuze"
-	},
-	{
-		"key": "Engineer",
-		"value": "Ingenieur"
-	},
-	{
-		"key": "Soldier",
-		"value": "Soldaat"
-	},
-	{
-		"key": "Scientist",
-		"value": "Wetenschapper"
-	},
-	{
-		"key": "Medic",
-		"value": "Dokter"
-	},
-	{
-		"key": "Hero",
-		"value": "Ninja"
-	},
-	{
-		"key": "Ninja",
-		"value": "Ninja"
-	},
-	{
-		"key": "Mercenary",
-		"value": "Huurling"
-	},
-	{
-		"key": "Sniper",
-		"value": "Scherpschutter"
-	},
-	{
-		"key": "Choose your class",
-		"value": "Kies jouw klasse"
-	},
-	{
-		"key": "Cancel",
-		"value": "Annuleer"
-	},
-	{
-		"key": "Explosion",
-		"value": "Explosie"
-	},
-	{
-		"key": "Aphrodisiac",
-		"value": "Verdovingsmiddel"
-	},
-	{
-		"key": "Hallucination",
-		"value": "Hallucinatie"
-	},
-	{
-		"key": "Shockwave",
-		"value": "Schokgolf"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "Kies bom effect"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Laser muur: {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "E\u00e9n bom over",
-		"other": "{int:NumBombs} bommen over",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "E\u00e9n mijn is actief",
-		"other": "{int:NumMines} mijnen zijn actief",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "Volgende doelwit in {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "Target te elimineren: {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Vergrendelde positie: {sec:RemainingTime}"
-	},
-	{
-		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Explosieve opbrengst: {percent:BombLevel}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Volgende vlag over {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Web-modus geactiveerd"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "Maag gevuld voor {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "De heks is dood"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "De ondode is eindelijk dood"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Type \"/help {str:ClassName}\" voor meer informatie over je klasse"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "De Held heeft de vlag gevonden!"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -193,6 +103,38 @@
 	{
 		"key": "{str:PlayerName} joined the game",
 		"value": "{str:PlayerName} sloot zich aan tot het spel"
+	},
+	{
+		"key": "Engineer",
+		"value": "Ingenieur"
+	},
+	{
+		"key": "Soldier",
+		"value": "Soldaat"
+	},
+	{
+		"key": "Medic",
+		"value": "Dokter"
+	},
+	{
+		"key": "Hero",
+		"value": "Ninja"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Huurling"
+	},
+	{
+		"key": "Sniper",
+		"value": "Scherpschutter"
+	},
+	{
+		"key": "Scientist",
+		"value": "Wetenschapper"
 	},
 	{
 		"key": "Smoker",
@@ -265,10 +207,6 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, door necropotame (version {str:VersionCode})"
-	},
-	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Gebaseerd op Infection mod door Gravity"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -399,7 +337,7 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "Hij kan ook gif granaten gooien die \u00e9\u00e9n schade punt oplevert.",
+		"one": "Hij kan ook gif granaten gooien die een schade punt oplevert.",
 		"other": "Hij kan ook gif granaten gooien die {int:NumDamagePoints} schade punten oplevert.",
 	},
 	{
@@ -555,51 +493,73 @@
 		"value": "Druk op <F3> of <F4> voor het in- of uitschakelen van de bescherming van de haak"
 	},
 	{
-		"key": "You are now logged.",
-		"value": "Je bent nu ingelogd."
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Je bent bevroren: {sec:EffectDuration}"
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "Verkeerde gebruikersnaam/wachtwoord"
+		"key": "Random choice",
+		"value": "Willekeurige keuze"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "Er is een fout is opgetreden tijdens de actie"
+		"key": "Choose your class",
+		"value": "Kies jouw klasse"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "Je moet ingelogd zijn voor deze actie"
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laser muur: {sec:RemainingTime}"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Gelieve 5 minuten te wachten voordat je een ander account aanmaakt."
+		"key": "{int:NumBombs} bombs left",
+		"one": "E\u00e9n bom over",
+		"other": "{int:NumBombs} bommen over",
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "Er is een fout opgetreden tijdens het aanmaken van je account."
+		"key": "{int:NumMines} mines are actives",
+		"one": "{int:NumMines} mijn is actief",
+		"other": "{int:NumMines} mijnen zijn actief",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "Deze gebruikersnaam is al gebruikt door een bestaand account."
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Volgende doelwit in {sec:RemainingTime}"
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Je account is aangemaakt en je bent nu ingelogd."
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Target te elimineren: {str:PlayerName}"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "Je moet ingelogd zijn om je rang te zien."
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Vergrendelde positie: {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "Je moet ingelogd zijn om je doel te zien"
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Explosieve opbrengst: {percent:BombLevel}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Je hebt al gemeld dat {str:PlayerName} verbannen moet worden."
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Volgende vlag over {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} wil {str:VictimName} verbannen ({str:Reason})"
+		"key": "Web mode enabled",
+		"value": "Web-modus geactiveerd"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Maag gevuld voor {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "De heks is dood"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "De ondode is eindelijk dood"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Type \"/help {str:ClassName}\" voor meer informatie over je klasse"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "De Held heeft de vlag gevonden!"
 	},
 ]}

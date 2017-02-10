@@ -1,5 +1,53 @@
 {"translation":[
 	{
+		"key": "You are now logged.",
+		"value": "\u0644\u0642\u062f \u0642\u0645\u062a \u0628\u0627\u0644\u0648\u0644\u0648\u062c \u0644\u0644\u062a\u0648"
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "\u0625\u0633\u0645 \u0645\u0633\u062a\u062e\u062f\u0645\\\u0631\u0645\u0632 \u0645\u0631\u0648\u0631 \u062e\u0627\u0637\u0626"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "\u0644\u0642\u062f \u062d\u062f\u062b \u062e\u0637\u0623 \u0623\u062b\u0646\u0627\u0621 \u0627\u0644\u0639\u0645\u0644\u064a\u0629"
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "\u064a\u062c\u0628 \u0623\u0646 \u062a\u0642\u0648\u0645 \u0628\u0627\u0644\u0648\u0644\u0648\u062c \u0644\u0644\u0642\u064a\u0627\u0645 \u0628\u0647\u0630\u0647 \u0627\u0644\u0639\u0645\u0644\u064a\u0629"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "\u0627\u0644\u0631\u062c\u0627\u0621 \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631 5 \u062f\u0642\u0627\u0626\u0642 \u0642\u0628\u0644 \u0635\u0646\u0639 \u062d\u0633\u0627\u0628 \u0627\u062e\u0631"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "\u062d\u062f\u062b \u062e\u0637\u0623 \u0627\u062b\u0646\u0627\u0621 \u0635\u0646\u0639 \u062d\u0633\u0627\u0628\u0643"
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "\u0627\u0633\u0645 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \u0645\u0623\u062e\u0648\u0630"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "\u062a\u0645 \u0635\u0646\u0639 \u062d\u0633\u0627\u0628\u0643 \u0648\u0627\u0646\u062a \u0627\u0644\u0627\u0646 \u0645\u0633\u062c\u0644 \u062f\u062e\u0648\u0644\u0643"
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "\u064a\u062c\u0628 \u0627\u0646 \u062a\u0633\u062c\u0644 \u0627\u0644\u062f\u062e\u0648\u0644 \u0644\u062a\u0631\u0649 \u0631\u062a\u0628\u062a\u0643"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "\u064a\u062c\u0628 \u0627\u0646 \u062a\u0633\u062c\u0644 \u0627\u0644\u062f\u062e\u0648\u0627\u0644 \u0644\u062a\u0631\u0649 \u0627\u0644\u0647\u062f\u0641"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "\u0627\u0646\u062a \u0646\u0648\u0647\u062a \u0644\u0644\u062a\u0648 \u0627\u0646 {str:PlayerName} \u064a\u062c\u0628 \u062d\u0638\u0631\u0647"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} \u064a\u0631\u064a\u062f {str:VictimName} \u0627\u0646 \u064a\u062d\u0638\u0631 {str:VictimName}"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "\u0623\u0635\u064a\u0628 \u0628\u0627\u0644\u0639\u062f\u0648\u0649 {str:VictimName}"
 	},
@@ -27,136 +75,6 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "\u0644\u0642\u062f \u0642\u062a\u062a\u0644\u062a \u0633\u0627\u062d\u0631\u0629 . +5 \u0646\u0642\u0627\u0637"
-	},
-	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "\u0644\u0642\u062f \u0623\u0642\u0635\u064a\u062a \u0647\u062f\u0641\u0643\u060c +3 \u0646\u0642\u0627\u0637"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "\u0627\u0644\u0644\u0627\u0645\u064a\u062a \u0633\u064a\u0623\u062a\u064a!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "\u0627\u0644\u0633\u0627\u062d\u0631\u0629  \u0633\u0640\u062a\u0623\u062a\u064a!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "\u0644\u0642\u062f \u062a\u062c\u0645\u062f\u062a : {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "\u0625\u062e\u062a\u064a\u0627\u0631 \u0639\u0634\u0648\u0627\u0626\u064a"
-	},
-	{
-		"key": "Engineer",
-		"value": "\u0645\u0647\u0646\u062f\u0633"
-	},
-	{
-		"key": "Soldier",
-		"value": "\u062c\u0646\u062f\u064a"
-	},
-	{
-		"key": "Scientist",
-		"value": "\u0639\u0627\u0644\u0645"
-	},
-	{
-		"key": "Medic",
-		"value": "\u0637\u0628\u064a\u0628"
-	},
-	{
-		"key": "Hero",
-		"value": "\u0628\u0637\u0644"
-	},
-	{
-		"key": "Ninja",
-		"value": "\u0646\u064a\u0646\u062c\u0627"
-	},
-	{
-		"key": "Mercenary",
-		"value": "\u0645\u0631\u062a\u0632\u0642"
-	},
-	{
-		"key": "Sniper",
-		"value": "\u0642\u0646\u0627\u0635"
-	},
-	{
-		"key": "Choose your class",
-		"value": "\u0625\u062e\u062a\u0631 \u0634\u062e\u0635\u064a\u062a\u0643"
-	},
-	{
-		"key": "Cancel",
-		"value": "\u0625\u0644\u063a\u0627\u0621"
-	},
-	{
-		"key": "Explosion",
-		"value": "\u0625\u0646\u0641\u062c\u0627\u0631"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "\u0625\u062e\u062a\u0631 \u062a\u0623\u062b\u064a\u0631 \u0627\u0644\u0642\u0646\u0628\u0644\u0629"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "\u062d\u0627\u062c\u0632 \u0627\u0644\u0644\u064a\u0632\u0631 : {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"zero": "\u0660 \u0642\u0646\u0628\u0644\u0629 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
-		"one": "\u0642\u0646\u0628\u0644\u0629 \u0648\u0627\u062d\u062f\u0629 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
-		"two": "\u0642\u0646\u0628\u0644\u062a\u064a\u0646 \u0645\u062a\u0628\u0642\u064a\u062a\u064a\u0646 {int:NumBombs}",
-		"few": "\u0628\u0636\u0639 \u0642\u0646\u0627\u0628\u0644 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
-		"many": "\u0642\u0646\u0627\u0628\u0644 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
-		"other": "\u0642\u0646\u0627\u0628\u0644 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"zero": "",
-		"one": "",
-		"two": "",
-		"few": "",
-		"many": "",
-		"other": "",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "\u0627\u0644\u0647\u062f\u0641 \u0627\u0644\u062a\u0627\u0644\u064a \u0641\u064a  {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "\u0627\u0644\u0647\u062f\u0641 \u0644\u0644\u0625\u0642\u0635\u0627\u0621 : {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "\u062a\u062c\u0645\u062f \u0627\u0644\u0645\u0648\u0642\u0641 : {sec:RemainingTime}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "\u0627\u0644\u0639\u064e\u0644\u064e\u0645\u064e \u0627\u0644\u062a\u0627\u0644\u064a \u0641\u064a {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "\u0648\u0636\u0639\u064a\u0629 \u0627\u0644\u0639\u0646\u0643\u0628\u0648\u062a \u062a\u0639\u0645\u0644"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "\u0627\u0644\u0645\u0639\u062f\u0629 \u0645\u0645\u062a\u0644\u0626\u0629 \u062d\u062a\u0649  {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "\u0627\u0644\u0633\u0627\u062d\u0631\u0629 \u0645\u0627\u062a\u062a"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "\u0627\u0644\u0644\u0627\u0645\u064a\u062a \u0645\u0627\u062a"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "\u0623\u0643\u062a\u0628 \"/help {str:ClassName}\" \u0644\u0645\u0632\u064a\u062f \u0645\u0646 \u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0639\u0646 \u0634\u062e\u0635\u064a\u062a\u0643"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "\u0627\u0644\u0628\u0637\u0644 \u0648\u062c\u062f \u0627\u0644\u0639\u0644\u0645!"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -189,6 +107,38 @@
 	{
 		"key": "{str:PlayerName} joined the game",
 		"value": "{str:PlayerName} \u0625\u0646\u0636\u0645 \u0625\u0644\u0649 \u0627\u0644\u0644\u0639\u0628\u0629"
+	},
+	{
+		"key": "Engineer",
+		"value": "\u0645\u0647\u0646\u062f\u0633"
+	},
+	{
+		"key": "Soldier",
+		"value": "\u062c\u0646\u062f\u064a"
+	},
+	{
+		"key": "Medic",
+		"value": "\u0637\u0628\u064a\u0628"
+	},
+	{
+		"key": "Hero",
+		"value": "\u0628\u0637\u0644"
+	},
+	{
+		"key": "Ninja",
+		"value": "\u0646\u064a\u0646\u062c\u0627"
+	},
+	{
+		"key": "Mercenary",
+		"value": "\u0645\u0631\u062a\u0632\u0642"
+	},
+	{
+		"key": "Sniper",
+		"value": "\u0642\u0646\u0627\u0635"
+	},
+	{
+		"key": "Scientist",
+		"value": "\u0639\u0627\u0644\u0645"
 	},
 	{
 		"key": "Smoker",
@@ -261,10 +211,6 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "\u0639\u0628\u0629 \u0627\u0644\u0645\u0635\u0627\u0628\u0648\u0646, \u0645\u0635\u0645\u0645\u0647\u0627 necropotame \u0629 (version {str:VersionCode})"
-	},
-	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "\u0645\u0628\u0646\u064a\u0629 \u0639\u0644\u0649 \u0644\u0639\u0628\u0629 \u0627\u0644\u0645\u0635\u0627\u0628\u0648\u0646 \u0645\u0635\u0645\u0645\u0647\u0627 Gravity"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -543,51 +489,77 @@
 		"value": "\u0627\u0636\u063a\u0637 <F3> \u0627\u0648 <F4> \u0644\u062a\u0641\u0639\u064a\u0644 \u0627\u0648 \u0627\u0644\u063a\u0627\u0621 \u062a\u0641\u0639\u064a\u0644 \u0627\u0644\u0633\u062d\u0628"
 	},
 	{
-		"key": "You are now logged.",
-		"value": "\u0644\u0642\u062f \u0642\u0645\u062a \u0628\u0627\u0644\u0648\u0644\u0648\u062c \u0644\u0644\u062a\u0648"
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "\u0644\u0642\u062f \u062a\u062c\u0645\u062f\u062a : {sec:EffectDuration}"
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "\u0625\u0633\u0645 \u0645\u0633\u062a\u062e\u062f\u0645\\\u0631\u0645\u0632 \u0645\u0631\u0648\u0631 \u062e\u0627\u0637\u0626"
+		"key": "Random choice",
+		"value": "\u0625\u062e\u062a\u064a\u0627\u0631 \u0639\u0634\u0648\u0627\u0626\u064a"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "\u0644\u0642\u062f \u062d\u062f\u062b \u062e\u0637\u0623 \u0623\u062b\u0646\u0627\u0621 \u0627\u0644\u0639\u0645\u0644\u064a\u0629"
+		"key": "Choose your class",
+		"value": "\u0625\u062e\u062a\u0631 \u0634\u062e\u0635\u064a\u062a\u0643"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "\u064a\u062c\u0628 \u0623\u0646 \u062a\u0642\u0648\u0645 \u0628\u0627\u0644\u0648\u0644\u0648\u062c \u0644\u0644\u0642\u064a\u0627\u0645 \u0628\u0647\u0630\u0647 \u0627\u0644\u0639\u0645\u0644\u064a\u0629"
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "\u062d\u0627\u062c\u0632 \u0627\u0644\u0644\u064a\u0632\u0631 : {sec:RemainingTime}"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "\u0627\u0644\u0631\u062c\u0627\u0621 \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631 5 \u062f\u0642\u0627\u0626\u0642 \u0642\u0628\u0644 \u0635\u0646\u0639 \u062d\u0633\u0627\u0628 \u0627\u062e\u0631"
+		"key": "{int:NumBombs} bombs left",
+		"zero": "\u0660 \u0642\u0646\u0628\u0644\u0629 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
+		"one": "\u0642\u0646\u0628\u0644\u0629 \u0648\u0627\u062d\u062f\u0629 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
+		"two": "\u0642\u0646\u0628\u0644\u062a\u064a\u0646 \u0645\u062a\u0628\u0642\u064a\u062a\u064a\u0646 {int:NumBombs}",
+		"few": "\u0628\u0636\u0639 \u0642\u0646\u0627\u0628\u0644 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
+		"many": "\u0642\u0646\u0627\u0628\u0644 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
+		"other": "\u0642\u0646\u0627\u0628\u0644 \u0645\u062a\u0628\u0642\u064a\u0629 {int:NumBombs}",
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "\u062d\u062f\u062b \u062e\u0637\u0623 \u0627\u062b\u0646\u0627\u0621 \u0635\u0646\u0639 \u062d\u0633\u0627\u0628\u0643"
+		"key": "{int:NumMines} mines are actives",
+		"zero": "",
+		"one": "",
+		"two": "",
+		"few": "",
+		"many": "",
+		"other": "",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "\u0627\u0633\u0645 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \u0645\u0623\u062e\u0648\u0630"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "\u0627\u0644\u0647\u062f\u0641 \u0627\u0644\u062a\u0627\u0644\u064a \u0641\u064a  {sec:RemainingTime}"
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "\u062a\u0645 \u0635\u0646\u0639 \u062d\u0633\u0627\u0628\u0643 \u0648\u0627\u0646\u062a \u0627\u0644\u0627\u0646 \u0645\u0633\u062c\u0644 \u062f\u062e\u0648\u0644\u0643"
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "\u0627\u0644\u0647\u062f\u0641 \u0644\u0644\u0625\u0642\u0635\u0627\u0621 : {str:PlayerName}"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "\u064a\u062c\u0628 \u0627\u0646 \u062a\u0633\u062c\u0644 \u0627\u0644\u062f\u062e\u0648\u0644 \u0644\u062a\u0631\u0649 \u0631\u062a\u0628\u062a\u0643"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "\u062a\u062c\u0645\u062f \u0627\u0644\u0645\u0648\u0642\u0641 : {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "\u064a\u062c\u0628 \u0627\u0646 \u062a\u0633\u062c\u0644 \u0627\u0644\u062f\u062e\u0648\u0627\u0644 \u0644\u062a\u0631\u0649 \u0627\u0644\u0647\u062f\u0641"
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "\u0627\u0644\u0639\u064e\u0644\u064e\u0645\u064e \u0627\u0644\u062a\u0627\u0644\u064a \u0641\u064a {sec:RemainingTime}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "\u0627\u0646\u062a \u0646\u0648\u0647\u062a \u0644\u0644\u062a\u0648 \u0627\u0646 {str:PlayerName} \u064a\u062c\u0628 \u062d\u0638\u0631\u0647"
+		"key": "Web mode enabled",
+		"value": "\u0648\u0636\u0639\u064a\u0629 \u0627\u0644\u0639\u0646\u0643\u0628\u0648\u062a \u062a\u0639\u0645\u0644"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} \u064a\u0631\u064a\u062f {str:VictimName} \u0627\u0646 \u064a\u062d\u0638\u0631 {str:VictimName}"
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "\u0627\u0644\u0645\u0639\u062f\u0629 \u0645\u0645\u062a\u0644\u0626\u0629 \u062d\u062a\u0649  {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "\u0627\u0644\u0633\u0627\u062d\u0631\u0629 \u0645\u0627\u062a\u062a"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "\u0627\u0644\u0644\u0627\u0645\u064a\u062a \u0645\u0627\u062a"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "\u0623\u0643\u062a\u0628 \"/help {str:ClassName}\" \u0644\u0645\u0632\u064a\u062f \u0645\u0646 \u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0639\u0646 \u0634\u062e\u0635\u064a\u062a\u0643"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "\u0627\u0644\u0628\u0637\u0644 \u0648\u062c\u062f \u0627\u0644\u0639\u0644\u0645!"
 	},
 ]}

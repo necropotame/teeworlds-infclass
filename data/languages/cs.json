@@ -1,5 +1,53 @@
 {"translation":[
 	{
+		"key": "You are now logged.",
+		"value": "Jsi p\u0159\u00edhl\u00e1\u0161en/a"
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "\u0160patn\u00e9 jm\u00e9no. nebo heslo"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "B\u011bhem operace se stala chyba"
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "K tomuto \u00fakonu mus\u00ed\u0161 b\u00fdt p\u0159ihl\u00e1\u0161en"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Pros\u00edm, po\u010dkej 5 minut p\u0159ed vytvo\u0159en\u00edm dal\u0161\u00edho \u00fa\u010dtu."
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "P\u0159i vytv\u00e1\u0159en\u00ed \u00fa\u010dtu se stala chyba."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Toto jm\u00e9no je obsazen\u00e9"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Tv\u016fj \u00fa\u010det byl vytvo\u0159en a u\u017e jsi p\u0159ihl\u00e1\u0161en."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Mus\u00ed\u0161 b\u00fdt p\u0159\u00edhl\u00e1\u0161en, aby jsi vid\u011bl svou pozici"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Mus\u00ed\u0161 b\u00fdt p\u0159ihl\u00e1\u0161en, aby jsi vid\u011bl sv\u016fj c\u00edl"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "U\u017e jsi ozn\u00e1mil, \u017ee  {str:PlayerName} mus\u00ed b\u00fdt zabanov\u00e1n"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} chce, aby byl {str:VictimName} zabanov\u00e1n z d\u016fvodu: ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} byl naka\u017een"
 	},
@@ -24,146 +72,6 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "Zabil jsi \u010darod\u011bjnici, +5 bod\u016f"
-	},
-	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "Zavra\u017edil jsi sv\u016fj c\u00edl +3 body"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "Nemrtv\u00fd p\u0159ich\u00e1z\u00ed!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "\u010carod\u011bjnice p\u0159ich\u00e1z\u00ed!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Jsi zmra\u017een\u00fd:  {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "N\u00e1hodn\u00e1 volba"
-	},
-	{
-		"key": "Engineer",
-		"value": "In\u017een\u00fdr"
-	},
-	{
-		"key": "Soldier",
-		"value": "Voj\u00e1k"
-	},
-	{
-		"key": "Scientist",
-		"value": "V\u011bdec"
-	},
-	{
-		"key": "Medic",
-		"value": "L\u00e9ka\u0159"
-	},
-	{
-		"key": "Hero",
-		"value": "Hrdina"
-	},
-	{
-		"key": "Ninja",
-		"value": "Nind\u017ea"
-	},
-	{
-		"key": "Mercenary",
-		"value": "\u017doldn\u00e9\u0159"
-	},
-	{
-		"key": "Sniper",
-		"value": "Odst\u0159elova\u010d"
-	},
-	{
-		"key": "Choose your class",
-		"value": "Vyber si sv\u00e9 povol\u00e1n\u00ed"
-	},
-	{
-		"key": "Cancel",
-		"value": "Zav\u0159\u00edt"
-	},
-	{
-		"key": "Explosion",
-		"value": "Exploze"
-	},
-	{
-		"key": "Aphrodisiac",
-		"value": "Afrodisiakum"
-	},
-	{
-		"key": "Hallucination",
-		"value": "Halucinace"
-	},
-	{
-		"key": "Shockwave",
-		"value": "R\u00e1zov\u00e1 vlna"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "Vyber si efekt "
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Laserov\u00e1 st\u011bna: {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Jedna bomba zb\u00fdv\u00e1",
-		"few": "{int:NumBombs} bomby zb\u00fdvaj\u00ed",
-		"other": "{int:NumBombs} bomby zb\u00fdvaj\u00ed",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "Jedna mina je aktivn\u00ed",
-		"few": "{int:NumMines} miny jsou aktivn\u00ed",
-		"other": "{int:NumMines} miny jsou aktivn\u00ed",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "P\u0159\u00ed\u0161t\u00ed c\u00edl za {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "Ter\u010d k zavra\u017ed\u011bn\u00ed: {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Znehybn\u011bn\u00ed: {sec:RemainingTime}"
-	},
-	{
-		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Explosivn\u00ed efekt: {percent:BombLevel}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "P\u0159\u00ed\u0161t\u00ed vlajka se spawne za {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Pavu\u010dinov\u00fd m\u00f3d aktivov\u00e1n"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "\u017daludek napln\u011bn za {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "\u010carod\u011bjnice byla zabita"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "Nemrtv\u00fd je kone\u010dn\u011b mrtv\u00fd"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Napi\u0161 \"/help {str:ClassName}\" pro v\u00edc informac\u00ed o tv\u00e9m povol\u00e1n\u00ed"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "Hrdina na\u0161el vlajku!"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -196,6 +104,38 @@
 	{
 		"key": "{str:PlayerName} joined the game",
 		"value": "{str:PlayerName} se p\u0159ipojil do hry"
+	},
+	{
+		"key": "Engineer",
+		"value": "In\u017een\u00fdr"
+	},
+	{
+		"key": "Soldier",
+		"value": "Voj\u00e1k"
+	},
+	{
+		"key": "Medic",
+		"value": "L\u00e9ka\u0159"
+	},
+	{
+		"key": "Hero",
+		"value": "Hrdina"
+	},
+	{
+		"key": "Ninja",
+		"value": "Nind\u017ea"
+	},
+	{
+		"key": "Mercenary",
+		"value": "\u017doldn\u00e9\u0159"
+	},
+	{
+		"key": "Sniper",
+		"value": "Odst\u0159elova\u010d"
+	},
+	{
+		"key": "Scientist",
+		"value": "V\u011bdec"
 	},
 	{
 		"key": "Smoker",
@@ -268,10 +208,6 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, vytvo\u0159il necropotame (version{str:VersionCode})"
-	},
-	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Na b\u00e1zi Infection m\u00f3du, kter\u00fd byl vytvo\u0159en hr\u00e1\u010dem Gravity"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -405,9 +341,9 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b 1 \u017eivot",
-		"few": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b  {int:NumDamagePoints} \u017eivoty",
-		"other": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b {int:NumDamagePoints} \u017eivot\u016f",
+		"one": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b 1 \u017eivot.",
+		"few": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b {int:NumDamagePoints} \u017eivoty.",
+		"other": "M\u016f\u017ee h\u00e1zet jedovat\u00e9 gran\u00e1ty, kter\u00e9 ub\u00edraj\u00ed postupn\u011b {int:NumDamagePoints} \u017eivot\u016f.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -562,51 +498,75 @@
 		"value": "Zm\u00e1\u010dkni <F3> nebo <F4> k aktivaci,  nebo deaktivaci h\u00e1kov\u00e9 ochrany"
 	},
 	{
-		"key": "You are now logged.",
-		"value": "Jsi p\u0159\u00edhl\u00e1\u0161en/a"
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Jsi zmra\u017een\u00fd:  {sec:EffectDuration}"
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "\u0160patn\u00e9 jm\u00e9no. nebo heslo"
+		"key": "Random choice",
+		"value": "N\u00e1hodn\u00e1 volba"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "B\u011bhem operace se stala chyba"
+		"key": "Choose your class",
+		"value": "Vyber si sv\u00e9 povol\u00e1n\u00ed"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "K tomuto \u00fakonu mus\u00ed\u0161 b\u00fdt p\u0159ihl\u00e1\u0161en"
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laserov\u00e1 st\u011bna: {sec:RemainingTime}"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Pros\u00edm, po\u010dkej 5 minut p\u0159ed vytvo\u0159en\u00edm dal\u0161\u00edho \u00fa\u010dtu."
+		"key": "{int:NumBombs} bombs left",
+		"one": "Jedna bomba zb\u00fdv\u00e1",
+		"few": "{int:NumBombs} bomby zb\u00fdvaj\u00ed",
+		"other": "{int:NumBombs} bomby zb\u00fdvaj\u00ed",
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "P\u0159i vytv\u00e1\u0159en\u00ed \u00fa\u010dtu se stala chyba."
+		"key": "{int:NumMines} mines are actives",
+		"one": "Jedna mina je aktivn\u00ed",
+		"few": "{int:NumMines} miny jsou aktivn\u00ed",
+		"other": "{int:NumMines} miny jsou aktivn\u00ed",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "Toto jm\u00e9no je obsazen\u00e9"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "P\u0159\u00ed\u0161t\u00ed c\u00edl za {sec:RemainingTime}"
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Tv\u016fj \u00fa\u010det byl vytvo\u0159en a u\u017e jsi p\u0159ihl\u00e1\u0161en."
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Ter\u010d k zavra\u017ed\u011bn\u00ed: {str:PlayerName}"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "Mus\u00ed\u0161 b\u00fdt p\u0159\u00edhl\u00e1\u0161en, aby jsi vid\u011bl svou pozici"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Znehybn\u011bn\u00ed: {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "Mus\u00ed\u0161 b\u00fdt p\u0159ihl\u00e1\u0161en, aby jsi vid\u011bl sv\u016fj c\u00edl"
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Explosivn\u00ed efekt: {percent:BombLevel}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "U\u017e jsi ozn\u00e1mil, \u017ee  {str:PlayerName} mus\u00ed b\u00fdt zabanov\u00e1n"
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "P\u0159\u00ed\u0161t\u00ed vlajka se spawne za {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} chce, aby byl {str:VictimName} zabanov\u00e1n z d\u016fvodu: ({str:Reason})"
+		"key": "Web mode enabled",
+		"value": "Pavu\u010dinov\u00fd m\u00f3d aktivov\u00e1n"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "\u017daludek napln\u011bn za {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "\u010carod\u011bjnice byla zabita"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Nemrtv\u00fd je kone\u010dn\u011b mrtv\u00fd"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Napi\u0161 \"/help {str:ClassName}\" pro v\u00edc informac\u00ed o tv\u00e9m povol\u00e1n\u00ed"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Hrdina na\u0161el vlajku!"
 	},
 ]}

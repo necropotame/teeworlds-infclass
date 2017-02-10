@@ -1,5 +1,37 @@
 {"translation":[
 	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "\u5225\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u4f5c\u6210\u5b8c\u4e86\u3059\u308b\u307e\u30675\u5206\u9593\u304a\u5f85\u3061\u304f\u3060\u3055\u3044"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "\u30a2\u30ab\u30a6\u30f3\u30c8\u4f5c\u6210\u4e2d\u306b\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f\u3002"
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "\u3053\u306e\u540d\u524d\u306f\u65e2\u306b\u4f7f\u7528\u3055\u308c\u3066\u3044\u307e\u3059"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "\u30a2\u30ab\u30a6\u30f3\u30c8\u306e\u4f5c\u6210\u304c\u5b8c\u4e86\u3057\u3001\u73fe\u5728\u30a2\u30ab\u30a6\u30f3\u30c8\u60c5\u5831\u3092\u8a18\u9332\u3057\u3066\u3044\u307e\u3059\u3002"
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "\u8a18\u9332\u3092\u3059\u308b\u3053\u3068\u3067\u3042\u306a\u305f\u306e\u30e9\u30f3\u30af\u304c\u95b2\u89a7\u3067\u304d\u308b\u3088\u3046\u306b\u306a\u308a\u307e\u3059\u3002"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "\u8a18\u9332\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f\u3002"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "\u3053\u306e\u30a2\u30ab\u30a6\u30f3\u30c8 {str:PlayerName} \u306fBAN\u3055\u308c\u3066\u3044\u307e\u3059"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName}\u306b\u3088\u308a\u3001{str:VictimName}\u306fBAN\u3055\u308c\u307e\u3057\u305f ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} \u306f\u611f\u67d3\u3057\u305f"
 	},
@@ -22,94 +54,6 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "\u9b54\u5973\u3092\u5012\u3057\u305f\uff01 +5\u30dd\u30a4\u30f3\u30c8"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "\u30a2\u30f3\u30c7\u30c3\u30c9\u304c\u73fe\u308c\u305f\uff01"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "\u9b54\u5973\u304c\u73fe\u308c\u305f\uff01"
-	},
-	{
-		"key": "Random choice",
-		"value": "\u62bd\u9078\u3067\u6c7a\u3081\u308b"
-	},
-	{
-		"key": "Engineer",
-		"value": "\u30a8\u30f3\u30b8\u30cb\u30a2"
-	},
-	{
-		"key": "Soldier",
-		"value": "\u5175\u58eb"
-	},
-	{
-		"key": "Scientist",
-		"value": "\u79d1\u5b66\u8005"
-	},
-	{
-		"key": "Medic",
-		"value": "\u533b\u8005"
-	},
-	{
-		"key": "Hero",
-		"value": "\u30d2\u30fc\u30ed\u30fc"
-	},
-	{
-		"key": "Ninja",
-		"value": "\u5fcd\u8005"
-	},
-	{
-		"key": "Mercenary",
-		"value": "\u50ad\u5175"
-	},
-	{
-		"key": "Sniper",
-		"value": "\u72d9\u6483\u5175"
-	},
-	{
-		"key": "Choose your class",
-		"value": "\u597d\u304d\u306a\u8077\u696d\u3092\u9078\u3093\u3067\u4e0b\u3055\u3044"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "\u30d0\u30ea\u30a2\u5c55\u958b\u4e2d \u6b8b\u308a {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"other": "{int:NumBombs} \u500b\u306e\u7206\u5f3e\u304c\u5c55\u958b\u4e2d",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"other": "",
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "\u4f4d\u7f6e\u56fa\u5b9a \u6b8b\u308a {sec:RemainingTime}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "\u6b21\u306e\u30d5\u30e9\u30b0\u51fa\u73fe\u307e\u3067 \u6b8b\u308a {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "\u8718\u86db\u7cf8\u30e2\u30fc\u30c9\u4e2d"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "\u9b54\u5973\u306f\u5012\u308c\u305f"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "\u30a2\u30f3\u30c7\u30c3\u30c9\u306f\u5012\u308c\u305f"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "\"/help {str:ClassName}\" \u3067\u305d\u306e\u8077\u696d\u306e\u8a73\u7d30\u3092\u958b\u3051\u307e\u3059"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "\u30d2\u30fc\u30ed\u30fc\u306f\u30d5\u30e9\u30b0\u3092\u898b\u3064\u3051\u305f\uff01"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -142,6 +86,38 @@
 	{
 		"key": "{str:PlayerName} joined the game",
 		"value": "{str:PlayerName} \u304c\u53c2\u52a0\u3057\u307e\u3057\u305f"
+	},
+	{
+		"key": "Engineer",
+		"value": "\u30a8\u30f3\u30b8\u30cb\u30a2"
+	},
+	{
+		"key": "Soldier",
+		"value": "\u5175\u58eb"
+	},
+	{
+		"key": "Medic",
+		"value": "\u533b\u8005"
+	},
+	{
+		"key": "Hero",
+		"value": "\u30d2\u30fc\u30ed\u30fc"
+	},
+	{
+		"key": "Ninja",
+		"value": "\u5fcd\u8005"
+	},
+	{
+		"key": "Mercenary",
+		"value": "\u50ad\u5175"
+	},
+	{
+		"key": "Sniper",
+		"value": "\u72d9\u6483\u5175"
+	},
+	{
+		"key": "Scientist",
+		"value": "\u79d1\u5b66\u8005"
 	},
 	{
 		"key": "Smoker",
@@ -210,10 +186,6 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, by necropotame (version {str:VersionCode})"
-	},
-	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Infection mod\u3092\u5143\u306b\u3057\u307e\u3057\u305f\u3002 by Gravity"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -337,7 +309,7 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"other": "",
+		"other": "\u307e\u305f\u3001\u30dd\u30a4\u30ba\u30f3\u30b0\u30ec\u30cd\u30fc\u30c9\u3092\u6295\u3052\u308b\u3053\u3068\u3082\u3067\u304d\u3001\u52b9\u679c\u7bc4\u56f2\u306b\u3044\u308b\u611f\u67d3\u8005\u306b{int:NumDamagePoints}\u30c0\u30e1\u30fc\u30b8\u3092\u4e0e\u3048\u307e\u3059\u3002",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -460,35 +432,51 @@
 		"value": "\u30d5\u30c3\u30af\u306e\u4fdd\u8b77\u3092\u8a31\u53ef\u3001\u7981\u6b62\u3059\u308b\u305f\u3081\u306b<F3>\u304b<F4>\u3092\u62bc\u3057\u3066\u4e0b\u3055\u3044"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "\u5225\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u4f5c\u6210\u5b8c\u4e86\u3059\u308b\u307e\u30675\u5206\u9593\u304a\u5f85\u3061\u304f\u3060\u3055\u3044"
+		"key": "Random choice",
+		"value": "\u62bd\u9078\u3067\u6c7a\u3081\u308b"
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "\u30a2\u30ab\u30a6\u30f3\u30c8\u4f5c\u6210\u4e2d\u306b\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f\u3002"
+		"key": "Choose your class",
+		"value": "\u597d\u304d\u306a\u8077\u696d\u3092\u9078\u3093\u3067\u4e0b\u3055\u3044"
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "\u3053\u306e\u540d\u524d\u306f\u65e2\u306b\u4f7f\u7528\u3055\u308c\u3066\u3044\u307e\u3059"
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "\u30d0\u30ea\u30a2\u5c55\u958b\u4e2d \u6b8b\u308a {sec:RemainingTime}"
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "\u30a2\u30ab\u30a6\u30f3\u30c8\u306e\u4f5c\u6210\u304c\u5b8c\u4e86\u3057\u3001\u73fe\u5728\u30a2\u30ab\u30a6\u30f3\u30c8\u60c5\u5831\u3092\u8a18\u9332\u3057\u3066\u3044\u307e\u3059\u3002"
+		"key": "{int:NumBombs} bombs left",
+		"other": "{int:NumBombs} \u500b\u306e\u7206\u5f3e\u304c\u5c55\u958b\u4e2d",
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "\u8a18\u9332\u3092\u3059\u308b\u3053\u3068\u3067\u3042\u306a\u305f\u306e\u30e9\u30f3\u30af\u304c\u95b2\u89a7\u3067\u304d\u308b\u3088\u3046\u306b\u306a\u308a\u307e\u3059\u3002"
+		"key": "{int:NumMines} mines are actives",
+		"other": "{int:NumMines} \u500b\u306e\u5730\u96f7\u304c\u5c55\u958b\u4e2d",
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "\u8a18\u9332\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f\u3002"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "\u4f4d\u7f6e\u56fa\u5b9a \u6b8b\u308a {sec:RemainingTime}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "\u3053\u306e\u30a2\u30ab\u30a6\u30f3\u30c8 {str:PlayerName} \u306fBAN\u3055\u308c\u3066\u3044\u307e\u3059"
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "\u6b21\u306e\u30d5\u30e9\u30b0\u51fa\u73fe\u307e\u3067 \u6b8b\u308a {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName}\u306b\u3088\u308a\u3001{str:VictimName}\u306fBAN\u3055\u308c\u307e\u3057\u305f ({str:Reason})"
+		"key": "Web mode enabled",
+		"value": "\u8718\u86db\u7cf8\u30e2\u30fc\u30c9\u4e2d"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "\u9b54\u5973\u306f\u5012\u308c\u305f"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "\u30a2\u30f3\u30c7\u30c3\u30c9\u306f\u5012\u308c\u305f"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "\"/help {str:ClassName}\" \u3067\u305d\u306e\u8077\u696d\u306e\u8a73\u7d30\u3092\u958b\u3051\u307e\u3059"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "\u30d2\u30fc\u30ed\u30fc\u306f\u30d5\u30e9\u30b0\u3092\u898b\u3064\u3051\u305f\uff01"
 	},
 ]}

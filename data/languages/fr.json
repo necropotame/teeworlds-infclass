@@ -1,5 +1,57 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} a \u00e9t\u00e9 mis sous silence pour {sec:Duration} ({str:Reason})"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "Vous \u00eates connect\u00e9 \u00e0 votre compte."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "L'identifiant ou le mot de passe est incorrecte."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Une erreur s'est produite durant cette op\u00e9ration. "
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Vous devez \u00eatre connect\u00e9 pour effectuer cette op\u00e9ration."
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Veuillez attendre 5 minutes avant de cr\u00e9er un nouveau compte"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Une erreur est survenue durant la cr\u00e9ation de votre compte"
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Ce nom d'utilisateur est d\u00e9j\u00e0 pris par un compte existant"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Votre compte a \u00e9t\u00e9 cr\u00e9\u00e9 et vous \u00eates maintenant connect\u00e9"
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Vous devez \u00eatre connect\u00e9 pour voir votre rang"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Vous devez \u00eatre connect\u00e9 pour voir votre objectif"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Vous avez d\u00e9j\u00e0 notifi\u00e9 que {str:PlayerName} doit \u00eatre banni"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} veut voir {str:VictimName} banni ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} a \u00e9t\u00e9 infect\u00e9\u00b7e"
 	},
@@ -25,142 +77,8 @@
 		"value": "Vous avez tu\u00e9 une Sorci\u00e8re ou un Sorcier, +5 points"
 	},
 	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "Vous avez \u00e9limin\u00e9 votre cible, +3 points"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "Un\u00b7e Invincible arrive !"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "Un\u00b7e Sorcier\u00b7i\u00e8re arrive !"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Vous \u00eates gel\u00e9s : {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "Choix al\u00e9atoire"
-	},
-	{
-		"key": "Engineer",
-		"value": "Ing\u00e9nieur\u00b7e"
-	},
-	{
-		"key": "Soldier",
-		"value": "Soldat\u00b7e"
-	},
-	{
-		"key": "Scientist",
-		"value": "Scientifique"
-	},
-	{
-		"key": "Medic",
-		"value": "M\u00e9decin"
-	},
-	{
-		"key": "Hero",
-		"value": "H\u00e9ro\u00b7\u00efne"
-	},
-	{
-		"key": "Ninja",
-		"value": "Ninja"
-	},
-	{
-		"key": "Mercenary",
-		"value": "Mercenaire"
-	},
-	{
-		"key": "Sniper",
-		"value": "Sniper"
-	},
-	{
-		"key": "Choose your class",
-		"value": "Choisissez votre classe"
-	},
-	{
-		"key": "Cancel",
-		"value": "Annuler"
-	},
-	{
-		"key": "Explosion",
-		"value": "Explosion"
-	},
-	{
-		"key": "Aphrodisiac",
-		"value": "Aphrodisiaque"
-	},
-	{
-		"key": "Hallucination",
-		"value": "Allucination"
-	},
-	{
-		"key": "Shockwave",
-		"value": "Onde de choc"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "Choisissez l'effet de la bombe"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Barri\u00e8re laser : {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Une bombe restante",
-		"other": "{int:NumBombs} bombes restantes",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "Une mine est active",
-		"other": "{int:NumMines} mines sont actives",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "Prochaine cible dans {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "Cible \u00e0 \u00e9liminer: {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Verrou de position : {sec:RemainingTime}"
-	},
-	{
-		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Puissance de l'explosion: {percent:BombLevel}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Prochain drapeau dans {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Mode toile activ\u00e9"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "Estomac rempli \u00e0 {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "Un\u00b7e Sorcier\u00b7i\u00e8re a disparu"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "Un\u00b7e Invincible a disparu"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Tapez \"/help {str:ClassName}\" pour plus d'information sur votre classe"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "Le drapeau a \u00e9t\u00e9 trouv\u00e9 par un\u00b7e H\u00e9ro\u00b7\u00efne!"
+		"key": "You have eliminated your target, +2 points",
+		"value": "Vous avez \u00e9limin\u00e9 votre cible, +2 points"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -195,6 +113,42 @@
 		"value": "{str:PlayerName} a rejoint la partie"
 	},
 	{
+		"key": "Engineer",
+		"value": "Ing\u00e9nieur\u00b7e"
+	},
+	{
+		"key": "Soldier",
+		"value": "Soldat\u00b7e"
+	},
+	{
+		"key": "Medic",
+		"value": "M\u00e9decin"
+	},
+	{
+		"key": "Hero",
+		"value": "H\u00e9ro\u00b7\u00efne"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Mercenaire"
+	},
+	{
+		"key": "Sniper",
+		"value": "Sniper"
+	},
+	{
+		"key": "Scientist",
+		"value": "Scientifique"
+	},
+	{
+		"key": "Biologist",
+		"value": "Biologiste"
+	},
+	{
 		"key": "Smoker",
 		"value": "Smoker"
 	},
@@ -217,6 +171,10 @@
 	{
 		"key": "Ghoul",
 		"value": "Goule"
+	},
+	{
+		"key": "Slug",
+		"value": "Limace"
 	},
 	{
 		"key": "Witch",
@@ -243,6 +201,10 @@
 		"value": "{str:PlayerName} est arriv\u00e9\u00b7e et a rejoint la partie"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "Vous \u00eates mis sous silence pour {sec:Duration}"
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "Vous ne pouvez-pas rejoindre les spectateurs pour le moment"
 	},
@@ -267,8 +229,12 @@
 		"value": "InfectionClass, par necropotame (version {str:VersionCode})"
 	},
 	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Bas\u00e9 sur le mod Infection par Gravity"
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Bas\u00e9 sur le concept du mod \"Infection\" par Gravity"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Contributeurs principaux: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -357,6 +323,10 @@
 		"value": "Il ne peut y avoir que deux mines par Scientifique au m\u00eame moment."
 	},
 	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "Les biologistes ont un fusil \u00e0 pompe tirant des balles rebondissantes et peuvent cr\u00e9er des mines printani\u00e8res en utilisant le fusil laser."
+	},
+	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
 		"value": "Les M\u00e9decins peuvent prot\u00e9ger les humain\u00b7e\u00b7s \u00e0 l'aide de leur marteau en leur donnant une armure."
 	},
@@ -399,8 +369,8 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "Illes peuvent aussi lancer des grenades empoisonn\u00e9es qui infligent un point de d\u00e9g\u00e2t.",
-		"other": "Illes peuvent aussi lancer des grenades empoisonn\u00e9es qui infligent {int:NumDamagePoints} points de d\u00e9g\u00e2t.",
+		"one": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent un point de d\u00e9g\u00e2t.",
+		"other": "Il peut aussi lancer des grenades empoisonn\u00e9es qui infligent {int:NumDamagePoints} points de d\u00e9g\u00e2t.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -473,6 +443,18 @@
 	{
 		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
 		"value": "Elles dig\u00e8rent progressivement et revient petit \u00e0 petit \u00e0 leur \u00e9tat normal. Lorsqu'elles meurent, elles conservent une partie de leur nourriture."
+	},
+	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "Les limaces peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "Elles peuvent rendre le sol et les murs toxiques en d\u00e9posant de la bave \u00e0 l'aide de leur marteau"
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "En touchant cette bave toxique, les humain\u00b7e\u00b7s perdent trois points de vie en trois secondes."
 	},
 	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
@@ -555,51 +537,93 @@
 		"value": "Appuyer sur <F3> or <F4> pour activer ou d\u00e9sactiver la protection contre le grapin"
 	},
 	{
-		"key": "You are now logged.",
-		"value": "Vous \u00eates connect\u00e9 \u00e0 votre compte."
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "Vous avez gard\u00e9 une zone bonus pendant une minute, +5 points."
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "L'identifiant ou le mot de passe est incorrecte."
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Vous \u00eates gel\u00e9s : {sec:EffectDuration}"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "Une erreur s'est produite durant cette op\u00e9ration. "
+		"key": "Random choice",
+		"value": "Choix al\u00e9atoire"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "Vous devez \u00eatre connect\u00e9 pour effectuer cette op\u00e9ration."
+		"key": "Choose your class",
+		"value": "Choisissez votre classe"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Veuillez attendre 5 minutes avant de cr\u00e9er un nouveau compte"
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Barri\u00e8re laser : {sec:RemainingTime}"
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "Une erreur est survenue durant la cr\u00e9ation de votre compte"
+		"key": "{int:NumBombs} bombs left",
+		"one": "Une bombe restante",
+		"other": "{int:NumBombs} bombes restantes",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "Ce nom d'utilisateur est d\u00e9j\u00e0 pris par un compte existant"
+		"key": "{int:NumMines} mines are actives",
+		"one": "Une mine est active",
+		"other": "{int:NumMines} mines sont actives",
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Votre compte a \u00e9t\u00e9 cr\u00e9\u00e9 et vous \u00eates maintenant connect\u00e9"
+		"key": "Mine activated",
+		"value": "Mine activ\u00e9e"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "Vous devez \u00eatre connect\u00e9 pour voir votre rang"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Prochaine cible dans {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "Vous devez \u00eatre connect\u00e9 pour voir votre objectif"
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Cible \u00e0 \u00e9liminer: {str:PlayerName}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Vous avez d\u00e9j\u00e0 notifi\u00e9 que {str:PlayerName} doit \u00eatre banni"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Verrou de position : {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} veut voir {str:VictimName} banni ({str:Reason})"
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Puissance de l'explosion: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Prochain drapeau dans {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Mode toile activ\u00e9"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Estomac rempli \u00e0 {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "Un\u00b7e Sorcier\u00b7i\u00e8re a disparu"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Un\u00b7e Invincible a disparu"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Vitesse de l'\u00e9p\u00e9e augment\u00e9e"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "Force de l'\u00e9p\u00e9e augment\u00e9e"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Limite du nombre de grenades augment\u00e9e"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Tapez \"/help {str:ClassName}\" pour plus d'information sur votre classe"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Le drapeau a \u00e9t\u00e9 trouv\u00e9 par un\u00b7e H\u00e9ro\u00b7\u00efne!"
 	},
 ]}

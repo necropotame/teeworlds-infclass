@@ -1,5 +1,57 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} lingua praecisa est ad {sec:Duration} ({str:Reason})"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "Nunc conscriptus es."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Nomen falsum aut tessera falsa."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Error obvenit operatione."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Tibi conscriptum esse opus est, ut hanc operationem conficias."
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Expecta minutas 5 ante quam recrees adcomputum alium."
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Error obvenit, quum accomputus creatus est."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Hoc accomputus iam exemptus est."
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Accomputus tuus confectus est tuque iam conscriptus es."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Tibi conscriptum esse opus est, ut decus videas."
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Tibi conscriptum esse opus est, ut terminum videas."
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Iam denuntiavisti {str:PlayerName} esse proiectum."
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} {str:VictimName} proiectum esse postulavit ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} infectus est"
 	},
@@ -25,142 +77,8 @@
 		"value": "Maleficam necavisti, +5 copiae"
 	},
 	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "Scopum sustulisti, +3 copiae"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "Immortalis advenit!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "Malefica advenit!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Gelatus es: {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "Electio fortuita"
-	},
-	{
-		"key": "Engineer",
-		"value": "Clavicarius"
-	},
-	{
-		"key": "Soldier",
-		"value": "Miles"
-	},
-	{
-		"key": "Scientist",
-		"value": "Scientista"
-	},
-	{
-		"key": "Medic",
-		"value": "Medicus"
-	},
-	{
-		"key": "Hero",
-		"value": "Heros"
-	},
-	{
-		"key": "Ninja",
-		"value": "Ninja"
-	},
-	{
-		"key": "Mercenary",
-		"value": "Mercennarius"
-	},
-	{
-		"key": "Sniper",
-		"value": "Sniper"
-	},
-	{
-		"key": "Choose your class",
-		"value": "Classem elige"
-	},
-	{
-		"key": "Cancel",
-		"value": "Abruptio"
-	},
-	{
-		"key": "Explosion",
-		"value": "Displosio"
-	},
-	{
-		"key": "Aphrodisiac",
-		"value": "Aphrodisiacum"
-	},
-	{
-		"key": "Hallucination",
-		"value": "Alucinatio"
-	},
-	{
-		"key": "Shockwave",
-		"value": "Fluctus expulsivus"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "Consecutionem bombae selige"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Vallum lasericum: {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Bomba una reliqua",
-		"other": "{int:NumBombs} bombae reliquae",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "Una mina reliqua",
-		"other": "{int:NumMines} minae reliquae",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "Scopus sequens post {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "Scopus tollendus: {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Claustrum positionis: {sec:RemainingTime}"
-	},
-	{
-		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Vis displosiva: {percent:BombLevel}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Vexillum sequens post {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Modus retialis instructus"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "Venter infertus {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "Malefica mortua est"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "Immortalis tandem mortuus est"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Scribe \u00bb/help {str:ClassName}\u00ab pro informationibus pluribus"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "Heros vexillum invenit!"
+		"key": "You have eliminated your target, +2 points",
+		"value": "Scopum sustulisti, +2 copiae"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -195,6 +113,42 @@
 		"value": "{str:PlayerName} ad ludum accessit"
 	},
 	{
+		"key": "Engineer",
+		"value": "Clavicarius"
+	},
+	{
+		"key": "Soldier",
+		"value": "Miles"
+	},
+	{
+		"key": "Medic",
+		"value": "Medicus"
+	},
+	{
+		"key": "Hero",
+		"value": "Heros"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Mercennarius"
+	},
+	{
+		"key": "Sniper",
+		"value": "Sniper"
+	},
+	{
+		"key": "Scientist",
+		"value": "Scientista"
+	},
+	{
+		"key": "Biologist",
+		"value": "Biologista"
+	},
+	{
 		"key": "Smoker",
 		"value": "Fumigator"
 	},
@@ -217,6 +171,10 @@
 	{
 		"key": "Ghoul",
 		"value": "\u0120\u016bl"
+	},
+	{
+		"key": "Slug",
+		"value": "Limax"
 	},
 	{
 		"key": "Witch",
@@ -243,6 +201,10 @@
 		"value": "{str:PlayerName} intravit accessitque"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "Lingua tibi praecisa est ad {sec:Duration}"
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "Nondum ad spectatores accedere potes"
 	},
@@ -267,8 +229,12 @@
 		"value": "InfectionClass, auctoris necropotame (version {str:VersionCode})"
 	},
 	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Constat in modificatione Infection, auctoris Gravity"
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Constat in conceptu modificationis Infection, auctoris Gravity"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Contributores praecipui: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -357,6 +323,10 @@
 		"value": "Etiam granatas quae eum teleportant habet."
 	},
 	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "Biologus sclopetum dispergens cum missilibus reflectentibus habet laqueumque sclopeto laserico struere potest."
+	},
+	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
 		"value": "Medicus malleo tegumina disponens homines tuerier potest."
 	},
@@ -400,7 +370,7 @@
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Ad hoc granatas veneficas iacere potest quae singulae plagam unam inponunt.",
-		"other": "Ad hoc granatas veneficas iacere potest quae singulae plagas {int:NumDamagePoints} inponunt.",
+		"other": "Ad hoc granatas veneficas iacere potest quae plagas {int:NumDamagePoints} inponunt.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -473,6 +443,18 @@
 	{
 		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
 		"value": "Exinde pabulum digerit sensim ad statum vulgarem revolviens, ultro ei letum alimenta detrahit."
+	},
+	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "Limax malleo homines inficere infectosque sanare potest."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "Solum parietesque veneniferos malleo mucum reddendo potest."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Contamen muci homini plagas tres per secunda tria infligit."
 	},
 	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
@@ -555,51 +537,93 @@
 		"value": "Preme <F3> aut <F4> ad instructionem protectionis contra captionem"
 	},
 	{
-		"key": "You are now logged.",
-		"value": "Nunc conscriptus es."
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "Zonae seorsae unam minutam immoratus es, +5 copiae"
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "Nomen falsum aut tessera falsa."
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Gelatus es: {sec:EffectDuration}"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "Error obvenit operatione."
+		"key": "Random choice",
+		"value": "Electio fortuita"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "Tibi conscriptum esse opus est, ut hanc operationem conficias."
+		"key": "Choose your class",
+		"value": "Classem elige"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Expecta minutas 5 ante quam recrees adcomputum alium."
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Vallum lasericum: {sec:RemainingTime}"
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "Error obvenit, quum accomputus creatus est."
+		"key": "{int:NumBombs} bombs left",
+		"one": "Bomba una reliqua",
+		"other": "{int:NumBombs} bombae reliquae",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "Hoc accomputus iam exemptus est."
+		"key": "{int:NumMines} mines are actives",
+		"one": "Una mina reliqua",
+		"other": "{int:NumMines} minae reliquae",
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Accomputus tuus confectus est tuque iam conscriptus es."
+		"key": "Mine activated",
+		"value": "Mina posita"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "Tibi conscriptum esse opus est, ut decus videas."
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Scopus sequens post {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "Tibi conscriptum esse opus est, ut terminum videas."
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Scopus tollendus: {str:PlayerName}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Iam denuntiavisti {str:PlayerName} esse proiectum."
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Claustrum positionis: {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} {str:VictimName} proiectum esse postulavit ({str:Reason})"
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Vis displosiva: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Vexillum sequens post {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Modus retialis instructus"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Venter infertus {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "Malefica mortua est"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Immortalis tandem mortuus est"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Velocitas ensis aucta"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "Vis ensis aucta"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Limes granatarius auctus"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Scribe \u00bb/help {str:ClassName}\u00ab pro informationibus pluribus"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Heros vexillum invenit!"
 	},
 ]}
