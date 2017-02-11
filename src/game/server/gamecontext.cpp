@@ -1753,6 +1753,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 887: //Yemen
 						str_copy(m_VoteLanguage[ClientID], "ar", sizeof(m_VoteLanguage[ClientID]));		
 						break;
+					/* bs - Bosnian *************************************/	
+					case 70: //Bosnia and Hercegovina
+						str_copy(m_VoteLanguage[ClientID], "bs", sizeof(m_VoteLanguage[ClientID]));					
+						break;
 					/* cs - Czech *************************************/	
 					case 203: //Czechia
 						str_copy(m_VoteLanguage[ClientID], "cs", sizeof(m_VoteLanguage[ClientID]));					
@@ -1815,7 +1819,6 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						break;
 					/* hr - Croatian **********************************/	
 					case 191: //Croatia
-					case 70: //Bosnia and Hercegovina
 						str_copy(m_VoteLanguage[ClientID], "hr", sizeof(m_VoteLanguage[ClientID]));		
 						break;
 					/* hu - Hungarian *********************************/	
@@ -1861,12 +1864,16 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					/* ru - Russian ***********************************/	
 					case 112: //Belarus
 					case 643: //Russia
-					case 398: // Kazakhstan
+					case 398: //Kazakhstan
 						str_copy(m_VoteLanguage[ClientID], "ru", sizeof(m_VoteLanguage[ClientID]));
 						break;
-					/* sk - Slovak (will fit to Czech as long as there is no dedicated translation) ************************************/
+					/* sk - Slovak ************************************/
 					case 703: //Slovakia
-						str_copy(m_VoteLanguage[ClientID], "cs", sizeof(m_VoteLanguage[ClientID]));		
+						str_copy(m_VoteLanguage[ClientID], "sk", sizeof(m_VoteLanguage[ClientID]));		
+						break;
+					/* sr - Serbian ************************************/
+					case 688: //Serbia
+						str_copy(m_VoteLanguage[ClientID], "sr", sizeof(m_VoteLanguage[ClientID]));
 						break;
 					/* uk - Ukrainian **********************************/	
 					case 804: //Ukraine

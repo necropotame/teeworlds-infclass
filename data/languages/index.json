@@ -11,6 +11,11 @@
 		"direction": "rtl"
 	},
 	{
+		"file": "bs",
+		"name": "Bosanski",
+		"parent": "hr"
+	},
+	{
 		"file": "cs",
 		"name": "Czech",
 		"parent": "en"
@@ -29,6 +34,12 @@
 		"file": "es",
 		"name": "Español",
 		"parent": "en"
+	},
+	{
+		"file": "fa",
+		"name": "فارسی",
+		"parent": "en",
+		"direction": "rtl"
 	},
 	{
 		"file": "fr",
@@ -86,9 +97,24 @@
 		"parent": "cs"
 	},
 	{
+		"file": "sr",
+		"name": "Српски",
+		"parent": "sr-Cyrl"
+	},
+	{
+		"file": "sr-Cyrl",
+		"name": "Српски ћирилицом",
+		"parent": "sr-Latn"
+	},
+	{
+		"file": "sr-Latn",
+		"name": "Srpski latinicom",
+		"parent": "hr"
+	},
+	{
 		"file": "uk",
 		"name": "Українська",
-		"parent": "en"
+		"parent": "ru"
 	}
 
 ]
