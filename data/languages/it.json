@@ -245,8 +245,8 @@
 		"value": "Come tradurre questa modalit\u00e0"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "Crea un account su Transifex e unisciti al nostro team di traduzioni:"
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Crea un account su Crowdin e unisciti al nostro team di traduzioni:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",

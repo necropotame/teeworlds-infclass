@@ -249,8 +249,8 @@
 		"value": "\u0643\u064a\u0641 \u062a\u062a\u0631\u062c\u0645 \u0627\u0644\u0644\u0639\u0628\u0629"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "\u0633\u062c\u0644 \u062d\u0633\u0627\u0628 \u0639\u0644\u0649 Transifex \u0648\u0627\u0646\u0636\u0645 \u0627\u0644\u0649 \u0641\u0631\u064a\u0642 \u0627\u0644\u062a\u0631\u062c\u0645\u0629"
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "\u0633\u062c\u0644 \u062d\u0633\u0627\u0628 \u0639\u0644\u0649 Crowdin \u0648\u0627\u0646\u0636\u0645 \u0627\u0644\u0649 \u0641\u0631\u064a\u0642 \u0627\u0644\u062a\u0631\u062c\u0645\u0629"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",

@@ -245,8 +245,8 @@
 		"value": "Hoe de mod te vertalen"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "Maak een account aan op Transifex en neem deel aan het vertalingsteam:"
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Maak een account aan op Crowdin en neem deel aan het vertalingsteam:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",

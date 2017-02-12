@@ -60,7 +60,6 @@
 		"one": "Jeden cz\u0142owiek wygra\u0142 rund\u0119",
 		"few": "{int:NumHumans} Ludzie wygrali rund\u0119",
 		"many": "{int:NumHumans} Ludzie wygrali rund\u0119 ",
-		"other": "{int:NumHumans} Ludzie wygrali rund\u0119 ",
 	},
 	{
 		"key": "You have survived, +5 points",
@@ -247,8 +246,8 @@
 		"value": "Jak przet\u0142umaczy\u0107 ten mod"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "Utw\u00f3rz konto na Transiflex i do\u0142\u0105cz do dru\u017cyny t\u0142umaczy:"
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Utw\u00f3rz konto na Crowdin i do\u0142\u0105cz do dru\u017cyny t\u0142umaczy:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
@@ -275,7 +274,6 @@
 		"one": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 raz.",
 		"few": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 {int:NumBombs} razy",
 		"many": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 {int:NumBombs} razy",
-		"other": "Ka\u017cda bomba mo\u017ce wybuchn\u0105\u0107 {int:NumBombs} razy",
 	},
 	{
 		"key": "Use the hammer to place the bomb and explode it multiple times.",
@@ -294,7 +292,6 @@
 		"one": "Miny s\u0105 limitowane dla ka\u017cdego gracza w jednym momencie.",
 		"few": "Miny s\u0105 limitowane {int:NumMines} dla ka\u017cdego gracza w jednym momencie.",
 		"many": "Miny s\u0105 limitowane {int:NumMines} dla ka\u017cdego gracza w jednym momencie.",
-		"other": "Miny s\u0105 limitowane {int:NumMines} dla ka\u017cdego gracza w jednym momencie.",
 	},
 	{
 		"key": "He has also grenades that teleport him.",
@@ -333,7 +330,6 @@
 		"one": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 raz przed dotkni\u0119ciem ziemi.",
 		"few": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 {int:NinjaJump}  razy przed dotkni\u0119ciem ziemi.",
 		"many": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 {int:NinjaJump}  razy przed dotkni\u0119ciem ziemi.",
-		"other": "Jego m\u0142otek jest zamieniony w katan\u0119, pozwalaj\u0105c mu skaka\u0107 {int:NinjaJump}  razy przed dotkni\u0119ciem ziemi.",
 	},
 	{
 		"key": "The Mercenary fly in air using his machine gun.",
@@ -347,7 +343,7 @@
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 		"one": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 jeden punkt \u017cycia.",
 		"few": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkty \u017cycia.",
-		"many": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punktu \u017cycia.",
+		"many": "Mo\u017ce r\u00f3wnie\u017c rzuca\u0107 granaty zatruwaj\u0105ce, kt\u00f3re zabieraj\u0105 {int:NumDamagePoints} punkt\u00f3w \u017cycia.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -522,13 +518,12 @@
 		"one": "Jedna bomba pozosta\u0142a",
 		"few": "{int:NumBombs} pozosta\u0142o bomb",
 		"many": "{int:NumBombs} pozosta\u0142o bomb",
-		"other": "{int:NumBombs} pozosta\u0142o bomb",
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
 		"one": "Jedna mina jest aktywna",
 		"few": "{int:NumMines} miny jest aktywne",
-		"many": "{int:NumMines} miny jest aktywnej",
+		"many": "{int:NumMines} min jest aktywnych",
 	},
 	{
 		"key": "Next target in {sec:RemainingTime}",

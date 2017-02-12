@@ -246,8 +246,8 @@
 		"value": "Jak p\u0159elo\u017eit m\u00f3d"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "Vytvo\u0159 si \u00fa\u010det na Transifex a p\u0159ipoj se k p\u0159ekladatel\u016fm."
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Vytvo\u0159 si \u00fa\u010det na Crowdin a p\u0159ipoj se k p\u0159ekladatel\u016fm:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",

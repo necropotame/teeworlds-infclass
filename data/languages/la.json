@@ -273,8 +273,8 @@
 		"value": "Quemadmodum modificationem traducere potes:"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "Nomen tibi apud Transifex da et gregi traductionis accede:"
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Nomen tibi apud Crowdin da et gregi traductionis accede:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",

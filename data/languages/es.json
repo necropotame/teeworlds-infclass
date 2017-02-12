@@ -273,8 +273,8 @@
 		"value": "Como traducir el mod"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "Crea una cuenta en Transifex y te une a un equipo de traducci\u00f3n."
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Crea una cuenta en Crowdin y te une a un equipo de traducci\u00f3n:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
