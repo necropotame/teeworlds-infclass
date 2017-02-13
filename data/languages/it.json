@@ -1,5 +1,53 @@
 {"translation":[
 	{
+		"key": "You are now logged.",
+		"value": "Hai ora eseguito l'accesso."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Username/password sbagliata."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Si \u00e8 verificato un errore durante l'operazione."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Devi aver eseguito l'accesso per questa operazione"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Si prega di aspettare 5 minuti prima di creare un altro account"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Si \u00e8 verificato un errore durante la creazione del tuo account."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Questo username \u00e8 stato gi\u00e0 preso da un account esistente"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Il tuo account \u00e8 stato creato e hai ora effettuato l'accesso."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Devi aver effettuato l'accesso per vedere il tuo rank"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Devi aver effettuato l'accesso per vedere il tuo obiettivo"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "Hai gi\u00e0 informato che {str:PlayerName} deve essere bandito"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} vuole che {str:VictimName} sia bandito ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} \u00e8 stato infettato"
 	},
@@ -23,144 +71,6 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "Hai ucciso una strega, +5 punti"
-	},
-	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "Hai eliminato il tuo obbiettivo, +3 punti"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "Il Morto Vivente sta arrivando!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "La Strega sta arrivando!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "Sei congelato per {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "Scelta casuale"
-	},
-	{
-		"key": "Engineer",
-		"value": "Ingegnere"
-	},
-	{
-		"key": "Soldier",
-		"value": "Soldato"
-	},
-	{
-		"key": "Scientist",
-		"value": "Scienziato"
-	},
-	{
-		"key": "Medic",
-		"value": "Medico"
-	},
-	{
-		"key": "Hero",
-		"value": "Eroe"
-	},
-	{
-		"key": "Ninja",
-		"value": "Ninja"
-	},
-	{
-		"key": "Mercenary",
-		"value": "Mercenario"
-	},
-	{
-		"key": "Sniper",
-		"value": "Cecchino"
-	},
-	{
-		"key": "Choose your class",
-		"value": "Scegli la tua classe"
-	},
-	{
-		"key": "Cancel",
-		"value": "Cancella"
-	},
-	{
-		"key": "Explosion",
-		"value": "Esplosione"
-	},
-	{
-		"key": "Aphrodisiac",
-		"value": "afrodisiaco"
-	},
-	{
-		"key": "Hallucination",
-		"value": "Allucinazione"
-	},
-	{
-		"key": "Shockwave",
-		"value": "Onda d'urto"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "Scegli l'effetto della bomba"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Muro laser: {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "Una bomba rimasta",
-		"other": "{int:NumBombs}bombe rimaste",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "Una mina \u00e8 attiva",
-		"other": "{int:NumMines} mine sono attive",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "Prossimo bersaglio in {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "Bersaglio da eliminare: {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Posizione bloccata: {sec:RemainingTime}"
-	},
-	{
-		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Potenziale esplosivo: {percent:BombLevel}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Prossima bandiera in {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Modalit\u00e0 ragnatela attivata"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "Stomaco pieno di {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "La Strega \u00e8 morta"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "Il Morto Vivente \u00e8 finalmente morto"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Scrivi \"/help {str:ClassName}\" per avere pi\u00f9 informazioni sulla tua classe"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "L'Eroe ha trovato la bandiera"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -193,6 +103,38 @@
 	{
 		"key": "{str:PlayerName} joined the game",
 		"value": "{str:PlayerName} si \u00e8 unito alla partita"
+	},
+	{
+		"key": "Engineer",
+		"value": "Ingegnere"
+	},
+	{
+		"key": "Soldier",
+		"value": "Soldato"
+	},
+	{
+		"key": "Medic",
+		"value": "Medico"
+	},
+	{
+		"key": "Hero",
+		"value": "Eroe"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Mercenario"
+	},
+	{
+		"key": "Sniper",
+		"value": "Cecchino"
+	},
+	{
+		"key": "Scientist",
+		"value": "Scienziato"
 	},
 	{
 		"key": "Smoker",
@@ -267,10 +209,6 @@
 		"value": "InfectionClass, di necropotame (versione %s)"
 	},
 	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Basata sulla mod Infection di Gravity"
-	},
-	{
 		"key": "Thanks to {str:ListOfContributors}",
 		"value": "Ringaziamenti a {str:ListOfContributors}"
 	},
@@ -307,8 +245,8 @@
 		"value": "Come tradurre questa modalit\u00e0"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "Crea un account su Transifex e unisciti al nostro team di traduzioni:"
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Crea un account su Crowdin e unisciti al nostro team di traduzioni:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
@@ -555,51 +493,73 @@
 		"value": "Premi <F3> o <F4> per abilitare o disabilitare la protezione dalla corda "
 	},
 	{
-		"key": "You are now logged.",
-		"value": "Hai ora eseguito l'accesso."
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Sei congelato per {sec:EffectDuration}"
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "Username/password sbagliata."
+		"key": "Random choice",
+		"value": "Scelta casuale"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "Si \u00e8 verificato un errore durante l'operazione."
+		"key": "Choose your class",
+		"value": "Scegli la tua classe"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "Devi aver eseguito l'accesso per questa operazione"
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Muro laser: {sec:RemainingTime}"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Si prega di aspettare 5 minuti prima di creare un altro account"
+		"key": "{int:NumBombs} bombs left",
+		"one": "Una bomba rimasta",
+		"other": "{int:NumBombs}bombe rimaste",
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "Si \u00e8 verificato un errore durante la creazione del tuo account."
+		"key": "{int:NumMines} mines are actives",
+		"one": "Una mina \u00e8 attiva",
+		"other": "{int:NumMines} mine sono attive",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "Questo username \u00e8 stato gi\u00e0 preso da un account esistente"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Prossimo bersaglio in {sec:RemainingTime}"
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Il tuo account \u00e8 stato creato e hai ora effettuato l'accesso."
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Bersaglio da eliminare: {str:PlayerName}"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "Devi aver effettuato l'accesso per vedere il tuo rank"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Posizione bloccata: {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "Devi aver effettuato l'accesso per vedere il tuo obiettivo"
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Potenziale esplosivo: {percent:BombLevel}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Hai gi\u00e0 informato che {str:PlayerName} deve essere bandito"
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Prossima bandiera in {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} vuole che {str:VictimName} sia bandito ({str:Reason})"
+		"key": "Web mode enabled",
+		"value": "Modalit\u00e0 ragnatela attivata"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Stomaco pieno di {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "La Strega \u00e8 morta"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Il Morto Vivente \u00e8 finalmente morto"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Scrivi \"/help {str:ClassName}\" per avere pi\u00f9 informazioni sulla tua classe"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "L'Eroe ha trovato la bandiera"
 	},
 ]}

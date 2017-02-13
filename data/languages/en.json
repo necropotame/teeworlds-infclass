@@ -1,5 +1,57 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "You are now logged."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Wrong username/password."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "An error occured during the operation."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "You must be logged for this operation"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "Please wait 5 minutes before create an another account"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "An error occured during the creation of your account."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "This username is already taken by an existing account"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Your account has been created and you are now logged."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "You must be logged to see your rank"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "You must be logged to see your goal"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "You already notify that {str:PlayerName} must be banned"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} has been infected"
 	},
@@ -25,142 +77,8 @@
 		"value": "You have killed a witch, +5 points"
 	},
 	{
-		"key": "You have eliminated your target, +3 points",
-		"value": "You have eliminated your target, +3 points"
-	},
-	{
-		"key": "The undead is coming!",
-		"value": "The undead is coming!"
-	},
-	{
-		"key": "The witch is coming!",
-		"value": "The witch is coming!"
-	},
-	{
-		"key": "You are frozen: {sec:EffectDuration}",
-		"value": "You are frozen: {sec:EffectDuration}"
-	},
-	{
-		"key": "Random choice",
-		"value": "Random choice"
-	},
-	{
-		"key": "Engineer",
-		"value": "Engineer"
-	},
-	{
-		"key": "Soldier",
-		"value": "Soldier"
-	},
-	{
-		"key": "Scientist",
-		"value": "Scientist"
-	},
-	{
-		"key": "Medic",
-		"value": "Medic"
-	},
-	{
-		"key": "Hero",
-		"value": "Hero"
-	},
-	{
-		"key": "Ninja",
-		"value": "Ninja"
-	},
-	{
-		"key": "Mercenary",
-		"value": "Mercenary"
-	},
-	{
-		"key": "Sniper",
-		"value": "Sniper"
-	},
-	{
-		"key": "Choose your class",
-		"value": "Choose your class"
-	},
-	{
-		"key": "Cancel",
-		"value": "Cancel"
-	},
-	{
-		"key": "Explosion",
-		"value": "Explosion"
-	},
-	{
-		"key": "Aphrodisiac",
-		"value": "Aphrodisiac"
-	},
-	{
-		"key": "Hallucination",
-		"value": "Hallucination"
-	},
-	{
-		"key": "Shockwave",
-		"value": "Shockwave"
-	},
-	{
-		"key": "Choose bomb effect",
-		"value": "Choose bomb effect"
-	},
-	{
-		"key": "Laser wall: {sec:RemainingTime}",
-		"value": "Laser wall: {sec:RemainingTime}"
-	},
-	{
-		"key": "{int:NumBombs} bombs left",
-		"one": "One bomb left",
-		"other": "{int:NumBombs} bombs left",
-	},
-	{
-		"key": "{int:NumMines} mines are actives",
-		"one": "One mine is active",
-		"other": "{int:NumMines} mines are active",
-	},
-	{
-		"key": "Next target in {sec:RemainingTime}",
-		"value": "Next target in {sec:RemainingTime}"
-	},
-	{
-		"key": "Target to eliminate: {str:PlayerName}",
-		"value": "Target to eliminate: {str:PlayerName}"
-	},
-	{
-		"key": "Position lock: {sec:RemainingTime}",
-		"value": "Position lock: {sec:RemainingTime}"
-	},
-	{
-		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Explosive yield: {percent:BombLevel}"
-	},
-	{
-		"key": "Next flag in {sec:RemainingTime}",
-		"value": "Next flag in {sec:RemainingTime}"
-	},
-	{
-		"key": "Web mode enabled",
-		"value": "Web mode enabled"
-	},
-	{
-		"key": "Stomach filled by {percent:FodderInStomach}",
-		"value": "Stomach filled by {percent:FodderInStomach}"
-	},
-	{
-		"key": "The witch is dead",
-		"value": "The witch is dead"
-	},
-	{
-		"key": "The undead is finally dead",
-		"value": "The undead is finally dead"
-	},
-	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Type \"/help {str:ClassName}\" for more information about your class"
-	},
-	{
-		"key": "The Hero found the flag!",
-		"value": "The Hero found the flag!"
+		"key": "You have eliminated your target, +2 points",
+		"value": "You have eliminated your target, +2 points"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -195,6 +113,42 @@
 		"value": "{str:PlayerName} joined the game"
 	},
 	{
+		"key": "Engineer",
+		"value": "Engineer"
+	},
+	{
+		"key": "Soldier",
+		"value": "Soldier"
+	},
+	{
+		"key": "Medic",
+		"value": "Medic"
+	},
+	{
+		"key": "Hero",
+		"value": "Hero"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Mercenary"
+	},
+	{
+		"key": "Sniper",
+		"value": "Sniper"
+	},
+	{
+		"key": "Scientist",
+		"value": "Scientist"
+	},
+	{
+		"key": "Biologist",
+		"value": "Biologist"
+	},
+	{
 		"key": "Smoker",
 		"value": "Smoker"
 	},
@@ -217,6 +171,10 @@
 	{
 		"key": "Ghoul",
 		"value": "Ghoul"
+	},
+	{
+		"key": "Slug",
+		"value": "Slug"
 	},
 	{
 		"key": "Witch",
@@ -243,6 +201,10 @@
 		"value": "{str:PlayerName} entered and joined the game"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "You are muted for {sec:Duration}"
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "You can't join the spectators right now"
 	},
@@ -267,8 +229,12 @@
 		"value": "InfectionClass, by necropotame (version {str:VersionCode})"
 	},
 	{
-		"key": "Based on Infection mod by Gravity",
-		"value": "Based on Infection mod by Gravity"
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Based on the concept of Infection mod by Gravity"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Main contributors: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -307,8 +273,8 @@
 		"value": "How to translate the mod"
 	},
 	{
-		"key": "Create an account on Transifex and join a translation team:",
-		"value": "Create an account on Transifex and join a translation team:"
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Create an account on Crowdin and join a translation team:"
 	},
 	{
 		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
@@ -357,6 +323,10 @@
 		"value": "He has also grenades that teleport him."
 	},
 	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle."
+	},
+	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
 		"value": "The Medic can protect humans with his hammer by giving them armor."
 	},
@@ -399,8 +369,8 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "He can also throw poison grenades that deals one damage point.",
-		"other": "He can also throw poison grenades that deals {int:NumDamagePoints} damage points.",
+		"one": "He can also throw poison grenades that each deal one damage point.",
+		"other": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -473,6 +443,18 @@
 	{
 		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
 		"value": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment."
+	},
+	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "The Slug can infect humans and heal infected with his hammer."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "He can make the ground and walls toxic by spreading slime with his hammer."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Touching the slime inflicts three damage points in three seconds on a human."
 	},
 	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
@@ -555,51 +537,93 @@
 		"value": "Press <F3> or <F4> to enable or disable hook protection"
 	},
 	{
-		"key": "You are now logged.",
-		"value": "You are now logged."
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "You hold a bonus area for one minute, +5 points"
 	},
 	{
-		"key": "Wrong username/password.",
-		"value": "Wrong username/password."
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "You are frozen: {sec:EffectDuration}"
 	},
 	{
-		"key": "An error occured during the operation.",
-		"value": "An error occured during the operation."
+		"key": "Random choice",
+		"value": "Random choice"
 	},
 	{
-		"key": "You must be logged for this operation",
-		"value": "You must be logged for this operation"
+		"key": "Choose your class",
+		"value": "Choose your class"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Please wait 5 minutes before create an another account"
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Laser wall: {sec:RemainingTime}"
 	},
 	{
-		"key": "An error occured during the creation of your account.",
-		"value": "An error occured during the creation of your account."
+		"key": "{int:NumBombs} bombs left",
+		"one": "One bomb left",
+		"other": "{int:NumBombs} bombs left",
 	},
 	{
-		"key": "This username is already taken by an existing account",
-		"value": "This username is already taken by an existing account"
+		"key": "{int:NumMines} mines are actives",
+		"one": "One mine is active",
+		"other": "{int:NumMines} mines are actives",
 	},
 	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "Your account has been created and you are now logged."
+		"key": "Mine activated",
+		"value": "Mine activated"
 	},
 	{
-		"key": "You must be logged to see your rank",
-		"value": "You must be logged to see your rank"
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Next target in {sec:RemainingTime}"
 	},
 	{
-		"key": "You must be logged to see your goal",
-		"value": "You must be logged to see your goal"
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Target to eliminate: {str:PlayerName}"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "You already notify that {str:PlayerName} must be banned"
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Position lock: {sec:RemainingTime}"
 	},
 	{
-		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
-		"value": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})"
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Explosive yield: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Next flag in {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "Web mode enabled"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Stomach filled by {percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "The witch is dead"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "The undead is finally dead"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Sword velocity increased"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "Sword strength increased"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Grenade limit increased"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "Type \"/help {str:ClassName}\" for more information about your class"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "The Hero found the flag!"
 	},
 ]}

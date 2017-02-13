@@ -1753,6 +1753,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 887: //Yemen
 						str_copy(m_VoteLanguage[ClientID], "ar", sizeof(m_VoteLanguage[ClientID]));		
 						break;
+					/* bs - Bosnian *************************************/	
+					case 70: //Bosnia and Hercegovina
+						str_copy(m_VoteLanguage[ClientID], "bs", sizeof(m_VoteLanguage[ClientID]));					
+						break;
 					/* cs - Czech *************************************/	
 					case 203: //Czechia
 						str_copy(m_VoteLanguage[ClientID], "cs", sizeof(m_VoteLanguage[ClientID]));					
@@ -1766,6 +1770,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						break;
 					/* el - Greek ***********************************/	
 					case 300: //Greece
+					case 196: //Cyprus
 						str_copy(m_VoteLanguage[ClientID], "el", sizeof(m_VoteLanguage[ClientID]));
 						break;
 					/* es - Spanish ***********************************/	
@@ -1792,11 +1797,16 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 862: //Venezuela
 						str_copy(m_VoteLanguage[ClientID], "es", sizeof(m_VoteLanguage[ClientID]));
 						break;	
+					/* fa - Farsi ************************************/
+					case 364: //Islamic Republic of Iran
+					case 4: //Afghanistan
+						str_copy(m_VoteLanguage[ClientID], "fa", sizeof(m_VoteLanguage[ClientID]));
+						break;	
 					/* fr - French ************************************/							
 					case 204: //Benin
 					case 854: //Burkina Faso
 					case 178: //Republic of the Congo
-					case 384: //Cote d'Ivoire
+					case 384: //Cote d’Ivoire
 					case 266: //Gabon
 					case 324: //Ginea
 					case 466: //Mali
@@ -1807,7 +1817,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 492: //Monaco
 						str_copy(m_VoteLanguage[ClientID], "fr", sizeof(m_VoteLanguage[ClientID]));					
 						break;
-					/* hu - Croatian **********************************/	
+					/* hr - Croatian **********************************/	
 					case 191: //Croatia
 						str_copy(m_VoteLanguage[ClientID], "hr", sizeof(m_VoteLanguage[ClientID]));		
 						break;
@@ -1829,7 +1839,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						break;
 					/* nl - Dutch *************************************/
 					case 533: //Aruba
-					case 531: //Curacao
+					case 531: //Curaçao
 					case 534: //Sint Maarten
 					case 528: //Netherland
 					case 740: //Suriname
@@ -1848,19 +1858,24 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					//case 446: //Macao: official language, but spoken by less than 1% of the population
 					case 508: //Mozambique
 					case 626: //Timor-Leste
-					case 678: //Sao Tome and Principe
+					case 678: //São Tomé and Príncipe
 						str_copy(m_VoteLanguage[ClientID], "pt", sizeof(m_VoteLanguage[ClientID]));		
 						break;
 					/* ru - Russian ***********************************/	
 					case 112: //Belarus
 					case 643: //Russia
+					case 398: //Kazakhstan
 						str_copy(m_VoteLanguage[ClientID], "ru", sizeof(m_VoteLanguage[ClientID]));
 						break;
 					/* sk - Slovak ************************************/
 					case 703: //Slovakia
 						str_copy(m_VoteLanguage[ClientID], "sk", sizeof(m_VoteLanguage[ClientID]));		
 						break;
-					/* uk - Ukranian **********************************/	
+					/* sr - Serbian ************************************/
+					case 688: //Serbia
+						str_copy(m_VoteLanguage[ClientID], "sr", sizeof(m_VoteLanguage[ClientID]));
+						break;
+					/* uk - Ukrainian **********************************/	
 					case 804: //Ukraine
 						str_copy(m_VoteLanguage[ClientID], "uk", sizeof(m_VoteLanguage[ClientID]));
 						break;
@@ -3082,9 +3097,9 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("How to translate the mod"), NULL); 
 			Buffer.append(" ~~\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Create an account on Transifex and join a translation team:"), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Create an account on Crowdin and join a translation team:"), NULL); 
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "https://transifex.com/teeuniverse/infclass", NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "https://crowdin.com/project/teeuniverse", NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("For any question about the translation process, please contact us on IRC ({str:IRCAddress})"), "IRCAddress", "QuakeNet, #infclass", NULL);
 
@@ -3561,7 +3576,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
 	Console()->Register("alwaysrandom", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAlwaysRandom, this, "Display information about the mod");
-	Console()->Register("language", "s<fr|de|uk|ru|it|es|ar|hu|pl|nl|la>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
+	Console()->Register("language", "s<en|fr|nl|de|hr|cs|pl|hu|uk|ru|el|la|it|es|pt|ar|hu|fa|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
 /* INFECTION MODIFICATION END *****************************************/
 
