@@ -44,7 +44,7 @@ void CBiologistMine::Explode()
 	float RandomShift = random_float() * 2.0f * pi;
 	for(int i=0; i<15; i++)
 	{
-		new CBiologistLaser(GameWorld(), m_Pos, vec2(cos(RandomShift + AngleStep*i), sin(RandomShift + AngleStep*i)), m_Owner, 15);
+		new CBiologistLaser(GameWorld(), m_Pos, vec2(cos(RandomShift + AngleStep*i), sin(RandomShift + AngleStep*i)), m_Owner, 10);
 	}
 	
 	GameServer()->m_World.DestroyEntity(this);

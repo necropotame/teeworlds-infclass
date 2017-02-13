@@ -502,15 +502,6 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f + 0.5f*Factor);
 		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + 0.5f*Factor);
 	}
-	else if(GetClass() == PLAYERCLASS_BIOLOGIST)
-	{
-		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + 0.5f);
-		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + 0.5f);
-		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * (1.0f + 0.5f);
-		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f + 0.5f);
-		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f + 0.2f);
-		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + 0.2f);
-	}
 }
 
 void CCharacter::FireWeapon()

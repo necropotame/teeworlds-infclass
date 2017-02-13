@@ -10,6 +10,7 @@
 CBouncingBullet::CBouncingBullet(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_BOUNCING_BULLET)
 {
+	m_CreationPos = Pos;
 	m_Pos = Pos;
 	m_ActualPos = Pos;
 	m_ActualDir = Dir;
@@ -50,7 +51,7 @@ void CBouncingBullet::Tick()
 	m_ActualPos = CurPos;
 	m_ActualDir = normalize(CurPos - PrevPos);
 
-	if(GameLayerClipped(CurPos) || m_LifeSpan < 0 || m_BounceLeft < 0)
+	if(GameLayerClipped(CurPos) || m_LifeSpan < 0 || m_BounceLeft < 0 || distance(m_ActualPos, m_CreationPos) > 900.0f)
 	{
 		GameServer()->m_World.DestroyEntity(this);
 		return;
