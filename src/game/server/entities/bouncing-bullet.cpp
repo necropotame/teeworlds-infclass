@@ -10,7 +10,6 @@
 CBouncingBullet::CBouncingBullet(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_BOUNCING_BULLET)
 {
-	m_CreationPos = Pos;
 	m_Pos = Pos;
 	m_ActualPos = Pos;
 	m_ActualDir = Dir;
@@ -18,8 +17,8 @@ CBouncingBullet::CBouncingBullet(CGameWorld *pGameWorld, int Owner, vec2 Pos, ve
 	m_Owner = Owner;
 	m_StartTick = Server()->Tick();
 	m_LifeSpan = Server()->TickSpeed()*2;
-	m_BounceLeft = 3;
-	m_DistanceLeft = 900; // the max distance a bullet can travel
+	m_BounceLeft = 3; // the number of time that a bullet can bounce. It's usefull to remove bullets laying on the ground
+	m_DistanceLeft = 1200; // the max distance a bullet can travel
 	
 	GameWorld()->InsertEntity(this);
 }
@@ -52,7 +51,9 @@ void CBouncingBullet::Tick()
 	m_ActualPos = CurPos;
 	m_ActualDir = normalize(CurPos - PrevPos);
 
-	if(GameLayerClipped(CurPos) || m_LifeSpan < 0 || m_BounceLeft < 0 || distance(m_ActualPos, m_CreationPos) > m_DistanceLeft)
+	m_DistanceLeft -= distance(CurPos, PrevPos);
+	
+	if(GameLayerClipped(CurPos) || m_LifeSpan < 0 || m_BounceLeft < 0 || m_DistanceLeft < 0.0f)
 	{
 		GameServer()->m_World.DestroyEntity(this);
 		return;
@@ -79,11 +80,7 @@ void CBouncingBullet::Tick()
 		vec2 LastPos;
 		int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, NULL, &LastPos);
 		if(Collide)
-		{
-			m_DistanceLeft -= distance(CurPos, m_CreationPos);
-			m_CreationPos.x = CurPos.x;
-			m_CreationPos.y = CurPos.y;
-			
+		{			
 			//Thanks to TeeBall 0.6
 			vec2 CollisionPos;
 			CollisionPos.x = LastPos.x;
