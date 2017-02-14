@@ -27,7 +27,7 @@ private:
 	int m_LifeSpan;
 	int m_BounceLeft;
 	vec2 m_CreationPos;
-	int m_MaxDistance;
+	float m_DistanceLeft;
 };
 
 #endif
