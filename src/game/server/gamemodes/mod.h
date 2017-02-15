@@ -37,7 +37,7 @@ public:
 	
 private:
 	bool IsSpawnable(vec2 Pos, int TeleZoneIndex);
-	void UpdatePlayerCounter(int ClientException = -1);
+	void GetPlayerCounter(int ClientException, int& NumHumans, int& NumInfected, int& NumFirstInfected);
 	
 private:	
 	int m_MapWidth;
@@ -45,9 +45,6 @@ private:
 	int* m_GrowingMap;
 	bool m_ExplosionStarted;
 	
-	int m_NumFirstInfected;
-	int m_HumanCounter;
-	int m_InfectedCounter;
 	bool m_InfectedStarted;
 	
 	CHeroFlag* m_pHeroFlag;
