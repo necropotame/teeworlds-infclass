@@ -1,5 +1,9 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} zosta\u0142 wyciszony na {sec:Duration} ({str:Reason})"
+	},
+	{
 		"key": "You are now logged.",
 		"value": "Jeste\u015b zalogowany."
 	},
@@ -74,6 +78,10 @@
 		"value": "Zabi\u0142e\u015b wied\u017am\u0119, +5 points"
 	},
 	{
+		"key": "You have eliminated your target, +2 points",
+		"value": "wyeliminowa\u0142e\u015b przeciwnika + 2 punkty"
+	},
+	{
 		"key": "Hook protection enabled",
 		"value": "Ochrona od haka aktywowana"
 	},
@@ -138,6 +146,10 @@
 		"value": "Naukowiec"
 	},
 	{
+		"key": "Biologist",
+		"value": "Biolog"
+	},
+	{
 		"key": "Smoker",
 		"value": "Chwytacz"
 	},
@@ -160,6 +172,10 @@
 	{
 		"key": "Ghoul",
 		"value": "Ghul"
+	},
+	{
+		"key": "Slug",
+		"value": "\u015blimak"
 	},
 	{
 		"key": "Witch",
@@ -186,6 +202,10 @@
 		"value": "{str:PlayerName} Po\u0142\u0105czy\u0142 si\u0119 i jest gotowy do gry"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "Zosta\u0142e\u015b wyciszony na {sec:Duration}"
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "Nie mo\u017cesz do\u0142\u0105czy\u0107 do obserwator\u00f3w w tym momencie"
 	},
@@ -208,6 +228,14 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, od necropotame (version {str:VersionCode})"
+	},
+	{
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "W oparciu o Infecton mod by Gravity"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Tw\u00f3rcy: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -296,6 +324,10 @@
 	{
 		"key": "He has also grenades that teleport him.",
 		"value": "Ma r\u00f3wnie\u017c granaty do teleportacji."
+	},
+	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "Biolog posiada strzelb\u0119 strzelaj\u0105c\u0105 skacz\u0105cymi pociskami i mo\u017ce ustawi\u0107 laserow\u0105 min\u0119 strzelaj\u0105c z lasera."
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
@@ -418,6 +450,18 @@
 		"value": "Jednakowo\u017c je\u017celi nie czerpie, kawa\u0142ek po kawa\u0142ku b\u0119dzie wraca\u0142 do normalno\u015bci, albo gdy zginie."
 	},
 	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "\u015alimak mo\u017ce zara\u017ca\u0107 ludzi i leczy\u0107 zara\u017conych uderzaj\u0105c m\u0142otkiem."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "On mo\u017ce zainfekowa\u0107 \u015bciany rozrzucaj\u0105c szlam m\u0142otkiem."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Dotkni\u0119cie szlamu zadaje 3 punkty uszkodze\u0144 przez 3 sekundy."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Nieumar\u0142y mo\u017ce zara\u017ca\u0107 ludzi i leczy\u0107 zara\u017conych swoim m\u0142otem."
 	},
@@ -498,6 +542,10 @@
 		"value": "Naci\u015bnij <f3> lub <f4> aby aktywowa\u0107 lub dezaktywowa\u0107 ochron\u0119 przed hakiem."
 	},
 	{
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "Utrzyma\u0142e\u015b bonusow\u0105 stref\u0119 przez minut\u0119, +5 punkt\u00f3w"
+	},
+	{
 		"key": "You are frozen: {sec:EffectDuration}",
 		"value": "Jeste\u015b zamro\u017cony na: {sec:EffectDuration}"
 	},
@@ -524,6 +572,10 @@
 		"one": "Jedna mina jest aktywna",
 		"few": "{int:NumMines} miny jest aktywne",
 		"many": "{int:NumMines} min jest aktywnych",
+	},
+	{
+		"key": "Mine activated",
+		"value": "Mina aktywowana"
 	},
 	{
 		"key": "Next target in {sec:RemainingTime}",
@@ -560,6 +612,18 @@
 	{
 		"key": "The undead is finally dead",
 		"value": "Nieumar\u0142y jest wreszcie martwy"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Pr\u0119dko\u015b\u0107 miecza wzros\u0142a."
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "Obra\u017cenia od miecza wzros\u0142y"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Zwi\u0119kszony limit ilo\u015bci granat\u00f3w"
 	},
 	{
 		"key": "Type \"/help {str:ClassName}\" for more information about your class",
