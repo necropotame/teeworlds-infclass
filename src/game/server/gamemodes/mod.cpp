@@ -23,9 +23,6 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_MapHeight = GameServer()->Collision()->GetHeight();
 	m_GrowingMap = new int[m_MapWidth*m_MapHeight];
 	
-	m_HumanCounter = 0;
-	m_InfectedCounter = 0;
-	m_NumFirstInfected = 0;
 	m_InfectedStarted = false;
 	
 	for(int j=0; j<m_MapHeight; j++)
@@ -61,9 +58,12 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 	CPlayer* pPlayer = GameServer()->m_apPlayers[ClientID];
 	if(pPlayer && pPlayer->IsInfected() && m_InfectedStarted)
 	{
-		UpdatePlayerCounter(ClientID);
+		int NumHumans;
+		int NumInfected;
+		int NumFirstInfected;
+		GetPlayerCounter(ClientID, NumHumans, NumInfected, NumFirstInfected);
 		
-		if(m_NumFirstInfected > m_InfectedCounter-1)
+		if(NumInfected < NumFirstInfected)
 		{
 			Server()->Ban(ClientID, 10*60, "Leaver");
 		}
@@ -121,10 +121,10 @@ void CGameControllerMOD::EndRound()
 	IGameController::EndRound();
 }
 
-void CGameControllerMOD::UpdatePlayerCounter(int ClientException)
+void CGameControllerMOD::GetPlayerCounter(int ClientException, int& NumHumans, int& NumInfected, int& NumFirstInfected)
 {
-	m_HumanCounter = 0;
-	m_InfectedCounter = 0;
+	NumHumans = 0;
+	NumInfected = 0;
 	
 	//Count type of players
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
@@ -132,16 +132,16 @@ void CGameControllerMOD::UpdatePlayerCounter(int ClientException)
 	{
 		if(Iter.ClientID() == ClientException) continue;
 		
-		if(Iter.Player()->IsInfected()) m_InfectedCounter++;
-		else m_HumanCounter++;
+		if(Iter.Player()->IsInfected()) NumInfected++;
+		else NumHumans++;
 	}
 	
-	if(m_HumanCounter + m_InfectedCounter < 2)
-		m_NumFirstInfected = 0;
-	else if(m_HumanCounter + m_InfectedCounter < 4)
-		m_NumFirstInfected = 1;
+	if(NumHumans + NumInfected <= 1)
+		NumFirstInfected = 0;
+	else if(NumHumans + NumInfected <= 3)
+		NumFirstInfected = 1;
 	else
-		m_NumFirstInfected = 2;
+		NumFirstInfected = 2;
 }
 
 void CGameControllerMOD::Tick()
@@ -180,12 +180,15 @@ void CGameControllerMOD::Tick()
 		}
 	}
 	
-	UpdatePlayerCounter();
+	int NumHumans = 0;
+	int NumInfected = 0;
+	int NumFirstInfected = 0;
+	GetPlayerCounter(-1, NumHumans, NumInfected, NumFirstInfected);
 	
 	m_InfectedStarted = false;
 	
 	//If the game can start ...
-	if(m_GameOverTick == -1 && m_HumanCounter + m_InfectedCounter >= g_Config.m_InfMinPlayers)
+	if(m_GameOverTick == -1 && NumHumans + NumInfected >= g_Config.m_InfMinPlayers)
 	{
 		//If the infection started
 		if(IsInfectionStarted())
@@ -215,11 +218,11 @@ void CGameControllerMOD::Tick()
 				}
 			}
 			
-			int NumNeededInfection = m_NumFirstInfected;
+			int NumNeededInfection = NumFirstInfected;
 			
-			while(m_InfectedCounter < NumNeededInfection)
+			while(NumInfected < NumNeededInfection)
 			{
-				float InfectionProb = 1.0/static_cast<float>(m_HumanCounter);
+				float InfectionProb = 1.0/static_cast<float>(NumHumans);
 				float random = random_float();
 				
 				//Fair infection
@@ -234,8 +237,8 @@ void CGameControllerMOD::Tick()
 					{
 						Server()->InfecteClient(Iter.ClientID());
 						Iter.Player()->StartInfection();
-						m_InfectedCounter++;
-						m_HumanCounter--;
+						NumInfected++;
+						NumHumans--;
 						
 						GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTION, _("{str:VictimName} has been infected"),
 							"VictimName", Server()->ClientName(Iter.ClientID()),
@@ -258,8 +261,8 @@ void CGameControllerMOD::Tick()
 						{
 							Server()->InfecteClient(Iter.ClientID());
 							Iter.Player()->StartInfection();
-							m_InfectedCounter++;
-							m_HumanCounter--;
+							NumInfected++;
+							NumHumans--;
 							
 							GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTION, _("{str:VictimName} has been infected"), "VictimName", Server()->ClientName(Iter.ClientID()), NULL);
 							
@@ -288,7 +291,7 @@ void CGameControllerMOD::Tick()
 		}
 		
 		//Win check
-		if(m_InfectedStarted && m_HumanCounter == 0 && m_InfectedCounter > 1)
+		if(m_InfectedStarted && NumHumans == 0 && NumInfected > 1)
 		{			
 			int Seconds = (Server()->Tick()-m_RoundStartTick)/((float)Server()->TickSpeed());
 			
@@ -377,9 +380,9 @@ void CGameControllerMOD::Tick()
 			//If no more explosions, game over, decide who win
 			if(!NewExplosion)
 			{
-				if(m_HumanCounter)
+				if(NumHumans)
 				{
-					GameServer()->SendChatTarget_Localization_P(-1, CHATCATEGORY_HUMANS, m_HumanCounter, _P("One human won the round", "{int:NumHumans} humans won the round"), "NumHumans", &m_HumanCounter, NULL);
+					GameServer()->SendChatTarget_Localization_P(-1, CHATCATEGORY_HUMANS, NumHumans, _P("One human won the round", "{int:NumHumans} humans won the round"), "NumHumans", &NumHumans, NULL);
 					
 					CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 					while(Iter.Next())
