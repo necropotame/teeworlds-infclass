@@ -65,7 +65,7 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 		
 		if(NumInfected < NumFirstInfected)
 		{
-			Server()->Ban(ClientID, 10*60, "Leaver");
+			Server()->Ban(ClientID, 60*g_Config.m_InfLeaverBanTime, "Leaver");
 		}
 	}
 }
