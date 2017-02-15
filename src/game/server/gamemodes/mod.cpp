@@ -823,7 +823,7 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	Probability[PLAYERCLASS_GHOST - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_GHOST)) ? 0.25f : 0.0f;
 	Probability[PLAYERCLASS_SPIDER - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_SPIDER)) ? 0.25f : 0.0f;
-	Probability[PLAYERCLASS_GHOUL - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_GHOUL)) ? 0.25f : 0.0f;
+	Probability[PLAYERCLASS_GHOUL - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_GHOUL) && nbInfected > 4) ? 0.25f : 0.0f;
 	Probability[PLAYERCLASS_SLUG - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_SLUG)) ? 0.25f : 0.0f;
 	
 	Probability[PLAYERCLASS_WITCH - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_WITCH) && nbInfected > 2 && !thereIsAWitch) ? 0.25f : 0.0f;
