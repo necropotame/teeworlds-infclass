@@ -2219,7 +2219,8 @@ bool CCharacter::IncreaseOverallHp(int Amount)
 	}
 	if(Amount > 0)
 	{
-		success = IncreaseArmor(Amount);
+		if (IncreaseArmor(Amount)) 
+			success = true;
 	}
 	return success;
 }
