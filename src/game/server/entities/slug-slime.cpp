@@ -10,8 +10,9 @@ CSlugSlime::CSlugSlime(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 {
 	m_Pos = Pos;
 	m_Owner = Owner;
-	m_LifeSpan = Server()->TickSpeed()*10;
+	m_LifeSpan = Server()->TickSpeed()*g_Config.m_InfSlimeDuration;
 	GameWorld()->InsertEntity(this);
+	m_HealTick = 0;
 }
 
 void CSlugSlime::Reset()
@@ -37,10 +38,21 @@ void CSlugSlime::Tick()
 	// Find other players
 	for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 	{
-		if(p->IsInfected()) continue;
-
-		if(distance(p->m_Pos, m_Pos) < 84.0f)
-		p->Poison(3, m_Owner);
+		if(distance(p->m_Pos, m_Pos) > 84.0f) continue; // not in reach
+		
+		if(p->IsInfected()) 
+		{
+			p->SetEmote(EMOTE_HAPPY, Server()->Tick());
+			if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/g_Config.m_InfSlimeHealRate))
+			{
+				m_HealTick = Server()->Tick();
+				p->IncreaseHealth(1);
+			}
+		} 
+		else // p->IsHuman()
+		{ 
+			p->Poison(g_Config.m_InfSlimePoisenDuration, m_Owner); 
+		}
 	}
 	
 	if(random_prob(0.2f))
