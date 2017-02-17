@@ -530,6 +530,8 @@ void CCharacter::FireWeapon()
 	if(m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_RIFLE || GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GUN)
 		FullAuto = true;
 
+	if (m_ActiveWeapon == WEAPON_GUN && !IsInfected()) 
+		FullAuto = true;
 
 	// check if we gonna fire
 	bool WillFire = false;
