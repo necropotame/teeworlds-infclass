@@ -18,6 +18,7 @@ public:
 public:
 	int m_Owner;
 	int m_LifeSpan;
+	int m_HealTick;
 };
 
 #endif

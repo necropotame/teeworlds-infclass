@@ -1415,7 +1415,7 @@ void CCharacter::Tick()
 		{
 			if(IsInfected())
 			{
-				if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/3))
+				if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/g_Config.m_InfInfzoneHealRate))
 				{
 					m_HealTick = Server()->Tick();
 					if(m_Health < 10) m_Health++;
