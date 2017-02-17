@@ -48,7 +48,9 @@ void CSlugSlime::Tick()
 				m_HealTick = Server()->Tick();
 				p->IncreaseHealth(1);
 			}
-		} else { // p->IsHuman()
+		} 
+		else // p->IsHuman()
+		{ 
 			p->Poison(g_Config.m_InfSlimePoisenDuration, m_Owner); 
 		}
 	}
