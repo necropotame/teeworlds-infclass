@@ -530,9 +530,9 @@ void CCharacter::FireWeapon()
 	if(m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_RIFLE || GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GUN)
 		FullAuto = true;
 	
-	if (IsInfected() && g_Config.m_InfHammerspammInfected > 0) 
+	if (m_ActiveWeapon == WEAPON_HAMMER && IsInfected() && g_Config.m_InfHammerspammInfected > 0) 
 		FullAuto = true;
-	if (!IsInfected() && g_Config.m_InfHammerspammHuman > 0) 
+	if (m_ActiveWeapon == WEAPON_HAMMER && !IsInfected() && g_Config.m_InfHammerspammHuman > 0) 
 		FullAuto = true;
 
 	// check if we gonna fire
