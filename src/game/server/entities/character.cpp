@@ -526,18 +526,27 @@ void CCharacter::FireWeapon()
 	DoWeaponSwitch();
 	vec2 Direction = normalize(vec2(m_LatestInput.m_TargetX, m_LatestInput.m_TargetY));
 
+	bool AutoFire = false;
 	bool FullAuto = false;
-	if(m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_RIFLE || GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GUN)
+	
+	if(m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_RIFLE)
 		FullAuto = true;
 
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GUN)
+		FullAuto = true;
 
+	if(GetClass() == PLAYERCLASS_SLUG && m_ActiveWeapon == WEAPON_HAMMER)
+		FullAuto = true;
+	
 	// check if we gonna fire
 	bool WillFire = false;
 	if(CountInput(m_LatestPrevInput.m_Fire, m_LatestInput.m_Fire).m_Presses)
 		WillFire = true;
-
-	if(FullAuto && (m_LatestInput.m_Fire&1) && (m_aWeapons[m_ActiveWeapon].m_Ammo || (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GRENADE)))
+	else if(FullAuto && (m_LatestInput.m_Fire&1) && (m_aWeapons[m_ActiveWeapon].m_Ammo || (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GRENADE)))
+	{
+		AutoFire = true;
 		WillFire = true;
+	}
 
 	if(!WillFire || m_pPlayer->MapMenu() > 0)
 		return;
@@ -751,106 +760,114 @@ void CCharacter::FireWeapon()
 			{
 /* INFECTION MODIFICATION END *****************************************/
 				// reset objects Hit
-				m_NumObjectsHit = 0;
-				GameServer()->CreateSound(m_Pos, SOUND_HAMMER_FIRE);
-
-				if(GetClass() == PLAYERCLASS_GHOST)
-				{
-					m_IsInvisible = false;
-					m_InvisibleTick = Server()->Tick();
-				}
-
-				CCharacter *apEnts[MAX_CLIENTS];
 				int Hits = 0;
-				int Num = GameServer()->m_World.FindEntities(ProjStartPos, m_ProximityRadius*0.5f, (CEntity**)apEnts,
-															MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
-
-				for (int i = 0; i < Num; ++i)
+				bool ShowAttackAnimation = false;
+				
+				// make sure that the slug will not auto-fire to attack
+				if(!AutoFire)
 				{
-					CCharacter *pTarget = apEnts[i];
-
-					if ((pTarget == this) || GameServer()->Collision()->IntersectLine(ProjStartPos, pTarget->m_Pos, NULL, NULL))
-						continue;
-
-					// set his velocity to fast upward (for now)
-					if(length(pTarget->m_Pos-ProjStartPos) > 0.0f)
-						GameServer()->CreateHammerHit(pTarget->m_Pos-normalize(pTarget->m_Pos-ProjStartPos)*m_ProximityRadius*0.5f);
-					else
-						GameServer()->CreateHammerHit(ProjStartPos);
-
-					vec2 Dir;
-					if (length(pTarget->m_Pos - m_Pos) > 0.0f)
-						Dir = normalize(pTarget->m_Pos - m_Pos);
-					else
-						Dir = vec2(0.f, -1.f);
+					ShowAttackAnimation = true;
 					
-/* INFECTION MODIFICATION START ***************************************/
-					if(IsInfected())
+					m_NumObjectsHit = 0;
+					GameServer()->CreateSound(m_Pos, SOUND_HAMMER_FIRE);
+
+					if(GetClass() == PLAYERCLASS_GHOST)
 					{
-						if(pTarget->IsInfected())
+						m_IsInvisible = false;
+						m_InvisibleTick = Server()->Tick();
+					}
+
+					CCharacter *apEnts[MAX_CLIENTS];
+					int Num = GameServer()->m_World.FindEntities(ProjStartPos, m_ProximityRadius*0.5f, (CEntity**)apEnts,
+																MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
+
+					for (int i = 0; i < Num; ++i)
+					{
+						CCharacter *pTarget = apEnts[i];
+
+						if ((pTarget == this) || GameServer()->Collision()->IntersectLine(ProjStartPos, pTarget->m_Pos, NULL, NULL))
+							continue;
+
+						// set his velocity to fast upward (for now)
+						if(length(pTarget->m_Pos-ProjStartPos) > 0.0f)
+							GameServer()->CreateHammerHit(pTarget->m_Pos-normalize(pTarget->m_Pos-ProjStartPos)*m_ProximityRadius*0.5f);
+						else
+							GameServer()->CreateHammerHit(ProjStartPos);
+
+						vec2 Dir;
+						if (length(pTarget->m_Pos - m_Pos) > 0.0f)
+							Dir = normalize(pTarget->m_Pos - m_Pos);
+						else
+							Dir = vec2(0.f, -1.f);
+						
+	/* INFECTION MODIFICATION START ***************************************/
+						if(IsInfected())
 						{
-							if(pTarget->IsFrozen())
+							if(pTarget->IsInfected())
 							{
-								pTarget->Unfreeze();
-								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
+								if(pTarget->IsFrozen())
+								{
+									pTarget->Unfreeze();
+									GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
+								}
+								else
+								{
+									pTarget->IncreaseHealth(2);
+									pTarget->IncreaseArmor(2);
+									pTarget->m_EmoteType = EMOTE_HAPPY;
+									pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+									
+									if(!pTarget->GetPlayer()->HookProtectionEnabled())
+										pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
+								}
 							}
 							else
 							{
-								pTarget->IncreaseHealth(2);
-								pTarget->IncreaseArmor(2);
-								pTarget->m_EmoteType = EMOTE_HAPPY;
-								pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
-								
-								if(!pTarget->GetPlayer()->HookProtectionEnabled())
-									pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
+									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
+							}						
+						}
+						else if(GetClass() == PLAYERCLASS_BIOLOGIST)
+						{
+							if (pTarget->IsInfected())
+							{
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
+										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+							}
+						}
+						else if(GetClass() == PLAYERCLASS_MEDIC)
+						{
+							if (pTarget->IsInfected())
+							{
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
+										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+							}
+							else
+							{
+								if(pTarget->GetClass() != PLAYERCLASS_HERO)
+								{
+									pTarget->IncreaseArmor(4);
+									if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
+									{
+										Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
+										GameServer()->SendScoreSound(GetPlayer()->GetCID());
+										pTarget->m_NeedFullHeal = false;
+									}
+									pTarget->m_EmoteType = EMOTE_HAPPY;
+									pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+								}
 							}
 						}
 						else
 						{
 							pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
-								m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
-						}						
-					}
-					else if(GetClass() == PLAYERCLASS_BIOLOGIST)
-					{
-						if (pTarget->IsInfected())
-						{
-							pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
-									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+								m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 						}
+	/* INFECTION MODIFICATION END *****************************************/
+						Hits++;
 					}
-					else if(GetClass() == PLAYERCLASS_MEDIC)
-					{
-						if (pTarget->IsInfected())
-						{
-							pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
-									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
-						}
-						else
-						{
-							if(pTarget->GetClass() != PLAYERCLASS_HERO)
-							{
-								pTarget->IncreaseArmor(4);
-								if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
-								{
-									Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
-									GameServer()->SendScoreSound(GetPlayer()->GetCID());
-									pTarget->m_NeedFullHeal = false;
-								}
-								pTarget->m_EmoteType = EMOTE_HAPPY;
-								pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
-							}
-						}
-					}
-					else
-					{
-						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
-							m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
-					}
-/* INFECTION MODIFICATION END *****************************************/
-					Hits++;
 				}
-
+				
 				// if we Hit anything, we have to wait for the reload
 				if(Hits)
 				{
@@ -872,10 +889,14 @@ void CCharacter::FireWeapon()
 						
 						if(Distance > 84.0f)
 						{
+							ShowAttackAnimation = true;
 							new CSlugSlime(GameWorld(), CheckPos, m_pPlayer->GetCID());
 						}
 					}
 				}
+				
+				if(!ShowAttackAnimation)
+					return;
 					
 /* INFECTION MODIFICATION START ***************************************/
 			}
