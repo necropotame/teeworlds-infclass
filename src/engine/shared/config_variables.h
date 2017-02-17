@@ -141,5 +141,7 @@ MACRO_CONFIG_INT(InfSlimeDuration, inf_slime_duration, 10, 0, 10000, CFGFLAG_SER
 MACRO_CONFIG_INT(InfSlimePoisenDuration, inf_slime_poisen_duration, 5, 0, 10000, CFGFLAG_SERVER, "How long Slug-Slime will deal damage to humans (in seconds), WARNING: when set to 1 second slime will deal damage very fast")
 MACRO_CONFIG_INT(InfSlimeHealRate, inf_slime_heal_rate, 2, 0, 10000, CFGFLAG_SERVER, "Slug-Slime heals infected for X hearts every second")
 MACRO_CONFIG_INT(InfInfzoneHealRate, inf_infzone_heal_rate, 3, 0, 10000, CFGFLAG_SERVER, "InfectionZone heals infected for X hearts every second")
+MACRO_CONFIG_INT(InfHammerspammInfected, inf_hammerspamm_infected, 1, 0, 1, CFGFLAG_SERVER, "If true infected can hold down left mouse to spamm hammer attack")
+MACRO_CONFIG_INT(InfHammerspammHuman, inf_hammerspamm_human, 1, 0, 1, CFGFLAG_SERVER, "If true humans can hold down left mouse to spamm hammer attack")
 
 #endif
