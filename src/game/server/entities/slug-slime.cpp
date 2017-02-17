@@ -51,7 +51,7 @@ void CSlugSlime::Tick()
 		} 
 		else // p->IsHuman()
 		{ 
-			p->Poison(g_Config.m_InfSlimePoisenDuration, m_Owner); 
+			p->Poison(g_Config.m_InfSlimePoisonDuration, m_Owner); 
 		}
 	}
 	
