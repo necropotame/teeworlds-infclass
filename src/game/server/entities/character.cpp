@@ -796,8 +796,14 @@ void CCharacter::FireWeapon()
 							}
 							else
 							{
-								pTarget->IncreaseHealth(2);
-								pTarget->IncreaseArmor(2);
+								if (pTarget->IncreaseHealth(2) || pTarget->IncreaseArmor(2))
+								{
+									if(m_Health >= 10)
+										IncreaseArmor(1);
+									else
+										IncreaseHealth(1);
+								}
+								
 								pTarget->m_EmoteType = EMOTE_HAPPY;
 								pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 								
