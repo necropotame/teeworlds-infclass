@@ -809,9 +809,7 @@ void CCharacter::FireWeapon()
 								}
 								else
 								{
-									bool healSuccess = pTarget->IncreaseHealth(2);
-									healSuccess = healSuccess || pTarget->IncreaseArmor(2);
-									if(healSuccess)
+									if(pTarget->IncreaseOverallHp(4))
 									{
 										IncreaseOverallHp(1);
 
@@ -2391,8 +2389,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 				//Heal and unfreeze
 				if(pKillerPlayer->GetClass() == PLAYERCLASS_BOOMER && Weapon == WEAPON_HAMMER)
 				{
-					IncreaseHealth(4+random_int(0, 5));
-					IncreaseArmor(4+random_int(0, 5));
+					IncreaseOverallHp(8+random_int(0, 10));
 					if(IsFrozen())
 						Unfreeze();
 						
