@@ -594,6 +594,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 					pKiller->GetCharacter()->GiveNinjaBuf();
 					pKiller->GetCharacter()->SetEmote(EMOTE_HAPPY, Server()->Tick() + Server()->TickSpeed());
 					GameServer()->SendEmoticon(pKiller->GetCID(), EMOTICON_MUSIC);
+					pKiller->GetCharacter()->IncreaseHealth(4);
 				}
 			}
 		}
