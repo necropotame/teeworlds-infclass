@@ -534,6 +534,8 @@ void CCharacter::FireWeapon()
 		FullAuto = true;
 	if (m_ActiveWeapon == WEAPON_HAMMER && !IsInfected() && g_Config.m_InfHammerspammHuman > 0) 
 		FullAuto = true;
+	if (m_ActiveWeapon == WEAPON_GUN && !IsInfected()) 
+		FullAuto = true;
 
 	// check if we gonna fire
 	bool WillFire = false;
