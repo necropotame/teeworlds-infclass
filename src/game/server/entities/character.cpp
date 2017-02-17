@@ -809,10 +809,15 @@ void CCharacter::FireWeapon()
 								}
 								else
 								{
-									pTarget->IncreaseHealth(2);
-									pTarget->IncreaseArmor(2);
-									pTarget->m_EmoteType = EMOTE_HAPPY;
-									pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+									bool healSuccess = pTarget->IncreaseHealth(2);
+									healSuccess = healSuccess || pTarget->IncreaseArmor(2);
+									if(healSuccess)
+									{
+										IncreaseOverallHp(1);
+
+										pTarget->m_EmoteType = EMOTE_HAPPY;
+										pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+									}
 									
 									if(!pTarget->GetPlayer()->HookProtectionEnabled())
 										pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
@@ -822,7 +827,7 @@ void CCharacter::FireWeapon()
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
-							}						
+							}
 						}
 						else if(GetClass() == PLAYERCLASS_BIOLOGIST)
 						{
@@ -2219,6 +2224,24 @@ bool CCharacter::IncreaseArmor(int Amount)
 		return false;
 	m_Armor = clamp(m_Armor+Amount, 0, 10);
 	return true;
+}
+
+bool CCharacter::IncreaseOverallHp(int Amount)
+{
+	bool success = false;
+	if(m_Health < 10)
+	{
+		int healthDiff = 10-m_Health;
+		IncreaseHealth(Amount);
+		success = true;
+		Amount = Amount - healthDiff;
+	}
+	if(Amount > 0)
+	{
+		if (IncreaseArmor(Amount)) 
+			success = true;
+	}
+	return success;
 }
 
 void CCharacter::Die(int Killer, int Weapon)
