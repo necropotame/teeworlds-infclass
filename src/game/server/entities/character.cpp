@@ -529,10 +529,7 @@ void CCharacter::FireWeapon()
 	bool AutoFire = false;
 	bool FullAuto = false;
 	
-	if(m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_RIFLE)
-		FullAuto = true;
-
-	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GUN)
+	if(m_ActiveWeapon == WEAPON_GUN || m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_RIFLE)
 		FullAuto = true;
 
 	if(GetClass() == PLAYERCLASS_SLUG && m_ActiveWeapon == WEAPON_HAMMER)
