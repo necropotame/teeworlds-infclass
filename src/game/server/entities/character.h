@@ -78,6 +78,7 @@ public:
 
 	bool IncreaseHealth(int Amount);
 	bool IncreaseArmor(int Amount);
+	bool IncreaseOverallHp(int Amount);
 
 	bool GiveWeapon(int Weapon, int Ammo);
 

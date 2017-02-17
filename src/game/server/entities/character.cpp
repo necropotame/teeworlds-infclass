@@ -796,13 +796,11 @@ void CCharacter::FireWeapon()
 							}
 							else
 							{
-								if (pTarget->IncreaseHealth(2) || pTarget->IncreaseArmor(2))
-								{
-									if(m_Health >= 10)
-										IncreaseArmor(1);
-									else
-										IncreaseHealth(1);
-								}
+								bool healSuccess = false;
+								healSuccess = pTarget->IncreaseHealth(2);
+								healSuccess = pTarget->IncreaseArmor(2);
+								if (healSuccess)
+									IncreaseOverallHp(1);
 								
 								pTarget->m_EmoteType = EMOTE_HAPPY;
 								pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
@@ -2207,6 +2205,23 @@ bool CCharacter::IncreaseArmor(int Amount)
 		return false;
 	m_Armor = clamp(m_Armor+Amount, 0, 10);
 	return true;
+}
+
+bool CCharacter::IncreaseOverallHp(int Amount)
+{
+	bool success = false;
+	if(m_Health < 10)
+	{
+		int healthDiff = 10-m_Health;
+		IncreaseHealth(Amount);
+		success = true;
+		Amount = Amount - healthDiff;
+	}
+	if(Amount > 0)
+	{
+		success = IncreaseArmor(Amount);
+	}
+	return success;
 }
 
 void CCharacter::Die(int Killer, int Weapon)
