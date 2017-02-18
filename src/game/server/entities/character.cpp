@@ -2253,26 +2253,18 @@ void CCharacter::Die(int Killer, int Weapon)
 	
 	//Find the nearest ghoul
 	{
-		CCharacter* pGhoul = NULL;
-		float MinLen = 999999999.0f;
-		
 		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 		{
 			if(p->GetClass() != PLAYERCLASS_GHOUL || p == this) continue;
 			if(p->GetPlayer() && p->GetPlayer()->GetGhoulPercent() >= 1.0f) continue;
 
 			float Len = distance(p->m_Pos, m_Pos);
-			if(MinLen > Len)
+			
+			if(p && Len < 800.0f)
 			{
-				MinLen = Len;
-				pGhoul = p;
+				int Points = (IsInfected() ? 8 : 14);
+				new CFlyingPoint(GameWorld(), m_Pos, p->GetPlayer()->GetCID(), Points, m_Core.m_Vel);
 			}
-		}
-		
-		if(pGhoul && MinLen < 800.0f)
-		{
-			int Points = (IsInfected() ? 8 : 14);
-			new CFlyingPoint(GameWorld(), m_Pos, pGhoul->GetPlayer()->GetCID(), Points, m_Core.m_Vel);
 		}
 	}
 	if(GetClass() == PLAYERCLASS_GHOUL)
