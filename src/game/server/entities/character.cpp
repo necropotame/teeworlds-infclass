@@ -84,6 +84,7 @@ CCharacter::CCharacter(CGameWorld *pWorld)
 	m_PositionLockAvailable = false;
 	m_PoisonTick = 0;
 	m_HealTick = 0;
+	m_InfZoneTick = -1;
 	m_InAirTick = 0;
 	m_InWater = 0;
 	m_BonusTick = 0;
@@ -1439,13 +1440,18 @@ void CCharacter::Tick()
 				if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/g_Config.m_InfInfzoneHealRate))
 				{
 					m_HealTick = Server()->Tick();
-					if(m_Health < 10) m_Health++;
+					IncreaseHealth(1);
 				}
+				if (m_InfZoneTick < 0) m_InfZoneTick = Server()->Tick(); // Save Tick when zombie enters infection zone
 			}
 			else
 			{
 				m_pPlayer->StartInfection();
 			}
+		}
+		if(m_Alive && (Index0 != ZONE_DAMAGE_INFECTION && Index1 != ZONE_DAMAGE_INFECTION && Index2 != ZONE_DAMAGE_INFECTION && Index3 != ZONE_DAMAGE_INFECTION))
+		{
+			m_InfZoneTick = -1;// Reset Tick when zombie is not in infection zone
 		}
 	}
 	
@@ -3274,5 +3280,11 @@ int CCharacter::GetInfWeaponID(int WID)
 		return INFWEAPON_NINJA;
 	}
 	else return INFWEAPON_NONE;
+}
+
+int CCharacter::GetInfZoneTick() // returns how many ticks long a player is already in InfZone
+{
+	if (m_InfZoneTick < 0) return 0;
+	return Server()->Tick()-m_InfZoneTick;
 }
 /* INFECTION MODIFICATION END *****************************************/
