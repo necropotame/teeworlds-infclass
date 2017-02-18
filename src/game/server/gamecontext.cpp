@@ -835,6 +835,13 @@ void CGameContext::OnTick()
 		m_TargetToKill = -1;
 	}
 	
+	int lastTarget = -1;
+	if(m_TargetToKill >= 0 && m_apPlayers[m_TargetToKill]->GetCharacter()->GetTimeInInfcZone() > 20000) // Zombie is in InfecZone too long -> change target
+	{
+		lastTarget = m_TargetToKill;
+		m_TargetToKill = -1;
+	}
+	
 	if(m_TargetToKillCoolDown > 0)
 		m_TargetToKillCoolDown--;
 	
@@ -846,13 +853,22 @@ void CGameContext::OnTick()
 		{		
 			if(m_apPlayers[i] && m_apPlayers[i]->IsInfected() && m_apPlayers[i]->GetClass() != PLAYERCLASS_UNDEAD)
 			{
-				m_aTargetList[NbTargets] = i;
-				NbTargets++;
+				if (m_apPlayers[i]->GetCharacter() && m_apPlayers[i]->GetCharacter()->GetTimeInInfcZone() < 20000) // Make sure zombie is not camping in InfcZone
+				{
+					m_aTargetList[NbTargets] = i;
+					NbTargets++;
+				} 
 			}
 		}
 		
-		if(NbTargets > 1)
+		if(NbTargets > 0)
 			m_TargetToKill = m_aTargetList[random_int(0, NbTargets-1)];
+			
+		if(m_TargetToKill == -1)
+		{
+			if (lastTarget >= 0)
+				m_TargetToKill = lastTarget; // Reset Target if no new targets were found
+		}
 	}
 	
 	//Check for banvote
