@@ -836,7 +836,7 @@ void CGameContext::OnTick()
 	}
 	
 	int lastTarget = -1;
-	if(m_TargetToKill >= 0 && m_apPlayers[m_TargetToKill]->GetCharacter()->GetTimeInInfcZone() > 20000) // Zombie is in InfecZone too long -> change target
+	if(m_TargetToKill >= 0 && m_apPlayers[m_TargetToKill]->GetCharacter()->GetTimeInInfcZone() > 1000*g_Config.m_InfNinjaTargetAfkTime) // Zombie is in InfecZone too long -> change target
 	{
 		lastTarget = m_TargetToKill;
 		m_TargetToKill = -1;
@@ -849,15 +849,17 @@ void CGameContext::OnTick()
 	{
 		int m_aTargetList[MAX_CLIENTS];
 		int NbTargets = 0;
+		int infectedCount = 0;
 		for(int i=0; i<MAX_CLIENTS; i++)
 		{		
 			if(m_apPlayers[i] && m_apPlayers[i]->IsInfected() && m_apPlayers[i]->GetClass() != PLAYERCLASS_UNDEAD)
 			{
-				if (m_apPlayers[i]->GetCharacter() && m_apPlayers[i]->GetCharacter()->GetTimeInInfcZone() < 20000) // Make sure zombie is not camping in InfcZone
+				if (m_apPlayers[i]->GetCharacter() && m_apPlayers[i]->GetCharacter()->GetTimeInInfcZone() < 1000*g_Config.m_InfNinjaTargetAfkTime) // Make sure zombie is not camping in InfcZone
 				{
 					m_aTargetList[NbTargets] = i;
 					NbTargets++;
 				} 
+				infectedCount++;
 			}
 		}
 		
@@ -868,6 +870,11 @@ void CGameContext::OnTick()
 		{
 			if (lastTarget >= 0)
 				m_TargetToKill = lastTarget; // Reset Target if no new targets were found
+		}
+		
+		if (infectedCount < g_Config.m_InfNinjaMinInfected)
+		{
+			m_TargetToKill = -1; // disable target system
 		}
 	}
 	
