@@ -171,7 +171,7 @@ private:
 	bool m_IsInvisible;
 	int m_HealTick;
 	int m_BonusTick;
-	int m_InfcZoneTick;
+	int m_InfZoneTick;
 	
 	int m_FlagID;
 	int m_HeartID;
@@ -229,7 +229,7 @@ public:
 	bool FindWitchSpawnPosition(vec2& Res);
 	void SaturateVelocity(vec2 Force, float MaxSpeed);
 	void GiveGift(int GiftType);
-	int GetTimeInInfcZone();
+	int GetInfZoneTick();
 /* INFECTION MODIFICATION END *****************************************/
 };
 
