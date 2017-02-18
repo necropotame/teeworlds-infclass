@@ -24,6 +24,7 @@ void CFlyingPoint::Tick()
 		if(Dist < 24.0f)
 		{
 			OwnerChar->GetPlayer()->IncreaseGhoulLevel(m_Points);
+			OwnerChar->IncreaseOverallHp(4);
 			GameServer()->m_World.DestroyEntity(this);
 		}
 		else
