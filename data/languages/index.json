@@ -112,6 +112,11 @@
 		"parent": "hr"
 	},
 	{
+		"file": "tr",
+		"name": "Türkçe",
+		"parent": "en"
+	},
+	{
 		"file": "uk",
 		"name": "Українська",
 		"parent": "ru"

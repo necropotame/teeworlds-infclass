@@ -1,0 +1,573 @@
+{"translation":[
+	{
+		"key": "You are now logged.",
+		"value": "Giri\u015f yapt\u0131n\u0131z."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Yanl\u0131\u015f kullan\u0131c\u0131 ad\u0131/\u015fifre."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "\u0130\u015flem s\u0131ras\u0131nda bir hata olu\u015ftu."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Bu i\u015flem i\u00e7in giri\u015f yapm\u0131\u015f olman\u0131z gerekiyor"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "L\u00fctfen ba\u015fka bir hesap olu\u015fturmadan \u00f6nce 5 dakika bekleyin"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Hesab\u0131n\u0131z olu\u015fturulurken bir hata olu\u015ftu."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Bu kullan\u0131c\u0131 ad\u0131 daha \u00f6nceden al\u0131nm\u0131\u015f"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "Hesab\u0131n\u0131z olu\u015fturuldu ve giri\u015f yapt\u0131n\u0131z."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "S\u0131ralaman\u0131z\u0131 g\u00f6rmek i\u00e7in giri\u015f yapmal\u0131s\u0131n\u0131z"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Hedefinizi g\u00f6rmek i\u00e7in giri\u015f yapmal\u0131s\u0131n\u0131z"
+	},
+	{
+		"key": "{str:VictimName} has been infected",
+		"value": "{str:VictimName} d\u00f6n\u00fc\u015ft\u00fc"
+	},
+	{
+		"key": "Infected won the round in {sec:RoundDuration}",
+		"value": "Zombiler bu eli {sec:RoundDuration} s\u00fcrede kazand\u0131lar"
+	},
+	{
+		"key": "{int:NumHumans} humans won the round",
+		"one": "Bir tane insan bu eli kazand\u0131",
+		"other": "{int:NumHumans} insan bu eli kazand\u0131",
+	},
+	{
+		"key": "You have survived, +5 points",
+		"value": "Hayatta kald\u0131n\u0131z, +5 puan"
+	},
+	{
+		"key": "You have infected {str:VictimName}, +3 points",
+		"value": "{str:VictimName} oyuncusunu d\u00f6n\u00fc\u015ft\u00fcrd\u00fcn\u00fcz, +3 puan"
+	},
+	{
+		"key": "You have killed a witch, +5 points",
+		"value": "Bir tane cad\u0131 \u00f6ld\u00fcrd\u00fcn\u00fcz, +5 puan"
+	},
+	{
+		"key": "You have eliminated your target, +2 points",
+		"value": "Hedefiniz olan oyuncuyu hallettiniz, +2 puan"
+	},
+	{
+		"key": "Hook protection enabled",
+		"value": "Kanca korumas\u0131 aktif"
+	},
+	{
+		"key": "Hook protection disabled",
+		"value": "Kanca korumas\u0131 devre d\u0131\u015f\u0131"
+	},
+	{
+		"key": "Engineer",
+		"value": "M\u00fchendis"
+	},
+	{
+		"key": "Soldier",
+		"value": "Asker"
+	},
+	{
+		"key": "Medic",
+		"value": "Doktor"
+	},
+	{
+		"key": "Hero",
+		"value": "Kahraman"
+	},
+	{
+		"key": "Ninja",
+		"value": "Ninja"
+	},
+	{
+		"key": "Mercenary",
+		"value": "Paral\u0131 asker"
+	},
+	{
+		"key": "Sniper",
+		"value": "Keskin ni\u015fanc\u0131"
+	},
+	{
+		"key": "Scientist",
+		"value": "Bilim adam\u0131"
+	},
+	{
+		"key": "Biologist",
+		"value": "Biyolog"
+	},
+	{
+		"key": "Smoker",
+		"value": "Dumanc\u0131"
+	},
+	{
+		"key": "Hunter",
+		"value": "Avc\u0131"
+	},
+	{
+		"key": "Boomer",
+		"value": "Patlay\u0131c\u0131"
+	},
+	{
+		"key": "Ghost",
+		"value": "Hayalet"
+	},
+	{
+		"key": "Spider",
+		"value": "\u00d6r\u00fcmcek"
+	},
+	{
+		"key": "Ghoul",
+		"value": "Gulyabani"
+	},
+	{
+		"key": "Slug",
+		"value": "S\u00fcm\u00fckl\u00fcb\u00f6cek"
+	},
+	{
+		"key": "Witch",
+		"value": "Cad\u0131"
+	},
+	{
+		"key": "Unknown class",
+		"value": "Bilinmeyen s\u0131n\u0131f"
+	},
+	{
+		"key": "You are a human: {str:ClassName}",
+		"value": "Bir insans\u0131n\u0131z: {str:ClassName}"
+	},
+	{
+		"key": "You are an infected: {str:ClassName}",
+		"value": "Bir zombisiniz: {str:ClassName}"
+	},
+	{
+		"key": "{str:PlayerName} entered and joined the game",
+		"value": "{str:PlayerName} girdi ve oyuna kat\u0131ld\u0131"
+	},
+	{
+		"key": "You can't join the spectators right now",
+		"value": "\u015eu anda izleyicilere kat\u0131lamazs\u0131n\u0131z"
+	},
+	{
+		"key": "{str:PlayerName} changed their name to {str:NewName}",
+		"value": "{str:PlayerName} ad\u0131n\u0131 {str:NewName} yapt\u0131"
+	},
+	{
+		"key": "Switch language to english ?",
+		"value": "Dili \u0130ngilizce'ye \u00e7evirmek istiyor musunuz?"
+	},
+	{
+		"key": "You can change the language of this mod using the command /language.",
+		"value": "/language komutunu kullanarak bu modun dilini de\u011fi\u015febilirsiniz."
+	},
+	{
+		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "E\u011fer diliniz kullan\u0131labilir de\u011filse, \u00e7eviriye yard\u0131m edebilirsiniz (/help translate)."
+	},
+	{
+		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
+		"value": "InfectionClass, by necropotame (s\u00fcr\u00fcm {str:VersionCode})"
+	},
+	{
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Gravity'nin infection konseptine dayal\u0131 olarak yap\u0131lm\u0131\u015ft\u0131r"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Ba\u015fl\u0131ca katk\u0131da bulunanlar: {str:ListOfContributors}"
+	},
+	{
+		"key": "Thanks to {str:ListOfContributors}",
+		"value": "Te\u015fekk\u00fcrler: {str:ListOfContributors}"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "Bu isimde bir oyuncu bulunamad\u0131"
+	},
+	{
+		"key": "InfectionClass is a team game between humans and infected.",
+		"value": "\u0130nfectionClass, insanlar ve zombiler aras\u0131nda bir tak\u0131m oyunudur."
+	},
+	{
+		"key": "All players start as human.",
+		"value": "B\u00fct\u00fcn oyuncular birer insan olarak ba\u015flar."
+	},
+	{
+		"key": "10 seconds later, two players become infected.",
+		"value": "10 saniye sonra 2 oyuncu zombiye d\u00f6n\u00fc\u015f\u00fcr."
+	},
+	{
+		"key": "The goal for humans is to survive until the army clean the map.",
+		"value": "\u0130nsanlar\u0131n g\u00f6revi, ordu haritay\u0131 temizleyene kadar hayatta kalmakt\u0131r."
+	},
+	{
+		"key": "The goal for infected is to infect all humans.",
+		"value": "Zombilerin g\u00f6revi b\u00fct\u00fcn insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrmektir."
+	},
+	{
+		"key": "How to translate the mod",
+		"value": "Modu nas\u0131l terc\u00fcme edebilirim"
+	},
+	{
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "Crowdin'de bir hesap olu\u015fturun ve \u00e7eviri ekibine kat\u0131l\u0131n:"
+	},
+	{
+		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "Terc\u00fcme i\u015flemi hakk\u0131nda herhangi bir sorunuz i\u00e7in, l\u00fctfen IRC \u00fczerinden ileti\u015fime ge\u00e7in ({str:IRCAddress})"
+	},
+	{
+		"key": "The Engineer can build walls with his hammer to block infected.",
+		"value": "M\u00fchendis, zombileri uzak tutmak i\u00e7in \u00e7ekiciyle duvar \u00f6rebilir."
+	},
+	{
+		"key": "When an infected touch the wall, he dies.",
+		"value": "Duvara dokunan zombiler \u00f6l\u00fcr."
+	},
+	{
+		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
+		"value": "Duvar\u0131n s\u00fcresi {sec:LifeSpan} kadard\u0131r ve her oyuncu ayn\u0131 anda birer duvar yapabilir."
+	},
+	{
+		"key": "The Soldier can pose floating bombs with his hammer.",
+		"value": "Asker, \u00e7ekiciyle u\u00e7an bombalar kurabilir."
+	},
+	{
+		"key": "Each bomb can explode {int:NumBombs} times.",
+		"one": "Her bomba birer kez patlayabilir.",
+		"other": "Her bomba {int:NumBombs} kez patlayabilir.",
+	},
+	{
+		"key": "Use the hammer to place the bomb and explode it multiple times.",
+		"value": "Bomba yerle\u015ftirmek ve onu patlatmak i\u00e7in \u00e7ekicinizi kullan\u0131n."
+	},
+	{
+		"key": "Bombs are limited to one per player at the same time.",
+		"value": "Bombalar oyuncu ba\u015f\u0131 ayn\u0131 anda birer adet ile s\u0131n\u0131rl\u0131d\u0131r."
+	},
+	{
+		"key": "The Scientist can pose floating mines with his hammer.",
+		"value": "Bilim adam\u0131, \u00e7ekiciyle u\u00e7an may\u0131nlar kurabilir."
+	},
+	{
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
+		"one": "May\u0131nlar oyuncu ba\u015f\u0131 ayn\u0131 anda bir adet ile s\u0131n\u0131rl\u0131d\u0131r.",
+		"other": "May\u0131nlar oyuncu ba\u015f\u0131 ayn\u0131 anda {int:NumMines} adet ile s\u0131n\u0131rl\u0131d\u0131r.",
+	},
+	{
+		"key": "He has also grenades that teleport him.",
+		"value": "Ayr\u0131ca onu \u0131\u015f\u0131nlayan bombalar\u0131 vard\u0131r."
+	},
+	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "Biyologlar\u0131n seken mermilere sahip pompal\u0131lar\u0131 vard\u0131r ve t\u00fcfekleriyle ate\u015f ederek lazer tuza\u011f\u0131 kurabilirler."
+	},
+	{
+		"key": "The Medic can protect humans with his hammer by giving them armor.",
+		"value": "Doktorlar, \u00e7eki\u00e7leriyle z\u0131rh vererek insanlar\u0131 koruyabilirler."
+	},
+	{
+		"key": "He has also a powerful shotgun that can pullback infected.",
+		"value": "Ayr\u0131ca zombileri itekleyen g\u00fc\u00e7l\u00fc pompal\u0131lar\u0131 vard\u0131r."
+	},
+	{
+		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+		"value": "Kahramanlar\u0131n pompal\u0131lar\u0131, lazer t\u00fcfekleri ve bombalar\u0131 vard\u0131r."
+	},
+	{
+		"key": "The Hero must find a flag hidden in the map.",
+		"value": "Kahraman, haritada gizli olan bir bayra\u011f\u0131 bulmal\u0131d\u0131r."
+	},
+	{
+		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+		"value": "Bayra\u011f\u0131 ald\u0131\u011f\u0131nda b\u00fct\u00fcn insanlara 1 can puan\u0131, 4 z\u0131rh puan\u0131 ve tam mermi gelir. Ayr\u0131ca kahramana da tam sa\u011fl\u0131k ve z\u0131rh gelir."
+	},
+	{
+		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "Kahraman, doktor taraf\u0131ndan iyile\u015ftirilemez. Ama sa\u011fl\u0131\u011f\u0131 zombilerle m\u00fccadele etmek i\u00e7in yeterlidir."
+	},
+	{
+		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
+		"value": "Ninja, zombileri 3 saniyeli\u011fine donduran fla\u015f bombalar\u0131 atabilir."
+	},
+	{
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
+		"one": "\u00c7ekicinin yerine bir katana vard\u0131r, yere dokunmadan \u00f6nce bir kez z\u0131plamas\u0131n\u0131 sa\u011flar.",
+		"other": "\u00c7ekicinin yerine bir katana vard\u0131r, yere dokunmadan \u00f6nce {int:NinjaJump} kez z\u0131plamas\u0131n\u0131 sa\u011flar.",
+	},
+	{
+		"key": "The Mercenary fly in air using his machine gun.",
+		"value": "Paral\u0131 asker, makineli t\u00fcfe\u011fini kullanarak havada u\u00e7abilir."
+	},
+	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "\u00c7ekiciyle \u00e7e\u015fitli patlay\u0131c\u0131lar kurabilir ve uzaktan patlatabilir."
+	},
+	{
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
+		"one": "Ayr\u0131ca her biri birer puan hasar veren zehir bombalar\u0131 atabilir.",
+		"other": "Ayr\u0131ca her biri {int:NumDamagePoints} puan hasar veren zehir bombalar\u0131 atabilir.",
+	},
+	{
+		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
+		"value": "Keskin ni\u015fanc\u0131, \u00e7ekiciyle havada 15 saniyeli\u011fine pozisyonunu kilitleyebilir."
+	},
+	{
+		"key": "He can jump two times in air.",
+		"value": "Havada iki kez z\u0131playabilir."
+	},
+	{
+		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+		"value": "Ayr\u0131ca normalinde 9-10, kilitli pozisyonda 20 puan hasar veren g\u00fc\u00e7l\u00fc bir t\u00fcfe\u011fi vard\u0131r."
+	},
+	{
+		"key": "The Smoker can infect humans and heal infected with his hammer.",
+		"value": "Dumanc\u0131, insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrebilir ve \u00e7ekiciyle vurarak zombileri iyile\u015ftirebilir."
+	},
+	{
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
+		"value": "Ayr\u0131ca kancayla insanlar\u0131 tuttu\u011fu her saniye 1 puan zarar verir."
+	},
+	{
+		"key": "The Boomer explodes when he attack.",
+		"value": "Patlay\u0131c\u0131, sald\u0131rd\u0131\u011f\u0131nda patlar."
+	},
+	{
+		"key": "All humans affected by the explosion become infected.",
+		"value": "Patlamaya temas eden b\u00fct\u00fcn insanlar zombiye d\u00f6n\u00fc\u015f\u00fcr."
+	},
+	{
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
+		"value": "Ayr\u0131ca kancayla insanlar\u0131 tuttu\u011fu her saniye 1 puan zarar verir."
+	},
+	{
+		"key": "The Hunter can infect humans and heal infected with his hammer.",
+		"value": "Avc\u0131, insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrebilir ve \u00e7ekiciyle vurarak zombileri iyile\u015ftirebilir."
+	},
+	{
+		"key": "The Ghost can infect humans and heal infected with his hammer.",
+		"value": "Hayalet, insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrebilir ve \u00e7ekiciyle vurarak zombileri iyile\u015ftirebilir."
+	},
+	{
+		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
+		"value": "Yak\u0131n\u0131nda bir insan bulunmad\u0131\u011f\u0131, hasar almad\u0131\u011f\u0131 veya \u00e7ekicini kullanmad\u0131\u011f\u0131 s\u00fcrece g\u00f6r\u00fcnmezdir."
+	},
+	{
+		"key": "The Spider can infect humans and heal infected with his hammer.",
+		"value": "\u00d6r\u00fcmcek, insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrebilir ve \u00e7ekiciyle vurarak zombileri iyile\u015ftirebilir."
+	},
+	{
+		"key": "When selecting any gun, his hook enter in web mode.",
+		"value": "Herhangi bir silah se\u00e7erken kancas\u0131 a\u011f moduna ge\u00e7er."
+	},
+	{
+		"key": "Any human that touch a hook in web mode is automatically grabbed.",
+		"value": "A\u011f modundaki kancaya dokunan herhangi bir insan otomatik olarak kancaya yakalan\u0131r."
+	},
+	{
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
+		"value": "\u00d6r\u00fcmce\u011fin kancas\u0131 (iki modda da) saniyede 1 puan hasar verir ve bir insan\u0131 2 saniye boyunca tutabilir."
+	},
+	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "Gulyabani, insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrebilir ve \u00e7ekiciyle vurarak zombileri iyile\u015ftirebilir."
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Yak\u0131n\u0131nda \u00f6len herkesi yiyerek daha g\u00fc\u00e7l\u00fc, h\u0131zl\u0131 ve dayan\u0131kl\u0131 olur."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Yediklerini par\u00e7a par\u00e7a sindirerek normal haline d\u00f6ner, ayr\u0131ca \u00f6lmek de yediklerini ondan al\u0131r."
+	},
+	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "S\u00fcm\u00fckl\u00fc b\u00f6cek, insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrebilir ve \u00e7ekiciyle vurarak zombileri iyile\u015ftirebilir."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "Zemini ve duvarlar\u0131, \u00e7ekiciyle bal\u00e7\u0131k bula\u015ft\u0131rarak zehirli hale getirebilir."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Bal\u00e7\u0131\u011fa dokunmak, insana 3 saniye i\u00e7inde 3 puan hasar verir."
+	},
+	{
+		"key": "Instead of dying, he freezes during 10 seconds.",
+		"value": "\u00d6lmek yerine 10 saniyeli\u011fine donar."
+	},
+	{
+		"key": "If an infected heals him, the freeze effect disappear.",
+		"value": "E\u011fer bir zombi onu iyile\u015ftirirse, donma etkisi ortadan kalkar."
+	},
+	{
+		"key": "The Witch can infect humans and heal infected with his hammer.",
+		"value": "Cad\u0131, insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrebilir ve \u00e7ekiciyle vurarak zombileri iyile\u015ftirebilir."
+	},
+	{
+		"key": "When an infected dies, he may re-spawn near her.",
+		"value": "\u00d6len baz\u0131 zombiler yan\u0131nda do\u011far."
+	},
+	{
+		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"value": "E\u011fer cad\u0131 \u00f6l\u00fcrse, kaybolur ve yerine ba\u015fka bir s\u0131n\u0131ftan zombi gelir."
+	},
+	{
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
+		"value": "Ayr\u0131ca kancayla insanlar\u0131 tuttu\u011fu her saniye 1 puan zarar verir."
+	},
+	{
+		"key": "Targeted chat messages",
+		"value": "Hedeflenen sohbet mesajlar\u0131"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "Bu oyuncuya \u00f6zel mesaj g\u00f6ndermek i\u00e7in \"/msg <PlayerName> <My Message>\" komutunu kullan\u0131n."
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Belirli bir s\u0131n\u0131ftaki b\u00fct\u00fcn oyunculara \u00f6zel mesaj yollamak i\u00e7in \"/msg !<ClassName> <My Message>\" komutunu kullan\u0131n."
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "\u00d6rne\u011fin: \"/msg !medic Yaral\u0131y\u0131m!\""
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "Yak\u0131n\u0131n\u0131zdaki b\u00fct\u00fcn oyunculara \u00f6zel mesaj yollamak i\u00e7in \"/msg !near\" komutunu kullan\u0131n."
+	},
+	{
+		"key": "Choose a help page with /help <page>",
+		"value": "\"/help <page>\" ile bir yard\u0131m sayfas\u0131 se\u00e7in"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "Kullan\u0131labilir yard\u0131m sayfalar\u0131: {str:PageList}"
+	},
+	{
+		"key": "A random class will be automatically attributed to you when rounds start",
+		"value": "El ba\u015flad\u0131\u011f\u0131nda rastgele bir s\u0131n\u0131f se\u00e7ilecek"
+	},
+	{
+		"key": "The class selector will be displayed when rounds start",
+		"value": "El ba\u015flad\u0131\u011f\u0131nda s\u0131n\u0131f se\u00e7im ekran\u0131 gelecek"
+	},
+	{
+		"key": "Unknown language",
+		"value": "Bilinmeyen dil"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "Kullan\u0131labilir diller: {str:ListOfLanguage}"
+	},
+	{
+		"key": "List of commands",
+		"value": "Komut listesi"
+	},
+	{
+		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "Kanca korumas\u0131n\u0131 a\u00e7mak veya kapatmak i\u00e7in <F3> veya <F4> tu\u015funa bas\u0131n\u0131z"
+	},
+	{
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "Bonus alan\u0131nda 1 dakika bulundunuz, +5 puan"
+	},
+	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "Dondunuz: {sec:EffectDuration}"
+	},
+	{
+		"key": "Random choice",
+		"value": "Rastgele se\u00e7im"
+	},
+	{
+		"key": "Choose your class",
+		"value": "S\u0131n\u0131f\u0131n\u0131z\u0131 se\u00e7in"
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "Lazer duvar\u0131: {sec:RemainingTime}"
+	},
+	{
+		"key": "{int:NumBombs} bombs left",
+		"one": "Bir adet bomba kald\u0131",
+		"other": "{int:NumBombs} adet bomba kald\u0131",
+	},
+	{
+		"key": "{int:NumMines} mines are actives",
+		"one": "Bir may\u0131n aktif",
+		"other": "{int:NumMines} say\u0131da may\u0131n aktif",
+	},
+	{
+		"key": "Mine activated",
+		"value": "May\u0131n aktif"
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Yeni hedef, {sec:RemainingTime} s\u00fcre i\u00e7inde belli olacak"
+	},
+	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Halledilecek hedef: {str:PlayerName}"
+	},
+	{
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "Pozisyon kilitlendi: {sec:RemainingTime}"
+	},
+	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Patlama verimi: {percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "Yeni bayrak: {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "A\u011f modu aktif"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Mideniz {percent:FodderInStomach} oranda dolu"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "Cad\u0131 \u00f6ld\u00fc"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "K\u0131l\u0131\u00e7 h\u0131z\u0131 artt\u0131"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "K\u0131l\u0131\u00e7 g\u00fcc\u00fc artt\u0131"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Bomba limiti artt\u0131"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "S\u0131n\u0131f\u0131n\u0131z hakk\u0131nda daha fazla bilgi i\u00e7in \"/help {str:ClassName}\" yaz\u0131n"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "Kahraman bayra\u011f\u0131 buldu!"
+	},
+]}

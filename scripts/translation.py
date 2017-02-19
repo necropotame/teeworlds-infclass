@@ -47,4 +47,4 @@ ConvertPo2Json("pt", ["one", "other"])
 ConvertPo2Json("ru", ["one", "few", "many", "other"])
 ConvertPo2Json("uk", ["one", "few", "other"])
 ConvertPo2Json("fa", ["one", "other"])
-
+ConvertPo2Json("tr", ["one", "other"])

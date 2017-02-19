@@ -1899,6 +1899,11 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 688: //Serbia
 						str_copy(m_VoteLanguage[ClientID], "sr", sizeof(m_VoteLanguage[ClientID]));
 						break;
+					/* tr - Turkish ************************************/
+					case 31: // Azerbaijan
+					case 792: //Turkey
+						str_copy(m_VoteLanguage[ClientID], "tr", sizeof(m_VoteLanguage[ClientID]));
+						break;
 					/* uk - Ukrainian **********************************/	
 					case 804: //Ukraine
 						str_copy(m_VoteLanguage[ClientID], "uk", sizeof(m_VoteLanguage[ClientID]));
@@ -2558,7 +2563,7 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	
 	dynamic_string Buffer;
 	
-	const char aThanks[] = "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, Socialdarwinist, FakeDeath, tee_to_F_U_UP!, Stitch626, Denis, NanoSlime_, tria, pinkieval...";
+	const char aThanks[] = "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, Socialdarwinist, FakeDeath, tee_to_F_U_UP!, Stitch626, Denis, NanoSlime_, tria, pinkieval…";
 	const char aContributors[] = "necropotame, Stitch626";
 	
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("InfectionClass, by necropotame (version {str:VersionCode})"), "{str:VersionCode}", "2.0", NULL); 
@@ -3600,7 +3605,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
 	Console()->Register("alwaysrandom", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAlwaysRandom, this, "Display information about the mod");
-	Console()->Register("language", "s<en|fr|nl|de|hr|cs|pl|hu|uk|ru|el|la|it|es|pt|ar|hu|fa|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
+	Console()->Register("language", "s<en|fr|nl|de|hr|cs|pl|hu|uk|ru|el|la|it|es|pt|hu|ar|tr|fa|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
 /* INFECTION MODIFICATION END *****************************************/
 

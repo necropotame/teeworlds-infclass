@@ -1,5 +1,9 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} \u00e8 stata mutata per {sec:Duration} ({str:Reason})"
+	},
+	{
 		"key": "You are now logged.",
 		"value": "Hai ora eseguito l'accesso."
 	},
@@ -73,6 +77,10 @@
 		"value": "Hai ucciso una strega, +5 punti"
 	},
 	{
+		"key": "You have eliminated your target, +2 points",
+		"value": "Hai eliminato il tuo obbiettivo, +2 punti"
+	},
+	{
 		"key": "Hook protection enabled",
 		"value": "Protezione dalla corda abilitata"
 	},
@@ -137,6 +145,10 @@
 		"value": "Scienziato"
 	},
 	{
+		"key": "Biologist",
+		"value": "Biologo"
+	},
+	{
 		"key": "Smoker",
 		"value": "Smoker"
 	},
@@ -159,6 +171,10 @@
 	{
 		"key": "Ghoul",
 		"value": "Spirito"
+	},
+	{
+		"key": "Slug",
+		"value": "Lumaca"
 	},
 	{
 		"key": "Witch",
@@ -185,6 +201,10 @@
 		"value": "{str:PlayerName} \u00e8 entrato e si \u00e8 unito alla partita"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "Sei mutato per {sec:Duration}"
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "Non puoi unirti agli spettatori in questo momento"
 	},
@@ -207,6 +227,14 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, di necropotame (versione %s)"
+	},
+	{
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Basato sul concetto della modalit\u00e0 Infection di Gravity"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Contributori principali {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -293,6 +321,10 @@
 	{
 		"key": "He has also grenades that teleport him.",
 		"value": "Ha anche un lancia granate che lo pu\u00f2 teletrasportare."
+	},
+	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "Il biologo ha un fucile con proiettili rimbalzanti e pu\u00f2 creare un trappola sparando con il suo laser."
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
@@ -413,6 +445,18 @@
 		"value": "Dopo digerisce il suo cibo poco a poco tornando indietro al suo stato originale, e poi, quando muore, libera il suo nutrimento."
 	},
 	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "La Lumaca pu\u00f2 infettare umani e curare infetti con il suo martello."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "Lui pu\u00f2 rendere il terreno e i muri tossici diffondendo bava con il suo martello."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Toccanndo la bava, infligge tre punti danno in tre secondi su un umano."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Il Morto Vivente pu\u00f2 infettare gli umani e guarire gli infetti con il suo martello."
 	},
@@ -493,6 +537,10 @@
 		"value": "Premi <F3> o <F4> per abilitare o disabilitare la protezione dalla corda "
 	},
 	{
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "Hai mantenuto un'area bonus per un minuto, +5 punti"
+	},
+	{
 		"key": "You are frozen: {sec:EffectDuration}",
 		"value": "Sei congelato per {sec:EffectDuration}"
 	},
@@ -517,6 +565,10 @@
 		"key": "{int:NumMines} mines are actives",
 		"one": "Una mina \u00e8 attiva",
 		"other": "{int:NumMines} mine sono attive",
+	},
+	{
+		"key": "Mine activated",
+		"value": "Mina attivata"
 	},
 	{
 		"key": "Next target in {sec:RemainingTime}",
@@ -553,6 +605,18 @@
 	{
 		"key": "The undead is finally dead",
 		"value": "Il Morto Vivente \u00e8 finalmente morto"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Velocit\u00e0 della spada aumentata"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "Forza della spada aumentata"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Limite del lanciagranate aumentato"
 	},
 	{
 		"key": "Type \"/help {str:ClassName}\" for more information about your class",

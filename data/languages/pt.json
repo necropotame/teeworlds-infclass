@@ -1,5 +1,25 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} foi silenciado dentro de {sec:Duration} ({str:Reason})"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "Agora voc\u00ea est\u00e1 logado."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Username/password errada."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Ocorreu um erro durante a opera\u00e7\u00e3o."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Voc\u00ea deve estar logado para esta opera\u00e7\u00e3o"
+	},
+	{
 		"key": "Please wait 5 minutes before create an another account",
 		"value": "Por favor espere 5 minutos antes de criar outra conta"
 	},
@@ -55,6 +75,10 @@
 	{
 		"key": "You have killed a witch, +5 points",
 		"value": "Voc\u00ea matou a bruxa, +5 pontos"
+	},
+	{
+		"key": "You have eliminated your target, +2 points",
+		"value": "Voc\u00ea eliminou seu alvo, +2 pontos"
 	},
 	{
 		"key": "Hook protection enabled",
@@ -121,6 +145,10 @@
 		"value": "Cientista"
 	},
 	{
+		"key": "Biologist",
+		"value": "Bi\u00f3logo"
+	},
+	{
 		"key": "Smoker",
 		"value": "Smoker"
 	},
@@ -139,6 +167,14 @@
 	{
 		"key": "Spider",
 		"value": "Aranha"
+	},
+	{
+		"key": "Ghoul",
+		"value": "Canibalista"
+	},
+	{
+		"key": "Slug",
+		"value": "Lesma"
 	},
 	{
 		"key": "Witch",
@@ -165,6 +201,10 @@
 		"value": "{str:PlayerName} se conectou e entrou no jogo"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "Voc\u00ea est\u00e1 silenciado por {sec:Duration}"
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "Voc\u00ea n\u00e3o pode se juntar aos espectadores neste momento"
 	},
@@ -187,6 +227,14 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, por necropotame (vers\u00e3o {str:VersionCode})"
+	},
+	{
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Baseado no conceito de Infection mod por Gravity"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Principais colaboradores: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -275,6 +323,10 @@
 		"value": "Ele tamb\u00e9m t\u00eam granadas que podem teleporta-lo"
 	},
 	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "O bi\u00f3logo tem uma espingarda com balas saltando e pode criar uma armadilha de laser da mola disparando com seu rifle."
+	},
+	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
 		"value": "O M\u00e9dico pode proteger humanos com seu martelo dando armadura a eles."
 	},
@@ -310,6 +362,10 @@
 	{
 		"key": "The Mercenary fly in air using his machine gun.",
 		"value": "O Mercen\u00e1rio pode voar usando sua metralhadora."
+	},
+	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "Ele pode bobinar e acender remotamente explosivos de v\u00e1rios efeitos com seu martelo."
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
@@ -377,6 +433,30 @@
 		"value": "O gancho da aranha (nos dois modos) causa 1 ponto de dano por segundo e pode agarrar humanos por 2 segundos. "
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "O canibalista pode infectar seres humanos e curar os infectados com o seu martelo."
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Ele pode devorar tudo que morreu perto dele, o que o torna mais forte, mais r\u00e1pido e mais resistente."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Com isso, ele digere a sua forragem pouco a pouco, voltando ao seu estado normal, e al\u00e9m disso, a morte o privou de seu alimento."
+	},
+	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "A lesma pode infectar seres humanos e curar os infectados com o seu martelo."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "Ele pode tornar o solo e paredes t\u00f3xicas espalhando lodo com seu martelo."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Tocando o limo inflige tr\u00eas pontos de dano em tr\u00eas segundos em um ser humano."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "O Morto Vivo pode infectar humanos e curar infectados com seu martelo."
 	},
@@ -403,6 +483,26 @@
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Ela tamb\u00e9m pode causar 1 ponto de dano por segundo enganchando humanos."
+	},
+	{
+		"key": "Targeted chat messages",
+		"value": "Mensagens de chat espec\u00edficas"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "Use \"/ msg <PlayerName> <My Message>\" para enviar uma mensagem privada para este jogador."
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "Use \"/ msg! <ClassName> <My Message>\" para enviar uma mensagem privada para todos os jogadores com uma classe espec\u00edfica."
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "Exemplo: \"/ msg! Medic Estou ferido!\""
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "Use \"/ msg! Near\" para enviar uma mensagem privada para todos os jogadores perto de voc\u00ea."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -437,6 +537,10 @@
 		"value": "Pressione <F3> ou <F4> para ativar ou desativar a prote\u00e7\u00e3o contra o gancho "
 	},
 	{
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "Voc\u00ea manteve numa \u00e1rea de b\u00f4nus por um minuto, +5 pontos"
+	},
+	{
 		"key": "You are frozen: {sec:EffectDuration}",
 		"value": "Voc\u00ea est\u00e1 congelado: {sec:EffectDuration}"
 	},
@@ -463,8 +567,24 @@
 		"other": "{int:NumMines} minas est\u00e3o ativas",
 	},
 	{
+		"key": "Mine activated",
+		"value": "Mina ativada"
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "Seguinte alvo em {sec:RemainingTime}"
+	},
+	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Alvo para eliminar: {str:PlayerName}"
+	},
+	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Posi\u00e7\u00e3o travada: {sec:RemainingTime}"
+	},
+	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Rendimento explosivo: {percent:BombLevel}"
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -475,12 +595,28 @@
 		"value": "Modo Teia ativado"
 	},
 	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Est\u00f4mago preenchido {percent:FodderInStomach}"
+	},
+	{
 		"key": "The witch is dead",
-		"value": "A bruxa est\u00e1 morta"
+		"value": "A bruxa morreu"
 	},
 	{
 		"key": "The undead is finally dead",
-		"value": "O Morto Vivo finalmente est\u00e1 morto"
+		"value": "O Morto Vivo finalmente morreu"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Velocidade da espada aumentada"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "For\u00e7a da espada aumentada"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Limite de granadas aumentado"
 	},
 	{
 		"key": "Type \"/help {str:ClassName}\" for more information about your class",
