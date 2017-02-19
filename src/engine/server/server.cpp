@@ -338,6 +338,9 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_AlwaysRandom = 0;
 		m_DefaultScoreMode = PLAYERSCOREMODE_SCORE;
 		str_copy(m_aLanguage, "en", sizeof(m_aLanguage));
+
+		m_WaitingTime = 0;
+		m_WasInfected = 0;
 		
 		mem_zero(m_Memory, sizeof(m_Memory));
 		
@@ -527,6 +530,10 @@ int CServer::Init()
 		m_aClients[i].m_aClan[0] = 0;
 		m_aClients[i].m_Country = -1;
 		m_aClients[i].m_Snapshots.Init();
+		m_aClients[i].m_WaitingTime = 0;
+		m_aClients[i].m_WasInfected = 0;
+		m_aClients[i].m_Accusation.m_Num = 0;
+        m_aClients[i].m_Latency = 0;
 	}
 
 	m_CurrentGameTick = 0;

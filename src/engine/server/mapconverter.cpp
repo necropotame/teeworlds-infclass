@@ -119,6 +119,10 @@ bool CMapConverter::Load()
 
 void CMapConverter::InitQuad(CQuad* pQuad)
 {
+    for (int i=0; i<5; i++) {
+        pQuad->m_aPoints[i].x = 0;
+        pQuad->m_aPoints[i].y = 0;
+    }
 	pQuad->m_aColors[0].r = pQuad->m_aColors[1].r = 255;
 	pQuad->m_aColors[0].g = pQuad->m_aColors[1].g = 255;
 	pQuad->m_aColors[0].b = pQuad->m_aColors[1].b = 255;
@@ -150,13 +154,13 @@ void CMapConverter::InitQuad(CQuad* pQuad, vec2 Pos, vec2 Size)
 	int Y1 = f2fx(Pos.y+Size.y/2.0f);
 	int YC = f2fx(Pos.y);
 	
+	InitQuad(pQuad);
 	pQuad->m_aPoints[0].x = pQuad->m_aPoints[2].x = X0;
 	pQuad->m_aPoints[1].x = pQuad->m_aPoints[3].x = X1;
 	pQuad->m_aPoints[0].y = pQuad->m_aPoints[1].y = Y0;
 	pQuad->m_aPoints[2].y = pQuad->m_aPoints[3].y = Y1;
 	pQuad->m_aPoints[4].x = XC;
 	pQuad->m_aPoints[4].y = YC;
-	InitQuad(pQuad);
 }
 
 void CMapConverter::CreateCircle(array<CQuad>* pQuads, vec2 CenterPos, float Size, vec4 Color, int Env, int EnvTO)
@@ -316,7 +320,7 @@ void CMapConverter::AddTeeLayer(const char* pName, int ImageID, vec2 Pos, float 
 	}
 	
 	CMapItemLayerQuads Item;
-	Item.m_Version = 2;
+	Item.m_Version = Item.m_Layer.m_Version = 2;
 	Item.m_Layer.m_Flags = 0;
 	Item.m_Layer.m_Type = LAYERTYPE_QUADS;
 	Item.m_Image = ImageID;
@@ -412,7 +416,7 @@ void CMapConverter::CopyAnimations()
 void CMapConverter::CopyGameLayer()
 {
 	CMapItemLayerTilemap Item;
-	Item.m_Version = 3;
+	Item.m_Version = Item.m_Layer.m_Version = 3;
 	Item.m_Layer.m_Flags = 0;
 	Item.m_Layer.m_Type = LAYERTYPE_TILES;
 	Item.m_Color.r = 255;
