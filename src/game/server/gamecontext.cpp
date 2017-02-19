@@ -48,6 +48,7 @@ void CGameContext::Construct(int Resetting)
 	m_pVoteOptionLast = 0;
 	m_NumVoteOptions = 0;
 	m_LockTeams = 0;
+    m_TargetToKillCoolDown = 0;
 	
 	m_ChatResponseTargetID = -1;
 
