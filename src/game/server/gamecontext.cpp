@@ -838,7 +838,7 @@ void CGameContext::OnTick()
 	
 	int LastTarget = -1;
 	// Zombie is in InfecZone too long -> change target
-	if(m_apPlayers[m_TargetToKill] && m_apPlayers[m_TargetToKill]->GetCharacter() && m_TargetToKill >= 0 && (m_apPlayers[m_TargetToKill]->GetCharacter()->GetInfZoneTick()*Server()->TickSpeed()) > 1000*g_Config.m_InfNinjaTargetAfkTime) 
+	if(m_TargetToKill >= 0 && m_apPlayers[m_TargetToKill] && m_apPlayers[m_TargetToKill]->GetCharacter() && m_TargetToKill >= 0 && (m_apPlayers[m_TargetToKill]->GetCharacter()->GetInfZoneTick()*Server()->TickSpeed()) > 1000*g_Config.m_InfNinjaTargetAfkTime) 
 	{
 		LastTarget = m_TargetToKill;
 		m_TargetToKill = -1;
