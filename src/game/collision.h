@@ -56,6 +56,8 @@ public:
 	
 /* INFECTION MODIFICATION START ***************************************/
 	bool CheckPhysicsFlag(vec2 Pos, int Flag);
+	
+	bool AreConnected(vec2 Pos1, vec2 Pos2, float Radius);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

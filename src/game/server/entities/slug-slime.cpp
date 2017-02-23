@@ -38,15 +38,19 @@ void CSlugSlime::Tick()
 	// Find other players
 	for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 	{
-		if(distance(p->m_Pos, m_Pos) > 84.0f) continue; // not in reach
+		if(!GameServer()->Collision()->AreConnected(p->m_Pos, m_Pos, 84.0f))
+			continue; // not in reach
 		
 		if(p->IsInfected()) 
 		{
-			p->SetEmote(EMOTE_HAPPY, Server()->Tick());
-			if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/g_Config.m_InfSlimeHealRate))
+			if(p->GetClass() != PLAYERCLASS_SLUG)
 			{
-				m_HealTick = Server()->Tick();
-				p->IncreaseHealth(1);
+				p->SetEmote(EMOTE_HAPPY, Server()->Tick());
+				if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/g_Config.m_InfSlimeHealRate))
+				{
+					m_HealTick = Server()->Tick();
+					p->IncreaseHealth(1);
+				}
 			}
 		} 
 		else // p->IsHuman()

@@ -383,3 +383,74 @@ int CCollision::GetZoneValueAt(int ZoneHandle, float x, float y)
 	return Index;
 }
 
+bool CCollision::AreConnected(vec2 Pos1, vec2 Pos2, float Radius)
+{
+	if(distance(Pos1, Pos2) > Radius)
+		return false;
+	
+	int TileRadius = std::ceil(Radius/32.0f);
+	int CenterX = TileRadius;
+	int CenterY = TileRadius;
+	int Width = 2*TileRadius+1;
+	int Height = 2*TileRadius+1;
+	char* pMap = new char[Width*Height];
+	for(int j=0; j<Height; j++)
+	{
+		for(int i=0; i<Width; i++)
+		{
+			if(CheckPoint(Pos1.x + 32.0f*(i-CenterX), Pos1.y + 32.0f*(j-CenterY)))
+				pMap[j*Width+i] = 0x0; //This tile can be checked
+			else
+				pMap[j*Width+i] = 0x1;
+		}
+	}
+	
+	pMap[CenterY*Width+CenterX] = 0x2; //This tile is checked
+	
+	int Pos2X = clamp(CenterX + (int)round((Pos2.x - Pos1.x)/32.0f), 0, Width-1);
+	int Pos2Y = clamp(CenterY + (int)round((Pos2.y - Pos1.y)/32.0f), 0, Height-1);
+	
+	bool Changes = true;
+	while(Changes)
+	{
+		Changes = false;
+		for(int j=0; j<Height; j++)
+		{
+			for(int i=0; i<Width; i++)
+			{
+				if(pMap[j*Width+i]&0x1 && !(pMap[j*Width+i]&0x2))
+				{
+					if(i>0 && (pMap[j*Width+(i-1)]&0x2))
+					{
+						pMap[j*Width+i] = 0x2;
+						Changes = true;
+					}
+					if(j>0 && (pMap[(j-1)*Width+i]&0x2))
+					{
+						pMap[j*Width+i] = 0x2;
+						Changes = true;
+					}
+					if(i<Width-1 && (pMap[j*Width+(i+1)]&0x2))
+					{
+						pMap[j*Width+i] = 0x2;
+						Changes = true;
+					}
+					if(j<Height-1 && (pMap[(j+1)*Width+i]&0x2))
+					{
+						pMap[j*Width+i] = 0x2;
+						Changes = true;
+					}
+				}
+			}
+		}
+		
+		if(pMap[Pos2Y*Width+Pos2X]&0x2)
+		{
+			delete[] pMap;
+			return true;
+		}
+	}	
+	
+	delete[] pMap;
+	return false;
+}
