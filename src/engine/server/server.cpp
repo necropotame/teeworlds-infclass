@@ -334,6 +334,7 @@ void CServer::CClient::Reset(bool ResetScore)
 #endif
 		m_LogInstance = -1;
 		
+		m_AntiPing = 0;
 		m_CustomSkin = 0;
 		m_AlwaysRandom = 0;
 		m_DefaultScoreMode = PLAYERSCOREMODE_SCORE;
@@ -2192,6 +2193,33 @@ bool CServer::ConKick(IConsole::IResult *pResult, void *pUser)
 	return true;
 }
 
+/* INFECTION MODIFICATION START ***************************************/
+bool CServer::ConOptionStatus(IConsole::IResult *pResult, void *pUser)
+{
+	char aBuf[1024];
+	CServer* pThis = static_cast<CServer *>(pUser);
+
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(pThis->m_aClients[i].m_State == CClient::STATE_INGAME)
+		{
+			str_format(aBuf, sizeof(aBuf), "(#%02i) %s: [lang=%s] [antiping=%d] [alwaysrandom=%d] [customskin=%d]",
+				i,
+				pThis->ClientName(i),
+				pThis->m_aClients[i].m_aLanguage,
+				pThis->GetClientAntiPing(i),
+				pThis->GetClientAlwaysRandom(i),
+				pThis->GetClientCustomSkin(i)
+			);
+			
+			pThis->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", aBuf);
+		}
+	}
+	
+	return true;
+}
+/* INFECTION MODIFICATION END *****************************************/
+
 bool CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 {
 	char aBuf[1024];
@@ -2213,18 +2241,16 @@ bool CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 					aBufName[c] = ' ';
 				aBufName[sizeof(aBufName)-1] = 0;
 				
-				const char *pAuthStr = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? " Admin" :
-										pThis->m_aClients[i].m_Authed == CServer::AUTHED_MOD ? " Moderator" : "Player";
+				int AuthLevel = pThis->m_aClients[i].m_Authed == CServer::AUTHED_ADMIN ? 2 :
+										pThis->m_aClients[i].m_Authed == CServer::AUTHED_MOD ? 1 : 0;
 				
-				const char *pSecurityStr = pThis->m_NetServer.HasSecurityToken(i) ? " Protected" : "Unprotected";
-				
-				str_format(aBuf, sizeof(aBuf), "#%02i | %s | %s | %s | %s | %s",
+				str_format(aBuf, sizeof(aBuf), "(#%02i) %s: [antispoof=%d] [login=%d] [level=%d] [ip=%s]",
 					i,
 					aBufName,
-					aAddrStr,
-					pThis->m_aClients[i].m_aLanguage,
-					pAuthStr,
-					pSecurityStr
+					pThis->m_NetServer.HasSecurityToken(i),
+					pThis->IsClientLogged(i),
+					AuthLevel,
+					aAddrStr
 				);
 			}
 			else
@@ -2478,6 +2504,7 @@ void CServer::RegisterCommands()
 	// register console commands
 	Console()->Register("kick", "s<username or uid> ?r<reason>", CFGFLAG_SERVER, ConKick, this, "Kick player with specified id for any reason");
 	Console()->Register("status", "", CFGFLAG_SERVER, ConStatus, this, "List players");
+	Console()->Register("option_status", "", CFGFLAG_SERVER, ConOptionStatus, this, "List player options");
 	Console()->Register("shutdown", "", CFGFLAG_SERVER, ConShutdown, this, "Shut down");
 	Console()->Register("logout", "", CFGFLAG_SERVER, ConLogout, this, "Logout of rcon");
 
@@ -2659,6 +2686,16 @@ void CServer::InfecteClient(int ClientID)
 			m_aClients[i].m_WasInfected = 0;
 		}
 	}
+}
+
+int CServer::GetClientAntiPing(int ClientID)
+{
+	return m_aClients[ClientID].m_AntiPing;
+}
+
+void CServer::SetClientAntiPing(int ClientID, int Value)
+{
+	m_aClients[ClientID].m_AntiPing = Value;
 }
 
 int CServer::GetClientCustomSkin(int ClientID)

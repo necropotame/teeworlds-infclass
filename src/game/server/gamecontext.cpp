@@ -3430,6 +3430,21 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+bool CGameContext::ConAntiPing(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	
+	int Arg = pResult->GetInteger(0);
+
+	if(Arg > 0)
+		pSelf->Server()->SetClientAntiPing(ClientID, 1);
+	else
+		pSelf->Server()->SetClientAntiPing(ClientID, 0);
+	
+	return true;
+}
+
 bool CGameContext::ConCustomSkin(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
@@ -3539,7 +3554,7 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	Buffer.append("~~ ");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("List of commands")); 
 	Buffer.append(" ~~\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/alwaysrandom, /customskin, /help, /info, /language", NULL);
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/antiping, /alwaysrandom, /customskin, /help, /info, /language", NULL);
 	Buffer.append("\n\n");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/msg", NULL);
 	Buffer.append("\n\n");
@@ -3607,6 +3622,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
 	Console()->Register("alwaysrandom", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAlwaysRandom, this, "Display information about the mod");
+	Console()->Register("antiping", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAntiPing, this, "Try to improve your ping");
 	Console()->Register("language", "s<en|fr|nl|de|hr|cs|pl|hu|uk|ru|el|la|it|es|pt|hu|ar|tr|fa|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
 /* INFECTION MODIFICATION END *****************************************/

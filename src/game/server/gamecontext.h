@@ -228,6 +228,7 @@ private:
 	static bool ConHelp(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCustomSkin(IConsole::IResult *pResult, void *pUserData);
 	static bool ConAlwaysRandom(IConsole::IResult *pResult, void *pUserData);
+	static bool ConAntiPing(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLanguage(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCmdList(IConsole::IResult *pResult, void *pUserData);
 	bool PrivateMessage(const char* pStr, int ClientID, bool TeamChat);

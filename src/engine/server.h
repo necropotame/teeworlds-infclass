@@ -174,6 +174,9 @@ public:
 	
 	virtual int GetClientNbRound(int ClientID) = 0;
 	
+	virtual int GetClientAntiPing(int ClientID) = 0;
+	virtual void SetClientAntiPing(int ClientID, int Value) = 0;
+	
 	virtual int GetClientCustomSkin(int ClientID) = 0;
 	virtual void SetClientCustomSkin(int ClientID, int Value) = 0;
 	

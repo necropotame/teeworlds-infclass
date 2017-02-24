@@ -143,6 +143,7 @@ void CEngineerWall::Snap(int SnappingClient)
 		pObj->m_FromY = (int)m_Pos2.y;
 		pObj->m_StartTick = Server()->Tick()-LifeDiff;
 	}
+	if(!Server()->GetClientAntiPing(SnappingClient))
 	{
 		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_EndPointID, sizeof(CNetObj_Laser)));
 		if(!pObj)

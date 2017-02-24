@@ -141,6 +141,7 @@ public:
 		
 		int m_NbRound;
 		
+		int m_AntiPing;
 		int m_CustomSkin;
 		int m_AlwaysRandom;
 		int m_DefaultScoreMode;
@@ -258,6 +259,7 @@ public:
 
 	static bool ConKick(IConsole::IResult *pResult, void *pUser);
 	static bool ConStatus(IConsole::IResult *pResult, void *pUser);
+	static bool ConOptionStatus(IConsole::IResult *pResult, void *pUser);
 	static bool ConShutdown(IConsole::IResult *pResult, void *pUser);
 	static bool ConRecord(IConsole::IResult *pResult, void *pUser);
 	static bool ConStopRecord(IConsole::IResult *pResult, void *pUser);
@@ -297,6 +299,9 @@ public:
 public:
 	virtual int IsClientInfectedBefore(int ClientID);
 	virtual void InfecteClient(int ClientID);
+	
+	virtual int GetClientAntiPing(int ClientID);
+	virtual void SetClientAntiPing(int ClientID, int Value);
 	
 	virtual int GetClientCustomSkin(int ClientID);
 	virtual void SetClientCustomSkin(int ClientID, int Value);

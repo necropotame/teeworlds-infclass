@@ -62,9 +62,15 @@ void CScientistMine::Explode(int DetonatedBy)
 
 void CScientistMine::Snap(int SnappingClient)
 {
-	float AngleStep = 2.0f * pi / CScientistMine::NUM_SIDE;
 	float Radius = g_Config.m_InfMineRadius;
-	for(int i=0; i<CScientistMine::NUM_SIDE; i++)
+	
+	int NumSide = CScientistMine::NUM_SIDE;
+	if(Server()->GetClientAntiPing(SnappingClient))
+		NumSide = std::min(6, NumSide);
+	
+	float AngleStep = 2.0f * pi / NumSide;
+	
+	for(int i=0; i<NumSide; i++)
 	{
 		vec2 PartPosStart = m_Pos + vec2(Radius * cos(AngleStep*i), Radius * sin(AngleStep*i));
 		vec2 PartPosEnd = m_Pos + vec2(Radius * cos(AngleStep*(i+1)), Radius * sin(AngleStep*(i+1)));
@@ -79,21 +85,25 @@ void CScientistMine::Snap(int SnappingClient)
 		pObj->m_FromY = (int)PartPosEnd.y;
 		pObj->m_StartTick = Server()->Tick();
 	}
-	for(int i=0; i<CScientistMine::NUM_PARTICLES; i++)
+	
+	if(!Server()->GetClientAntiPing(SnappingClient))
 	{
-		float RandomRadius = random_float()*(Radius-4.0f);
-		float RandomAngle = 2.0f * pi * random_float();
-		vec2 ParticlePos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
-		
-		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[CScientistMine::NUM_SIDE+i], sizeof(CNetObj_Projectile)));
-		if(pObj)
+		for(int i=0; i<CScientistMine::NUM_PARTICLES; i++)
 		{
-			pObj->m_X = (int)ParticlePos.x;
-			pObj->m_Y = (int)ParticlePos.y;
-			pObj->m_VelX = 0;
-			pObj->m_VelY = 0;
-			pObj->m_StartTick = Server()->Tick();
-			pObj->m_Type = WEAPON_HAMMER;
+			float RandomRadius = random_float()*(Radius-4.0f);
+			float RandomAngle = 2.0f * pi * random_float();
+			vec2 ParticlePos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
+			
+			CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[CScientistMine::NUM_SIDE+i], sizeof(CNetObj_Projectile)));
+			if(pObj)
+			{
+				pObj->m_X = (int)ParticlePos.x;
+				pObj->m_Y = (int)ParticlePos.y;
+				pObj->m_VelX = 0;
+				pObj->m_VelY = 0;
+				pObj->m_StartTick = Server()->Tick();
+				pObj->m_Type = WEAPON_HAMMER;
+			}
 		}
 	}
 }
