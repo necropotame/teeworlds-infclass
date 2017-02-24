@@ -1,5 +1,9 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} is gedempt voor {sec:Duration} ({str:Reason})"
+	},
+	{
 		"key": "You are now logged.",
 		"value": "Je bent nu ingelogd."
 	},
@@ -73,6 +77,10 @@
 		"value": "Je hebt een heks vermoord, +5 punten"
 	},
 	{
+		"key": "You have eliminated your target, +2 points",
+		"value": "Je hebt je doelwit ge\u00eblimineerd, +2 punten"
+	},
+	{
 		"key": "Hook protection enabled",
 		"value": "Beveiliging van de haak ingeschakeld"
 	},
@@ -137,6 +145,10 @@
 		"value": "Wetenschapper"
 	},
 	{
+		"key": "Biologist",
+		"value": "Bioloog"
+	},
+	{
 		"key": "Smoker",
 		"value": "Smoker"
 	},
@@ -159,6 +171,10 @@
 	{
 		"key": "Ghoul",
 		"value": "Ghoul"
+	},
+	{
+		"key": "Slug",
+		"value": "Slak"
 	},
 	{
 		"key": "Witch",
@@ -185,6 +201,10 @@
 		"value": "{str:PlayerName} is binnengekomen en sloot zich aan tot het spel"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "Je bent gedempt voor {sec:Duration}"
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "Je kan op dit moment niet aansluiten bij de toeschouwers"
 	},
@@ -207,6 +227,14 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, door necropotame (version {str:VersionCode})"
+	},
+	{
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Gebaseerd op het concept van Infection mod door Gravity"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Belangrijkste bijdragers: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -295,6 +323,10 @@
 		"value": "Hij kan ook granaten gooien die hem teleporteren."
 	},
 	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "De bioloog heeft een shotgun met weerkaatsende kogels en kan een lente laser val maken door te schieten met zijn lasergeweer."
+	},
+	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
 		"value": "De dokter kan alle mensen beschermen met zijn hamer door hen armor te geven."
 	},
@@ -304,7 +336,7 @@
 	},
 	{
 		"key": "The Hero has a shotgun, a laser rifle and grenades.",
-		"value": "De Held heeft een shotgun, een laser geweer en granaten."
+		"value": "De Held heeft een shotgun, een lasergeweer en granaten."
 	},
 	{
 		"key": "The Hero must find a flag hidden in the map.",
@@ -413,6 +445,18 @@
 		"value": "Daarop verteert hij zijn voeder beetje bij beetje en gaat hij terug naar zijn normale toestand, en bovendien, de dood berooft hem van zijn voeding."
 	},
 	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "De Slak kan mensen infecteren en ge\u00efnfecteerden genezen met zijn hamer."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "Hij kan de grond en de muren giftig maken door het verspreiden van slijm met zijn hamer."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Het aanraken van slijm levert drie schade punten op in drie seconden op een mens."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "De ondode kan mensen infecteren en mensen genezen met zijn hamer."
 	},
@@ -493,6 +537,10 @@
 		"value": "Druk op <F3> of <F4> voor het in- of uitschakelen van de bescherming van de haak"
 	},
 	{
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "Je bezit een bonus ruimte voor een minuut, +5 punten"
+	},
+	{
 		"key": "You are frozen: {sec:EffectDuration}",
 		"value": "Je bent bevroren: {sec:EffectDuration}"
 	},
@@ -517,6 +565,10 @@
 		"key": "{int:NumMines} mines are actives",
 		"one": "{int:NumMines} mijn is actief",
 		"other": "{int:NumMines} mijnen zijn actief",
+	},
+	{
+		"key": "Mine activated",
+		"value": "Mijn geactiveerd"
 	},
 	{
 		"key": "Next target in {sec:RemainingTime}",
@@ -553,6 +605,18 @@
 	{
 		"key": "The undead is finally dead",
 		"value": "De ondode is eindelijk dood"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Zwaard snelheid verhoogd"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "Zwaard sterkte verhoogd"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Granaat limiet verhoogd"
 	},
 	{
 		"key": "Type \"/help {str:ClassName}\" for more information about your class",
