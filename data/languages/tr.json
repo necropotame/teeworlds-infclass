@@ -77,6 +77,14 @@
 		"value": "Kanca korumas\u0131 devre d\u0131\u015f\u0131"
 	},
 	{
+		"key": "{str:PlayerName} has left the game ({str:Reason})",
+		"value": "{str:PlayerName} oyunu terk etti ({str:Reason})"
+	},
+	{
+		"key": "{str:PlayerName} has left the game",
+		"value": "{str:PlayerName} oyundan ayr\u0131ld\u0131"
+	},
+	{
 		"key": "Engineer",
 		"value": "M\u00fchendis"
 	},
@@ -145,6 +153,10 @@
 		"value": "Cad\u0131"
 	},
 	{
+		"key": "Undead",
+		"value": "Zombi"
+	},
+	{
 		"key": "Unknown class",
 		"value": "Bilinmeyen s\u0131n\u0131f"
 	},
@@ -199,6 +211,10 @@
 	{
 		"key": "No player was found with this name",
 		"value": "Bu isimde bir oyuncu bulunamad\u0131"
+	},
+	{
+		"key": "Rules of the game",
+		"value": "Oyunun kurallar\u0131"
 	},
 	{
 		"key": "InfectionClass is a team game between humans and infected.",
@@ -549,6 +565,10 @@
 	{
 		"key": "The witch is dead",
 		"value": "Cad\u0131 \u00f6ld\u00fc"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "Zombi nihayet \u00f6ld\u00fc"
 	},
 	{
 		"key": "Sword velocity increased",
