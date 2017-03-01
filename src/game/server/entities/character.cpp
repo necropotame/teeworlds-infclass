@@ -1137,7 +1137,7 @@ void CCharacter::FireWeapon()
 					if(m_PositionLocked)
 						Damage = 30;
 					else
-						Damage = min(10, 9 + random_int(0, 3));
+						Damage = random_int(10, 13);
 				}
 				
 				if(GetClass() == PLAYERCLASS_SCIENTIST)
