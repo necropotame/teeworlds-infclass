@@ -1640,7 +1640,7 @@ void CCharacter::Tick()
 			m_HookMode == 1 &&
 			m_Core.m_HookState == HOOK_GRABBED &&
 			distance(m_Core.m_Pos, m_Core.m_HookPos) > 48.0f &&
--			m_Core.m_HookedPlayer < 0
+			m_Core.m_HookedPlayer < 0
 		)
 		{
 			// Find other players
