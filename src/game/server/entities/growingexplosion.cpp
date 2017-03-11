@@ -271,7 +271,8 @@ void CGrowingExplosion::Tick()
 	}
 	
 	// clean slug slime
-	if (m_ExplosionEffect == GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED) {
+	if (m_ExplosionEffect == GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED) 
+	{
 		for(CEntity *e = (CEntity*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SLUG_SLIME); e; e = (CEntity *)e->TypeNext())
 		{
 			int tileX = m_MaxGrowing + static_cast<int>(round(e->m_Pos.x))/32 - m_SeedX;
