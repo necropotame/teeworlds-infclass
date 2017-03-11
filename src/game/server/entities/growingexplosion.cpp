@@ -269,6 +269,27 @@ void CGrowingExplosion::Tick()
 			}
 		}
 	}
+	
+	// clean slug slime
+	if (m_ExplosionEffect == GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED) {
+		for(CEntity *e = (CEntity*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SLUG_SLIME); e; e = (CEntity *)e->TypeNext())
+		{
+			int tileX = m_MaxGrowing + static_cast<int>(round(e->m_Pos.x))/32 - m_SeedX;
+			int tileY = m_MaxGrowing + static_cast<int>(round(e->m_Pos.y))/32 - m_SeedY;
+		
+			if(tileX < 0 || tileX >= m_GrowingMap_Length || tileY < 0 || tileY >= m_GrowingMap_Length)
+				continue;
+				
+			int k = tileY*m_GrowingMap_Length+tileX;
+			if(m_pGrowingMap[k] >= 0)
+			{
+				if(tick - m_pGrowingMap[k] < Server()->TickSpeed()/4)
+				{
+					e->Reset();
+				}
+			}
+		}
+	}
 }
 
 void CGrowingExplosion::TickPaused()
