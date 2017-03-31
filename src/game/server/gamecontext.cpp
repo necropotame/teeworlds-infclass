@@ -1902,13 +1902,19 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						str_copy(m_VoteLanguage[ClientID], "sr", sizeof(m_VoteLanguage[ClientID]));
 						break;
 					/* tr - Turkish ************************************/
-					case 31: // Azerbaijan
+					case 31: //Azerbaijan
 					case 792: //Turkey
 						str_copy(m_VoteLanguage[ClientID], "tr", sizeof(m_VoteLanguage[ClientID]));
 						break;
 					/* uk - Ukrainian **********************************/	
 					case 804: //Ukraine
 						str_copy(m_VoteLanguage[ClientID], "uk", sizeof(m_VoteLanguage[ClientID]));
+						break;
+					/* zh-Hans - Chinese (Simplified) **********************************/	
+					case 156: //People’s Republic of China
+					case 344: //Hong Kong
+					case 446: //Macau
+						str_copy(m_VoteLanguage[ClientID], "zh-Hans", sizeof(m_VoteLanguage[ClientID]));
 						break;
 				}
 				
