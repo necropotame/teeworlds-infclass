@@ -1,0 +1,622 @@
+{"translation":[
+	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} \u56e0 {sec:Duration} ({str:Reason}) \u88ab\u7981\u8a00"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "\u4f60\u5df2\u767b\u5f55\u3002"
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "\u7528\u6237\u540d\u5bc6\u7801\u9519\u8bef\u3002"
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "\u5728\u64cd\u4f5c\u8fc7\u7a0b\u4e2d\u53d1\u751f\u9519\u8bef\u3002"
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "\u767b\u5f55\u540e\u624d\u53ef\u8fdb\u884c\u6b64\u64cd\u4f5c"
+	},
+	{
+		"key": "Please wait 5 minutes before create an another account",
+		"value": "\u5728\u521b\u5efa\u53e6\u4e00\u4e2a\u8d26\u53f7\u524d\u8bf7\u7b49\u5f855\u5206\u949f"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "\u521b\u5efa\u5e10\u6237\u65f6\u53d1\u751f\u9519\u8bef\u3002"
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "\u6b64\u7528\u6237\u540d\u5df2\u5b58\u5728"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "\u5df2\u6210\u529f\u521b\u5efa\u8d26\u53f7\uff0c\u5e76\u6210\u529f\u767b\u5f55"
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "\u767b\u9646\u540e\u624d\u770b\u67e5\u770b\u7b49\u7ea7\u6392\u540d"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "\u60a8\u5fc5\u987b\u767b\u5f55\u624d\u80fd\u770b\u5230\u60a8\u7684\u76ee\u6807"
+	},
+	{
+		"key": "You already notify that {str:PlayerName} must be banned",
+		"value": "\u4f60\u5df2\u901a\u77e5{str:PlayerName}\u5fc5\u987b\u88ab\u5c01\u7981\u3002"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName}\u5e0c\u671b{str:VictimName}\u88ab\u5c01\u7981\uff0c\u7406\u7531\uff1a{str:Reason}"
+	},
+	{
+		"key": "{str:VictimName} has been infected",
+		"value": "{str:VictimName}\u88ab\u611f\u67d3\u4e86"
+	},
+	{
+		"key": "Infected won the round in {sec:RoundDuration}",
+		"value": "\u88ab\u611f\u67d3\u8005\u5728\u672c\u8f6e\u4e2d\u83b7\u5f97\u80dc\u5229 {sec:RoundDuration}"
+	},
+	{
+		"key": "{int:NumHumans} humans won the round",
+		"other": "Singular Form\n\u4e00\u540d\u4eba\u7c7b\u83b7\u5f97\u672c\u8f6e\u80dc\u5229\nPlural Form\n{int:NumHumans} \u540d\u4eba\u7c7b\u83b7\u5f97\u672c\u8f6e\u80dc\u5229",
+	},
+	{
+		"key": "You have survived, +5 points",
+		"value": "\u4f60\u6210\u529f\u5b58\u6d3b\uff0c+5 points"
+	},
+	{
+		"key": "You have infected {str:VictimName}, +3 points",
+		"value": "\u4f60\u611f\u67d3\u4e86 {str:VictimName}\uff0c+3 points"
+	},
+	{
+		"key": "You have killed a witch, +5 points",
+		"value": "\u4f60\u6740\u4e86\u4e00\u4e2a\u5973\u5deb\uff0c+5 points"
+	},
+	{
+		"key": "You have eliminated your target, +2 points",
+		"value": "\u4f60\u9664\u6389\u4e86\u6240\u6709\u4f60\u7684\u76ee\u6807\uff0c+ 2 points"
+	},
+	{
+		"key": "Hook protection enabled",
+		"value": "\u542f\u7528\u4e86Hook\u4fdd\u62a4"
+	},
+	{
+		"key": "Hook protection disabled",
+		"value": "\u5173\u95ed\u4e86Hook\u4fdd\u62a4"
+	},
+	{
+		"key": "{str:PlayerName} has been banned ({str:Reason})",
+		"value": "{str:PlayerName} \u7531\u4e8e ({str:Reason})\u88ab\u5c01\u7981"
+	},
+	{
+		"key": "{str:PlayerName} has been kicked ({str:Reason})",
+		"value": "{str:PlayerName} \u7531\u4e8e ({str:Reason})\u88ab\u8e22\u51fa\u623f\u95f4"
+	},
+	{
+		"key": "{str:PlayerName} has left the game ({str:Reason})",
+		"value": "{str:PlayerName} \u7531\u4e8e ({str:Reason})\u79bb\u5f00\u6e38\u620f"
+	},
+	{
+		"key": "{str:PlayerName} has left the game",
+		"value": "\u73a9\u5bb6 {str:PlayerName} \u9000\u51fa\u6e38\u620f\u3002"
+	},
+	{
+		"key": "{str:PlayerName} joined the spectators",
+		"value": "{str:PlayerName} \u52a0\u5165\u89c2\u4f17"
+	},
+	{
+		"key": "{str:PlayerName} joined the game",
+		"value": "{str:PlayerName} \u52a0\u5165\u6e38\u620f"
+	},
+	{
+		"key": "Engineer",
+		"value": "\u5de5\u7a0b\u5e08"
+	},
+	{
+		"key": "Soldier",
+		"value": "\u58eb\u5175"
+	},
+	{
+		"key": "Medic",
+		"value": "\u533b\u7597\u5175"
+	},
+	{
+		"key": "Hero",
+		"value": "\u82f1\u96c4"
+	},
+	{
+		"key": "Ninja",
+		"value": "\u5fcd\u8005"
+	},
+	{
+		"key": "Mercenary",
+		"value": "\u96c7\u4f63\u5175"
+	},
+	{
+		"key": "Sniper",
+		"value": "\u72d9\u51fb\u624b"
+	},
+	{
+		"key": "Scientist",
+		"value": "\u79d1\u5b66\u5bb6"
+	},
+	{
+		"key": "Biologist",
+		"value": "\u751f\u7269\u5b66\u5bb6"
+	},
+	{
+		"key": "Smoker",
+		"value": "\u5438\u70df\u8005"
+	},
+	{
+		"key": "Hunter",
+		"value": "\u730e\u4eba"
+	},
+	{
+		"key": "Boomer",
+		"value": "Boomer"
+	},
+	{
+		"key": "Ghost",
+		"value": "\u5e7d\u7075"
+	},
+	{
+		"key": "Spider",
+		"value": "\u8718\u86db"
+	},
+	{
+		"key": "Ghoul",
+		"value": "\u98df\u5c38\u9b3c"
+	},
+	{
+		"key": "Slug",
+		"value": "\u9f3b\u6d95\u866b"
+	},
+	{
+		"key": "Witch",
+		"value": "\u5deb\u5a46"
+	},
+	{
+		"key": "Undead",
+		"value": "\u4e0d\u6b7b\u65cf"
+	},
+	{
+		"key": "Unknown class",
+		"value": "\u672a\u77e5"
+	},
+	{
+		"key": "You are a human: {str:ClassName}",
+		"value": "\u4f60\u5904\u4e8e\u6b63\u5e38\u72b6\u6001\u3002{str:ClassName}"
+	},
+	{
+		"key": "You are an infected: {str:ClassName}",
+		"value": "\u4f60\u5df2\u88ab\u611f\u67d3\u3002 {str:ClassName}"
+	},
+	{
+		"key": "{str:PlayerName} entered and joined the game",
+		"value": "{str:PlayerName} \u8fdb\u5165\u623f\u95f4\u5e76\u52a0\u5165\u6e38\u620f"
+	},
+	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "\u4f60\u88ab\u7981\u8a00{sec:Duration}"
+	},
+	{
+		"key": "You can't join the spectators right now",
+		"value": "\u4f60\u73b0\u5728\u4e0d\u80fd\u52a0\u5165\u89c2\u4f17"
+	},
+	{
+		"key": "{str:PlayerName} changed their name to {str:NewName}",
+		"value": "{str:PlayerName}\u7684\u540d\u5b57\u6539\u6210 {str:NewName}"
+	},
+	{
+		"key": "Switch language to english ?",
+		"value": "\u5207\u6362\u5230\u4e2d\u8bed\u7684\u8bed\u8a00\u5417\uff1f"
+	},
+	{
+		"key": "You can change the language of this mod using the command /language.",
+		"value": "\u4f60\u53ef\u4ee5\u5207\u6362\u6b64\u6a21\u5f0f\u7684\u8bed\u8a00\uff1a\u4f7f\u7528\u547d\u4ee4/language"
+	},
+	{
+		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "\u5982\u679c\u4f60\u7684\u8bed\u8a00\u8fd8\u4e0d\u53ef\u7528\u7684\u8bdd\uff0c\u4f60\u53ef\u4ee5\u5e2e\u52a9\u7ffb\u8bd1(\u8be6\u89c1/help translate)"
+	},
+	{
+		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
+		"value": "\u65b0\u751f\u5316\u5371\u673aInfectionClass, \u4f5c\u8005\uff1a necropotame (\u7248\u672c{str:VersionCode})"
+	},
+	{
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "\u57fa\u4e8eGravity\u6240\u505a\u7684\u539f\u751f\u5316\u5371\u673a\uff08Infection \uff09\u6a21\u5f0f"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "\u4e3b\u8981\u8d21\u732e\u8005\ufe30 {str:ListOfContributors}"
+	},
+	{
+		"key": "Thanks to {str:ListOfContributors}",
+		"value": "\u611f\u8c22 {str:ListOfContributors}"
+	},
+	{
+		"key": "No player was found with this name",
+		"value": "\u6ca1\u6709\u627e\u5230\u7528\u8fd9\u4e2a\u540d\u5b57\u7684\u73a9\u5bb6"
+	},
+	{
+		"key": "Rules of the game",
+		"value": "\u6e38\u620f\u89c4\u5219"
+	},
+	{
+		"key": "InfectionClass is a team game between humans and infected.",
+		"value": "\u65b0\u751f\u5316\u5371\u673aInfectionClass \u662f\u4e00\u9879\u56e2\u961f\u6e38\u620f\uff0c\u4f60\u5c06\u6210\u4e3a\u4eba\u7c7b\u6216\u88ab\u611f\u67d3\u8005"
+	},
+	{
+		"key": "All players start as human.",
+		"value": "\u6240\u6709\u73a9\u5bb6\u4e00\u5f00\u59cb\u90fd\u662f\u6b63\u5e38\u4eba"
+	},
+	{
+		"key": "10 seconds later, two players become infected.",
+		"value": "10\u79d2\u540e\uff0c\u6709\u4e24\u540d\u73a9\u5bb6\u4f1a\u88ab\u611f\u67d3"
+	},
+	{
+		"key": "The goal for humans is to survive until the army clean the map.",
+		"value": "\u4eba\u7c7b\u76ee\u6807\u662f\u5b58\u6d3b\u5230\u63f4\u519b\u6765\u6e05\u573a"
+	},
+	{
+		"key": "The goal for infected is to infect all humans.",
+		"value": "\u88ab\u611f\u67d3\u8005\u76ee\u6807\u4e3a\u611f\u67d3\u6b63\u5e38\u4eba"
+	},
+	{
+		"key": "How to translate the mod",
+		"value": "\u5982\u4f55\u6765\u7ffb\u8bd1\u6b64\u6a21\u5f0f"
+	},
+	{
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "\u5728 Crowdin \u4e0a\u521b\u5efa\u4e00\u4e2a\u5e10\u6237\u5e76\u52a0\u5165\u7ffb\u8bd1\u56e2\u961f\ufe30"
+	},
+	{
+		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "\u7ffb\u8bd1\u8fc7\u7a0b\u7684\u4efb\u4f55\u7591\u95ee\uff0c\u8bf7\u8054\u7cfb\u5728 IRC\u6211\u4eec ({str:IRCAddress})"
+	},
+	{
+		"key": "The Engineer can build walls with his hammer to block infected.",
+		"value": "\u5de5\u7a0b\u5e08\u53ef\u4ee5\u7528\u4ed6\u7684\u9524\u5b50\u7b51\u5899\u62b5\u5fa1\u88ab\u611f\u67d3\u8005\u3002"
+	},
+	{
+		"key": "When an infected touch the wall, he dies.",
+		"value": "\u5f53\u4e00\u4e2a\u53d7\u611f\u67d3\u8005\u89e6\u6478\u5899\u65f6\uff0cBoom\uff01"
+	},
+	{
+		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
+		"value": "\u4e00\u5835\u5899\u53ef\u4ee5\u4fdd\u7559\u65f6\u95f4 {sec:LifeSpan}\uff0c\u6bcf\u4e2a\u73a9\u5bb6\u5728\u540c\u4e00\u65f6\u95f4\u53ea\u80fd\u7b51\u4e00\u5835\u5899\u3002"
+	},
+	{
+		"key": "The Soldier can pose floating bombs with his hammer.",
+		"value": "\u58eb\u5175\u53ef\u4ee5\u7528\u4ed6\u7684\u9524\u5b50\u6784\u6210\u6d6e\u52a8\u70b8\u5f39\u3002"
+	},
+	{
+		"key": "Each bomb can explode {int:NumBombs} times.",
+		"other": "\u6bcf\u4e2a\u70b8\u5f39\u53ef\u4ee5\u7206\u70b8 {int:NumBombs} \u6b21\u3002",
+	},
+	{
+		"key": "Use the hammer to place the bomb and explode it multiple times.",
+		"value": "\u7528\u9524\u5b50\u653e\u7f6e\u70b8\u5f39\u5e76\u5f15\u7206\u5b83\u591a\u6b21\u3002"
+	},
+	{
+		"key": "Bombs are limited to one per player at the same time.",
+		"value": "\u6bcf\u4e00\u4e2a\u73a9\u5bb6\u53ea\u80fd\u540c\u65f6\u5f15\u7206\u70b8\u5f39"
+	},
+	{
+		"key": "The Scientist can pose floating mines with his hammer.",
+		"value": "\u79d1\u5b66\u5bb6\u53ef\u4ee5\u7528\u4ed6\u7684\u9524\u5b50\u8bbe\u7f6e\u6d6e\u52a8\u5730\u96f7\u3002"
+	},
+	{
+		"key": "Mines are limited to {int:NumMines} per player at the same time.",
+		"other": "\u6bcf\u4e2a\u73a9\u5bb6\u5728\u540c\u4e00\u65f6\u95f4\u53ef\u4f7f\u7528\u7684\u5730\u96f7\u6570\u91cf\u4e3a {int:NumMines} \u3002",
+	},
+	{
+		"key": "He has also grenades that teleport him.",
+		"value": "\u4ed6\u4e5f\u53ef\u4ee5\u7528\u69b4\u5f39\u67aa\u6765\u5b8c\u6210\u77ac\u95f4\u79fb\u52a8"
+	},
+	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "\u751f\u7269\u5b66\u5bb6\uff08\u751f\u5316\u6b66\u5668\uff1f\uff09\u53ef\u4ee5\u7528shotgun\u6253\u8df3\u5f39\uff0c\u53ef\u4ee5\u7528rifle\u8bbe\u7f6e\u5f39\u7c27\u6fc0\u5149\u9677\u9631"
+	},
+	{
+		"key": "The Medic can protect humans with his hammer by giving them armor.",
+		"value": "\u533b\u7597\u5175\u7528\u4ed6\u7684\u9524\u5b50\u53ef\u4ee5\u4fdd\u62a4\u4eba\u7c7b\uff0c\u8ba9\u4ed6\u4eec\u62a4\u7532\u3002"
+	},
+	{
+		"key": "He has also a powerful shotgun that can pullback infected.",
+		"value": "\u4ed6\u6709\u5f3a\u5927\u7684\u6563\u5f39\u67aa\u5e76\u80fd\u62c9\u56de\u88ab\u611f\u67d3\u8005\u3002"
+	},
+	{
+		"key": "The Hero has a shotgun, a laser rifle and grenades.",
+		"value": "\u82f1\u96c4\u6709\u6563\u5f39\u67aa\u3001\u6fc0\u5149\u67aa\u548c\u69b4\u5f39\u67aa"
+	},
+	{
+		"key": "The Hero must find a flag hidden in the map.",
+		"value": "\u82f1\u96c4\u804c\u4e1a\u9700\u8981\u627e\u5230\u5730\u56fe\u4e2d\u9690\u85cf\u7684\u65d7\u5e1c"
+	},
+	{
+		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
+		"value": "\u4e00\u65e6\u62ff\u5230\uff0c\u65d7\u5e1c\u4f1a\u63d0\u4f9b1\u70b9\u751f\u547d\u503c\u30014\u70b9\u62a4\u7532\u503c\u548c\u8db3\u91cf\u7684\u5f39\u836f\u7ed9\u6240\u6709\u672a\u88ab\u611f\u67d3\u8005\uff0c\u5e76\u65f6\u82f1\u96c4\u5145\u6ee1\u751f\u547d\u503c\u548c\u62a4\u76fe\u503c\u3002"
+	},
+	{
+		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "\u82f1\u96c4\u4e0d\u80fd\u88ab\u533b\u7597\u5175\u6cbb\u6108\uff0c\u4f46\u662f\u4ed6\u80fd\u627f\u53d7\u88ab\u611f\u67d3\u8005\u7684\u63a8\u529b\uff08\u4fb5\u8680\uff1f\uff09\uff0c\u4ed6\u7684\u751f\u547d\u529b\u8db3\u591f\u5f3a\u5927"
+	},
+	{
+		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
+		"value": "\u5fcd\u8005\u53ef\u4ee5\u6254\u95ea\u5149\u5f39\uff0c\u5728\u4e09\u79d2\u949f\u5185\u53ef\u4ee5\u51bb\u7ed3\u88ab\u611f\u67d3\u8005\u3002"
+	},
+	{
+		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
+		"other": "\u4ed6\u7684\u9524\u5b50\u88ab\u6b66\u58eb\u5200\u53d6\u4ee3\uff0c\u5141\u8bb8\u4ed6\u8df3 {int:NinjaJump} \u591a\u6b21\u89e6\u78b0\u5730\u9762\u3002",
+	},
+	{
+		"key": "The Mercenary fly in air using his machine gun.",
+		"value": "\u96c7\u4f63\u519b\u53ef\u4f7f\u7528\u4ed6\u7684\u673a\u67aa\u98de\u5728\u7a7a\u4e2d\u3002"
+	},
+	{
+		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"value": "\u4ed6\u53ef\u4ee5\u7528\u4ed6\u7684\u9524\u5b50\u8bbe\u7f6e\u70b8\u5f39\u3002"
+	},
+	{
+		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
+		"other": "\u4ed6\u4e5f\u80fd\u6254\u6bd2\u70b8\u5f39 \u6bcf\u6b21\u9020\u6210 {int:NumDamagePoints} \u70b9\u4f24\u5bb3\u3002",
+	},
+	{
+		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
+		"value": "\u72d9\u51fb\u624b\u7528\u4ed6\u7684\u9524\u5b50\u53ef\u4ee5 15 \u79d2\u9501\u5b9a\u4ed6\u5728\u7a7a\u4e2d\u7684\u4f4d\u7f6e\u3002"
+	},
+	{
+		"key": "He can jump two times in air.",
+		"value": "\u80fd\u5728\u7a7a\u4e2d\u8df3\u8dc3\u4e24\u6b21"
+	},
+	{
+		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+		"value": "\u4ed6\u53ef\u4ee5\u5728\u9501\u5b9a\u7684\u4f4d\u7f6e\u4f7f\u7528\u5f3a\u529b\u7684\u72d9\u51fb\u67aa\uff0c\u80fd\u591f\u9020\u621020\u70b9\u4f24\u5bb3\uff0c\u5176\u4ed6\u5730\u65b9\u80fd\u591f\u9020\u62109-10\u70b9\u4f24\u5bb3\u3002"
+	},
+	{
+		"key": "The Smoker can infect humans and heal infected with his hammer.",
+		"value": "Smoker\u53ef\u4ee5\u611f\u67d3\u6b63\u5e38\u4eba\uff0c\u5e76\u53ef\u4ee5\u7528\u9524\u5b50\u7ed9\u88ab\u611f\u67d3\u8005\u589e\u52a0\u751f\u547d\u503c\u3002"
+	},
+	{
+		"key": "He can also inflict 4 damage points per second by hooking humans.",
+		"value": "\u4ed6\u8fd8\u53ef\u4ee5\u901a\u8fc7Hook\u7ed9\u6b63\u5e38\u4eba\u9020\u6210\u6bcf\u79d2 4 \u70b9\u4f24\u5bb3\u503c\u3002"
+	},
+	{
+		"key": "The Boomer explodes when he attack.",
+		"value": "Boomer\u5728\u653b\u51fb\u7684\u65f6\u5019\u4f1a\u7206\u70b8\uff01"
+	},
+	{
+		"key": "All humans affected by the explosion become infected.",
+		"value": "\u88ab\u70b8\u5230\u7684\u4eba\u7edf\u7edf\u90fd\u4f1a\u88ab\u611f\u67d3\u3002"
+	},
+	{
+		"key": "He can also inflict 1 damage point per second by hooking humans.",
+		"value": "\u5f53\u7136\uff0c\u901a\u8fc7Hook\u53ef\u4ee5\u7ed9\u6b63\u5e38\u4eba\u9020\u62101\u70b9\u4f24\u5bb3"
+	},
+	{
+		"key": "The Hunter can infect humans and heal infected with his hammer.",
+		"value": "\u730e\u4eba\uff08\u8ffd\u6740\u8005\uff09\u53ef\u4ee5\u901a\u8fc7\u9524\u5b50\u611f\u67d3\u6b63\u5e38\u4eba\u6216\u7ed9\u88ab\u611f\u67d3\u8005\u6062\u590d\u751f\u547d\u503c\u3002"
+	},
+	{
+		"key": "The Ghost can infect humans and heal infected with his hammer.",
+		"value": "\u5e7d\u7075\u53ef\u4ee5\u901a\u8fc7\u9524\u5b50\u611f\u67d3\u6b63\u5e38\u4eba\u6216\u7ed9\u88ab\u611f\u67d3\u8005\u6062\u590d\u751f\u547d\u503c\u3002"
+	},
+	{
+		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
+		"value": "\u4ed6\u662f\u4e0d\u53ef\u89c1\u7684\uff0c\u5f53\u4eba\u7c7b\u63a5\u8fd1\u4ed6\u3001\u53d7\u5230\u4f24\u5bb3\u3001\u4f7f\u7528\u9524\u5b50\u65f6\u4f1a\u53d8\u6210\u53ef\u89c6\u72b6\u6001\u3002"
+	},
+	{
+		"key": "The Spider can infect humans and heal infected with his hammer.",
+		"value": "\u8718\u86db\u53ef\u4ee5\u901a\u8fc7\u9524\u5b50\u611f\u67d3\u6b63\u5e38\u4eba\u6216\u7ed9\u88ab\u611f\u67d3\u8005\u6062\u590d\u751f\u547d\u503c\u3002"
+	},
+	{
+		"key": "When selecting any gun, his hook enter in web mode.",
+		"value": "\u4ed6\u9009\u62e9\u4efb\u610f\u67aa\u65f6\u4ed6\u7684Hook\u4f1a\u8fdb\u5165\u7f51\u72b6\u6a21\u5f0f\u3002"
+	},
+	{
+		"key": "Any human that touch a hook in web mode is automatically grabbed.",
+		"value": "\u4efb\u4f55\u4eba\u78b0\u5230\u4ed6\u7f51\u72b6\u6a21\u5f0f\u7684Hook\u65f6\u90fd\u4f1a\u88ab\u56f0\u4f4f\u3002"
+	},
+	{
+		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
+		"value": "\u8718\u86db\u4e24\u5f20\u6a21\u5f0f\u7684Hook\u4f1a\u9020\u62101\u70b9\u4f24\u5bb3\u6bcf\u79d2\uff0c\u5e76\u80fd\u56f0\u4f4f\u6b63\u5e38\u4eba\u4e24\u79d2\u3002"
+	},
+	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "\u98df\u5c38\u9b3c\u53ef\u4ee5\u901a\u8fc7\u9524\u5b50\u611f\u67d3\u6b63\u5e38\u4eba\u6216\u7ed9\u88ab\u611f\u67d3\u8005\u6062\u590d\u751f\u547d\u503c\u3002"
+	},
+	{
+		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "\u4ed6\u53ef\u4ee5\u541e\u98df\u4efb\u4f55\u6fd2\u4e34\u6b7b\u4ea1\u8005\uff0c\u5e76\u4f1a\u4f7f\u4ed6\u66f4\u5feb\u66f4\u5f3a\u58ee\u66f4\u5177\u62b5\u6297\u529b\u3002"
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "\u4ed6\u4f1a\u4e0d\u65ad\u6d88\u8017\u8425\u517b\u503c\u4f1a\u5230\u6b63\u5e38\u72b6\u6001\uff0c\u6b64\u5916\uff0c\u6b7b\u4ea1\u4f1a\u6d88\u8017\u6240\u6709\u8425\u517b\u503c"
+	},
+	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "\u86de\u8753\uff08\u9f3b\u6d95\u866b\uff09\u53ef\u4ee5\u611f\u67d3\u4eba\u7c7b\u548c\u6cbb\u6108\u611f\u67d3\uff0c\u7528\u4ed6\u7684\u9524\u5b50\u3002"
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "\u4ed6\u53ef\u4ee5\u7528\u9524\u5b50\u9524\u5730\u9762\u548c\u5899\u58c1\u6295\u6bd2=w=\u3002"
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "\u6295\u4e0b\u7684\u6bd2\u57283\u79d2\u5185\u5bf9\u4eba\u7c7b\u9020\u62103\u70b9\u4f24\u5bb3\u503c"
+	},
+	{
+		"key": "The Undead can infect humans and heal infected with his hammer.",
+		"value": "\u4e0d\u6b7b\u65cf\u53ef\u4ee5\u901a\u8fc7\u9524\u5b50\u611f\u67d3\u6b63\u5e38\u4eba\u6216\u7ed9\u88ab\u611f\u67d3\u8005\u6062\u590d\u751f\u547d\u503c\u3002"
+	},
+	{
+		"key": "Instead of dying, he freezes during 10 seconds.",
+		"value": "\u4ee3\u66ff\u6b7b\u4ea1\u7684\u662f\u4ed6\u5c06\u51bb\u7ed310\u79d2"
+	},
+	{
+		"key": "If an infected heals him, the freeze effect disappear.",
+		"value": "\u5982\u679c\u611f\u67d3\u8005\u6cbb\u6108\u4ed6\uff0c\u51bb\u7ed3\u6548\u679c\u6d88\u5931\u3002"
+	},
+	{
+		"key": "The Witch can infect humans and heal infected with his hammer.",
+		"value": "\u5973\u5deb\u53ef\u4ee5\u901a\u8fc7\u9524\u5b50\u611f\u67d3\u6b63\u5e38\u4eba\u6216\u7ed9\u88ab\u611f\u67d3\u8005\u6062\u590d\u751f\u547d\u503c\u3002"
+	},
+	{
+		"key": "When an infected dies, he may re-spawn near her.",
+		"value": "\u5f53\u88ab\u611f\u67d3\u8005\u6b7b\u4ea1\u65f6\uff0c\u53ef\u80fd\u4f1a\u91cd\u751f\u5728\u5973\u5deb\u65c1\u8fb9"
+	},
+	{
+		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"value": "\u5982\u679c\u5973\u5deb\u6b7b\u4e86\uff0c\u5979\u5c06\u6d88\u5931\uff0c\u53d6\u800c\u4ee3\u4e4b\u7684\u662f\u53e6\u4e00\u79cd\u611f\u67d3\u7c7b\u578b\u3002"
+	},
+	{
+		"key": "She can also inflict 1 damage point per second by hooking humans.",
+		"value": "\u5979\u4e5f\u53ef\u4ee5\u901a\u8fc7Hook\u53ef\u4ee5\u7ed9\u6b63\u5e38\u4eba\u9020\u62101\u70b9\u4f24\u5bb3"
+	},
+	{
+		"key": "Targeted chat messages",
+		"value": "\u6709\u9488\u5bf9\u6027\u7684\u804a\u5929\u6d88\u606f"
+	},
+	{
+		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"value": "\u4f7f\u7528\"/msg <PlayerName> <My Message>\"\u6765\u53d1\u9001\u79c1\u4eba\u6d88\u606f\u7ed9\u8fd9\u540d\u73a9\u5bb6"
+	},
+	{
+		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"value": "\u4f7f\u7528 \"/msg !<ClassName> <My Message>\"\u7ed9\u6240\u6709\u7279\u5b9a\u804c\u4e1a\u7684\u73a9\u5bb6\u53d1\u9001\u6d88\u606f"
+	},
+	{
+		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"value": "\u4f8b\u5982\uff1a\"/msg !medic I'm wounded!\""
+	},
+	{
+		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"value": "\u4f7f\u7528\"/msg !near\"\u7ed9\u4f60\u9644\u8fd1\u7684\u6240\u6709\u73a9\u5bb6\u53d1\u9001\u6d88\u606f"
+	},
+	{
+		"key": "Choose a help page with /help <page>",
+		"value": "\u4f7f\u7528/help <page>\u6765\u67e5\u770b\u5e2e\u52a9"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "\u53ef\u7528\u7684\u5e2e\u52a9\u9875\u9762\ufe30 {str:PageList}"
+	},
+	{
+		"key": "A random class will be automatically attributed to you when rounds start",
+		"value": "\u968f\u673a\u804c\u4e1a\u4f1a\u5728\u4e00\u8f6e\u6e38\u620f\u5f00\u59cb\u65f6\u81ea\u52a8\u9009\u62e9"
+	},
+	{
+		"key": "The class selector will be displayed when rounds start",
+		"value": "\u5728\u56de\u5408\u5f00\u59cb\u65f6\uff0c\u5c06\u663e\u793a\u804c\u4e1a\u9009\u62e9\u5668"
+	},
+	{
+		"key": "Unknown language",
+		"value": "\u672a\u77e5\u8bed\u8a00"
+	},
+	{
+		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "\u53ef\u7528\u8bed\u8a00\ufe30 {str:ListOfLanguage}"
+	},
+	{
+		"key": "List of commands",
+		"value": "\u547d\u4ee4\u5217\u8868"
+	},
+	{
+		"key": "Press <F3> or <F4> to enable or disable hook protection",
+		"value": "\u6309<f3>\u6216<f4>\u6765\u542f\u7528\u6216\u7981\u7528\u94a9\u4fdd\u62a4"
+	},
+	{
+		"key": "You hold a bonus area for one minute, +5 points",
+		"value": "\u4f60\u5728\u5956\u91d1\u5730\u533a\u5446\u4e00\u5206\u949f\uff0c+5 points"
+	},
+	{
+		"key": "You are frozen: {sec:EffectDuration}",
+		"value": "\u4f60\u88ab\u51bb\u7ed3\ufe30 {sec:EffectDuration}"
+	},
+	{
+		"key": "Random choice",
+		"value": "\u968f\u673a\u9009\u62e9 "
+	},
+	{
+		"key": "Choose your class",
+		"value": "\u9009\u62e9\u60a8\u7684\u804c\u4e1a"
+	},
+	{
+		"key": "Laser wall: {sec:RemainingTime}",
+		"value": "\u6fc0\u5149\u5899\ufe30 {sec:RemainingTime}"
+	},
+	{
+		"key": "{int:NumBombs} bombs left",
+		"other": "\u70b8\u5f39\u5269\u4f59{int:NumBombs} ",
+	},
+	{
+		"key": "{int:NumMines} mines are actives",
+		"other": "\u5730\u96f7\u5df2\u6fc0\u6d3b{int:NumMines} \u4e2a",
+	},
+	{
+		"key": "Mine activated",
+		"value": "\u5730\u96f7\u6fc0\u6d3b"
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "\u5728 {sec:RemainingTime} \u4e2d\u7684\u4e0b\u4e00\u4e2a\u76ee\u6807"
+	},
+	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "\u8981\u6d88\u9664\u76ee\u6807\ufe30 {str:PlayerName}"
+	},
+	{
+		"key": "Position lock: {sec:RemainingTime}",
+		"value": "\u4f4d\u7f6e\u9501\ufe30 {sec:RemainingTime}"
+	},
+	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "\u7206\u70b8\u7269\u586b\u5145\u91cf\uff1a{percent:BombLevel}"
+	},
+	{
+		"key": "Next flag in {sec:RemainingTime}",
+		"value": "\u4e0b\u4e00\u4e2a\u65d7\u5e1c\u51fa\u73b0\u65f6\u95f4\uff1a {sec:RemainingTime}"
+	},
+	{
+		"key": "Web mode enabled",
+		"value": "\u7f51\u72b6\u6a21\u5f0f\u542f\u7528"
+	},
+	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "\u8425\u517b\u503c\u586b\u5145\u91cf\uff1a{percent:FodderInStomach}"
+	},
+	{
+		"key": "The witch is dead",
+		"value": "\u5973\u5deb\u5df2\u6b7b"
+	},
+	{
+		"key": "The undead is finally dead",
+		"value": "\u4e0d\u6b7b\u65cf\u6700\u540e\u8fd8\u662f\u6b7b\u4e86"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "\u5251\u901f\u5ea6\u589e\u52a0"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "\u5251\u5f3a\u5ea6\u589e\u5927"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "\u589e\u52a0\u69b4\u5f39\u6781\u9650"
+	},
+	{
+		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"value": "\u952e\u5165\"/help {str:ClassName}\"\u6765\u83b7\u53d6\u5f53\u524d\u804c\u4e1a\u7684\u66f4\u591a\u4fe1\u606f"
+	},
+	{
+		"key": "The Hero found the flag!",
+		"value": "\u82f1\u96c4\u627e\u5230\u4e86\u65d7\u5e1c \uff01"
+	},
+]}
