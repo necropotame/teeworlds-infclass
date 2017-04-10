@@ -1,6 +1,6 @@
 #xgettext --keyword=_ --keyword="_P:1,2" --language=C -o ../infclass-translation/infclass.pot $(find ./src -name \*.cpp -or -name \*.h)
 
-import sys, polib, json, os
+import polib, json, os
 
 def ConvertPo2Json(languageCode, plurals):
 	if os.path.isfile("../infclass-translation/infclasspot_"+languageCode+".po"):
@@ -46,3 +46,4 @@ ConvertPo2Json("ru", ["one", "few", "many", "other"])
 ConvertPo2Json("uk", ["one", "few", "other"])
 ConvertPo2Json("fa", ["one", "other"])
 ConvertPo2Json("tr", ["one", "other"])
+ConvertPo2Json("zh-Hans", ["other"])

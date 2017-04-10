@@ -120,6 +120,16 @@
 		"file": "uk",
 		"name": "Українська",
 		"parent": "ru"
+	},
+	{
+		"file": "zh",
+		"name": "中文",
+		"parent": "zh-Hans"
+	},
+	{
+		"file": "zh-Hans",
+		"name": "白话文",
+		"parent": "en"
 	}
 
 ]
