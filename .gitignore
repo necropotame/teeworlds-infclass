@@ -19,3 +19,5 @@ src/game/generated
 /infclass_client*
 /infclass_srv*
 /infclass_editor*
+/serverconfig.cfg
+/startserver.sh
