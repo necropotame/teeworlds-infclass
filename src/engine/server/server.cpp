@@ -3567,7 +3567,7 @@ public:
 			{
 				int CurrentDay = pSqlServer->GetResults()->getInt("WeekDay");
 				int CurrentWeek = pSqlServer->GetResults()->getInt("Week");
-				ChallengeType = (CurrentWeek + CurrentDay)%7;
+				ChallengeType = (CurrentWeek*7 + CurrentDay)%NB_HUMANCLASS;
 			}
 			
 			ScoreType = ChallengeTypeToScoreType(ChallengeType);
