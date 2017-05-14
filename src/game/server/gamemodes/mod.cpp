@@ -821,17 +821,35 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	
 	double Probability[NB_INFECTEDCLASS];
 	
-	Probability[PLAYERCLASS_SMOKER - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_SMOKER)) ? 1.0f : 0.0f;
-	Probability[PLAYERCLASS_HUNTER - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_HUNTER)) ? 1.0f : 0.0f;
-	Probability[PLAYERCLASS_BOOMER - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_BOOMER)) ? 1.0f : 0.0f;
+	Probability[PLAYERCLASS_SMOKER - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_SMOKER)) ?
+        (double) g_Config.m_InfProbaSmoker : 0.0f;
+	Probability[PLAYERCLASS_HUNTER - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_HUNTER)) ?
+        (double) g_Config.m_InfProbaHunter : 0.0f;
+	Probability[PLAYERCLASS_BOOMER - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_BOOMER)) ?
+        (double) g_Config.m_InfProbaBoomer : 0.0f;
 	
-	Probability[PLAYERCLASS_GHOST - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_GHOST)) ? 0.25f : 0.0f;
-	Probability[PLAYERCLASS_SPIDER - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_SPIDER)) ? 0.25f : 0.0f;
-	Probability[PLAYERCLASS_GHOUL - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_GHOUL) && nbInfected >= g_Config.m_InfGhoulThreshold) ? 0.25f : 0.0f;
-	Probability[PLAYERCLASS_SLUG - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_SLUG)) ? 0.25f : 0.0f;
+	Probability[PLAYERCLASS_GHOST - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_GHOST)) ?
+        (double) g_Config.m_InfProbaGhost : 0.0f;
+	Probability[PLAYERCLASS_SPIDER - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_SPIDER)) ?
+        (double) g_Config.m_InfProbaSpider : 0.0f;
+	Probability[PLAYERCLASS_GHOUL - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_GHOUL) && nbInfected >= g_Config.m_InfGhoulThreshold) ?
+        (double) g_Config.m_InfProbaGhoul : 0.0f;
+	Probability[PLAYERCLASS_SLUG - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_SLUG)) ?
+        (double) g_Config.m_InfProbaSlug : 0.0f;
 	
-	Probability[PLAYERCLASS_WITCH - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_WITCH) && nbInfected > 2 && !thereIsAWitch) ? 0.25f : 0.0f;
-	Probability[PLAYERCLASS_UNDEAD - START_INFECTEDCLASS - 1] = (Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) && nbInfected > 2 && !thereIsAnUndead) ? 0.20f : 0.0f;
+	Probability[PLAYERCLASS_WITCH - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_WITCH) && nbInfected > 2 && !thereIsAWitch) ?
+        (double) g_Config.m_InfProbaWitch : 0.0f;
+	Probability[PLAYERCLASS_UNDEAD - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) && nbInfected > 2 && !thereIsAnUndead) ?
+        (double) g_Config.m_InfProbaUndead : 0.0f;
 	
 	return START_INFECTEDCLASS + 1 + random_distribution(Probability, Probability + NB_INFECTEDCLASS);
 }
