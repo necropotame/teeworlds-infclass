@@ -651,7 +651,7 @@ void CCharacter::FireWeapon()
 					}
 				}
 			}
-			else if(GetClass() == PLAYERCLASS_MERCENARY)
+			else if(GetClass() == PLAYERCLASS_MERCENARY && g_Config.m_InfMercLove)
 			{
 				CMercenaryBomb* pCurrentBomb = NULL;
 				for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
@@ -828,8 +828,9 @@ void CCharacter::FireWeapon()
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
 							}
 						}
-						else if(GetClass() == PLAYERCLASS_BIOLOGIST)
+						else if(GetClass() == PLAYERCLASS_BIOLOGIST || GetClass() == PLAYERCLASS_MERCENARY)
 						{
+							/* affects mercenary only if love bombs are disabled. */
 							if (pTarget->IsInfected())
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
