@@ -28,6 +28,7 @@ public:
 	virtual bool PickupAllowed(int Index);
 	virtual int ChooseHumanClass(CPlayer* pPlayer);
 	virtual int ChooseInfectedClass(CPlayer* pPlayer);
+	virtual bool IsEnabledClass(int PlayerClass);
 	virtual bool IsChoosableClass(int PlayerClass);
 	virtual bool CanVote();
 	virtual void OnClientDrop(int ClientID, int Type);

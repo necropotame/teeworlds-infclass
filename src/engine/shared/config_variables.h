@@ -144,4 +144,24 @@ MACRO_CONFIG_INT(InfSlimePoisonDuration, inf_slime_poison_duration, 5, 0, 10000,
 MACRO_CONFIG_INT(InfSlimeHealRate, inf_slime_heal_rate, 2, 0, 10000, CFGFLAG_SERVER, "Slug-Slime heals infected for X hearts every second")
 MACRO_CONFIG_INT(InfInfzoneHealRate, inf_infzone_heal_rate, 3, 0, 10000, CFGFLAG_SERVER, "InfectionZone heals infected for X hearts every second")
 
+MACRO_CONFIG_INT(InfProbaSmoker, inf_proba_smoker, 20, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a smoker")
+MACRO_CONFIG_INT(InfProbaHunter, inf_proba_hunter, 20, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a hunter")
+MACRO_CONFIG_INT(InfProbaBoomer, inf_proba_boomer, 20, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a boomer")
+MACRO_CONFIG_INT(InfProbaGhost, inf_proba_ghost, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a ghost")
+MACRO_CONFIG_INT(InfProbaSpider, inf_proba_spider, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a spider")
+MACRO_CONFIG_INT(InfProbaGhoul, inf_proba_ghoul, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a ghoul")
+MACRO_CONFIG_INT(InfProbaSlug, inf_proba_slug, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a slug")
+MACRO_CONFIG_INT(InfProbaWitch, inf_proba_witch, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a witch")
+MACRO_CONFIG_INT(InfProbaUndead, inf_proba_undead, 4, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be an undead")
+
+MACRO_CONFIG_INT(InfEnableEngineer, inf_enable_engineer, 1, 0, 1, CFGFLAG_SERVER, "Makes the engineer class available")
+MACRO_CONFIG_INT(InfEnableSoldier, inf_enable_soldier, 1, 0, 1, CFGFLAG_SERVER, "Makes the soldier class available")
+MACRO_CONFIG_INT(InfEnableScientist, inf_enable_scientist, 1, 0, 1, CFGFLAG_SERVER, "Makes the scientist class available")
+MACRO_CONFIG_INT(InfEnableBiologist, inf_enable_biologist, 1, 0, 1, CFGFLAG_SERVER, "Makes the biologist class available")
+MACRO_CONFIG_INT(InfEnableMercenary, inf_enable_mercenary, 1, 0, 1, CFGFLAG_SERVER, "Makes the mercenary class available")
+MACRO_CONFIG_INT(InfEnableSniper, inf_enable_sniper, 1, 0, 1, CFGFLAG_SERVER, "Makes the sniper class available")
+MACRO_CONFIG_INT(InfEnableNinja, inf_enable_ninja, 1, 0, 1, CFGFLAG_SERVER, "Makes the ninja class available")
+MACRO_CONFIG_INT(InfEnableMedic, inf_enable_medic, 1, 0, 1, CFGFLAG_SERVER, "Makes the medic class available")
+MACRO_CONFIG_INT(InfEnableHero, inf_enable_hero, 1, 0, 1, CFGFLAG_SERVER, "Makes the hero class available")
+
 #endif
