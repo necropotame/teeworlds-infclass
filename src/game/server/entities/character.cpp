@@ -2735,6 +2735,8 @@ void CCharacter::OpenClassChooser()
 	if(!Server()->IsClassChooserEnabled() || Server()->GetClientAlwaysRandom(m_pPlayer->GetCID()))
 	{
 		m_pPlayer->SetClass(GameServer()->m_pController->ChooseHumanClass(m_pPlayer));
+		if(Server()->IsClassChooserEnabled())
+			IncreaseArmor(10);
 	}
 	else
 	{
