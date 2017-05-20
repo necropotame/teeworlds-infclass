@@ -332,7 +332,7 @@
 		"value": "Paral\u0131 asker, makineli t\u00fcfe\u011fini kullanarak havada u\u00e7abilir."
 	},
 	{
-		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
+		"key": "He can coil explosives with his hammer that hinder infected from harming.",
 		"value": "\u00c7ekiciyle \u00e7e\u015fitli patlay\u0131c\u0131lar kurabilir ve uzaktan patlatabilir."
 	},
 	{
@@ -349,8 +349,8 @@
 		"value": "Havada iki kez z\u0131playabilir."
 	},
 	{
-		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
-		"value": "Ayr\u0131ca normalinde 9-10, kilitli pozisyonda 20 puan hasar veren g\u00fc\u00e7l\u00fc bir t\u00fcfe\u011fi vard\u0131r."
+		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10\u201313 otherwise.",
+		"value": "Ayr\u0131ca normalinde 10\u201313, kilitli pozisyonda 30 puan hasar veren g\u00fc\u00e7l\u00fc bir t\u00fcfe\u011fi vard\u0131r."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",

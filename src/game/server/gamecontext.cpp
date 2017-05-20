@@ -3256,7 +3256,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append(" ~~\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Mercenary fly in air using his machine gun."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can coil and remotely ignite explosives of various effects with his hammer."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can coil explosives with his hammer that hinder infected from harming."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_LP(
 				Buffer, pLanguage, g_Config.m_InfPoisonDamage,
@@ -3276,7 +3276,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can jump two times in air."), NULL); 
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also a powerful rifle that deals 30 damage points in locked position, and 10–13 otherwise."), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}

@@ -364,8 +364,8 @@
 		"value": "Der S\u00f6ldner ist mit einem Maschinengewehr ausgestattet, dessen R\u00fccksto\u00df ihn in die L\u00fcfte erhebt."
 	},
 	{
-		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
-		"value": "Er kann Sprengs\u00e4tze verschiedener Wirkung aufwinden und aus der Ferne z\u00fcnden."
+		"key": "He can coil explosives with his hammer that hinder infected from harming.",
+		"value": "Er kann Sprengs\u00e4tze aufwinden, die Erkrankte daran hindern zu schaden."
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
@@ -381,7 +381,7 @@
 		"value": "Er kann zweimal in der Luft springen."
 	},
 	{
-		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
+		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10\u201313 otherwise.",
 		"value": "In fester Stellung f\u00fcgt sein Laser 30 Schadenspunkte zu, in Bewegung 10\u201313."
 	},
 	{

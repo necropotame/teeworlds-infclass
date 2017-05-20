@@ -1,4 +1,4 @@
-#xgettext --keyword=_ --keyword="_P:1,2" --language=C -o ../infclass-translation/infclass.pot $(find ./src -name \*.cpp -or -name \*.h)
+#xgettext --keyword=_ --keyword="_P:1,2" --language=C --from-code=UTF-8 -o ../infclass-translation/infclasspot.po $(find ./src -name \*.cpp -or -name \*.h)
 
 import sys, polib, json, os
 

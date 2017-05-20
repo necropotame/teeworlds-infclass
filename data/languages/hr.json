@@ -368,8 +368,8 @@
 		"value": "Pla\u0107enik leti zrakom koriste\u0107i se machine gunom."
 	},
 	{
-		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
-		"value": "On mo\u017ee naviti i daljinski aktivirati eksplozive razli\u010ditih efekata pomo\u0107u svog \u010deki\u0107a."
+		"key": "He can coil explosives with his hammer that hinder infected from harming.",
+		"value": "On mo\u017ee naviti eksplozive pomo\u0107u svog \u010deki\u0107a koji onemogu\u0107e zara\u017eenima \u0161koditi."
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
@@ -386,8 +386,8 @@
 		"value": "Mo\u017ee sko\u010diti dva puta u zrak."
 	},
 	{
-		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
-		"value": "Ima i sna\u017enu pu\u0161ku koja dijeli 20 damage bodova u zaklju\u010danoj poziciji, a 9-10 bodova ina\u010de."
+		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10\u201313 otherwise.",
+		"value": "Ima i sna\u017enu pu\u0161ku koja dijeli 30 \u0161kodnih bodova u zaklju\u010danoj poziciji, a 10\u201313 bodova ina\u010de."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",
