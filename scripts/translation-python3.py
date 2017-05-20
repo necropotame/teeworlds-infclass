@@ -29,6 +29,7 @@ def ConvertPo2Json(languageCode, plurals):
 		print(']}', end="\n", file=f)
 
 ConvertPo2Json("ar", ["zero", "one", "two", "few", "many", "other"])
+ConvertPo2Json("bg", ["one", "other"])
 ConvertPo2Json("cs", ["one", "few", "other"])
 ConvertPo2Json("de", ["one", "other"])
 ConvertPo2Json("el", ["one", "other"])

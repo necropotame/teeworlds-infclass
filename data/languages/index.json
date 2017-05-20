@@ -11,13 +11,18 @@
 		"direction": "rtl"
 	},
 	{
+		"file": "bg",
+		"name": "Български",
+		"parent": "en"
+	},
+	{
 		"file": "bs",
 		"name": "Bosanski",
 		"parent": "hr"
 	},
 	{
 		"file": "cs",
-		"name": "Czech",
+		"name": "Čeština",
 		"parent": "en"
 	},
 	{

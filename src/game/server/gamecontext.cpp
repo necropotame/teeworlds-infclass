@@ -1779,6 +1779,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 887: //Yemen
 						str_copy(m_VoteLanguage[ClientID], "ar", sizeof(m_VoteLanguage[ClientID]));		
 						break;
+					/* bg - Bosnian *************************************/	
+					case 100: //Bulgaria
+						str_copy(m_VoteLanguage[ClientID], "bg", sizeof(m_VoteLanguage[ClientID]));					
+						break;
 					/* bs - Bosnian *************************************/	
 					case 70: //Bosnia and Hercegovina
 						str_copy(m_VoteLanguage[ClientID], "bs", sizeof(m_VoteLanguage[ClientID]));					
@@ -3629,7 +3633,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
 	Console()->Register("alwaysrandom", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAlwaysRandom, this, "Display information about the mod");
 	Console()->Register("antiping", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAntiPing, this, "Try to improve your ping");
-	Console()->Register("language", "s<en|fr|nl|de|hr|cs|pl|hu|uk|ru|el|la|it|es|pt|hu|ar|tr|fa|zh-Hans|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
+	Console()->Register("language", "s<en|fr|nl|de|bg|hr|cs|pl|uk|ru|el|la|it|es|pt|hu|ar|tr|fa|zh-Hans|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
 /* INFECTION MODIFICATION END *****************************************/
 
