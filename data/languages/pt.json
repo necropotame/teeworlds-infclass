@@ -70,7 +70,7 @@
 	},
 	{
 		"key": "You have infected {str:VictimName}, +3 points",
-		"value": "Voc\u00ea infectou {str:VictimName}, +3 pontos"
+		"value": "Voc\u00ea infetou {str:VictimName}, +3 pontos"
 	},
 	{
 		"key": "You have killed a witch, +5 points",
@@ -458,7 +458,7 @@
 	},
 	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
-		"value": "O Morto Vivo pode infectar humanos e curar infectados com seu martelo."
+		"value": "O Morto Vivo pode infetar humanos e curar infetados com seu martelo."
 	},
 	{
 		"key": "Instead of dying, he freezes during 10 seconds.",
@@ -600,7 +600,7 @@
 	},
 	{
 		"key": "The witch is dead",
-		"value": "A bruxa morreu"
+		"value": "A bruxa est\u00e1 morta"
 	},
 	{
 		"key": "The undead is finally dead",
