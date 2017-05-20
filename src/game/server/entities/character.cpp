@@ -2324,7 +2324,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	}
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME)
+	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME && !(IsInLove() && Weapon == WEAPON_SELF) )
 	{
 		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 		GameServer()->CreateExplosionDisk(m_Pos, 80.0f, 120.5f, 14, 52.0f, m_pPlayer->GetCID(), WEAPON_HAMMER, TAKEDAMAGEMODE_INFECTION);
