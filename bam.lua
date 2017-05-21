@@ -158,6 +158,7 @@ function build(settings)
 		settings.cc.flags:Add("/wd4244")
 	else
 		settings.cc.flags:Add("-Wall -std=c++11")
+		settings.cc.flags:Add("-Werror=format -fstack-protector-all -D_FORTIFY_SOURCE=1 -fPIE -pie")
 		if family == "windows" then
 			-- disable visibility attribute support for gcc on windows
 			settings.cc.defines:Add("NO_VIZ")
