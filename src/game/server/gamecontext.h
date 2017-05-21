@@ -77,9 +77,6 @@ class CGameContext : public IGameServer
 	static bool ConSay(IConsole::IResult *pResult, void *pUserData);
 	static bool ConSetTeam(IConsole::IResult *pResult, void *pUserData);
 	static bool ConSetTeamAll(IConsole::IResult *pResult, void *pUserData);
-	static bool ConSwapTeams(IConsole::IResult *pResult, void *pUserData);
-	static bool ConShuffleTeams(IConsole::IResult *pResult, void *pUserData);
-	static bool ConLockTeams(IConsole::IResult *pResult, void *pUserData);
 	static bool ConAddVote(IConsole::IResult *pResult, void *pUserData);
 	static bool ConRemoveVote(IConsole::IResult *pResult, void *pUserData);
 	static bool ConForceVote(IConsole::IResult *pResult, void *pUserData);
@@ -118,8 +115,6 @@ public:
 
 	// helper functions
 	class CCharacter *GetPlayerChar(int ClientID);
-
-	int m_LockTeams;
 
 	// voting
 	void StartVote(const char *pDesc, const char *pCommand, const char *pReason);
@@ -175,9 +170,6 @@ public:
 	//
 	void CheckPureTuning();
 	void SendTuningParams(int ClientID);
-
-	//
-	void SwapTeams();
 
 	// engine events
 	virtual void OnInit();

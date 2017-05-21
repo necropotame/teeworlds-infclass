@@ -47,7 +47,6 @@ void CGameContext::Construct(int Resetting)
 	m_pVoteOptionFirst = 0;
 	m_pVoteOptionLast = 0;
 	m_NumVoteOptions = 0;
-	m_LockTeams = 0;
     m_TargetToKill = -1;
     m_TargetToKillCoolDown = 0;
 	
@@ -787,22 +786,6 @@ void CGameContext::SendTuningParams(int ClientID)
 	for(unsigned i = 0; i < sizeof(m_Tuning)/sizeof(int); i++)
 		Msg.AddInt(pParams[i]);
 	Server()->SendMsg(&Msg, MSGFLAG_VITAL, ClientID);
-}
-
-void CGameContext::SwapTeams()
-{
-	if(!m_pController->IsTeamplay())
-		return;
-	
-	SendChat(-1, CGameContext::CHAT_ALL, "Teams were swapped");
-
-	for(int i = 0; i < MAX_CLIENTS; ++i)
-	{
-		if(m_apPlayers[i] && m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
-			m_apPlayers[i]->SetTeam(m_apPlayers[i]->GetTeam()^1, false);
-	}
-
-	(void)m_pController->CheckTeamBalance();
 }
 
 void CGameContext::SendHitSound(int ClientID)
@@ -1610,13 +1593,6 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			if(pPlayer->GetTeam() == pMsg->m_Team || (g_Config.m_SvSpamprotection && pPlayer->m_LastSetTeam && pPlayer->m_LastSetTeam+Server()->TickSpeed()*3 > Server()->Tick()))
 				return;
 
-			if(pMsg->m_Team != TEAM_SPECTATORS && m_LockTeams)
-			{
-				pPlayer->m_LastSetTeam = Server()->Tick();
-				SendBroadcast(ClientID, "Teams are locked", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
-				return;
-			}
-
 			if(pPlayer->m_TeamChangeTick > Server()->Tick())
 			{
 				pPlayer->m_LastSetTeam = Server()->Tick();
@@ -2190,71 +2166,6 @@ bool CGameContext::ConSetTeamAll(IConsole::IResult *pResult, void *pUserData)
 			pSelf->m_apPlayers[i]->SetTeam(Team, false);
 
 	(void)pSelf->m_pController->CheckTeamBalance();
-	
-	return true;
-}
-
-bool CGameContext::ConSwapTeams(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	pSelf->SwapTeams();
-	
-	return true;
-}
-
-bool CGameContext::ConShuffleTeams(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	if(!pSelf->m_pController->IsTeamplay())
-		return true;
-
-	int CounterRed = 0;
-	int CounterBlue = 0;
-	int PlayerTeam = 0;
-	for(int i = 0; i < MAX_CLIENTS; ++i)
-		if(pSelf->m_apPlayers[i] && pSelf->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
-			++PlayerTeam;
-	PlayerTeam = (PlayerTeam+1)/2;
-	
-	pSelf->SendChat(-1, CGameContext::CHAT_ALL, "Teams were shuffled");
-
-	for(int i = 0; i < MAX_CLIENTS; ++i)
-	{
-		if(pSelf->m_apPlayers[i] && pSelf->m_apPlayers[i]->GetTeam() != TEAM_SPECTATORS)
-		{
-			if(CounterRed == PlayerTeam)
-				pSelf->m_apPlayers[i]->SetTeam(TEAM_BLUE, false);
-			else if(CounterBlue == PlayerTeam)
-				pSelf->m_apPlayers[i]->SetTeam(TEAM_RED, false);
-			else
-			{	
-				if(random_prob(0.5f))
-				{
-					pSelf->m_apPlayers[i]->SetTeam(TEAM_BLUE, false);
-					++CounterBlue;
-				}
-				else
-				{
-					pSelf->m_apPlayers[i]->SetTeam(TEAM_RED, false);
-					++CounterRed;
-				}
-			}
-		}
-	}
-
-	(void)pSelf->m_pController->CheckTeamBalance();
-	
-	return true;
-}
-
-bool CGameContext::ConLockTeams(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	pSelf->m_LockTeams ^= 1;
-	if(pSelf->m_LockTeams)
-		pSelf->SendChat(-1, CGameContext::CHAT_ALL, "Teams were locked");
-	else
-		pSelf->SendChat(-1, CGameContext::CHAT_ALL, "Teams were unlocked");
 	
 	return true;
 }
@@ -3610,9 +3521,6 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("say", "r", CFGFLAG_SERVER, ConSay, this, "Say in chat");
 	Console()->Register("set_team", "ii?i", CFGFLAG_SERVER, ConSetTeam, this, "Set team of player to team");
 	Console()->Register("set_team_all", "i", CFGFLAG_SERVER, ConSetTeamAll, this, "Set team of all players to team");
-	Console()->Register("swap_teams", "", CFGFLAG_SERVER, ConSwapTeams, this, "Swap the current teams");
-	Console()->Register("shuffle_teams", "", CFGFLAG_SERVER, ConShuffleTeams, this, "Shuffle the current teams");
-	Console()->Register("lock_teams", "", CFGFLAG_SERVER, ConLockTeams, this, "Lock/unlock teams");
 
 	Console()->Register("add_vote", "sr", CFGFLAG_SERVER, ConAddVote, this, "Add a voting option");
 	Console()->Register("remove_vote", "s", CFGFLAG_SERVER, ConRemoveVote, this, "remove a voting option");
