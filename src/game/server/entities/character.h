@@ -208,6 +208,7 @@ public:
 public:
 	void DestroyChildEntities();
 	void ClassSpawnAttributes();
+	void GiveArmorIfLonely();
 	void OpenClassChooser();
 	int GetClass();
 	void SetClass(int ClassChoosed);
