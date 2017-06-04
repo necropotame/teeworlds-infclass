@@ -9,7 +9,7 @@
 	},
 	{
 		"key": "Wrong username/password.",
-		"value": "L'identifiant ou le mot de passe est incorrecte."
+		"value": "L'identifiant ou le mot de passe est incorrect."
 	},
 	{
 		"key": "An error occured during the operation.",

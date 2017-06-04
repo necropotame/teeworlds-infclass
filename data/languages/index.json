@@ -47,6 +47,11 @@
 		"direction": "rtl"
 	},
 	{
+		"file": "fil",
+		"name": "Filipino",
+		"parent": "tl"
+	},
+	{
 		"file": "fr",
 		"name": "Français",
 		"parent": "en"
@@ -115,6 +120,11 @@
 		"file": "sr-Latn",
 		"name": "Srpski latinicom",
 		"parent": "hr"
+	},
+	{
+		"file": "tl",
+		"name": "Tagalog",
+		"parent": "en"
 	},
 	{
 		"file": "tr",
