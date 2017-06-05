@@ -11,13 +11,18 @@
 		"direction": "rtl"
 	},
 	{
+		"file": "bg",
+		"name": "Български",
+		"parent": "en"
+	},
+	{
 		"file": "bs",
 		"name": "Bosanski",
 		"parent": "hr"
 	},
 	{
 		"file": "cs",
-		"name": "Czech",
+		"name": "Čeština",
 		"parent": "en"
 	},
 	{
@@ -40,6 +45,11 @@
 		"name": "فارسی",
 		"parent": "en",
 		"direction": "rtl"
+	},
+	{
+		"file": "fil",
+		"name": "Filipino",
+		"parent": "tl"
 	},
 	{
 		"file": "fr",
@@ -110,6 +120,11 @@
 		"file": "sr-Latn",
 		"name": "Srpski latinicom",
 		"parent": "hr"
+	},
+	{
+		"file": "tl",
+		"name": "Tagalog",
+		"parent": "en"
 	},
 	{
 		"file": "tr",

@@ -368,8 +368,8 @@
 		"value": "Najemnik mo\u017ce lata\u0107 u\u017cywaj\u0105c swojego pistelotu maszynowego."
 	},
 	{
-		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
-		"value": "Mo\u017ce na\u0142adowa\u0107 pole ekslozji lub innych efekt\u00f3w swoim m\u0142otem."
+		"key": "He can coil explosives with his hammer that hinder infected from harming.",
+		"value": "Mo\u017ce na\u0142adowa\u0107 pole ekslozji swoim m\u0142otem kt\u00f3re uniemo\u017cliwia zainfekowanym szkodzi\u0107."
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
@@ -386,8 +386,8 @@
 		"value": "\u0141owca mo\u017ce zara\u017ca\u0107 ludzi i leczy\u0107 zara\u017conych swoim m\u0142otem."
 	},
 	{
-		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
-		"value": "Ma r\u00f3wnie\u017c pot\u0119\u017cny karabin, kt\u00f3ry zabiera 20 punkt\u00f3w obra\u017cen w pozycji zablokowanej i 9-10 gdy nie jest."
+		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10\u201313 otherwise.",
+		"value": "Ma r\u00f3wnie\u017c pot\u0119\u017cny karabin, kt\u00f3ry zabiera 30 punkt\u00f3w obra\u017cen w pozycji zablokowanej i 10\u201313 gdy nie jest."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",

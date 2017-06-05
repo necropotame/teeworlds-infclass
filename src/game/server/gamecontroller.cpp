@@ -175,11 +175,7 @@ void IGameController::CycleMap(bool Forced)
 		return;
 
 	if(!Forced && m_RoundCount < g_Config.m_SvRoundsPerMap-1)
-	{
-		if(g_Config.m_SvRoundSwap)
-			GameServer()->SwapTeams();
 		return;
-	}
 
 	// handle maprotation
 	const char *pMapRotation = g_Config.m_SvMaprotation;
@@ -450,8 +446,15 @@ void IGameController::Tick()
 		m_UnbalancedTick = -1;
 	}
 
+	unsigned int nbPlayers=0;
+	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
+	while(Iter.Next())
+	{
+		nbPlayers++;
+	}
+
 	// check for inactive players
-	if(g_Config.m_SvInactiveKickTime > 0)
+	if(g_Config.m_SvInactiveKickTime > 0 && nbPlayers > 1)
 	{
 		for(int i = 0; i < MAX_CLIENTS; ++i)
 		{

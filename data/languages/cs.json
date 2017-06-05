@@ -336,8 +336,8 @@
 		"value": "\u017doldn\u00e9\u0159 l\u00e9t\u00e1 ve vzduchu pomoc\u00ed jeho pistole."
 	},
 	{
-		"key": "He can coil and remotely ignite explosives of various effects with his hammer.",
-		"value": "M\u016f\u017ee sv\u00fdm kladivem tvo\u0159it exploze s r\u016fzn\u00fdmi efekty"
+		"key": "He can coil explosives with his hammer that hinder infected from harming.",
+		"value": "M\u016f\u017ee sv\u00fdm kladivem tvo\u0159it exploze."
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
@@ -354,8 +354,8 @@
 		"value": "M\u016f\u017ee sko\u010dit 3 kr\u00e1t"
 	},
 	{
-		"key": "He has also a powerful rifle that deals 20 damage points in locked position, and 9-10 otherwise.",
-		"value": "Taky m\u00e1 velmi siln\u00fd laser, kter\u00fd ud\u011bluje 20 \u017eivot\u016f v zhehybn\u011bnosti a 9-10 norm\u00e1ln\u011b."
+		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10\u201313 otherwise.",
+		"value": "Taky m\u00e1 velmi siln\u00fd laser, kter\u00fd ud\u011bluje 30 \u017eivot\u016f v zhehybn\u011bnosti a 10-13 norm\u00e1ln\u011b."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",

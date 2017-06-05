@@ -651,7 +651,7 @@ void CCharacter::FireWeapon()
 					}
 				}
 			}
-			else if(GetClass() == PLAYERCLASS_MERCENARY)
+			else if(GetClass() == PLAYERCLASS_MERCENARY && g_Config.m_InfMercLove)
 			{
 				CMercenaryBomb* pCurrentBomb = NULL;
 				for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
@@ -828,8 +828,9 @@ void CCharacter::FireWeapon()
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
 							}
 						}
-						else if(GetClass() == PLAYERCLASS_BIOLOGIST)
+						else if(GetClass() == PLAYERCLASS_BIOLOGIST || GetClass() == PLAYERCLASS_MERCENARY)
 						{
+							/* affects mercenary only if love bombs are disabled. */
 							if (pTarget->IsInfected())
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
@@ -2323,10 +2324,10 @@ void CCharacter::Die(int Killer, int Weapon)
 	}
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME)
+	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME && !(IsInLove() && Weapon == WEAPON_SELF) )
 	{
 		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
-		GameServer()->CreateExplosionDisk(m_Pos, 80.0f, 120.5f, 14, 52.0f, m_pPlayer->GetCID(), WEAPON_HAMMER, TAKEDAMAGEMODE_INFECTION);
+		GameServer()->CreateExplosionDisk(m_Pos, 80.0f, 107.5f, 14, 52.0f, m_pPlayer->GetCID(), WEAPON_HAMMER, TAKEDAMAGEMODE_INFECTION);
 	}
 	
 	if(GetClass() == PLAYERCLASS_WITCH)
@@ -2734,6 +2735,8 @@ void CCharacter::OpenClassChooser()
 	if(!Server()->IsClassChooserEnabled() || Server()->GetClientAlwaysRandom(m_pPlayer->GetCID()))
 	{
 		m_pPlayer->SetClass(GameServer()->m_pController->ChooseHumanClass(m_pPlayer));
+		if(Server()->IsClassChooserEnabled())
+			IncreaseArmor(10);
 	}
 	else
 	{
