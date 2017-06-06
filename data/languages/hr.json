@@ -9,11 +9,11 @@
 	},
 	{
 		"key": "Wrong username/password.",
-		"value": "Pogre\u0161no korisnicko ime/\u0161ifra."
+		"value": "Pogre\u0161no korisni\u010dko ime/\u0161ifra."
 	},
 	{
 		"key": "An error occured during the operation.",
-		"value": "Pojavila se gre\u0161ka prlikom operacije."
+		"value": "Pojavila se gre\u0161ka prilikom operacije."
 	},
 	{
 		"key": "You must be logged for this operation",
@@ -25,7 +25,7 @@
 	},
 	{
 		"key": "An error occured during the creation of your account.",
-		"value": "Dogodila se gre\u0161ka pri izradi Va\u0161eg naloga."
+		"value": "Dogodila se gre\u0161ka pri izradi Va\u0161eg ra\u010duna."
 	},
 	{
 		"key": "This username is already taken by an existing account",
@@ -45,7 +45,7 @@
 	},
 	{
 		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Ve\u0107 ste obavjestili da {str:PlayerName} treba biti bannovan"
+		"value": "Ve\u0107 ste obavijestili da {str:PlayerName} treba biti bannovan"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
@@ -61,9 +61,9 @@
 	},
 	{
 		"key": "{int:NumHumans} humans won the round",
-		"one": "Jedan \u010dovjek je pobijedio ovu rundu",
-		"few": "{int:NumHumans} ljudi je pobijedilo ovu rundu",
-		"other": "{int:NumHumans} ljudi je pobijedilo ovu rundu",
+		"one": "{int:NumHumans} \u010dovjek je pobijedio ovu rundu",
+		"few": "{int:NumHumans} \u010dovjeka su pobijedili ovu rundu",
+		"other": "{int:NumHumans} ljudi su pobijedili ovu rundu",
 	},
 	{
 		"key": "You have survived, +5 points",
@@ -299,7 +299,7 @@
 	},
 	{
 		"key": "Each bomb can explode {int:NumBombs} times.",
-		"one": "Svaka bomba mo\u017ee eksplodirati jedan put.",
+		"one": "Svaka bomba mo\u017ee eksplodirati {int:NumBombs} put.",
 		"few": "Svaka bomba mo\u017ee eksplodirati {int:NumBombs} puta.",
 		"other": "Svaka bomba mo\u017ee eksplodirati {int:NumBombs} puta.",
 	},
@@ -317,7 +317,7 @@
 	},
 	{
 		"key": "Mines are limited to {int:NumMines} per player at the same time.",
-		"one": "Mine su ograni\u010dene na jednog igra\u010da u isto vrijeme.",
+		"one": "Mine su ograni\u010dene na {int:NumMines} za igra\u010da u isto vrijeme.",
 		"few": "Mine su ograni\u010dene na {int:NumMines} po igra\u010du u isto vrijeme.",
 		"other": "Mine su ograni\u010dene na {int:NumMines} po igra\u010du u isto vrijeme.",
 	},
@@ -331,15 +331,15 @@
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
-		"value": "Lije\u010dnik mo\u017ee dati ljudima armor."
+		"value": "Lije\u010dnik mo\u017ee dati ljudima oklop."
 	},
 	{
 		"key": "He has also a powerful shotgun that can pullback infected.",
-		"value": "Ima i sna\u017ean shotgun koji odbacuje zara\u017eene."
+		"value": "Ima i sna\u017enu sa\u010dmaru koji odbacuje zara\u017eene."
 	},
 	{
 		"key": "The Hero has a shotgun, a laser rifle and grenades.",
-		"value": "Heroj ima shotgun, lasersku pu\u0161ku i granate."
+		"value": "Heroj ima sa\u010dmaru, lasersku pu\u0161ku i granate."
 	},
 	{
 		"key": "The Hero must find a flag hidden in the map.",
@@ -347,11 +347,11 @@
 	},
 	{
 		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
-		"value": "Kad ju uzme, zastava daje 1 health, 4 armor, i puni municiju svim ljudima, te cijeli health i armor za heroja."
+		"value": "Kad ju uzme, zastava daje 1 zdravlje, 4 oklopa, i punu municiju svim ljudima, te puno zdravlje i oklop za heroja."
 	},
 	{
 		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
-		"value": "Heroja ne mo\u017ee izlije\u010diti lije\u010dnik, ali on mo\u017ee izdr\u017eati napad zara\u017eenog jer ima dovoljno healtha."
+		"value": "Heroja ne mo\u017ee izlije\u010diti lije\u010dnik, ali on mo\u017ee izdr\u017eati napad zara\u017eenog ako ima dovoljno zdravlja."
 	},
 	{
 		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
@@ -395,7 +395,7 @@
 	},
 	{
 		"key": "He can also inflict 4 damage points per second by hooking humans.",
-		"value": "Nanosi 4 damage boda po sekundi kad huka ljude."
+		"value": "Nanosi 4 \u0161kodnih boda po sekundi kad huka ljude."
 	},
 	{
 		"key": "The Boomer explodes when he attack.",
@@ -407,7 +407,7 @@
 	},
 	{
 		"key": "He can also inflict 1 damage point per second by hooking humans.",
-		"value": "Mo\u017ee nanijeniti 1 damage bod po sekundi kada huka ljude."
+		"value": "Mo\u017ee nanijeti 1 \u0161kodan bod po sekundi kada huka ljude."
 	},
 	{
 		"key": "The Hunter can infect humans and heal infected with his hammer.",
@@ -427,7 +427,7 @@
 	},
 	{
 		"key": "When selecting any gun, his hook enter in web mode.",
-		"value": "Kada selektira\u0161 neko oru\u017eje, njegov huk prelazi u mre\u017eu."
+		"value": "Kada izdvaja neko oru\u017eje, njegov huk prelazi u mre\u017eu."
 	},
 	{
 		"key": "Any human that touch a hook in web mode is automatically grabbed.",
@@ -439,7 +439,7 @@
 	},
 	{
 		"key": "The Ghoul can infect humans and heal infected with his hammer.",
-		"value": "Zloduh mo\u017ee da inficira ljude i da le\u010di inficirane svojim \u010deki\u0107em."
+		"value": "Zloduh mo\u017ee da zara\u017eava ljude i da lije\u010di zara\u017eene svojim \u010deki\u0107em."
 	},
 	{
 		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
@@ -451,7 +451,7 @@
 	},
 	{
 		"key": "The Slug can infect humans and heal infected with his hammer.",
-		"value": "Pu\u017e mo\u017ee da inficira ljude i da le\u010di inficirane sa svojim \u010deki\u0107em."
+		"value": "Pu\u017e mo\u017ee da zara\u017eava ljude i da lije\u010di zara\u017eene sa svojim \u010deki\u0107em."
 	},
 	{
 		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
@@ -487,7 +487,7 @@
 	},
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
-		"value": "Mo\u017ee nanijeniti 1 damage bod po sekundi kada huka ljude."
+		"value": "Mo\u017ee nanijeti 1 \u0161kodan bod po sekundi kada huka ljude."
 	},
 	{
 		"key": "Targeted chat messages",
@@ -495,19 +495,19 @@
 	},
 	{
 		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "Koristi \"/msg \" da bi slao/slala privatne poruke."
+		"value": "Koristi \u00bb/msg <korisnik> <poruka moja>\u00ab da bi slao/slala privatne poruke."
 	},
 	{
 		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Koristi \"/msg !\" da bi poslao/poslala privatnu poruku svim igra\u010dima jedne specifi\u010dne klase."
+		"value": "Koristi \u00bb/msg !<ime klase> <poruka moja>\u00ab da bi poslao/poslala privatnu poruku svim igra\u010dima jedne specifi\u010dne klase."
 	},
 	{
 		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "Primer: \"/msg !medic I'm wounded!\""
+		"value": "Primer: \u00bb/msg !medic I'm wounded!\u00ab"
 	},
 	{
 		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "Koristi \"/msg !near\" da bi poslao/poslala privatne poruke svim igra\u010dima blizu tebe."
+		"value": "Koristi \u00bb/msg !near\u00ab da bi poslao/poslala privatne poruke svim igra\u010dima blizu tebe."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -563,15 +563,15 @@
 	},
 	{
 		"key": "{int:NumBombs} bombs left",
-		"one": "Jedna bomba preostala",
-		"few": "{int:NumBombs} bombi preostalo",
+		"one": "{int:NumBombs} bomba preostala",
+		"few": "{int:NumBombs} bombe preostalo",
 		"other": "{int:NumBombs} bombi preostalo",
 	},
 	{
 		"key": "{int:NumMines} mines are actives",
 		"one": "{int:NumMines} mina je aktivna",
 		"few": "{int:NumMines} mine su aktivne",
-		"other": "{int:NumMines} mine su aktivne",
+		"other": "{int:NumMines} mina su aktivne",
 	},
 	{
 		"key": "Mine activated",
@@ -579,7 +579,7 @@
 	},
 	{
 		"key": "Next target in {sec:RemainingTime}",
-		"value": "Slede\u0107a meta za {sec:RemainingTime}"
+		"value": "Sljede\u0107a meta za {sec:RemainingTime}"
 	},
 	{
 		"key": "Target to eliminate: {str:PlayerName}",
@@ -627,7 +627,7 @@
 	},
 	{
 		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Napi\u0161i \"/help {str:ClassName}\" za vi\u0161e informacija o svojoj klasi"
+		"value": "Napi\u0161i \u00bb/help {str:ClassName}\u00ab za vi\u0161e informacija o svojoj klasi"
 	},
 	{
 		"key": "The Hero found the flag!",

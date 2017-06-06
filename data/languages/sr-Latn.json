@@ -347,7 +347,7 @@
 	},
 	{
 		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
-		"value": "Kad ju uzme, zastava daje 1 health, 4 armor, i puni municiju svim ljudima, te puni zdravlje i oklop za heroja."
+		"value": "Kad ju uzme, zastava daje 1 zdravlje, 4 oklopa, i punu municiju svim ljudima, te puno zdravlje i oklop za heroja."
 	},
 	{
 		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
