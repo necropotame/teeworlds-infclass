@@ -4027,6 +4027,7 @@ void CServer::OnRoundEnd()
 		str_comp(m_aCurrentMap, "infc_skull") != 0 &&
 		str_comp(m_aCurrentMap, "infc_altepetl") != 0 &&
 		str_comp(m_aCurrentMap, "infc_sewers") != 0 &&
+		str_comp(m_aCurrentMap, "infc_lunaroutpost") != 0 &&
 		str_comp(m_aCurrentMap, "infc_bamboo") != 0 &&
 		str_comp(m_aCurrentMap, "infc_chashitsu") != 0 &&
 		str_comp(m_aCurrentMap, "infc_eidalfitr") != 0 &&
