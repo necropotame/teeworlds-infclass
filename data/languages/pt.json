@@ -1,7 +1,7 @@
 {"translation":[
 	{
 		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
-		"value": "{str:Victim} foi silenciado dentro de {sec:Duration} ({str:Reason})"
+		"value": "{str:Victim} foi silenciado por {sec:Duration} ({str:Reason})"
 	},
 	{
 		"key": "You are now logged.",
@@ -9,7 +9,7 @@
 	},
 	{
 		"key": "Wrong username/password.",
-		"value": "Username/password errada."
+		"value": "Usu\u00e1rio e/ou senha inv\u00e1lidos."
 	},
 	{
 		"key": "An error occured during the operation.",
@@ -25,7 +25,7 @@
 	},
 	{
 		"key": "An error occured during the creation of your account.",
-		"value": "Um erro ocorreu durante a cria\u00e7\u00e3o da sua conta."
+		"value": "Um erro ocorreu durante a cria\u00e7\u00e3o de sua conta."
 	},
 	{
 		"key": "This username is already taken by an existing account",
@@ -45,7 +45,7 @@
 	},
 	{
 		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Voc\u00ea j\u00e1 prop\u00f4s que {str:PlayerName} deve ser banido"
+		"value": "Voc\u00ea j\u00e1 prop\u00f4s que {str:PlayerName} seja banido"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
@@ -70,7 +70,7 @@
 	},
 	{
 		"key": "You have infected {str:VictimName}, +3 points",
-		"value": "Voc\u00ea infetou {str:VictimName}, +3 pontos"
+		"value": "Voc\u00ea infectou {str:VictimName}, +3 pontos"
 	},
 	{
 		"key": "You have killed a witch, +5 points",
@@ -170,7 +170,7 @@
 	},
 	{
 		"key": "Ghoul",
-		"value": "Canibalista"
+		"value": "Canibal"
 	},
 	{
 		"key": "Slug",
@@ -190,11 +190,11 @@
 	},
 	{
 		"key": "You are a human: {str:ClassName}",
-		"value": "Voc\u00ea \u00e9 um humano : {str:ClassName}"
+		"value": "Voc\u00ea \u00e9 um humano: {str:ClassName}"
 	},
 	{
 		"key": "You are an infected: {str:ClassName}",
-		"value": "Voc\u00ea \u00e9 um infectado : {str:ClassName}"
+		"value": "Voc\u00ea \u00e9 um infectado: {str:ClassName}"
 	},
 	{
 		"key": "{str:PlayerName} entered and joined the game",
@@ -214,7 +214,7 @@
 	},
 	{
 		"key": "Switch language to english ?",
-		"value": "Mudar o idioma para Portugu\u00eas ?"
+		"value": "Mudar o idioma para Portugu\u00eas?"
 	},
 	{
 		"key": "You can change the language of this mod using the command /language.",
@@ -238,7 +238,7 @@
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
-		"value": "Obrigado \u00e0 {str:ListOfContributors}"
+		"value": "Agradecimentos a {str:ListOfContributors}"
 	},
 	{
 		"key": "No player was found with this name",
@@ -290,7 +290,7 @@
 	},
 	{
 		"key": "The lifespan of a wall is {sec:LifeSpan}, and walls are limited to one per player at the same time.",
-		"value": "A dura\u00e7\u00e3o do muro \u00e9 de {sec:LifeSpan}, e cada jogador s\u00f3 pode ter um muro ativo de cada vez."
+		"value": "A dura\u00e7\u00e3o do muro \u00e9 de {sec:LifeSpan}, e cada jogador s\u00f3 pode ter um muro ativo por vez."
 	},
 	{
 		"key": "The Soldier can pose floating bombs with his hammer.",
@@ -303,7 +303,7 @@
 	},
 	{
 		"key": "Use the hammer to place the bomb and explode it multiple times.",
-		"value": "Use o martelo para colocar a bomba e explodi-la multiplas vezes."
+		"value": "Use o martelo para colocar a bomba e explodi-la m\u00faltiplas vezes."
 	},
 	{
 		"key": "Bombs are limited to one per player at the same time.",
@@ -315,16 +315,16 @@
 	},
 	{
 		"key": "Mines are limited to {int:NumMines} per player at the same time.",
-		"one": "Minas s\u00e3o limitadas \u00e0 uma de cada vez por jogador.",
+		"one": "Minas s\u00e3o limitadas a uma de cada vez por jogador.",
 		"other": "Minas s\u00e3o limitadas \u00e0 {int:NumMines} por jogador ao mesmo tempo.",
 	},
 	{
 		"key": "He has also grenades that teleport him.",
-		"value": "Ele tamb\u00e9m t\u00eam granadas que podem teleporta-lo"
+		"value": "Ele tamb\u00e9m tem granadas que podem teleport\u00e1-lo."
 	},
 	{
 		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
-		"value": "O bi\u00f3logo tem uma espingarda com balas saltando e pode criar uma armadilha de laser da mola disparando com seu rifle."
+		"value": "O bi\u00f3logo tem uma espingarda com balas que ricocheteiam na parede e pode criar uma armadilha, que aciona automaticamente, disparando com seu rifle."
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
@@ -356,8 +356,8 @@
 	},
 	{
 		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
-		"one": "Seu martelo foi substitu\u00eddo por uma katana, permitindo que ele pule uma vez antes de tocar no ch\u00e3o.",
-		"other": "Seu martelo foi substitu\u00eddo por uma katana, permitindo que ele pule {int:NinjaJump} vezes antes de tocar no ch\u00e3o.",
+		"one": "Seu martelo foi substitu\u00eddo por uma katana, permitindo que ele ataque uma vez antes de precisar tocar no ch\u00e3o.",
+		"other": "Seu martelo foi substitu\u00eddo por uma katana, permitindo que ele ataque {int:NinjaJump} vezes antes de precisar tocar no ch\u00e3o.",
 	},
 	{
 		"key": "The Mercenary fly in air using his machine gun.",
@@ -365,7 +365,7 @@
 	},
 	{
 		"key": "He can coil explosives with his hammer that hinder infected from harming.",
-		"value": "Ele pode bobinar explosivos com seu martelo que impedem aos infectados danar."
+		"value": "Ele pode armar explosivos com seu martelo os quais impedem que os infectados causem dano temporariamente."
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
@@ -390,7 +390,7 @@
 	},
 	{
 		"key": "He can also inflict 4 damage points per second by hooking humans.",
-		"value": "Ele tamb\u00e9m pode causar 4 pontos de dano por segundo enganchando humanos."
+		"value": "Ele tamb\u00e9m pode causar 4 pontos de dano por segundo ao segurar humanos com seu gancho."
 	},
 	{
 		"key": "The Boomer explodes when he attack.",
@@ -402,7 +402,7 @@
 	},
 	{
 		"key": "He can also inflict 1 damage point per second by hooking humans.",
-		"value": "Ele tamb\u00e9m causa 1 ponto de dano por segundo enganchando humanos."
+		"value": "Ele tamb\u00e9m causa 1 ponto de dano por segundo ao segurar humanos com seu gancho."
 	},
 	{
 		"key": "The Hunter can infect humans and heal infected with his hammer.",
@@ -410,7 +410,7 @@
 	},
 	{
 		"key": "The Ghost can infect humans and heal infected with his hammer.",
-		"value": "O Fantasma pode infectar humanos e cura-los com seu martelo."
+		"value": "O Fantasma pode infectar humanos e curar infectados com seu martelo."
 	},
 	{
 		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
@@ -422,11 +422,11 @@
 	},
 	{
 		"key": "When selecting any gun, his hook enter in web mode.",
-		"value": "Quando selecionar qualquer arma, seu gancho entra no modo teia."
+		"value": "Ao selecionar qualquer arma, seu gancho entra no modo teia."
 	},
 	{
 		"key": "Any human that touch a hook in web mode is automatically grabbed.",
-		"value": "Qualquer humano que tocar um gancho no modo teia \u00e9 automaticamento agarrado."
+		"value": "Qualquer humano que tocar um gancho no modo teia \u00e9 automaticamente agarrado."
 	},
 	{
 		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
@@ -434,7 +434,7 @@
 	},
 	{
 		"key": "The Ghoul can infect humans and heal infected with his hammer.",
-		"value": "O canibalista pode infectar seres humanos e curar os infectados com o seu martelo."
+		"value": "O canibal pode infectar seres humanos e curar os infectados com o seu martelo."
 	},
 	{
 		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
@@ -442,7 +442,7 @@
 	},
 	{
 		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
-		"value": "Com isso, ele digere a sua forragem pouco a pouco, voltando ao seu estado normal, e al\u00e9m disso, a morte o privou de seu alimento."
+		"value": "Pouco a pouco ele digere a sua forragem, voltando ao seu estado normal. A morte tamb\u00e9m o priva de sua nutri\u00e7\u00e3o, reduzindo suas for\u00e7as."
 	},
 	{
 		"key": "The Slug can infect humans and heal infected with his hammer.",
@@ -450,15 +450,15 @@
 	},
 	{
 		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
-		"value": "Ele pode tornar o solo e paredes t\u00f3xicas espalhando lodo com seu martelo."
+		"value": "Ele pode tornar o solo e paredes t\u00f3xicos espalhando limo com seu martelo."
 	},
 	{
 		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
-		"value": "Tocando o limo inflige tr\u00eas pontos de dano em tr\u00eas segundos em um ser humano."
+		"value": "Tocar o limo inflige tr\u00eas pontos de dano ao longo de tr\u00eas segundos em um ser humano."
 	},
 	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
-		"value": "O Morto Vivo pode infetar humanos e curar infetados com seu martelo."
+		"value": "O Morto Vivo pode infectar humanos e curar infectados com seu martelo."
 	},
 	{
 		"key": "Instead of dying, he freezes during 10 seconds.",
@@ -474,7 +474,7 @@
 	},
 	{
 		"key": "When an infected dies, he may re-spawn near her.",
-		"value": "Quando um infectado morre, ele pode re-spawnar perto dela."
+		"value": "Quando um infectado morre, ele pode renascer perto dela."
 	},
 	{
 		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
@@ -482,7 +482,7 @@
 	},
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
-		"value": "Ela tamb\u00e9m pode causar 1 ponto de dano por segundo enganchando humanos."
+		"value": "Ela tamb\u00e9m pode causar 1 ponto de dano por segundo ao segurar humanos com seu gancho."
 	},
 	{
 		"key": "Targeted chat messages",
@@ -490,19 +490,19 @@
 	},
 	{
 		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "Use \"/ msg <PlayerName> <My Message>\" para enviar uma mensagem privada para este jogador."
+		"value": "Use \u201c/msg <PlayerName> <My Message>\u201d para enviar uma mensagem privada para este jogador."
 	},
 	{
 		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Use \"/ msg! <ClassName> <My Message>\" para enviar uma mensagem privada para todos os jogadores com uma classe espec\u00edfica."
+		"value": "Use \u201c/msg !<ClassName> <My Message>\u201d para enviar uma mensagem privada para todos os jogadores de uma classe espec\u00edfica."
 	},
 	{
 		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "Exemplo: \"/ msg! Medic Estou ferido!\""
+		"value": "Exemplo: \"/msg !medic Estou ferido!\""
 	},
 	{
 		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "Use \"/ msg! Near\" para enviar uma mensagem privada para todos os jogadores perto de voc\u00ea."
+		"value": "Use \u201c/msg !near\u201d para enviar uma mensagem privada para todos os jogadores perto de voc\u00ea."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -534,11 +534,11 @@
 	},
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
-		"value": "Pressione <F3> ou <F4> para ativar ou desativar a prote\u00e7\u00e3o contra o gancho "
+		"value": "Pressione <F3> ou <F4> para ativar ou desativar a prote\u00e7\u00e3o contra o gancho de aliados"
 	},
 	{
 		"key": "You hold a bonus area for one minute, +5 points",
-		"value": "Voc\u00ea manteve numa \u00e1rea de b\u00f4nus por um minuto, +5 pontos"
+		"value": "Voc\u00ea permaneceu numa \u00e1rea de b\u00f4nus por um minuto, +5 pontos"
 	},
 	{
 		"key": "You are frozen: {sec:EffectDuration}",
@@ -584,7 +584,7 @@
 	},
 	{
 		"key": "Explosive yield: {percent:BombLevel}",
-		"value": "Rendimento explosivo: {percent:BombLevel}"
+		"value": "Poder explosivo: {percent:BombLevel}"
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -620,7 +620,7 @@
 	},
 	{
 		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Digite \"/help {str:ClassName}\" para mais informa\u00e7\u00f5es sobre sua classe."
+		"value": "Digite \u201c/help {str:ClassName}\u201d para mais informa\u00e7\u00f5es sobre sua classe"
 	},
 	{
 		"key": "The Hero found the flag!",
