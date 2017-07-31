@@ -16,8 +16,8 @@
 		"value": "K tomuto \u00fakonu mus\u00ed\u0161 b\u00fdt p\u0159ihl\u00e1\u0161en"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Pros\u00edm, po\u010dkej 5 minut p\u0159ed vytvo\u0159en\u00edm dal\u0161\u00edho \u00fa\u010dtu."
+		"key": "Please wait 5 minutes before creating another account",
+		"value": "Pros\u00edm, po\u010dkej 5 minut p\u0159ed vytvo\u0159en\u00edm dal\u0161\u00edho \u00fa\u010dtu"
 	},
 	{
 		"key": "An error occured during the creation of your account.",
@@ -40,8 +40,8 @@
 		"value": "Mus\u00ed\u0161 b\u00fdt p\u0159ihl\u00e1\u0161en, aby jsi vid\u011bl sv\u016fj c\u00edl"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "U\u017e jsi ozn\u00e1mil, \u017ee  {str:PlayerName} mus\u00ed b\u00fdt zabanov\u00e1n"
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
+		"value": "U\u017e jsi ozn\u00e1mil, \u017ee {str:PlayerName} mus\u00ed b\u00fdt zabanov\u00e1n"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
@@ -208,6 +208,10 @@
 	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, vytvo\u0159il necropotame (version{str:VersionCode})"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "Hlavn\u00ed p\u0159isp\u011bvatel\u00e9: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -410,8 +414,8 @@
 		"value": "Gh\u016fl m\u016f\u017ee nakazit lidi a l\u00e9\u010dit naka\u017een\u00e9 kladivem"
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
-		"value": "M\u016f\u017ee absorbovat naka\u017een\u00e9, kter\u00e9 um\u0159eli bl\u00edzko n\u011bho,  co\u017e ho pot\u00e9 d\u011bl\u00e1 odoln\u011bj\u0161\u00edm a rychlej\u0161\u00edm."
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "M\u016f\u017ee absorbovat naka\u017een\u00e9, kter\u00e9 um\u0159eli bl\u00edzko n\u011bho, co\u017e ho pot\u00e9 d\u011bl\u00e1 odoln\u011bj\u0161\u00edm a rychlej\u0161\u00edm."
 	},
 	{
 		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
@@ -438,7 +442,7 @@
 		"value": "Kdy\u017e naka\u017een\u00fd zem\u0159e, m\u016f\u017ee se spawnout u \u010darod\u011bjnice."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Kdy\u017e zem\u0159e\u0161 jako \u010darod\u011bjnice, tak se spawne\u0161 s jin\u00fdm povol\u00e1n\u00edm."
 	},
 	{
@@ -450,20 +454,20 @@
 		"value": "C\u00edlen\u00e9 zpr\u00e1vy chatu"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "Pokud chce\u0161 napsat zpr\u00e1vu jin\u00e9mu hr\u00e1\u010di pou\u017eij \"/msg <Jm\u00e9noHr\u00e1\u010de> \"<Zpr\u00e1va> "
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
+		"value": "Pokud chce\u0161 napsat zpr\u00e1vu jin\u00e9mu hr\u00e1\u010di pou\u017eij \u00bb/msg <Jm\u00e9noHr\u00e1\u010de> <Zpr\u00e1va>\u00ab."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Kdy\u017e chce\u0161 poslat zpr\u00e1vu specifick\u00e9 t\u0159\u00edd\u011b, pou\u017eij \"/msg!<Jm\u00e9noT\u0159\u00eddy> <Zpr\u00e1va>"
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Kdy\u017e chce\u0161 poslat zpr\u00e1vu specifick\u00e9 t\u0159\u00edd\u011b, pou\u017eij \u00bb/msg!<Jm\u00e9noT\u0159\u00eddy> <Zpr\u00e1va>\u00ab."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "P\u0159\u00edklad :\"/msg !medic Jsem zran\u011bn\u00fd\""
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
+		"value": "P\u0159\u00edklad: \u00bb/msg !medic Jsem zran\u011bn\u00fd!\u00ab"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "Pou\u017eij \"/msg !mear\" K naps\u00e1n\u00ed zpr\u00e1vy v\u0161em hr\u00e1\u010d\u016fm bl\u00edzko tebe"
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
+		"value": "Pou\u017eij \u00bb/msg !near\u00ab k naps\u00e1n\u00ed zpr\u00e1vy v\u0161em hr\u00e1\u010d\u016fm bl\u00edzko tebe."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -520,7 +524,7 @@
 		"other": "{int:NumBombs} bomby zb\u00fdvaj\u00ed",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "Jedna mina je aktivn\u00ed",
 		"few": "{int:NumMines} miny jsou aktivn\u00ed",
 		"other": "{int:NumMines} miny jsou aktivn\u00ed",
@@ -562,8 +566,8 @@
 		"value": "Nemrtv\u00fd je kone\u010dn\u011b mrtv\u00fd"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Napi\u0161 \"/help {str:ClassName}\" pro v\u00edc informac\u00ed o tv\u00e9m povol\u00e1n\u00ed"
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
+		"value": "Napi\u0161 \u00bb/help {str:ClassName}\u00ab pro v\u00edc informac\u00ed o tv\u00e9m povol\u00e1n\u00ed"
 	},
 	{
 		"key": "The Hero found the flag!",

@@ -1,6 +1,6 @@
 {"translation":[
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "K\u00e9rj\u00fck v\u00e1rj 5 percet miel\u0151tt l\u00e9trehozol egy m\u00e1sik felhaszn\u00e1l\u00f3t"
 	},
 	{
@@ -341,7 +341,7 @@
 		"value": "Ha egy zombit meg\u00f6lnek, j\u00f3 es\u00e9llyel a boszork\u00e1nyhoz k\u00f6zel fog \u00fajra felt\u0171nni."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Ha a boszork\u00e1ny meghal, ut\u00e1na m\u00e1r nem boszork\u00e1ny lesz."
 	},
 	{
@@ -390,9 +390,13 @@
 		"other": "{int:NumBombs} bomb\u00e1d maradt.",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "",
 		"other": "",
+	},
+	{
+		"key": "Next target in {sec:RemainingTime}",
+		"value": "K\u00f6vetkez\u0151 z\u00e1szl\u00f3 \u00e9rkezik: {sec:RemainingTime} m\u00e1sodperc"
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
@@ -415,8 +419,8 @@
 		"value": "Az \u00e9l\u0151halott v\u00e9gre meghalt"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "\u00cdrd be, hogy \"/help {str:ClassName}\", hogy t\u00f6bbet megtudhass az oszt\u00e1lyodr\u00f3l"
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
+		"value": "\u00cdrd be, hogy \u201e/help {str:ClassName}\u201d, hogy t\u00f6bbet megtudhass az oszt\u00e1lyodr\u00f3l"
 	},
 	{
 		"key": "The Hero found the flag!",

@@ -2901,7 +2901,7 @@ public:
 					m_pServer->m_aClients[m_ClientID].m_UserLevel = UserLevel;
 					str_copy(m_pServer->m_aClients[m_ClientID].m_aUsername, m_sName.Str(), sizeof(m_pServer->m_aClients[m_ClientID].m_aUsername));
 					
-					//If we are really unlucky, the client can deconnect and an another one connect during this small code
+					//If we are really unlucky, the client can deconnect and another one connect during this small code
 					if(m_pServer->m_aClients[m_ClientID].m_LogInstance != GetInstance())
 					{
 						m_pServer->m_aClients[m_ClientID].m_UserID = -1;
@@ -3060,7 +3060,7 @@ public:
 			if(pSqlServer->GetResults()->next())
 			{
 				dbg_msg("infclass", "Registration flooding");
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("Please wait 5 minutes before create an another account"));
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("Please wait 5 minutes before creating another account"));
 				m_pServer->AddGameServerCmd(pCmd);
 				
 				return true;
@@ -3142,7 +3142,7 @@ public:
 					m_pServer->m_aClients[m_ClientID].m_UserID = UserID;
 					str_copy(m_pServer->m_aClients[m_ClientID].m_aUsername, m_sName.Str(), sizeof(m_pServer->m_aClients[m_ClientID].m_aUsername));
 					
-					//If we are really unlucky, the client can deconnect and an another one connect during this small code
+					//If we are really unlucky, the client can deconnect and another one connect during this small code
 					if(m_pServer->m_aClients[m_ClientID].m_LogInstance != GetInstance())
 					{
 						m_pServer->m_aClients[m_ClientID].m_UserID = -1;
@@ -4107,7 +4107,7 @@ void CServer::AddAccusation(int From, int To, const char* pReason)
 		if(net_addr_comp(&m_aClients[To].m_Accusation.m_Addresses[i], &FromAddr) == 0)
 		{
 			if(m_pGameServer)
-				m_pGameServer->SendChatTarget_Localization(From, CHATCATEGORY_DEFAULT, _("You already notify that {str:PlayerName} must be banned"), "PlayerName", ClientName(To), NULL);
+				m_pGameServer->SendChatTarget_Localization(From, CHATCATEGORY_DEFAULT, _("You have already notified that {str:PlayerName} ought to be banned"), "PlayerName", ClientName(To), NULL);
 			return;
 		}
 	}

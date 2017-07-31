@@ -20,7 +20,7 @@
 		"value": "Musisz by\u0107 zalogowany na t\u0119 operacj\u0119."
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "Prosz\u0119 poczekaj 5 minut przed utworzeniem nast\u0119pnego konta"
 	},
 	{
@@ -44,7 +44,7 @@
 		"value": "Musisz by\u0107 zalogowany by zobaczy\u0107 sw\u00f3j gol"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "Ju\u017c zg\u0142osi\u0142e\u015b, to \u017ce {str:PlayerName} musi by\u0107 zbanowany"
 	},
 	{
@@ -215,7 +215,7 @@
 	},
 	{
 		"key": "Switch language to english ?",
-		"value": "Zmieni\u0107 j\u0119zyk na Polski ?"
+		"value": "Zmieni\u0107 j\u0119zyk na Polski?"
 	},
 	{
 		"key": "You can change the language of this mod using the command /language.",
@@ -442,8 +442,8 @@
 		"value": "Ghul mo\u017ce zara\u017ca\u0107 ludzi swoim m\u0142otem."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
-		"value": "Mo\u017ce pobiera\u0107 tych, kt\u00f3rzy umarli blisko niego, co czyni go silniejszym , szynszym i bardziej odpornym."
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Mo\u017ce pobiera\u0107 tych, kt\u00f3rzy umarli blisko niego, co czyni go silniejszym, szynszym i bardziej odpornym."
 	},
 	{
 		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
@@ -482,7 +482,7 @@
 		"value": "Kiedy zara\u017cony umiera, mo\u017ce od\u017cy\u0107 przy niej."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Je\u017celi wied\u017ama umrze, zniknie i zostanie zast\u0105piona inn\u0105 ras\u0105 zara\u017conych."
 	},
 	{
@@ -494,20 +494,20 @@
 		"value": "Znaczone wiadomo\u015bci czatu"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "U\u017cyj  \"/msg <PlayerName> <My Message>\" aby wys\u0142a\u0107 prywatn\u0105 wiadomo\u015b\u0107 temu graczowi."
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
+		"value": "U\u017cyj \u00ab/msg <PlayerName> <My Message>\u00bb aby wys\u0142a\u0107 prywatn\u0105 wiadomo\u015b\u0107 temu graczowi."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Uzyj  \"/msg !<ClassName> <My Message>\" aby wys\u0142a\u0107 prywatn\u0105 wiadomo\u015b\u0107 wszystkim graczom z konkretn\u0105 ras\u0105."
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Uzyj \u00ab/msg !<ClassName> <My Message>\u00bb aby wys\u0142a\u0107 prywatn\u0105 wiadomo\u015b\u0107 wszystkim graczom z konkretn\u0105 ras\u0105."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "Przyk\u0142ad \"/msg !medyk jestem ranny!\""
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
+		"value": "Przyk\u0142ad \u00ab/msg !medyk jestem ranny!\u00bb"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "U\u017cyj \"/msg !near\" aby wys\u0142a\u0107 wiadomo\u015bc wszystkim graczom w pobli\u017cu."
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
+		"value": "U\u017cyj \u00ab/msg !near\u00bb aby wys\u0142a\u0107 wiadomo\u015bc wszystkim graczom w pobli\u017cu."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -542,7 +542,7 @@
 		"value": "Naci\u015bnij <f3> lub <f4> aby aktywowa\u0107 lub dezaktywowa\u0107 ochron\u0119 przed hakiem."
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
+		"key": "You have held a bonus area for one minute, +5 points",
 		"value": "Utrzyma\u0142e\u015b bonusow\u0105 stref\u0119 przez minut\u0119, +5 punkt\u00f3w"
 	},
 	{
@@ -568,7 +568,7 @@
 		"many": "{int:NumBombs} pozosta\u0142o bomb",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "Jedna mina jest aktywna",
 		"few": "{int:NumMines} miny jest aktywne",
 		"many": "{int:NumMines} min jest aktywnych",
@@ -626,8 +626,8 @@
 		"value": "Zwi\u0119kszony limit ilo\u015bci granat\u00f3w"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Wpisz \"/help {str:ClassName}\" by uzyska\u0107 wi\u0119cej informacji o swojej rasie"
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
+		"value": "Wpisz \u00ab/help {str:ClassName}\u00bb by uzyska\u0107 wi\u0119cej informacji o swojej rasie"
 	},
 	{
 		"key": "The Hero found the flag!",

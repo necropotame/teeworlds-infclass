@@ -20,8 +20,8 @@
 		"value": "Je moet ingelogd zijn voor deze actie"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Gelieve 5 minuten te wachten voordat je een ander account aanmaakt."
+		"key": "Please wait 5 minutes before creating another account",
+		"value": "Gelieve 5 minuten te wachten voordat je een ander account aanmaakt"
 	},
 	{
 		"key": "An error occured during the creation of your account.",
@@ -44,8 +44,8 @@
 		"value": "Je moet ingelogd zijn om je doel te zien"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Je hebt al gemeld dat {str:PlayerName} verbannen moet worden."
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
+		"value": "Je hebt al gemeld dat {str:PlayerName} verbannen moet worden"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
@@ -437,7 +437,7 @@
 		"value": "De Ghoul kan mensen infecteren en ge\u00efnfecteerden genezen met zijn hamer."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "Hij kan al die dicht bij hem is overleden verslinden, dat maakt hem sterker, sneller en meer resistent."
 	},
 	{
@@ -477,7 +477,7 @@
 		"value": "Wanneer een ge\u00efnfecteerde sterft is er een kans dat hij herleeft in de buurt van haar."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Als de Heks sterft, verdwijnt ze en wordt ze vervangen door een andere klas van de ge\u00efnfecteerden."
 	},
 	{
@@ -489,20 +489,20 @@
 		"value": "Gerichte chatberichten"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "Gebruik \"/msg <PlayerName> <My Message>\" om een priv\u00e9 bericht te sturen naar deze speler."
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
+		"value": "Gebruik \u201e/msg <PlayerName> <My Message>\u201d om een priv\u00e9 bericht te sturen naar deze speler."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Gebruik \"/msg !<ClassName> <My Message>\" om een priv\u00e9 bericht te sturen naar alle spelers met een specifieke klas."
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Gebruik \u201e/msg !<ClassName> <My Message>\u201d om een priv\u00e9 bericht te sturen naar alle spelers met een specifieke klas."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "Voorbeeld: \"/msg !medic Ik ben gewond!\""
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
+		"value": "Voorbeeld: \u201e/msg !medic Ik ben gewond!\u201d"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "Gebruik \"/msg !near\" om een priv\u00e9 bericht te sturen naar alle spelers rondom jou."
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
+		"value": "Gebruik \u201e/msg !near\u201d om een priv\u00e9 bericht te sturen naar alle spelers rondom jou."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -537,7 +537,7 @@
 		"value": "Druk op <F3> of <F4> voor het in- of uitschakelen van de bescherming van de haak"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
+		"key": "You have held a bonus area for one minute, +5 points",
 		"value": "Je bezit een bonus ruimte voor een minuut, +5 punten"
 	},
 	{
@@ -562,7 +562,7 @@
 		"other": "{int:NumBombs} bommen over",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "{int:NumMines} mijn is actief",
 		"other": "{int:NumMines} mijnen zijn actief",
 	},
@@ -619,8 +619,8 @@
 		"value": "Granaat limiet verhoogd"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Type \"/help {str:ClassName}\" voor meer informatie over je klasse"
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
+		"value": "Type \u201e/help {str:ClassName}\u201d voor meer informatie over je klasse"
 	},
 	{
 		"key": "The Hero found the flag!",

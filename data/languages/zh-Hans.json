@@ -20,7 +20,7 @@
 		"value": "\u60a8\u5fc5\u987b\u767b\u5f55\u624d\u53ef\u8fdb\u884c\u6b64\u64cd\u4f5c"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "\u5728\u521b\u5efa\u53e6\u4e00\u4e2a\u8d26\u53f7\u524d\u8bf7\u7b49\u5f85 5 \u5206\u949f"
 	},
 	{
@@ -44,7 +44,7 @@
 		"value": "\u60a8\u5fc5\u987b\u767b\u5f55\u624d\u80fd\u770b\u5230\u60a8\u7684\u76ee\u6807"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "\u60a8\u5df2\u52a8\u8bae\u5c01\u7981 {str:PlayerName}\u3002"
 	},
 	{
@@ -432,7 +432,7 @@
 		"value": "\u98df\u5c38\u9b3c\u53ef\u4ee5\u7528\u9524\u5b50\u611f\u67d3\u4eba\u7c7b\uff0c\u6216\u6cbb\u7597\u88ab\u611f\u67d3\u8005\u3002"
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "\u4ed6\u53ef\u4ee5\u541e\u98df\u4ed6\u9644\u8fd1\u7684\u6fd2\u6b7b\u8005\uff0c\u5e76\u4f1a\u4f7f\u4ed6\u66f4\u5feb\uff0c\u66f4\u58ee\uff0c\u66f4\u5f3a\uff01"
 	},
 	{
@@ -472,7 +472,7 @@
 		"value": "\u5f53\u88ab\u611f\u67d3\u8005\u6b7b\u4ea1\u65f6\uff0c\u53ef\u80fd\u4f1a\u91cd\u751f\u5728\u5973\u5deb\u65c1\u8fb9\u3002"
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "\u5982\u679c\u5973\u5deb\u6b7b\u4e86\uff0c\u5979\u5c06\u6d88\u5931\uff0c\u53d6\u800c\u4ee3\u4e4b\u7684\u662f\u53e6\u4e00\u79cd\u65cf\u7c7b\u3002"
 	},
 	{
@@ -484,19 +484,19 @@
 		"value": "\u6709\u9488\u5bf9\u6027\u7684\u804a\u5929\u6d88\u606f"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
 		"value": "\u4f7f\u7528\u201c/msg <PlayerName> <My Message>\u201d\u6765\u53d1\u9001\u79c1\u4eba\u6d88\u606f\u7ed9\u8fd9\u540d\u73a9\u5bb6\u3002"
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
 		"value": "\u4f7f\u7528\u201c/msg !<ClassName> <My Message>\u201d\u7ed9\u6240\u6709\u7279\u5b9a\u65cf\u7c7b\u7684\u73a9\u5bb6\u53d1\u9001\u6d88\u606f\u3002"
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
 		"value": "\u4f8b\u5982\uff1a\u201c/msg !medic \u533b\u7597\u5175\uff01\u201d"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
 		"value": "\u4f7f\u7528\u201c/msg !near\u201d\u7ed9\u9644\u8fd1\u6240\u6709\u73a9\u5bb6\u53d1\u9001\u6d88\u606f\u3002"
 	},
 	{
@@ -532,7 +532,7 @@
 		"value": "\u6309 <F3> \u6216 <F4> \u6765\u542f\u7528\u6216\u7981\u7528\u94a9\u5b50\u4fdd\u62a4"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
+		"key": "You have held a bonus area for one minute, +5 points",
 		"value": "\u5728\u5956\u52b1\u5730\u533a\u5446\u4e00\u5206\u949f\u5c31\u4f1a\u589e\u52a0 5 \u5206\u3002"
 	},
 	{
@@ -556,7 +556,7 @@
 		"other": "\u70b8\u5f39\u5269\u4f59 {int:NumBombs}",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"other": "\u5730\u96f7\u5df2\u6fc0\u6d3b {int:NumMines} \u4e2a",
 	},
 	{
@@ -612,7 +612,7 @@
 		"value": "\u69b4\u5f39\u9650\u91cf\u5df2\u589e\u52a0"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
 		"value": "\u952e\u5165\u201c/help {str:ClassName}\u201d\u83b7\u53d6\u5f53\u524d\u804c\u4e1a\u7684\u66f4\u591a\u4fe1\u606f"
 	},
 	{

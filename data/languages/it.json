@@ -20,7 +20,7 @@
 		"value": "Devi aver eseguito l'accesso per questa operazione"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "Si prega di aspettare 5 minuti prima di creare un altro account"
 	},
 	{
@@ -44,7 +44,7 @@
 		"value": "Devi aver effettuato l'accesso per vedere il tuo obiettivo"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "Hai gi\u00e0 informato che {str:PlayerName} deve essere bandito"
 	},
 	{
@@ -437,7 +437,7 @@
 		"value": "Lo spirito pu\u00f2 infettare gli umani e curare gli infetti con il suo martello."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "Lui pu\u00f2 divorare tutto quello che \u00e8 morto vicino a lui e ci\u00f2 lo rende pi\u00f9 forte, veloce e pi\u00f9 resistente."
 	},
 	{
@@ -477,7 +477,7 @@
 		"value": "Quando un infetto muore, ha una probabilit\u00e0 di riapparire vicino a lei."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Se la Strega muore, ella scompare ed \u00e8 rimpiazzata da un infetto di un altra classe."
 	},
 	{
@@ -489,20 +489,20 @@
 		"value": "Messaggi di chat mirati"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "Usa \"/msg <NomeGiocatore> <Mio Messaggio>\" per inviare un messaggio privato a questo giocatore"
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
+		"value": "Usa \u00ab/msg <NomeGiocatore> <Mio Messaggio>\u00bb per inviare un messaggio privato a questo giocatore."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Usa \"/msg !<NomeClasse> <Mio Messaggio>\" per inviare un messaggio privato a tutti i giocatori di una classe specifica."
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Usa \u00ab/msg !<NomeClasse> <Mio Messaggio>\u00bb per inviare un messaggio privato a tutti i giocatori di una classe specifica."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "Esempio: \"/msg !medic Sono ferito!\""
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
+		"value": "Esempio: \u00ab/msg !medic Sono ferito!\u00bb"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "Usa /msg !near\" per inviare un messaggio a tutti i giocatori vicini a te."
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
+		"value": "Usa \u00ab/msg !near\u00bb per inviare un messaggio a tutti i giocatori vicini a te."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -537,8 +537,8 @@
 		"value": "Premi <F3> o <F4> per abilitare o disabilitare la protezione dalla corda "
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
-		"value": "Hai mantenuto un'area bonus per un minuto, +5 punti"
+		"key": "You have held a bonus area for one minute, +5 points",
+		"value": "Hai mantenuto un\u2019area bonus per un minuto, +5 punti"
 	},
 	{
 		"key": "You are frozen: {sec:EffectDuration}",
@@ -562,7 +562,7 @@
 		"other": "{int:NumBombs}bombe rimaste",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "Una mina \u00e8 attiva",
 		"other": "{int:NumMines} mine sono attive",
 	},
@@ -619,8 +619,8 @@
 		"value": "Limite del lanciagranate aumentato"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Scrivi \"/help {str:ClassName}\" per avere pi\u00f9 informazioni sulla tua classe"
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
+		"value": "Scrivi \u00ab/help {str:ClassName}\u00bb per avere pi\u00f9 informazioni sulla tua classe"
 	},
 	{
 		"key": "The Hero found the flag!",

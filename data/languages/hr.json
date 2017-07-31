@@ -20,7 +20,7 @@
 		"value": "Morate biti ulogovani za ovu operaciju"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "Molimo pri\u010dekajte 5 minuta prije nego napravite jo\u0161 jedan ra\u010dun"
 	},
 	{
@@ -44,7 +44,7 @@
 		"value": "Morate biti ulogirani da bi vidjeli svoj cilj"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "Ve\u0107 ste obavijestili da {str:PlayerName} treba biti bannovan"
 	},
 	{
@@ -327,7 +327,7 @@
 	},
 	{
 		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
-		"value": "Biolog ima sa\u010dmaru sa mecima koji odska\u010du od zidova i mo\u017ee da stvori lasersku zamku uz pomo\u0107 svoje laserske pu\u0161ke."
+		"value": "Biolog ima sa\u010dmaru sa mecima koji odska\u010du od zidova i mo\u017ee stvoriti lasersku zamku uz pomo\u0107 svoje laserske pu\u0161ke."
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
@@ -439,11 +439,11 @@
 	},
 	{
 		"key": "The Ghoul can infect humans and heal infected with his hammer.",
-		"value": "Zloduh mo\u017ee da zara\u017eava ljude i da lije\u010di zara\u017eene svojim \u010deki\u0107em."
+		"value": "Zloduh mo\u017ee zara\u017eavati ljude i lije\u010diti zara\u017eene svojim \u010deki\u0107em."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
-		"value": "On mo\u017ee da izjede sve \u0161to je umrlo blizu njega, \u0161to ga \u010dini sna\u017enijim, br\u017eim i otpornijim."
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "On mo\u017ee izjesti sve \u0161to je umrlo blizu njega, \u0161to ga \u010dini sna\u017enijim, br\u017eim i otpornijim."
 	},
 	{
 		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
@@ -451,7 +451,7 @@
 	},
 	{
 		"key": "The Slug can infect humans and heal infected with his hammer.",
-		"value": "Pu\u017e mo\u017ee da zara\u017eava ljude i da lije\u010di zara\u017eene sa svojim \u010deki\u0107em."
+		"value": "Pu\u017e mo\u017ee zara\u017eavati ljude i lije\u010diti zara\u017eene sa svojim \u010deki\u0107em."
 	},
 	{
 		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
@@ -482,7 +482,7 @@
 		"value": "Kada zara\u017eeni umre, ponovo \u0107e se stvoriti kod nje."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Ako Vje\u0161tica umre, ona nestaje i zamijenjena je drugom klasom zara\u017eenih."
 	},
 	{
@@ -494,19 +494,19 @@
 		"value": "Ciljano \u0107askanje"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
 		"value": "Koristi \u00bb/msg <korisnik> <poruka moja>\u00ab da bi slao/slala privatne poruke."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
 		"value": "Koristi \u00bb/msg !<ime klase> <poruka moja>\u00ab da bi poslao/poslala privatnu poruku svim igra\u010dima jedne specifi\u010dne klase."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
 		"value": "Primer: \u00bb/msg !medic I'm wounded!\u00ab"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
 		"value": "Koristi \u00bb/msg !near\u00ab da bi poslao/poslala privatne poruke svim igra\u010dima blizu tebe."
 	},
 	{
@@ -542,7 +542,7 @@
 		"value": "Pritisni <F3> ili <F4> da bi dopustio ili zabranio za\u0161titu protiv hukanja"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
+		"key": "You have held a bonus area for one minute, +5 points",
 		"value": "Dr\u017eao si bonus podru\u010dje za jedan minut, +5 poena"
 	},
 	{
@@ -568,7 +568,7 @@
 		"other": "{int:NumBombs} bombi preostalo",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "{int:NumMines} mina je aktivna",
 		"few": "{int:NumMines} mine su aktivne",
 		"other": "{int:NumMines} mina su aktivne",
@@ -626,7 +626,7 @@
 		"value": "Ograni\u010denje granate pove\u0107ano"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
 		"value": "Napi\u0161i \u00bb/help {str:ClassName}\u00ab za vi\u0161e informacija o svojoj klasi"
 	},
 	{

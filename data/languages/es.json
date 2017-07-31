@@ -20,7 +20,7 @@
 		"value": "Es menester que est\u00e9s conectado con tu cuenta para llevar a cabo esa operaci\u00f3n."
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "\u00a1Espera 5 minutos antes de que creares otra cuenta, por favor!"
 	},
 	{
@@ -44,7 +44,7 @@
 		"value": "Debes estar conectado con tu cuenta para ver tu objetivo"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "Ya has anunciado que {str:PlayerName} debe ser baneado"
 	},
 	{
@@ -437,7 +437,7 @@
 		"value": "El Gul puede infectar a humanos y curar a otros infectados con su martillo."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "Puede devorar todo que ha muerto cerca de \u00e9l, lo que lo hace m\u00e1s vigoroso, m\u00e1s r\u00e1pido y m\u00e1s resistente."
 	},
 	{
@@ -477,7 +477,7 @@
 		"value": "Cuando un infectado muere, este puede renacer cerca suyo."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Si la Bruja muere, esta desaparece y es reemplazada por otra clase de infectado."
 	},
 	{
@@ -489,19 +489,19 @@
 		"value": "Mensajes de chat dirigidos"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
 		"value": "Usa \u00ab/msg <Nombre de jugador> <Mi mensaje>\u00bb para hacer llegar un mensaje privado a un jugador espec\u00edfico."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Usa \u00ab/msg <Nombre de jugador> <Mi mensaje>\u00bb para hacer llegar un mensaje dirigido a los jugadores de una clase espec\u00edfico."
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Usa \u00ab/msg <Nombre de jugador> <Mi mensaje>\u00bb para hacer llegar un mensaje dirigido a los jugadores de una clase espec\u00edfica."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
 		"value": "Ejemplo: \u00ab\u00a1Estoy herido!\u00bb"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
 		"value": "Usa \u00ab/msg !near\u00bb para hacer llegar un mensaje dirigido a los jugadores en tu proximidad."
 	},
 	{
@@ -537,7 +537,7 @@
 		"value": "Pulsa <F3> o <F4> para activar o desactivar la protecci\u00f3n de gancho"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
+		"key": "You have held a bonus area for one minute, +5 points",
 		"value": "Has ocupado una \u00e1rea de bonificaci\u00f3n para un minuto, +5 puntos"
 	},
 	{
@@ -562,7 +562,7 @@
 		"other": "{int:NumBombs} bombas restantes",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "Una mina est\u00e1 activada",
 		"other": "{int:NumMines} minas est\u00e1n activadas",
 	},
@@ -619,7 +619,7 @@
 		"value": "L\u00edmite de granadas acrecentado"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
 		"value": "Escribe \u00ab/help {str:ClassName}\u00bb para m\u00e1s informaci\u00f3n sobre tu clase"
 	},
 	{

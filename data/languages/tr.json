@@ -16,7 +16,7 @@
 		"value": "Bu i\u015flem i\u00e7in giri\u015f yapm\u0131\u015f olman\u0131z gerekiyor"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "L\u00fctfen ba\u015fka bir hesap olu\u015fturmadan \u00f6nce 5 dakika bekleyin"
 	},
 	{
@@ -405,7 +405,7 @@
 		"value": "Gulyabani, insanlar\u0131 d\u00f6n\u00fc\u015ft\u00fcrebilir ve \u00e7ekiciyle vurarak zombileri iyile\u015ftirebilir."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "Yak\u0131n\u0131nda \u00f6len herkesi yiyerek daha g\u00fc\u00e7l\u00fc, h\u0131zl\u0131 ve dayan\u0131kl\u0131 olur."
 	},
 	{
@@ -441,7 +441,7 @@
 		"value": "\u00d6len baz\u0131 zombiler yan\u0131nda do\u011far."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "E\u011fer cad\u0131 \u00f6l\u00fcrse, kaybolur ve yerine ba\u015fka bir s\u0131n\u0131ftan zombi gelir."
 	},
 	{
@@ -453,20 +453,20 @@
 		"value": "Hedeflenen sohbet mesajlar\u0131"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "Bu oyuncuya \u00f6zel mesaj g\u00f6ndermek i\u00e7in \"/msg <PlayerName> <My Message>\" komutunu kullan\u0131n."
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
+		"value": "Bu oyuncuya \u00f6zel mesaj g\u00f6ndermek i\u00e7in \u201c/msg <PlayerName> <My Message>\u201d komutunu kullan\u0131n."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Belirli bir s\u0131n\u0131ftaki b\u00fct\u00fcn oyunculara \u00f6zel mesaj yollamak i\u00e7in \"/msg !<ClassName> <My Message>\" komutunu kullan\u0131n."
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Belirli bir s\u0131n\u0131ftaki b\u00fct\u00fcn oyunculara \u00f6zel mesaj yollamak i\u00e7in \u201c/msg !<ClassName> <My Message>\u201d komutunu kullan\u0131n."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "\u00d6rne\u011fin: \"/msg !medic Yaral\u0131y\u0131m!\""
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
+		"value": "\u00d6rne\u011fin: \u201c/msg !medic Yaral\u0131y\u0131m!\u201d"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "Yak\u0131n\u0131n\u0131zdaki b\u00fct\u00fcn oyunculara \u00f6zel mesaj yollamak i\u00e7in \"/msg !near\" komutunu kullan\u0131n."
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
+		"value": "Yak\u0131n\u0131n\u0131zdaki b\u00fct\u00fcn oyunculara \u00f6zel mesaj yollamak i\u00e7in \u201c/msg !near\u201d komutunu kullan\u0131n."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -501,7 +501,7 @@
 		"value": "Kanca korumas\u0131n\u0131 a\u00e7mak veya kapatmak i\u00e7in <F3> veya <F4> tu\u015funa bas\u0131n\u0131z"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
+		"key": "You have held a bonus area for one minute, +5 points",
 		"value": "Bonus alan\u0131nda 1 dakika bulundunuz, +5 puan"
 	},
 	{
@@ -526,7 +526,7 @@
 		"other": "{int:NumBombs} adet bomba kald\u0131",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "Bir may\u0131n aktif",
 		"other": "{int:NumMines} say\u0131da may\u0131n aktif",
 	},
@@ -583,7 +583,7 @@
 		"value": "Bomba limiti artt\u0131"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
 		"value": "S\u0131n\u0131f\u0131n\u0131z hakk\u0131nda daha fazla bilgi i\u00e7in \"/help {str:ClassName}\" yaz\u0131n"
 	},
 	{

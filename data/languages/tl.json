@@ -20,7 +20,7 @@
 		"value": "Ikaw ay nakalogin dapat para sa operation na ito"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "Maghintay ng 5 minuto bago gumawa ng bagong account"
 	},
 	{
@@ -44,7 +44,7 @@
 		"value": "Ikaw ay nakalogin dapat para makita ang iyong layunin"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "Napaalam mo na si {str:PlayerName} ay dapat ma ban"
 	},
 	{
@@ -437,7 +437,7 @@
 		"value": "Ang Ghoul ay kayang maka infect ng mga tao at makagamot ng mga infected gamit ang kanyang hammer."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "Kaya nyang makain lahat ng namatay malapit sa kanya, ito ay nagpapalakas sa kanya, pinapabilis at binibigyan siya ng mas malakas na resistensya."
 	},
 	{
@@ -477,7 +477,7 @@
 		"value": "Pagang infected ay namatay pwede silang magrespawn malapit sa kanya."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Kung ang witch ay mamatay, siya ay mawawala at mapapalitan ng bagong class."
 	},
 	{
@@ -489,20 +489,16 @@
 		"value": "Targeted chat messages"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "Gamitin \"/msg <panglan> <mensahe>\" para masend sa player privately."
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
+		"value": "Gamitin \u201c/msg <panglan> <mensahe>\u201d para masend sa player privately."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Gamitin \"/msg !<classname> <mensahe>\" para isend sa lahat nang player na ganun ang class."
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Gamitin \u201c/msg !<classname> <mensahe>\u201d para isend sa lahat nang player na ganun ang class."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "Example: \"/msg !medic I'm wounded!\""
-	},
-	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "Gamitin \"/msg !near\" para magsend ng private message sa lahat ng tao sa palibot mo."
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
+		"value": "Gamitin \u201c/msg !near\u201d para magsend ng private message sa lahat ng tao sa palibot mo."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -537,10 +533,6 @@
 		"value": "Pindutin ang <F3> o <F4> para ion o ioff ang hook protection"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
-		"value": "You hold a bonus area for one minute, +5 points"
-	},
-	{
 		"key": "You are frozen: {sec:EffectDuration}",
 		"value": "Ikaw ay frozen: {sec:EffectDuration}"
 	},
@@ -562,7 +554,7 @@
 		"other": "{int:NumBombs} bomba ang natira",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "Isang mine ang active",
 		"other": "{int:NumMines} mine ang active",
 	},
@@ -619,7 +611,7 @@
 		"value": "Bilang ng takdang granada ay nadagdagan"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
 		"value": "Isulat \"/help {str:ClassName}\" para sa mas marami na inpormasyon tungkol sa iyong klase"
 	},
 	{

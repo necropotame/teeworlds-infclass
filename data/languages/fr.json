@@ -20,7 +20,7 @@
 		"value": "Vous devez \u00eatre connect\u00e9 pour effectuer cette op\u00e9ration."
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "Veuillez attendre 5 minutes avant de cr\u00e9er un nouveau compte"
 	},
 	{
@@ -44,7 +44,7 @@
 		"value": "Vous devez \u00eatre connect\u00e9 pour voir votre objectif"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "Vous avez d\u00e9j\u00e0 notifi\u00e9 que {str:PlayerName} doit \u00eatre banni"
 	},
 	{
@@ -437,7 +437,7 @@
 		"value": "Les Goules peuvent infecter les humain\u00b7e\u00b7s et soigner les infect\u00e9\u00b7e\u00b7s \u00e0 l'aide de leur marteau."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "Elles d\u00e9vorent tous ceux et celles qui meurent pr\u00eat d'elles, ce qui les rends plus fortes, plus rapides et plus r\u00e9sistantes \u00e0 mesure que leur estomac se remplit."
 	},
 	{
@@ -477,7 +477,7 @@
 		"value": "Quand un\u00b7e infect\u00e9\u00b7e meurt, ce dernier a une chance de r\u00e9-appara\u00eetre \u00e0 cot\u00e9 d'un Sorcier ou d'une Sorci\u00e8re."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Un Sorcier ou une Sorci\u00e8re qui meurt redevient un\u00b7e infect\u00e9\u00b7e classique."
 	},
 	{
@@ -489,20 +489,20 @@
 		"value": "Messages de chat cibl\u00e9s"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
-		"value": "Utilisez \"/msg <NomDUnJoueur> <Mon Message>\" pour envoyer un message priv\u00e9 \u00e0 ce ou cette joueuse"
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
+		"value": "Utilisez \u00ab/msg <NomDUnJoueur> <Mon Message>\u00bb pour envoyer un message priv\u00e9 \u00e0 ce ou cette joueuse."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
-		"value": "Utilisez \"/msg !<NomDeClasse> <Mon Message>\" pour envoyer un message priv\u00e9 \u00e0 tous les joueurs et les joueuses avec une classe sp\u00e9cifique."
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Utilisez \u00ab/msg !<NomDeClasse> <Mon Message>\u00bb pour envoyer un message priv\u00e9 \u00e0 tous les joueurs et les joueuses avec une classe sp\u00e9cifique."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
-		"value": "Exemple : \"/msg !medic Je suis bless\u00e9 !\""
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
+		"value": "Exemple\u202f: \u00ab/msg !medic Je suis bless\u00e9\u202f!\u00bb"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
-		"value": "Utilisez \"/msg !near\" pour envoyer un message priv\u00e9 \u00e0 tous les joueurs et les joueuses proche de vous."
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
+		"value": "Utilisez \u00ab/msg !near\u00bb pour envoyer un message priv\u00e9 \u00e0 tous les joueurs et les joueuses proche de vous."
 	},
 	{
 		"key": "Choose a help page with /help <page>",
@@ -537,8 +537,8 @@
 		"value": "Appuyer sur <F3> or <F4> pour activer ou d\u00e9sactiver la protection contre le grapin"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
-		"value": "Vous avez gard\u00e9 une zone bonus pendant une minute, +5 points."
+		"key": "You have held a bonus area for one minute, +5 points",
+		"value": "Vous avez gard\u00e9 une zone bonus pendant une minute, +5 points"
 	},
 	{
 		"key": "You are frozen: {sec:EffectDuration}",
@@ -562,7 +562,7 @@
 		"other": "{int:NumBombs} bombes restantes",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "Une mine est active",
 		"other": "{int:NumMines} mines sont actives",
 	},
@@ -619,8 +619,8 @@
 		"value": "Limite du nombre de grenades augment\u00e9e"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
-		"value": "Tapez \"/help {str:ClassName}\" pour plus d'information sur votre classe"
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
+		"value": "Tapez \u00ab/help {str:ClassName}\u00bb pour plus d'information sur votre classe"
 	},
 	{
 		"key": "The Hero found the flag!",

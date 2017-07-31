@@ -17,10 +17,10 @@
 	},
 	{
 		"key": "You must be logged for this operation",
-		"value": "Morate biti ulogovani za ovu operaciju"
+		"value": "Morate da ste ulogovani za ovu operaciju"
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
+		"key": "Please wait 5 minutes before creating another account",
 		"value": "Molimo da pri\u010dekajte 5 minuta pre nego napravite jo\u0161 jedan nalog"
 	},
 	{
@@ -37,14 +37,14 @@
 	},
 	{
 		"key": "You must be logged to see your rank",
-		"value": "Morate biti ulogirani da bi videli Va\u0161 rang"
+		"value": "Morate da ste ulogirani da bi videli Va\u0161 rang"
 	},
 	{
 		"key": "You must be logged to see your goal",
-		"value": "Morate biti ulogirani da bi videli svoj cilj"
+		"value": "Morate da ste ulogirani da bi videli svoj cilj"
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "Ve\u0107 ste obavestili da {str:PlayerName} treba biti bannovan"
 	},
 	{
@@ -207,7 +207,7 @@
 	},
 	{
 		"key": "You can't join the spectators right now",
-		"value": "Ne mo\u017ee\u0161 gledati igru sada"
+		"value": "Ne mo\u017ee\u0161 da gleda\u0161 igru sada"
 	},
 	{
 		"key": "{str:PlayerName} changed their name to {str:NewName}",
@@ -219,7 +219,7 @@
 	},
 	{
 		"key": "You can change the language of this mod using the command /language.",
-		"value": "Mo\u017ee\u0161 promeniti jezik na ovom modu koriste\u0107i naredbu /language."
+		"value": "Mo\u017ee\u0161 da promeni\u0161 jezik na ovom modu koriste\u0107i naredbu /language."
 	},
 	{
 		"key": "If your language is not available, you can help with translation (/help translate).",
@@ -295,11 +295,11 @@
 	},
 	{
 		"key": "The Soldier can pose floating bombs with his hammer.",
-		"value": "Vojnik mo\u017ee postavljati lebde\u0107e bombe sa \u010deki\u0107em."
+		"value": "Vojnik mo\u017ee da postavlja lebde\u0107e bombe sa \u010deki\u0107em."
 	},
 	{
 		"key": "Each bomb can explode {int:NumBombs} times.",
-		"one": "Svaka bomba mo\u017ee eksplodirati {int:NumBombs} put.",
+		"one": "Svaka bomba mo\u017ee da eksplodira {int:NumBombs} put.",
 		"few": "Svaka bomba mo\u017ee eksplodirati {int:NumBombs} puta.",
 		"other": "Svaka bomba mo\u017ee eksplodirati {int:NumBombs} puta.",
 	},
@@ -313,7 +313,7 @@
 	},
 	{
 		"key": "The Scientist can pose floating mines with his hammer.",
-		"value": "Znanstvenik mo\u017ee postaviti ledbe\u0107e mine sa \u010deki\u0107em."
+		"value": "Znanstvenik mo\u017ee da postavi ledbe\u0107e mine sa \u010deki\u0107em."
 	},
 	{
 		"key": "Mines are limited to {int:NumMines} per player at the same time.",
@@ -331,7 +331,7 @@
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
-		"value": "Le\u010dnik mo\u017ee dati ljudima oklop pomo\u0107u svog \u010deki\u0107a."
+		"value": "Le\u010dnik mo\u017ee da da ljudima oklop pomo\u0107u svog \u010deki\u0107a."
 	},
 	{
 		"key": "He has also a powerful shotgun that can pullback infected.",
@@ -343,7 +343,7 @@
 	},
 	{
 		"key": "The Hero must find a flag hidden in the map.",
-		"value": "Heroj mora na\u0107i zastavu skrivenu u mapi."
+		"value": "Heroj mora da na\u0111e zastavu skrivenu u mapi."
 	},
 	{
 		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
@@ -351,7 +351,7 @@
 	},
 	{
 		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
-		"value": "Heroja ne mo\u017ee izle\u010diti le\u010dnik, ali on mo\u017ee izdr\u017eati napad zara\u017eenog ako ima dovoljno zdravlja."
+		"value": "Heroja ne mo\u017ee da izle\u010di le\u010dnik, ali on mo\u017ee da izdr\u017ei napad zara\u017eenog ako ima dovoljno zdravlja."
 	},
 	{
 		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
@@ -369,21 +369,21 @@
 	},
 	{
 		"key": "He can coil explosives with his hammer that hinder infected from harming.",
-		"value": "On mo\u017ee naviti eksplozive pomo\u0107u svog \u010deki\u0107a koji onemogu\u0107e zara\u017eenima \u0161koditi."
+		"value": "On mo\u017ee da navije eksplozive pomo\u0107u svog \u010deki\u0107a koji onemogu\u0107e zara\u017eenima da \u0161kode."
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "Mo\u017ee bacati otrovne granate od kojih svaka deli {int:NumDamagePoints} bod \u0161tete.",
-		"few": "Mo\u017ee bacati otrovne granate od kojih svaka deli {int:NumDamagePoints} boda \u0161tete.",
-		"other": "Mo\u017ee bacati otrovne granate od kojih svaka deli {int:NumDamagePoints} bodova \u0161tete.",
+		"one": "Mo\u017ee da baca otrovne granate od kojih svaka deli {int:NumDamagePoints} bod \u0161tete.",
+		"few": "Mo\u017ee da baca otrovne granate od kojih svaka deli {int:NumDamagePoints} boda \u0161tete.",
+		"other": "Mo\u017ee da baca otrovne granate od kojih svaka deli {int:NumDamagePoints} bodova \u0161tete.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
-		"value": "Snajper mo\u017ee zaklju\u010dati svoju poziciju u vazduhu na 15 sekundi koriste\u0107i se \u010deki\u0107em."
+		"value": "Snajper mo\u017ee da zaklju\u010da svoju poziciju u vazduhu na 15 sekundi koriste\u0107i se \u010deki\u0107em."
 	},
 	{
 		"key": "He can jump two times in air.",
-		"value": "Mo\u017ee sko\u010diti dva puta u vazduh."
+		"value": "Mo\u017ee da sko\u010di dva puta u vazduh."
 	},
 	{
 		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10\u201313 otherwise.",
@@ -407,15 +407,15 @@
 	},
 	{
 		"key": "He can also inflict 1 damage point per second by hooking humans.",
-		"value": "Mo\u017ee naneti 1 \u0161kodan bod po sekundi kada huka ljude."
+		"value": "Mo\u017ee da nanese 1 \u0161kodan bod po sekundi kada huka ljude."
 	},
 	{
 		"key": "The Hunter can infect humans and heal infected with his hammer.",
-		"value": "Lovac mo\u017ee zaraziti ljude i le\u010diti zara\u017eene svojim \u010deki\u0107em."
+		"value": "Lovac mo\u017ee da zarazi ljude i da le\u010di zara\u017eene svojim \u010deki\u0107em."
 	},
 	{
 		"key": "The Ghost can infect humans and heal infected with his hammer.",
-		"value": "Duh mo\u017ee zaraziti ljude i le\u010diti zara\u017eene svojim \u010deki\u0107em."
+		"value": "Duh mo\u017ee da zarazi ljude i da le\u010di zara\u017eene svojim \u010deki\u0107em."
 	},
 	{
 		"key": "He is invisible, except if a human is near him, if he takes a damage or if he use his hammer.",
@@ -423,7 +423,7 @@
 	},
 	{
 		"key": "The Spider can infect humans and heal infected with his hammer.",
-		"value": "Pauk mo\u017ee zaraziti ljude i le\u010diti zara\u017eene svojim \u010deki\u0107em."
+		"value": "Pauk mo\u017ee da zarazi ljude i da le\u010di zara\u017eene svojim \u010deki\u0107em."
 	},
 	{
 		"key": "When selecting any gun, his hook enter in web mode.",
@@ -435,14 +435,14 @@
 	},
 	{
 		"key": "The hook of the spider (in both mode) deal 1 damage point per second and can grab a human during 2 seconds.",
-		"value": "Paukov huk (u oba moda) nanosi 1 \u0161kodan bod po sekundi i mo\u017ee dr\u017eati \u010doveka 2 sekunde."
+		"value": "Paukov huk (u oba moda) nanosi 1 \u0161kodan bod po sekundi i mo\u017ee da dr\u017ei \u010doveka 2 sekunde."
 	},
 	{
 		"key": "The Ghoul can infect humans and heal infected with his hammer.",
-		"value": "Zloduh mo\u017ee zara\u017eava ljude i da le\u010di zara\u017eene svojim \u010deki\u0107em."
+		"value": "Zloduh mo\u017ee da zara\u017eava ljude i da le\u010di zara\u017eene svojim \u010deki\u0107em."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "On mo\u017ee da izjede sve \u0161to je umrlo blizu njega, \u0161to ga \u010dini sna\u017enijim, br\u017eim i otpornijim."
 	},
 	{
@@ -455,7 +455,7 @@
 	},
 	{
 		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
-		"value": "On mo\u017ee prekriti pod i zidove otrovnom sluzi svojim \u010deki\u0107em."
+		"value": "On mo\u017ee da prekrije pod i zidove otrovnom sluzi svojim \u010deki\u0107em."
 	},
 	{
 		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
@@ -463,7 +463,7 @@
 	},
 	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
-		"value": "Undead mo\u017ee zaraziti ljude i le\u010diti zara\u017eene svojim \u010deki\u0107em."
+		"value": "Undead mo\u017ee da zarazi ljude i da le\u010di zara\u017eene svojim \u010deki\u0107em."
 	},
 	{
 		"key": "Instead of dying, he freezes during 10 seconds.",
@@ -475,38 +475,38 @@
 	},
 	{
 		"key": "The Witch can infect humans and heal infected with his hammer.",
-		"value": "Ve\u0161tica mo\u017ee zaraziti ljude i le\u010diti zara\u017eene svojim \u010deki\u0107em."
+		"value": "Ve\u0161tica mo\u017ee da zarazi ljude i da le\u010di zara\u017eene svojim \u010deki\u0107em."
 	},
 	{
 		"key": "When an infected dies, he may re-spawn near her.",
 		"value": "Kada zara\u017eeni umre, ponovo \u0107e se stvoriti kod nje."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Ako Ve\u0161tica umre, ona nestaje i zamenjena je drugom klasom zara\u017eenih."
 	},
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
-		"value": "Mo\u017ee naneti 1 \u0161kodan bod po sekundi kada huka ljude."
+		"value": "Mo\u017ee da nanese 1 \u0161kodan bod po sekundi kada huka ljude."
 	},
 	{
 		"key": "Targeted chat messages",
 		"value": "Ciljano \u0107askanje"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
 		"value": "Koristi \u00bb/msg <korisnik> <poruka moja>\u00ab da bi slao/slala privatne poruke."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
 		"value": "Koristi \u00bb/msg !<ime klase> <poruka moja>\u00ab da bi poslao/poslala privatnu poruku svim igra\u010dima jedne specifi\u010dne klase."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
 		"value": "Primer: \u00bb/msg !medic I'm wounded!\u00ab"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
 		"value": "Koristi \u00bb/msg !near\\\u00ab da bi poslao/poslala privatne poruke svim igra\u010dima blizu tebe."
 	},
 	{
@@ -542,7 +542,7 @@
 		"value": "Pritisni <F3> ili <F4> da bi dopustio ili zabranio za\u0161titu protiv hukanja"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
+		"key": "You have held a bonus area for one minute, +5 points",
 		"value": "Dr\u017eao si bonus podru\u010dje za jedan minut, +5 poena"
 	},
 	{
@@ -568,7 +568,7 @@
 		"other": "{int:NumBombs} bombi preostalo",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "{int:NumMines} mina je aktivna",
 		"few": "{int:NumMines} mine su aktivne",
 		"other": "{int:NumMines} mina su aktivne",
@@ -626,7 +626,7 @@
 		"value": "Ograni\u010denje granate pove\u0107ano"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
 		"value": "Napi\u0161i \u00bb/help {str:ClassName}\\\u00ab za vi\u0161e informacija o svojoj klasi"
 	},
 	{

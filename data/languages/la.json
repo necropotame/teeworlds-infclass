@@ -20,8 +20,8 @@
 		"value": "Tibi conscriptum esse opus est, ut hanc operationem conficias."
 	},
 	{
-		"key": "Please wait 5 minutes before create an another account",
-		"value": "Expecta minutas 5 ante quam recrees adcomputum alium."
+		"key": "Please wait 5 minutes before creating another account",
+		"value": "Expecta minutas 5 ante quam recrees adcomputum alium"
 	},
 	{
 		"key": "An error occured during the creation of your account.",
@@ -44,8 +44,8 @@
 		"value": "Tibi conscriptum esse opus est, ut terminum videas."
 	},
 	{
-		"key": "You already notify that {str:PlayerName} must be banned",
-		"value": "Iam denuntiavisti {str:PlayerName} esse proiectum."
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
+		"value": "Iam denuntiavisti {str:PlayerName} esse proiectum"
 	},
 	{
 		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
@@ -437,7 +437,7 @@
 		"value": "\u0120\u016bl malleo homines inficere infectosque sanare potest."
 	},
 	{
-		"key": "He can devore all that has died close to him, which makes him stronger, faster and more resistant.",
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
 		"value": "Omnia circa eum mortua devorare potest, quo fortior, celerior firmiorque fiat."
 	},
 	{
@@ -477,7 +477,7 @@
 		"value": "Infectus mortuus iuxta eam ab inferis exsistere potest."
 	},
 	{
-		"key": "If the Witch dies, she disappear and is replaced by an another class of infected.",
+		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
 		"value": "Malefica mortua decedit commutaturque infecto classis alius."
 	},
 	{
@@ -489,19 +489,19 @@
 		"value": "Nuntia colineata"
 	},
 	{
-		"key": "Use \"/msg <PlayerName> <My Message>\" to send a private message to this player.",
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
 		"value": "Utere \u00bb/msg <Nomen arenarii> <Nuntium meum>\u00ab, ut nuntium privatum haec arenario emittas."
 	},
 	{
-		"key": "Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class.",
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
 		"value": "Utere \u00bb/msg !<nomen classis> <Nuntium meum>\u00ab, ut nuntium ad arenarios classis specialis collineatum emittas."
 	},
 	{
-		"key": "Example: \"/msg !medic I'm wounded!\"",
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
 		"value": "Exemplum: \u00bb/msg !medic Vulneratus sum!\u00ab"
 	},
 	{
-		"key": "Use \"/msg !near\" to send a private message to all players near you.",
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
 		"value": "Utere \u00bb/msg !near\u00ab, ut nuntium collineatum ad arenarios propinquos emittas."
 	},
 	{
@@ -537,7 +537,7 @@
 		"value": "Preme <F3> aut <F4> ad instructionem protectionis contra captionem"
 	},
 	{
-		"key": "You hold a bonus area for one minute, +5 points",
+		"key": "You have held a bonus area for one minute, +5 points",
 		"value": "Zonae seorsae unam minutam immoratus es, +5 copiae"
 	},
 	{
@@ -562,7 +562,7 @@
 		"other": "{int:NumBombs} bombae reliquae",
 	},
 	{
-		"key": "{int:NumMines} mines are actives",
+		"key": "{int:NumMines} mines are active",
 		"one": "Una mina reliqua",
 		"other": "{int:NumMines} minae reliquae",
 	},
@@ -619,7 +619,7 @@
 		"value": "Limes granatarius auctus"
 	},
 	{
-		"key": "Type \"/help {str:ClassName}\" for more information about your class",
+		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
 		"value": "Scribe \u00bb/help {str:ClassName}\u00ab pro informationibus pluribus"
 	},
 	{

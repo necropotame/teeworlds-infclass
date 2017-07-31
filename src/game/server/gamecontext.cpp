@@ -3274,7 +3274,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append(" ~~\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Ghoul can infect humans and heal infected with his hammer."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can devore all that has died close to him, which makes him stronger, faster and more resistant."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can devour all that has died close to him, which makes him stronger, faster and more resistant."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment."), NULL);
 			
@@ -3318,7 +3318,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("When an infected dies, he may re-spawn near her."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("If the Witch dies, she disappear and is replaced by an another class of infected."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("If the Witch dies, she disappears and is replaced by another class of infected."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("She can also inflict 1 damage point per second by hooking humans."), NULL);
 			
@@ -3330,13 +3330,13 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Targeted chat messages")); 
 			Buffer.append(" ~~\n\n");
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use \"/msg <PlayerName> <My Message>\" to send a private message to this player."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use “/msg <PlayerName> <My Message>” to send a private message to this player."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use \"/msg !<ClassName> <My Message>\" to send a private message to all player with a specific class."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use “/msg !<ClassName> <My Message>” to send a private message to all players with a specific class."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Example: \"/msg !medic I'm wounded!\""), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Example: “/msg !medic I'm wounded!”"), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use \"/msg !near\" to send a private message to all players near you."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use “/msg !near” to send a private message to all players near you."), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
