@@ -1,7 +1,7 @@
 {"translation":[
 	{
 		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
-		"value": "{str:Victim} \u56e0 {sec:Duration} ({str:Reason}) \u88ab\u7981\u8a00"
+		"value": "{str:Victim}\u56e0 ({str:Reason}) \u88ab\u7981\u8a00{sec:Duration}"
 	},
 	{
 		"key": "You are now logged.",
@@ -41,7 +41,7 @@
 	},
 	{
 		"key": "You must be logged to see your goal",
-		"value": "\u60a8\u5fc5\u987b\u767b\u5f55\u624d\u80fd\u770b\u5230\u60a8\u7684\u76ee\u6807"
+		"value": "\u60a8\u5fc5\u987b\u767b\u5f55\u624d\u80fd\u770b\u5230\u60a8\u7684\u6392\u540d"
 	},
 	{
 		"key": "You have already notified that {str:PlayerName} ought to be banned",

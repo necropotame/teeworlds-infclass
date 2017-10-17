@@ -182,7 +182,7 @@
 	},
 	{
 		"key": "Switch language to english ?",
-		"value": "Dili \u0130ngilizce'ye \u00e7evirmek istiyor musunuz?"
+		"value": "T\u00fcrk\u00e7e se\u00e7ene\u011fi i\u00e7in t\u0131klay\u0131n."
 	},
 	{
 		"key": "You can change the language of this mod using the command /language.",
@@ -238,7 +238,7 @@
 	},
 	{
 		"key": "How to translate the mod",
-		"value": "Modu nas\u0131l terc\u00fcme edebilirim"
+		"value": "Modu ba\u015fka dile \u00e7evirme yolu"
 	},
 	{
 		"key": "Create an account on Crowdin and join a translation team:",
