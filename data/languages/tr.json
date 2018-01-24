@@ -1,5 +1,9 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} {sec:Duration} {str:Reason} i\u00e7in susturuldu"
+	},
+	{
 		"key": "You are now logged.",
 		"value": "Giri\u015f yapt\u0131n\u0131z."
 	},
@@ -40,6 +44,14 @@
 		"value": "Hedefinizi g\u00f6rmek i\u00e7in giri\u015f yapmal\u0131s\u0131n\u0131z"
 	},
 	{
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
+		"value": "Siz \u00e7oktan {str:PlayerName}'\u0131n yasaklanaca\u011f\u0131n\u0131 bildirmi\u015ftiniz"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} {str:VictimName} yasaklanmas\u0131n\u0131 istiyor {str:Reason}"
+	},
+	{
 		"key": "{str:VictimName} has been infected",
 		"value": "{str:VictimName} d\u00f6n\u00fc\u015ft\u00fc"
 	},
@@ -77,12 +89,28 @@
 		"value": "Kanca korumas\u0131 devre d\u0131\u015f\u0131"
 	},
 	{
+		"key": "{str:PlayerName} has been banned ({str:Reason})",
+		"value": "{str:PlayerName} yasakland\u0131 {str:Reason}"
+	},
+	{
+		"key": "{str:PlayerName} has been kicked ({str:Reason})",
+		"value": "{str:PlayerName} at\u0131ld\u0131 ({str:Reason})"
+	},
+	{
 		"key": "{str:PlayerName} has left the game ({str:Reason})",
 		"value": "{str:PlayerName} oyunu terk etti ({str:Reason})"
 	},
 	{
 		"key": "{str:PlayerName} has left the game",
 		"value": "{str:PlayerName} oyundan ayr\u0131ld\u0131"
+	},
+	{
+		"key": "{str:PlayerName} joined the spectators",
+		"value": "{str:PlayerName} seyircilere kat\u0131ld\u0131"
+	},
+	{
+		"key": "{str:PlayerName} joined the game",
+		"value": "{str:PlayerName} oyuna kat\u0131ld\u0131"
 	},
 	{
 		"key": "Engineer",
@@ -171,6 +199,10 @@
 	{
 		"key": "{str:PlayerName} entered and joined the game",
 		"value": "{str:PlayerName} girdi ve oyuna kat\u0131ld\u0131"
+	},
+	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "{sec:Duration} y\u00fcz\u00fcnden susturuldunuz"
 	},
 	{
 		"key": "You can't join the spectators right now",
@@ -423,6 +455,10 @@
 	{
 		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
 		"value": "Bal\u00e7\u0131\u011fa dokunmak, insana 3 saniye i\u00e7inde 3 puan hasar verir."
+	},
+	{
+		"key": "The Undead can infect humans and heal infected with his hammer.",
+		"value": "\u00d6l\u00fcms\u00fcz, insanlara bula\u015fabilir ve \u00e7ekici ile bula\u015f\u0131c\u0131y\u0131 iyile\u015ftirebilir."
 	},
 	{
 		"key": "Instead of dying, he freezes during 10 seconds.",

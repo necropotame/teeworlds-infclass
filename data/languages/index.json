@@ -102,6 +102,11 @@
 		"parent": "en"
 	},
 	{
+		"file": "sah",
+		"name": "Саха",
+		"parent": "ru"
+	},
+	{
 		"file": "sk",
 		"name": "Slovenčina",
 		"parent": "cs"
