@@ -1,7 +1,55 @@
 {"translation":[
 	{
+		"key": "{str:Victim} has been muted for {sec:Duration} ({str:Reason})",
+		"value": "{str:Victim} le lett n\u00e9m\u00edtva {sec:Duration} id\u0151re ({str:Reason})"
+	},
+	{
+		"key": "You are now logged.",
+		"value": "Bejelentkezt\u00e9l."
+	},
+	{
+		"key": "Wrong username/password.",
+		"value": "Rossz felhaszn\u00e1l\u00f3n\u00e9v vagy jelsz\u00f3."
+	},
+	{
+		"key": "An error occured during the operation.",
+		"value": "Hiba ad\u00f3dott a m\u0171velet sor\u00e1n."
+	},
+	{
+		"key": "You must be logged for this operation",
+		"value": "Ehhez a m\u0171velethez be kell jelentkezned"
+	},
+	{
 		"key": "Please wait 5 minutes before creating another account",
 		"value": "K\u00e9rj\u00fck v\u00e1rj 5 percet miel\u0151tt l\u00e9trehozol egy m\u00e1sik felhaszn\u00e1l\u00f3t"
+	},
+	{
+		"key": "An error occured during the creation of your account.",
+		"value": "Hiba ad\u00f3dott a felhaszn\u00e1l\u00f3d l\u00e9trehoz\u00e1sa sor\u00e1n."
+	},
+	{
+		"key": "This username is already taken by an existing account",
+		"value": "Ez a felhaszn\u00e1l\u00f3n\u00e9v m\u00e1r foglalt"
+	},
+	{
+		"key": "Your account has been created and you are now logged.",
+		"value": "A felhaszn\u00e1l\u00f3d l\u00e9trej\u00f6tt - bejelentkezt\u00e9l."
+	},
+	{
+		"key": "You must be logged to see your rank",
+		"value": "Be kell jelentkezned hogy l\u00e1sd a helyez\u00e9sed"
+	},
+	{
+		"key": "You must be logged to see your goal",
+		"value": "Be kell jelentkezned hogy l\u00e1sd a c\u00e9lodat"
+	},
+	{
+		"key": "You have already notified that {str:PlayerName} ought to be banned",
+		"value": "M\u00e1r jelezted hogy {str:PlayerName}-t ki kellene tiltani"
+	},
+	{
+		"key": "{str:PlayerName} wants {str:VictimName} to be banned ({str:Reason})",
+		"value": "{str:PlayerName} ki szeretn\u00e9 {str:VictimName}-t tiltani ({str:Reason})"
 	},
 	{
 		"key": "{str:VictimName} has been infected",
@@ -29,6 +77,10 @@
 		"value": "Meg\u00f6lted a boszork\u00e1nyt, +5 pont"
 	},
 	{
+		"key": "You have eliminated your target, +2 points",
+		"value": "Kiiktattad a c\u00e9lpontot, +2 pont"
+	},
+	{
 		"key": "Hook protection enabled",
 		"value": "Horog-v\u00e9delem bekapcsolva"
 	},
@@ -38,11 +90,11 @@
 	},
 	{
 		"key": "{str:PlayerName} has been banned ({str:Reason})",
-		"value": "{str:PlayerName}-t letiltott\u00e1k ({str:Reason})"
+		"value": "{str:PlayerName} ki lett tiltva ({str:Reason})"
 	},
 	{
 		"key": "{str:PlayerName} has been kicked ({str:Reason})",
-		"value": "{str:PlayerName}-t kir\u00fagt\u00e1k ({str:Reason})"
+		"value": "{str:PlayerName} ki lett r\u00fagva ({str:Reason})"
 	},
 	{
 		"key": "{str:PlayerName} has left the game ({str:Reason})",
@@ -93,6 +145,10 @@
 		"value": "Tud\u00f3s"
 	},
 	{
+		"key": "Biologist",
+		"value": "Biol\u00f3gus"
+	},
+	{
 		"key": "Smoker",
 		"value": "F\u00fcst\u00f6s"
 	},
@@ -111,6 +167,14 @@
 	{
 		"key": "Spider",
 		"value": "P\u00f3k"
+	},
+	{
+		"key": "Ghoul",
+		"value": "V\u00e1mp\u00edr"
+	},
+	{
+		"key": "Slug",
+		"value": "Csiga"
 	},
 	{
 		"key": "Witch",
@@ -137,6 +201,10 @@
 		"value": "{str:PlayerName} bel\u00e9pett, \u00e9s csatlakozott a j\u00e1t\u00e9khoz"
 	},
 	{
+		"key": "You are muted for {sec:Duration}",
+		"value": "Le lett\u00e9l n\u00e9m\u00edtva {sec:Duration} id\u0151re"
+	},
+	{
 		"key": "You can't join the spectators right now",
 		"value": "Most nem csatlakozhatsz a megfigyel\u0151kh\u00f6z"
 	},
@@ -149,8 +217,24 @@
 		"value": "M\u00f3dos\u00edtod a nyelvet magyarra?"
 	},
 	{
+		"key": "You can change the language of this mod using the command /language.",
+		"value": "Megv\u00e1ltoztathatod a j\u00e1t\u00e9k nyelv\u00e9t a /language paranccsal."
+	},
+	{
+		"key": "If your language is not available, you can help with translation (/help translate).",
+		"value": "Ha a nyelved nem el\u00e9rhet\u0151, seg\u00edthetsz a ford\u00edt\u00e1sban (/help translate)."
+	},
+	{
 		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
 		"value": "InfectionClass, k\u00e9sz\u00edtette: necropotame (version {str:VersionCode})"
+	},
+	{
+		"key": "Based on the concept of Infection mod by Gravity",
+		"value": "Gravity Infection j\u00e1t\u00e9km\u00f3dja alapj\u00e1n"
+	},
+	{
+		"key": "Main contributors: {str:ListOfContributors}",
+		"value": "F\u0151 fejleszt\u0151k: {str:ListOfContributors}"
 	},
 	{
 		"key": "Thanks to {str:ListOfContributors}",
@@ -183,6 +267,18 @@
 	{
 		"key": "The goal for infected is to infect all humans.",
 		"value": "A zombik c\u00e9lja, hogy minden embert megfert\u0151zzenek."
+	},
+	{
+		"key": "How to translate the mod",
+		"value": "Hogyan ford\u00edtsd le a j\u00e1t\u00e9kot"
+	},
+	{
+		"key": "Create an account on Crowdin and join a translation team:",
+		"value": "K\u00e9sz\u00edts egy felhaszn\u00e1l\u00f3t a Crowdin oldal\u00e1n, \u00e9s csatlakozz a ford\u00edt\u00f3khoz:"
+	},
+	{
+		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
+		"value": "Ha k\u00e9rd\u00e9sed van a ford\u00edt\u00e1ssal kapcsolatban, vedd fel vel\u00fcnk a kapcsolatot IRC-n ({str:IRCAddress})"
 	},
 	{
 		"key": "The Engineer can build walls with his hammer to block infected.",
@@ -227,6 +323,10 @@
 		"value": "Tov\u00e1bb\u00e1 teleport\u00e1lhat gr\u00e1n\u00e1tvet\u0151j\u00e9vel."
 	},
 	{
+		"key": "The biologist has a shotgun with bouncing bullets and can create a spring laser trap by shooting with his rifle.",
+		"value": "A biol\u00f3gusnak van egy pusk\u00e1ja pattog\u00f3 l\u00f6ved\u00e9kekkel, \u00e9s l\u00e9tre tud hozni egy l\u00e9zer csapd\u00e1t a l\u00e9zerpisztoly\u00e1val."
+	},
+	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
 		"value": "Az orvos gy\u00f3gy\u00edthatja kalap\u00e1cs\u00e1val az embereket: t\u00f6bb pajzs ikon lesz nekik."
 	},
@@ -247,22 +347,30 @@
 		"value": "Ha megtal\u00e1lj\u00e1k, a z\u00e1szl\u00f3 minden embernek ad 1 \u00e9leter\u0151pontot, 4 p\u00e1nc\u00e9lpontot \u00e9s teljes t\u00f6lt\u00e9nyt\u00e1rat; a h\u0151snek ezen k\u00edv\u00fcl teljes \u00e9leter\u0151t \u00e9s p\u00e1nc\u00e9lt."
 	},
 	{
+		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
+		"value": "A h\u0151st nem gy\u00f3gy\u00edthatja orvos, de ellen\u00e1ll a zombik \u00fct\u00e9s\u00e9nek, b\u00e1r az \u00e9letereje cs\u00f6kken."
+	},
+	{
 		"key": "The Ninja can throw flash grenades that can freeze infected during three seconds.",
 		"value": "A nindzsa l\u0151hett bomb\u00e1kat, amik lefagyasztj\u00e1k a zombikat."
 	},
 	{
 		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
-		"one": "",
-		"other": "",
+		"one": "Kalap\u00e1cs helyett katan\u00e1ja van, amivel tud eggyel t\u00f6bb alkalommal ugrani miel\u0151tt f\u00f6ldet \u00e9r.",
+		"other": "Kalap\u00e1cs helyett katan\u00e1ja van, amivel tud {int:NinjaJump}-el t\u00f6bb alkalommal ugrani miel\u0151tt f\u00f6ldet \u00e9r.",
 	},
 	{
 		"key": "The Mercenary fly in air using his machine gun.",
 		"value": "A soldos tud rep\u00fclni a sorozatl\u00f6v\u0151j\u00e1vel."
 	},
 	{
+		"key": "He can coil explosives with his hammer that hinder infected from harming.",
+		"value": "Fel tud \u00e1ll\u00edtani robban\u00f3szereket kalap\u00e1cs\u00e1val, amik \u00e1rtalmatlann\u00e1 teszik a zombikat."
+	},
+	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points.",
-		"one": "",
-		"other": "",
+		"one": "Tud tov\u00e1bb\u00e1 m\u00e9rgezett gr\u00e1n\u00e1tokat dobni, amik 1 \u00e9leter\u0151pontnyit \u00fctnek.",
+		"other": "Tud tov\u00e1bb\u00e1 m\u00e9rgezett gr\u00e1n\u00e1tokat dobni, amik {int:NumDamagePoints} \u00e9leter\u0151pontnyit \u00fctnek.",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -271,6 +379,10 @@
 	{
 		"key": "He can jump two times in air.",
 		"value": "K\u00e9tszer ugorhat leveg\u0151ben."
+	},
+	{
+		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10\u201313 otherwise.",
+		"value": "Van tov\u00e1bb\u00e1 egy er\u0151s l\u00e9zerfegyvere ami 30 \u00e9leter\u0151pontnyit \u00fct ha egy helyben lebeg, 10-13-at egy\u00e9bk\u00e9nt."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",
@@ -321,6 +433,30 @@
 		"value": "Mindk\u00e9t esetben m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
 	},
 	{
+		"key": "The Ghoul can infect humans and heal infected with his hammer.",
+		"value": "A v\u00e1mp\u00edr kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
+	},
+	{
+		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
+		"value": "Ha valaki meghal a k\u00f6zel\u00e9ben, er\u0151sebb, gyorsabb \u00e9s ellen\u00e1ll\u00f3bb lesz."
+	},
+	{
+		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
+		"value": "Apr\u00e1nk\u00e9nt megem\u00e9szti a t\u00e1pl\u00e1l\u00e9k\u00e1t, \u00e9s lassan vissza\u00e1ll eredeti \u00e1llapot\u00e1ra."
+	},
+	{
+		"key": "The Slug can infect humans and heal infected with his hammer.",
+		"value": "A csiga kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
+	},
+	{
+		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
+		"value": "M\u00e9rget tud kenni kalap\u00e1cs\u00e1val a talajra \u00e9s falakra."
+	},
+	{
+		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
+		"value": "Ha egy ember hozz\u00e1\u00e9r a m\u00e9reghez, 3 \u00e9leter\u0151pontnyi sebz\u00e9st kap 3 m\u00e1sodperc alatt."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
 		"value": "Az \u00e9l\u0151halott kalap\u00e1cs\u00e1val megfert\u0151zhet embereket, \u00e9s gy\u00f3gy\u00edthat zombikat."
 	},
@@ -342,11 +478,39 @@
 	},
 	{
 		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
-		"value": "Ha a boszork\u00e1ny meghal, ut\u00e1na m\u00e1r nem boszork\u00e1ny lesz."
+		"value": "Ha a boszork\u00e1ny meghal, ut\u00e1na valamilyen m\u00e1s zombi lesz."
 	},
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
 		"value": "Tov\u00e1bb\u00e1 m\u00e1sodpercenk\u00e9nt 1 ponttal sebzi az embereket, ha r\u00e1juk akaszkodik."
+	},
+	{
+		"key": "Targeted chat messages",
+		"value": "C\u00e9lzott chat \u00fczenetek"
+	},
+	{
+		"key": "Use \u201c/msg <PlayerName> <My Message>\u201d to send a private message to this player.",
+		"value": "Az \"/msg <PlayerName> <My Message>\" paranccsal priv\u00e1t \u00fczenetet k\u00fcldhetsz egy j\u00e1t\u00e9kosnak."
+	},
+	{
+		"key": "Use \u201c/msg !<ClassName> <My Message>\u201d to send a private message to all players with a specific class.",
+		"value": "Az \"/msg !<ClassName> <My Message>\" paranccsal priv\u00e1t \u00fczenetet k\u00fcldhetsz minden adott oszt\u00e1ly\u00fa j\u00e1t\u00e9kosnak."
+	},
+	{
+		"key": "Example: \u201c/msg !medic I'm wounded!\u201d",
+		"value": "P\u00e9ld\u00e1ul: \"/msg !medic Seg\u00edts\u00e9g, megsebeztek!\""
+	},
+	{
+		"key": "Use \u201c/msg !near\u201d to send a private message to all players near you.",
+		"value": "Az \"/msg !near\" paranccsal priv\u00e1t \u00fczenetet k\u00fcldhetsz minden hozz\u00e1d k\u00f6zeli j\u00e1t\u00e9kosnak."
+	},
+	{
+		"key": "Choose a help page with /help <page>",
+		"value": "V\u00e1lassz oldalt a s\u00fag\u00f3ban a /help <page> paranccsal"
+	},
+	{
+		"key": "Available help pages: {str:PageList}",
+		"value": "El\u00e9rhet\u0151 s\u00fag\u00f3 oldalak: {str:PageList}"
 	},
 	{
 		"key": "A random class will be automatically attributed to you when rounds start",
@@ -361,12 +525,20 @@
 		"value": "Ismeretlen nyelv"
 	},
 	{
+		"key": "Available languages: {str:ListOfLanguage}",
+		"value": "El\u00e9rhet\u0151 nyelvek: {str:ListOfLanguage}"
+	},
+	{
 		"key": "List of commands",
 		"value": "Parancsok list\u00e1ja"
 	},
 	{
 		"key": "Press <F3> or <F4> to enable or disable hook protection",
 		"value": "Nyomd le az <F3>-at vagy <F4>-et, hogy enged\u00e9lyezd vagy letiltsd a horog-v\u00e9delmet"
+	},
+	{
+		"key": "You have held a bonus area for one minute, +5 points",
+		"value": "Tartottad a b\u00f3nusz terepet egy percig, +5 pont"
 	},
 	{
 		"key": "You are frozen: {sec:EffectDuration}",
@@ -391,16 +563,28 @@
 	},
 	{
 		"key": "{int:NumMines} mines are active",
-		"one": "",
-		"other": "",
+		"one": "Egy akt\u00edv akna",
+		"other": "{int:NumMines} akt\u00edv akna",
+	},
+	{
+		"key": "Mine activated",
+		"value": "Akna aktiv\u00e1lva"
 	},
 	{
 		"key": "Next target in {sec:RemainingTime}",
 		"value": "K\u00f6vetkez\u0151 z\u00e1szl\u00f3 \u00e9rkezik: {sec:RemainingTime} m\u00e1sodperc"
 	},
 	{
+		"key": "Target to eliminate: {str:PlayerName}",
+		"value": "Kiiktatand\u00f3 c\u00e9lpont: {str:PlayerName}"
+	},
+	{
 		"key": "Position lock: {sec:RemainingTime}",
 		"value": "Hely-z\u00e1r: {sec:RemainingTime}"
+	},
+	{
+		"key": "Explosive yield: {percent:BombLevel}",
+		"value": "Robban\u00f3szer: {percent:BombLevel}"
 	},
 	{
 		"key": "Next flag in {sec:RemainingTime}",
@@ -411,12 +595,28 @@
 		"value": "H\u00e1l\u00f3 m\u00f3d bekapcsolva"
 	},
 	{
+		"key": "Stomach filled by {percent:FodderInStomach}",
+		"value": "Gyomor tartalma: {percent:FodderInStomach}"
+	},
+	{
 		"key": "The witch is dead",
 		"value": "A boszork\u00e1ny meghalt"
 	},
 	{
 		"key": "The undead is finally dead",
 		"value": "Az \u00e9l\u0151halott v\u00e9gre meghalt"
+	},
+	{
+		"key": "Sword velocity increased",
+		"value": "Katana sebess\u00e9ge megn\u00f6velve"
+	},
+	{
+		"key": "Sword strength increased",
+		"value": "Katana er\u0151ss\u00e9ge megn\u00f6velve"
+	},
+	{
+		"key": "Grenade limit increased",
+		"value": "Gr\u00e1n\u00e1tok sz\u00e1m\u00e1nak korl\u00e1tja megn\u00f6velve"
 	},
 	{
 		"key": "Type \u201c/help {str:ClassName}\u201d for more information about your class",
