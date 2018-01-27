@@ -157,7 +157,7 @@ public:
 	void CreateHammerHit(vec2 Pos);
 	void CreatePlayerSpawn(vec2 Pos);
 	void CreateDeath(vec2 Pos, int Who);
-	void CreateSound(vec2 Pos, int Sound, int Mask=-1);
+	void CreateSound(vec2 Pos, int Sound, int64_t Mask=-1);
 	void CreateSoundGlobal(int Sound, int Target=-1);
 
 	enum
@@ -262,8 +262,6 @@ private:
 	int m_VoteBanClientID;
 	
 	class CBroadcastState
-	static void ConList(IConsole::IResult *pResult, void *pUserData);
-
 	{
 	public:
 		int m_NoChangeTick;
@@ -276,6 +274,9 @@ private:
 		int m_TimedPriority;
 		char m_TimedMessage[1024];
 	};
+
+	static void ConList(IConsole::IResult *pResult, void *pUserData);
+
 	
 	CBroadcastState m_BroadcastStates[MAX_CLIENTS];
 	

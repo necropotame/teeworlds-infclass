@@ -2752,18 +2752,6 @@ void CCharacter::OpenClassChooser()
 	{
 		m_pPlayer->OpenMapMenu(1);
 	}
-
-	if(Server()->Tick() - m_RefreshTime >= Server()->TickSpeed())
-	{
-		char aTmp[128];
-		if( g_Config.m_SvBroadcast[0] != 0 && (Server()->Tick() > (m_LastBroadcast + (Server()->TickSpeed() * 9))))
-		{
-			str_format(aTmp, sizeof(aTmp), "%s", g_Config.m_SvBroadcast);
-			GameServer()->SendBroadcast(aTmp, m_pPlayer->GetCID());
-			m_LastBroadcast = Server()->Tick();
-		}
-		m_RefreshTime = Server()->Tick();
-	}
 }
 
 int CCharacter::GetClass()

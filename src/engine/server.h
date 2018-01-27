@@ -320,9 +320,6 @@ public:
 	virtual int GetTimeShiftUnit() const = 0; //In ms
 /* INFECTION MODIFICATION END *****************************************/
 
-    // DDRace
-	virtual void GetClientAddr(int ClientID, NETADDR *pAddr) = 0;
-
 	virtual int* GetIdMap(int ClientID) = 0;
 	virtual void SetCustClt(int ClientID) = 0;
 };

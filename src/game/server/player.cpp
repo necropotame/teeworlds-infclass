@@ -783,24 +783,3 @@ void CPlayer::IncreaseGhoulLevel(int Diff)
 }
 
 /* INFECTION MODIFICATION END *****************************************/
-void CPlayer::FindDuplicateSkins()
-{
-	if (m_TeeInfos.m_UseCustomColor == 0 && !m_StolenSkin) return;
-	m_StolenSkin = 0;
-	for (int i = 0; i < MAX_CLIENTS; ++i)
-	{
-		if (i == m_ClientID) continue;
-		if(GameServer()->m_apPlayers[i])
-		{
-			if (GameServer()->m_apPlayers[i]->m_StolenSkin) continue;
-			if ((GameServer()->m_apPlayers[i]->m_TeeInfos.m_UseCustomColor == m_TeeInfos.m_UseCustomColor) &&
-			(GameServer()->m_apPlayers[i]->m_TeeInfos.m_ColorFeet == m_TeeInfos.m_ColorFeet) &&
-			(GameServer()->m_apPlayers[i]->m_TeeInfos.m_ColorBody == m_TeeInfos.m_ColorBody) &&
-			!str_comp(GameServer()->m_apPlayers[i]->m_TeeInfos.m_SkinName, m_TeeInfos.m_SkinName))
-			{
-				m_StolenSkin = 1;
-				return;
-			}
-		}
-	}
-}

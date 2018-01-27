@@ -116,11 +116,7 @@ class CCharacter *CGameContext::GetPlayerChar(int ClientID)
 	return m_apPlayers[ClientID]->GetCharacter();
 }
 
-<<<<<<< HEAD
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
-=======
-void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount, int64_t Mask)
->>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	float a = 3 * 3.14159f / 2 + Angle;
 	//float a = get_angle(dir);
@@ -139,11 +135,7 @@ void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount, int64_t Ma
 	}
 }
 
-<<<<<<< HEAD
 void CGameContext::CreateHammerHit(vec2 Pos)
-=======
-void CGameContext::CreateHammerHit(vec2 Pos, int64_t Mask)
->>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	// create the event
 	CNetEvent_HammerHit *pEvent = (CNetEvent_HammerHit *)m_Events.Create(NETEVENTTYPE_HAMMERHIT, sizeof(CNetEvent_HammerHit));
@@ -185,11 +177,7 @@ void CGameContext::CreateLoveEvent(vec2 Pos)
 	m_LoveDots.add(State);
 }
 
-<<<<<<< HEAD
 void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage, int TakeDamageMode)
-=======
-void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage, int ActivatedTeam, int64_t Mask)
->>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	// create the event
 	CNetEvent_Explosion *pEvent = (CNetEvent_Explosion *)m_Events.Create(NETEVENTTYPE_EXPLOSION, sizeof(CNetEvent_Explosion));
@@ -278,11 +266,7 @@ void create_smoke(vec2 Pos)
 	}
 }*/
 
-<<<<<<< HEAD
 void CGameContext::CreatePlayerSpawn(vec2 Pos)
-=======
-void CGameContext::CreatePlayerSpawn(vec2 Pos, int64_t Mask)
->>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	// create the event
 	CNetEvent_Spawn *ev = (CNetEvent_Spawn *)m_Events.Create(NETEVENTTYPE_SPAWN, sizeof(CNetEvent_Spawn));
@@ -293,11 +277,7 @@ void CGameContext::CreatePlayerSpawn(vec2 Pos, int64_t Mask)
 	}
 }
 
-<<<<<<< HEAD
 void CGameContext::CreateDeath(vec2 Pos, int ClientID)
-=======
-void CGameContext::CreateDeath(vec2 Pos, int ClientID, int64_t Mask)
->>>>>>> 3607218f1... Merge ddrace64 from eeeeee
 {
 	// create the event
 	CNetEvent_Death *pEvent = (CNetEvent_Death *)m_Events.Create(NETEVENTTYPE_DEATH, sizeof(CNetEvent_Death));
