@@ -1483,7 +1483,7 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, bool Extended, int
 {
 	CNetChunk Packet;
 	CPacker p;
-	char aBuf[128];
+	char aBuf[256];
 
 	// count the players
 	int PlayerCount = 0, ClientCount = 0;
@@ -1510,7 +1510,6 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, bool Extended, int
 	if(g_Config.m_InfCaptcha)
 	{
 		str_format(aBuf, sizeof(aBuf), "%s - PASSWORD: %s", g_Config.m_SvName, m_NetServer.GetCaptcha(pAddr));
-		p.AddString(aBuf, 64);
 	}
 	else
 	{
@@ -1550,27 +1549,25 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, bool Extended, int
 					break;
 			}
 			lock_release(m_ChallengeLock);
-			p.AddString(aBuf, 64);
-		}
-		else
-			p.AddString(g_Config.m_SvName, 64);
+        }
 #else
-		p.AddString(g_Config.m_SvName, 64);
+        memcpy(aBuf, g_Config.m_SvName, sizeof(aBuf));
 #endif
 	}
 	
 	if (Extended)
 	{
-			p.AddString(g_Config.m_SvName, 256);
+			p.AddString(aBuf, 256);
 	}
 	else
 	{
 		if (ClientCount < VANILLA_MAX_CLIENTS)
-			p.AddString(g_Config.m_SvName, 64);
+			p.AddString(aBuf, 64);
 		else
 		{
-			str_format(aBuf, sizeof(aBuf), "%s - %d/%d online", g_Config.m_SvName, ClientCount, m_NetServer.MaxClients());
-			p.AddString(aBuf, 64);
+           char bBuf[64];
+           str_format(bBuf, sizeof(bBuf), "%s - %d/%d online", aBuf, ClientCount, m_NetServer.MaxClients());
+           p.AddString(bBuf, 64);
 		}
 	}
 	p.AddString(GetMapName(), 32);
