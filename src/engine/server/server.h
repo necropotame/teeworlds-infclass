@@ -160,9 +160,15 @@ public:
 		int m_UserLevel;
 #endif
 		char m_aUsername[MAX_NAME_LENGTH];
+
+		// DDRace
+
+		NETADDR m_Addr;
+		bool m_CustClt;
 	};
 
 	CClient m_aClients[MAX_CLIENTS];
+	int IdMap[MAX_CLIENTS * VANILLA_MAX_CLIENTS];
 
 	CSnapshotDelta m_SnapshotDelta;
 	CSnapshotBuilder m_SnapshotBuilder;
@@ -246,7 +252,7 @@ public:
 
 	void ProcessClientPacket(CNetChunk *pPacket);
 
-	void SendServerInfo(const NETADDR *pAddr, int Token);
+	void SendServerInfo(const NETADDR *pAddr, int Token, bool Extended=false, int Offset=0);
 	void UpdateServerInfo();
 
 	void PumpNetwork();
@@ -391,6 +397,14 @@ public:
 	
 	virtual int GetTimeShiftUnit() const { return m_TimeShiftUnit; } //In ms
 /* INFECTION MODIFICATION END *****************************************/
+
+	void GetClientAddr(int ClientID, NETADDR *pAddr);
+	int m_aPrevStates[MAX_CLIENTS];
+	char *GetAnnouncementLine(char const *FileName);
+	unsigned m_AnnouncementLastLine;
+
+	virtual int* GetIdMap(int ClientID);
+	virtual void SetCustClt(int ClientID);
 };
 
 #endif
