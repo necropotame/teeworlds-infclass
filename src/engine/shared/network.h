@@ -319,7 +319,7 @@ class CNetServer
 	unsigned char m_SecurityTokenSeed[16];
 
 	CSpamConn m_aSpamConns[NET_CONNLIMIT_IPS];
-    int64 m_aDistSpamConns[NET_CONNLIMIT_DDOS];
+	int64 m_aDistSpamConns[NET_CONNLIMIT_DDOS];
 	
 	CNetRecvUnpacker m_RecvUnpacker;
 
@@ -354,7 +354,7 @@ public:
 	int GetClientSlot(const NETADDR &Addr);
 	SECURITY_TOKEN GetToken(const NETADDR &Addr);
 	bool Connlimit(NETADDR Addr);
-    bool DistConnlimit();
+	bool DistConnlimit();
 	int NumClientsWithAddr(NETADDR Addr);
 
 	// status requests
