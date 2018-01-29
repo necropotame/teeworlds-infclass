@@ -319,7 +319,7 @@ class CNetServer
 	unsigned char m_SecurityTokenSeed[16];
 
 	CSpamConn m_aSpamConns[NET_CONNLIMIT_IPS];
-    int64 m_DdosConns[NET_CONNLIMIT_DDOS];
+    int64 m_aDistSpamConns[NET_CONNLIMIT_DDOS];
 	
 	CNetRecvUnpacker m_RecvUnpacker;
 
