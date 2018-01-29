@@ -224,12 +224,16 @@ int CNetServer::TryAcceptClient(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
 	// If we're getting lots of connection attempts from many (probably spoofed) IP
 	// addressed trying to fill all the slots
 	if (DistConnlimit()) {
-		// If SecurityToken is invalid or the client does not support tokens
+		// If SecurityToken the client does not support tokens
 		// (ie. vanilla teeworlds)
 		if (SecurityToken != GetToken(Addr)) {
 			char aBuf[128];
 			str_format(aBuf, sizeof(aBuf), "This server is currently under attack, and is restricted to clients that support anti-spoof protection (DDNet-like)");
 			CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, str_length(aBuf) + 1, SecurityToken);
+			return -1; // failed to add client
+		}
+		// If the SecurityToken is invalid
+		else if (SecurityToken != GetToken(Addr)) {
 			return -1; // failed to add client
 		}
 	}
