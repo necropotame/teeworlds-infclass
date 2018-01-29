@@ -155,19 +155,20 @@ bool CNetServer::Connlimit(NETADDR Addr)
 
 	for(int i = 0; i < NET_CONNLIMIT_IPS; ++i)
 	{
+		// If that IP address already tried to connect.
 		if(!net_addr_comp(&m_aSpamConns[i].m_Addr, &Addr))
 		{
 			if(m_aSpamConns[i].m_Time > Now - time_freq() * g_Config.m_SvConnlimitTime)
 			{
 				if(m_aSpamConns[i].m_Conns >= g_Config.m_SvConnlimit)
-					return true;
+					return true; // Too many connections from this IP address
 			}
 			else
 			{
 				m_aSpamConns[i].m_Time = Now;
 				m_aSpamConns[i].m_Conns = 0;
 			}
-			m_aSpamConns[i].m_Conns++;
+			m_aSpamConns[i].m_Conns++; // Increase its number of attempts.
 			return false;
 		}
 
@@ -179,6 +180,27 @@ bool CNetServer::Connlimit(NETADDR Addr)
 	m_aSpamConns[Oldest].m_Time = Now;
 	m_aSpamConns[Oldest].m_Conns = 1;
 	return false;
+}
+bool CNetServer::DistConnlimit()
+{
+	int64 Now = time_get();
+	int Oldest = 0;
+
+	int NbConns = 0;
+
+	for(int i = 0; i < NET_CONNLIMIT_DDOS; ++i)
+	{
+		if(m_aDistSpamConns[i] > Now - time_freq() * g_Config.m_SvDistConnlimitTime)
+		{
+			NbConns++;
+		}
+
+		if(m_aDistSpamConns[i] < m_aDistSpamConns[Oldest])
+			Oldest = i;
+	}
+
+	m_aDistSpamConns[Oldest] = Now;
+	return NbConns >= g_Config.m_SvDistConnlimit;
 }
 
 int CNetServer::TryAcceptClient(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
@@ -197,6 +219,23 @@ int CNetServer::TryAcceptClient(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
 		str_format(aBuf, sizeof(aBuf), "Only %d players with the same IP are allowed", m_MaxClientsPerIP);
 		CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, str_length(aBuf) + 1, SecurityToken);
 		return -1; // failed to add client
+	}
+
+	// If we're getting lots of connection attempts from many (probably spoofed) IP
+	// addressed trying to fill all the slots
+	if (DistConnlimit()) {
+		// If SecurityToken the client does not support tokens
+		// (ie. vanilla teeworlds)
+		if (SecurityToken != GetToken(Addr)) {
+			char aBuf[128];
+			str_format(aBuf, sizeof(aBuf), "This server is currently under attack, and is restricted to clients that support anti-spoof protection (DDNet-like)");
+			CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, str_length(aBuf) + 1, SecurityToken);
+			return -1; // failed to add client
+		}
+		// If the SecurityToken is invalid
+		else if (SecurityToken != GetToken(Addr)) {
+			return -1; // failed to add client
+		}
 	}
 
 	int Slot = -1;
