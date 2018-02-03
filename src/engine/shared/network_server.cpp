@@ -205,16 +205,20 @@ bool CNetServer::DistConnlimit()
 
 int CNetServer::TryAcceptClient(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
 {
+	char aAddrStr[NETADDR_MAXSTRSIZE];
+	net_addr_str(&Addr, aAddrStr, sizeof(aAddrStr), true);
 	if (Connlimit(Addr))
 	{
 		const char Msg[] = "Too many connections in a short time";
 		CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, Msg, sizeof(Msg), SecurityToken);
+		dbg_msg("server", "Refusing connection from %s (too many from this client)", Addr);
 		return -1; // failed to add client
 	}
 
 	// check for sv_max_clients_per_ip
 	if (NumClientsWithAddr(Addr) + 1 > m_MaxClientsPerIP)
 	{
+		dbg_msg("server", "Refusing connection from %s (too many from this address)", aAddrStr);
 		char aBuf[128];
 		str_format(aBuf, sizeof(aBuf), "Only %d players with the same IP are allowed", m_MaxClientsPerIP);
 		CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, str_length(aBuf) + 1, SecurityToken);
@@ -226,7 +230,8 @@ int CNetServer::TryAcceptClient(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
 	if (DistConnlimit()) {
 		// If SecurityToken the client does not support tokens
 		// (ie. vanilla teeworlds)
-		if (SecurityToken != GetToken(Addr)) {
+		if (SecurityToken != NET_SECURITY_TOKEN_UNSUPPORTED) {
+			dbg_msg("server", "Refusing connection from %s (does not support security token)", aAddrStr);
 			char aBuf[128];
 			str_format(aBuf, sizeof(aBuf), "This server is currently under attack, and is restricted to clients that support anti-spoof protection (DDNet-like)");
 			CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, aBuf, str_length(aBuf) + 1, SecurityToken);
@@ -234,6 +239,7 @@ int CNetServer::TryAcceptClient(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
 		}
 		// If the SecurityToken is invalid
 		else if (SecurityToken != GetToken(Addr)) {
+			dbg_msg("server", "Refusing connection from %s (bad security token)", aAddrStr);
 			return -1; // failed to add client
 		}
 	}
