@@ -230,7 +230,7 @@ int CNetServer::TryAcceptClient(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
 	if (DistConnlimit()) {
 		// If SecurityToken the client does not support tokens
 		// (ie. vanilla teeworlds)
-		if (SecurityToken != NET_SECURITY_TOKEN_UNSUPPORTED) {
+		if (SecurityToken == NET_SECURITY_TOKEN_UNSUPPORTED) {
 			dbg_msg("server", "Refusing connection from %s (does not support security token)", aAddrStr);
 			char aBuf[128];
 			str_format(aBuf, sizeof(aBuf), "This server is currently under attack, and is restricted to clients that support anti-spoof protection (DDNet-like)");
