@@ -549,7 +549,7 @@ int CServer::Init()
 		
 /* INFECTION MODIFICATION START ***************************************/
 	SetFireDelay(INFWEAPON_NONE, 0);
-	SetFireDelay(INFWEAPON_HAMMER, 125);
+	SetFireDelay(INFWEAPON_HAMMER, 250);
 	SetFireDelay(INFWEAPON_GUN, 125);
 	SetFireDelay(INFWEAPON_SHOTGUN, 500);
 	SetFireDelay(INFWEAPON_GRENADE, 500);
