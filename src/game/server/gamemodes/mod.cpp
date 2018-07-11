@@ -14,7 +14,7 @@
 CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 : IGameController(pGameServer)
 {
-	m_pGameType = "InfClass";
+	m_pGameType = "InfClassR";
 	
 	m_GrowingMap = 0;
 	
