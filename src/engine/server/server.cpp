@@ -4076,8 +4076,11 @@ public:
 void CServer::OnRoundEnd()
 {
 #ifdef CONF_SQL
-	if(     
-		str_comp(m_aCurrentMap, "infc_lunaroutpost") != 0
+	if(     //infc_lunaroutpost infc_newdust infc_warehouse infc_provence
+		str_comp(m_aCurrentMap, "infc_lunaroutpost") != 0 &&
+		str_comp(m_aCurrentMap, "infc_newdust") != 0 &&
+		str_comp(m_aCurrentMap, "infc_warehouse") != 0 &&
+		str_comp(m_aCurrentMap, "infc_provence") != 0
 	)
 		return;
 	
