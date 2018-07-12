@@ -72,7 +72,7 @@ void CMercenaryBomb::Explode()
 	
 	if(m_Damage > 1)
 	{
-		new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+		new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED);
 	}
 				
 	GameServer()->m_World.DestroyEntity(this);

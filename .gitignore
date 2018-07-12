@@ -1,3 +1,4 @@
+.vs*
 bam
 !/bin/bam-040-linux64/bam
 .bam
