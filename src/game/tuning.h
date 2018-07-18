@@ -43,6 +43,6 @@ MACRO_TUNING_PARAM(LaserBounceNum, laser_bounce_num, 1)
 MACRO_TUNING_PARAM(LaserBounceCost, laser_bounce_cost, 0)
 MACRO_TUNING_PARAM(LaserDamage, laser_damage, 5)
 
-MACRO_TUNING_PARAM(PlayerCollision, player_collision, 1)
+MACRO_TUNING_PARAM(PlayerCollision, player_collision, 0) // inverted to avoid client collision prediction (?)
 MACRO_TUNING_PARAM(PlayerHooking, player_hooking, 1)
 #endif
