@@ -1,2 +1,2 @@
-# Teeworlds Mod: InfectionClass
-Infection Mod with a class system for TeeWorlds, by necropotame.
+# TeeWorlds InfClassR
+Slightly modified version of original [InfClass by necropotame](https://github.com/necropotame/teeworlds-infclass).
