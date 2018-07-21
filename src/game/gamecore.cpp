@@ -346,6 +346,8 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 			// handle player <-> player collision
 			if (!m_Infected && !pCharCore->m_Infected)
 				continue;
+			if ((m_Infected && pCharCore->m_Infected) && (m_HookProtected || pCharCore->m_HookProtected))
+				continue;
 			if(!pTuningParams->m_PlayerCollision && Distance < PhysSize*1.25f && Distance > 0.0f)
 			{
 				float a = (PhysSize*1.45f - Distance);
@@ -396,6 +398,8 @@ void CCharacterCore::Move(CParams* pParams)
 				if(!pCharCore || pCharCore == this)
 					continue;
 				if (!m_Infected && !pCharCore->m_Infected)
+					continue;
+				if ((m_Infected && pCharCore->m_Infected) && (m_HookProtected || pCharCore->m_HookProtected))
 					continue;
 				float D = distance(Pos, pCharCore->m_Pos);
 				if(D < 28.0f && D > 0.0f)
