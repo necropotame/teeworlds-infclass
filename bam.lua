@@ -184,7 +184,8 @@ function build(settings)
 			settings.link.frameworks:Add("AppKit")
 		else
 			settings.link.libs:Add("pthread")
-
+			settings.link.libs:Add("geolite2++") -- for ip geolocation
+			settings.link.libs:Add("maxminddb")  -- for ip geolocation
 			-- add ICU for linux
 			if ExecuteSilent("pkg-config icu-uc icu-i18n") == 0 then
 			end

@@ -6,6 +6,7 @@
 #include "message.h"
 #include <game/generated/protocol.h>
 #include <engine/shared/protocol.h>
+#include <string>
 
 /* INFECTION MODIFICATION START ***************************************/
 enum
@@ -137,6 +138,7 @@ public:
 	virtual bool ClientIngame(int ClientID) = 0;
 	virtual int GetClientInfo(int ClientID, CClientInfo *pInfo) = 0;
 	virtual void GetClientAddr(int ClientID, char *pAddrStr, int Size) = 0;
+	virtual std::string GetClientIP(int ClientID) = 0;
 
 	virtual int SendMsg(CMsgPacker *pMsg, int Flags, int ClientID) = 0;
 

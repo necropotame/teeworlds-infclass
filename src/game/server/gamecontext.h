@@ -19,6 +19,8 @@
 #include "gameworld.h"
 #include "player.h"
 
+#include <infclassr/geolocation.h>
+
 #ifdef _MSC_VER
 typedef __int32 int32_t;
 typedef unsigned __int32 uint32_t;
@@ -73,6 +75,7 @@ class CGameContext : public IGameServer
 	CTuningParams m_Tuning;
 	int m_TargetToKill;
 	int m_TargetToKillCoolDown;
+	GeoLite2PP::DB *db;
 
 	static bool ConTuneParam(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneReset(IConsole::IResult *pResult, void *pUserData);

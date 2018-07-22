@@ -45,6 +45,9 @@
 #include <teeuniverses/components/localization.h>
 /* INFECTION MODIFICATION END *****************************************/
 
+#include <infclassr/geolocation.h>
+#include <infclassr/geolocation.cpp>
+
 #if defined(CONF_FAMILY_WINDOWS)
 	#define _WIN32_WINNT 0x0501
 	#define WIN32_LEAN_AND_MEAN
@@ -673,6 +676,14 @@ void CServer::GetClientAddr(int ClientID, char *pAddrStr, int Size)
 {
 	if(ClientID >= 0 && ClientID < MAX_CLIENTS && m_aClients[ClientID].m_State == CClient::STATE_INGAME)
 		net_addr_str(m_NetServer.ClientAddr(ClientID), pAddrStr, Size, false);
+}
+
+std::string CServer::GetClientIP(int ClientID)
+{
+	char aAddrStr[NETADDR_MAXSTRSIZE];
+	net_addr_str(m_NetServer.ClientAddr(ClientID), aAddrStr, sizeof(aAddrStr), false);
+	std::string ip(aAddrStr);
+	return ip;
 }
 
 
