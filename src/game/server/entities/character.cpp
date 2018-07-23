@@ -2412,7 +2412,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	// m_pPlayer only inflicts half damage on self
 	if(From == m_pPlayer->GetCID())
 	{
-		if(GetClass() == PLAYERCLASS_HERO)
+		if(GetClass() == PLAYERCLASS_HERO || GetClass() == PLAYERCLASS_SOLDIER)
 			return false;
 		else
 			Dmg = max(1, Dmg/2);
