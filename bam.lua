@@ -279,6 +279,7 @@ function build(settings)
 	masterserver = Compile(settings, Collect("src/mastersrv/*.cpp"))
 	game_shared = Compile(settings, Collect("src/game/*.cpp"), nethash, network_source)
 	game_server = Compile(settings, CollectRecursive("src/game/server/*.cpp"), server_content_source)
+	infclassr = Compile(settings, Collect("src/infclassr/*.cpp"))
 
 
 	-- build tools (TODO: fix this so we don't get double _d_d stuff)
@@ -297,7 +298,7 @@ function build(settings)
 
 	-- build server, version server and master server
 	server_exe = Link(server_settings, "bin/server", engine, server,
-		game_shared, game_server, teeuniverses, zlib, server_link_other, md5, json)
+		game_shared, game_server, infclassr, teeuniverses, zlib, server_link_other, md5, json)
 
 	serverlaunch = {}
 	if platform == "macosx" then

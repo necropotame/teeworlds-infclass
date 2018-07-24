@@ -75,7 +75,7 @@ class CGameContext : public IGameServer
 	CTuningParams m_Tuning;
 	int m_TargetToKill;
 	int m_TargetToKillCoolDown;
-	GeoLite2PP::DB *db;
+	Geolocation* geolocation;
 
 	static bool ConTuneParam(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneReset(IConsole::IResult *pResult, void *pUserData);

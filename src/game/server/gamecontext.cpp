@@ -58,13 +58,13 @@ void CGameContext::Construct(int Resetting)
 
 CGameContext::CGameContext(int Resetting)
 {
-	db = new GeoLite2PP::DB("GeoLite2-Country.mmdb");
+	geolocation = new Geolocation("GeoLite2-Country.mmdb");
 	Construct(Resetting);
 }
 
 CGameContext::CGameContext()
 {
-	db = new GeoLite2PP::DB("GeoLite2-Country.mmdb");
+	geolocation = new Geolocation("GeoLite2-Country.mmdb");
 	Construct(NO_RESET);
 }
 
@@ -79,8 +79,8 @@ CGameContext::~CGameContext()
 		delete m_apPlayers[i];
 	if(!m_Resetting)
 		delete m_pVoteOptionHeap;
-	delete db;
-	db = nullptr;
+	delete geolocation;
+	geolocation = nullptr;
 }
 
 void CGameContext::Clear()
@@ -1727,14 +1727,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 
 			// IP geolocation start
 			std::string ip = Server()->GetClientIP(ClientID);
-			try {
-				GeoLite2PP::MStr map_str = db->get_all_fields(ip);
-				Server()->SetClientCountry(ClientID, get_iso_numeric_code(map_str));
-			}
-			catch (std::length_error) {
-				std::cout << "This ip was not found in database: " << ip << std::endl;
-				Server()->SetClientCountry(ClientID, -1);
-			}
+			Server()->SetClientCountry(ClientID, geolocation->get_country_iso_numeric_code(ip));
 			// IP geolocation end
 
 			str_copy(pPlayer->m_TeeInfos.m_CustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_CustomSkinName));

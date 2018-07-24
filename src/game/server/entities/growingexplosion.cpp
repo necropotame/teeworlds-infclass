@@ -258,7 +258,6 @@ void CGrowingExplosion::Tick()
 						break;
 					case GROWINGEXPLOSIONEFFECT_BOOM_INFECTED:
 					{
-						p->LoveEffect();
 						m_Hit[p->GetPlayer()->GetCID()] = true;
 						break;
 					}

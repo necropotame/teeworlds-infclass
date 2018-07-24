@@ -1,4 +1,26 @@
-int get_iso_numeric_code(GeoLite2PP::MStr& m) {
+#include <infclassr/geolocation.h>
+
+Geolocation::Geolocation(const char* path_to_mmdb) {
+	db = new GeoLite2PP::DB(path_to_mmdb);
+}
+
+Geolocation::~Geolocation() {
+	delete db;
+	db = nullptr;
+}
+
+int Geolocation::get_country_iso_numeric_code(std::string& ip) {
+	try {
+		GeoLite2PP::MStr map_str = db->get_all_fields(ip);
+		return get_iso_numeric_code(map_str);
+	}
+	catch (std::length_error) {
+		std::cout << "This ip was not found in database: " << ip << std::endl;
+		return -1;
+	}
+}
+
+int Geolocation::get_iso_numeric_code(GeoLite2PP::MStr& m) {
 	std::map<std::string, int> iso_numeric = {
 		{"AF", 4},
 		{"AX", 248},
@@ -250,6 +272,5 @@ int get_iso_numeric_code(GeoLite2PP::MStr& m) {
 		{"ZM", 894},
 		{"ZW", 716}
 	};
-	
 	return iso_numeric[m["country_iso_code"]];
 }
