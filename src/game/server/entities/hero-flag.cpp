@@ -39,7 +39,7 @@ void CHeroFlag::GiveGift(CCharacter* pHero)
 {
 	// Find other players	
 	GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The Hero found the flag!"), NULL);
-	
+	GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 	m_CoolDownTick = Server()->TickSpeed()*15;
 	
 	for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
