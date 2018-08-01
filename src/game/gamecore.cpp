@@ -357,7 +357,7 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 					m_Vel.y = SaturatedAdd(-DragSpeed, DragSpeed, m_Vel.y, -Accel*Dir.y*0.25f);
 
 					// InfClassR taxi mode, todo: cleanup
-					if (!m_Passenger && (!m_Infected && !pCharCore->m_Infected)) {
+					if (!m_Passenger && (!m_Infected && !pCharCore->m_Infected && !m_HookProtected)) {
 						m_IsPassenger = true;
 						pCharCore->m_Passenger = this;
 					}
