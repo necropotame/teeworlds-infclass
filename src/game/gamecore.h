@@ -211,6 +211,9 @@ public:
 	int m_HookedPlayer;
 	bool m_HookProtected;
 	bool m_Infected;
+	// InfClassR
+	bool m_IsPassenger;
+	CCharacterCore* m_Passenger;
 
 	int m_Jumped;
 

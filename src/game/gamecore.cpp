@@ -72,10 +72,24 @@ void CCharacterCore::Reset()
 	m_HookedPlayer = -1;
 	m_Jumped = 0;
 	m_TriggeredEvents = 0;
+	m_Passenger = nullptr;
+	m_IsPassenger = false;
 }
 
 void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 {
+	// InfClassR taxi mode, todo: cleanup
+	if (m_Passenger && (m_Passenger->m_Jumped || m_HookProtected || m_Passenger->m_Infected || m_Infected)) {
+		m_Passenger->m_IsPassenger = false;
+		m_Passenger = nullptr;
+	}
+	if (m_Passenger && !m_IsPassenger) {
+		m_Passenger->m_Vel = m_Vel;
+		m_Passenger->m_Pos.x = m_Pos.x;
+		m_Passenger->m_Pos.y =m_Pos.y - 50;
+	}
+	// InfClassR taxi mode end
+
 	const CTuningParams* pTuningParams = pParams->m_pTuningParams;
 	float PhysSize = 28.0f;
 	m_TriggeredEvents = 0;
@@ -341,6 +355,13 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 					// add a little bit force to the guy who has the grip
 					m_Vel.x = SaturatedAdd(-DragSpeed, DragSpeed, m_Vel.x, -Accel*Dir.x*0.25f);
 					m_Vel.y = SaturatedAdd(-DragSpeed, DragSpeed, m_Vel.y, -Accel*Dir.y*0.25f);
+
+					// InfClassR taxi mode, todo: cleanup
+					if (!m_Passenger && (!m_Infected && !pCharCore->m_Infected)) {
+						m_IsPassenger = true;
+						pCharCore->m_Passenger = this;
+					}
+					// InfClassR taxi mode end
 				}
 			}
 			// handle player <-> player collision
