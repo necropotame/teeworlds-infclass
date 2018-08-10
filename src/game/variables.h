@@ -7,7 +7,7 @@
 // server
 MACRO_CONFIG_INT(SvWarmup, sv_warmup, 0, 0, 0, CFGFLAG_SERVER, "Number of seconds to do warmup before round starts")
 MACRO_CONFIG_STR(SvMotd, sv_motd, 900, "", CFGFLAG_SERVER, "Message of the day to display for the clients")
-MACRO_CONFIG_STR(SvMaprotation, sv_maprotation, 768, "infc_lunaroutpost infc_newdust infc_warehouse infc_provence infc_damascus infc_eidalfitr infc_sewers infc_skull infc_junglewell", CFGFLAG_SERVER, "Maps to rotate between")
+MACRO_CONFIG_STR(SvMaprotation, sv_maprotation, 768, "infc_lunaroutpost infc_newdust infc_warehouse infc_provence infc_damascus infc_eidalfitr infc_sewers infc_skull", CFGFLAG_SERVER, "Maps to rotate between")
 MACRO_CONFIG_INT(SvRoundsPerMap, sv_rounds_per_map, 8, 1, 100, CFGFLAG_SERVER, "Number of rounds on each map before rotating")
 MACRO_CONFIG_INT(SvScorelimit, sv_scorelimit, 0, 0, 1000, CFGFLAG_SERVER, "Score limit (0 disables)")
 MACRO_CONFIG_INT(SvTimelimit, sv_timelimit, 0, 0, 1000, CFGFLAG_SERVER, "Time limit in minutes (0 disables)")
