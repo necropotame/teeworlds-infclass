@@ -74,22 +74,11 @@ void CCharacterCore::Reset()
 	m_TriggeredEvents = 0;
 	m_Passenger = nullptr;
 	m_IsPassenger = false;
+	m_ProbablyStucked = false;
 }
 
 void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 {
-	// InfClassR taxi mode, todo: cleanup
-	if (m_Passenger && (m_Passenger->m_Jumped || m_HookProtected || m_Passenger->m_Infected || m_Infected)) {
-		m_Passenger->m_IsPassenger = false;
-		m_Passenger = nullptr;
-	}
-	if (m_Passenger && !m_IsPassenger) {
-		m_Passenger->m_Vel = m_Vel;
-		m_Passenger->m_Pos.x = m_Pos.x;
-		m_Passenger->m_Pos.y =m_Pos.y - 50;
-	}
-	// InfClassR taxi mode end
-
 	const CTuningParams* pTuningParams = pParams->m_pTuningParams;
 	float PhysSize = 28.0f;
 	m_TriggeredEvents = 0;
@@ -100,7 +89,19 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 		Grounded = true;
 	if(m_pCollision->CheckPoint(m_Pos.x-PhysSize/2, m_Pos.y+PhysSize/2+5))
 		Grounded = true;
-
+	
+	bool Stucked = false;
+	for (int epsilon = 0; epsilon <= PhysSize/2; epsilon++) {
+		if (m_pCollision->CheckPoint(m_Pos.x+PhysSize/2, m_Pos.y - PhysSize/2 + epsilon))
+			Stucked = true;
+		if(m_pCollision->CheckPoint(m_Pos.x-PhysSize/2, m_Pos.y - PhysSize/2 + epsilon))
+			Stucked = true;
+		if (m_pCollision->CheckPoint(m_Pos.x+PhysSize/2, m_Pos.y + PhysSize/2 - epsilon))
+			Stucked = true;
+		if(m_pCollision->CheckPoint(m_Pos.x-PhysSize/2, m_Pos.y + PhysSize/2 - epsilon))
+			Stucked = true;
+	}
+	
 	vec2 TargetDirection = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
 
 	m_Vel.y += pTuningParams->m_Gravity;
@@ -108,6 +109,27 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 	float MaxSpeed = Grounded ? pTuningParams->m_GroundControlSpeed : pTuningParams->m_AirControlSpeed;
 	float Accel = Grounded ? pTuningParams->m_GroundControlAccel : pTuningParams->m_AirControlAccel;
 	float Friction = Grounded ? pTuningParams->m_GroundFriction : pTuningParams->m_AirFriction;
+
+	// InfClassR taxi mode, todo: cleanup
+	if (m_Passenger) {
+		m_Passenger->m_Vel = m_Vel;
+		m_Passenger->m_Pos.x = m_Pos.x;
+		m_Passenger->m_Pos.y = m_Pos.y - 50;
+		if (m_Passenger->m_Jumped || m_Passenger->m_Infected || (m_Infected || m_HookProtected)) {
+			m_Passenger->m_IsPassenger = false;
+			m_Passenger->m_ProbablyStucked = true;
+			m_Passenger = nullptr;
+		}
+	}
+	
+	if (m_ProbablyStucked) {
+		m_Pos.y += 1;
+		if (!Stucked) {
+			m_ProbablyStucked = false;
+			m_Pos.y -= 1;
+		}
+	}
+	// InfClassR taxi mode end
 
 	// handle input
 	if(UseInput)
@@ -228,7 +250,7 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 			for(int i = 0; i < MAX_CLIENTS; i++)
 			{
 				CCharacterCore *pCharCore = m_pWorld->m_apCharacters[i];
-				if(!pCharCore || pCharCore == this || (pCharCore->m_HookProtected && (m_Infected == pCharCore->m_Infected)) || m_IsPassenger)
+				if(!pCharCore || pCharCore == this || (pCharCore->m_HookProtected && (m_Infected == pCharCore->m_Infected)) || m_IsPassenger || m_Passenger == pCharCore)
 					continue;
 
 				vec2 ClosestPoint = closest_point_on_line(m_HookPos, NewPos, pCharCore->m_Pos);
@@ -357,9 +379,9 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 					m_Vel.y = SaturatedAdd(-DragSpeed, DragSpeed, m_Vel.y, -Accel*Dir.y*0.25f);
 
 					// InfClassR taxi mode, todo: cleanup
-					if (!m_Passenger && (!m_Infected && !pCharCore->m_Infected && !m_HookProtected)) {
-						m_IsPassenger = true;
+					if (!pCharCore->m_Passenger && (!m_Infected && !pCharCore->m_Infected && !m_HookProtected)) {
 						pCharCore->m_Passenger = this;
+						m_IsPassenger = true;
 					}
 					// InfClassR taxi mode end
 				}

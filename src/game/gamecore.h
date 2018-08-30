@@ -212,8 +212,9 @@ public:
 	bool m_HookProtected;
 	bool m_Infected;
 	// InfClassR
-	bool m_IsPassenger;
 	CCharacterCore* m_Passenger;
+	bool m_IsPassenger;
+	bool m_ProbablyStucked;
 
 	int m_Jumped;
 
