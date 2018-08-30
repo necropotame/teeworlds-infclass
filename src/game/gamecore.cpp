@@ -379,7 +379,7 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 					m_Vel.y = SaturatedAdd(-DragSpeed, DragSpeed, m_Vel.y, -Accel*Dir.y*0.25f);
 
 					// InfClassR taxi mode, todo: cleanup
-					if (!pCharCore->m_Passenger && (!m_Infected && !pCharCore->m_Infected && !m_HookProtected)) {
+					if (!pCharCore->m_Passenger && (!m_Infected && !pCharCore->m_Infected && !m_HookProtected) && !IsChildCharacter(pCharCore, this)) {
 						pCharCore->m_Passenger = this;
 						m_IsPassenger = true;
 					}
@@ -503,5 +503,14 @@ void CCharacterCore::Quantize()
 	CNetObj_CharacterCore Core;
 	Write(&Core);
 	Read(&Core);
+}
+
+bool CCharacterCore::IsChildCharacter(CCharacterCore *suspect, CCharacterCore *me) {
+	if (me->m_Passenger) {
+		if (me->m_Passenger == suspect)
+			return true;
+		else return IsChildCharacter(suspect, me->m_Passenger);
+	}
+	else return false;
 }
 
