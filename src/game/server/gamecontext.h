@@ -317,6 +317,9 @@ public:
 	virtual void DisableTargetToKill() { m_TargetToKill = -2; }
 	virtual int GetTargetToKillCoolDown() { return m_TargetToKillCoolDown; }
 /* INFECTION MODIFICATION END *****************************************/
+	// InfClassR begin
+	void RemoveSpectatorCID(int ClientID);
+	// InfClassR end
 };
 
 inline int64_t CmaskAll() { return -1LL; }

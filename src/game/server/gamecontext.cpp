@@ -14,6 +14,7 @@
 #include <game/gamecore.h>
 #include <iostream>
 #include "gamemodes/mod.h"
+#include <algorithm> // infclassr vector.find()
 
 enum
 {
@@ -1215,7 +1216,17 @@ void CGameContext::OnClientConnected(int ClientID)
 	// Check which team the player should be on
 	const int StartTeam = g_Config.m_SvTournamentMode ? TEAM_SPECTATORS : m_pController->GetAutoTeam(ClientID);
 
-	m_apPlayers[ClientID] = new(ClientID) CPlayer(this, ClientID, StartTeam);
+	// infclassr check spectator vector
+	bool is_spectator = false;
+	for (auto& spec : Server()->spectators_id) {
+		if (ClientID == spec)
+			is_spectator = true;
+	}
+
+	if (is_spectator)
+		m_apPlayers[ClientID] = new(ClientID) CPlayer(this, ClientID, TEAM_SPECTATORS);
+	else
+		m_apPlayers[ClientID] = new(ClientID) CPlayer(this, ClientID, StartTeam);
 	
 	//Thanks to Stitch
 	if(m_pController->IsInfectionStarted())
@@ -1278,6 +1289,9 @@ void CGameContext::OnClientDrop(int ClientID, int Type, const char *pReason)
 		if(m_apPlayers[i] && m_apPlayers[i]->m_SpectatorID == ClientID)
 			m_apPlayers[i]->m_SpectatorID = SPEC_FREEVIEW;
 	}
+	// InfClassR remove spectators
+	RemoveSpectatorCID(ClientID);
+	// InfClassR end
 }
 
 void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
@@ -1635,6 +1649,16 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					if(pPlayer->GetTeam() == TEAM_SPECTATORS || pMsg->m_Team == TEAM_SPECTATORS)
 						m_VoteUpdate = true;
 					pPlayer->SetTeam(pMsg->m_Team);
+					if (pPlayer->GetTeam() == TEAM_SPECTATORS) {
+						// Infclassr add client id to spectators id vector
+						auto& specs = Server()->spectators_id;
+						if(!(std::find(specs.begin(), specs.end(), ClientID) != specs.end())) {
+							specs.push_back(ClientID);
+						}
+						// Infclassr end
+					} else {
+						RemoveSpectatorCID(ClientID);
+					}
 					(void)m_pController->CheckTeamBalance();
 					pPlayer->m_TeamChangeTick = Server()->Tick();
 				}
@@ -3839,3 +3863,13 @@ void CGameContext::List(int ClientID, const char* filter)
 	str_format(buf, sizeof(buf), "%d players online", total);
 	SendChatTarget(ClientID, buf);
 }
+
+void CGameContext::RemoveSpectatorCID(int ClientID) {
+		auto& specs = Server()->spectators_id;
+		for (auto it = specs.begin(); it != specs.end(); ) {
+			if (*it == ClientID)
+				it = specs.erase(it);
+			else
+				++it;
+		}
+	}
