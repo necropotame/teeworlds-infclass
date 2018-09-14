@@ -3373,6 +3373,17 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
+		else if(str_comp_nocase(pHelpPage, "taxi") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("How to use taxi mode"), NULL); 
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Two or more humans can form a taxi."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("In order to use it, both humans have to disable hook protection (usually, with F3). The human being hooked becomes the driver."), NULL);
+
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
 		else
 			pHelpPage = 0x0;
 	}
@@ -3383,7 +3394,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		
 		dynamic_string Buffer;
 		pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Available help pages: {str:PageList}"),
-			"PageList", "game, translate, msg",
+			"PageList", "game, translate, msg, taxi",
 			NULL
 		);
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", Buffer.buffer());
