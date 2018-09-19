@@ -2958,7 +2958,7 @@ public:
 			if(pSqlServer->GetResults()->next())
 			{
 				//The client is still the same
-				if(m_pServer->m_aClients[m_ClientID].m_LogInstance == GetInstance())
+				if(m_pServer->m_aClients[m_ClientID].m_LogInstance == GetInstance() && m_pServer->m_aClients[m_ClientID].m_UserID == -1)
 				{
 					int UserID = (int)pSqlServer->GetResults()->getInt("UserId");
 					int UserLevel = (int)pSqlServer->GetResults()->getInt("Level");
@@ -2974,9 +2974,16 @@ public:
 					}
 					else
 					{
-						CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("You are now logged."));
+						str_format(aBuf, sizeof(aBuf), "%s logged in (id: %d)", m_pServer->m_aClients[m_ClientID].m_aUsername,
+							m_pServer->m_aClients[m_ClientID].m_UserID);
+						CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(-1, aBuf);
 						m_pServer->AddGameServerCmd(pCmd);
 					}
+				}
+				else {
+					str_format(aBuf, sizeof(aBuf), "You are already logged in.");
+					CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
+					m_pServer->AddGameServerCmd(pCmd);
 				}
 			}
 			else
