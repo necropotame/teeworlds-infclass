@@ -6,6 +6,8 @@
 #include "message.h"
 #include <game/generated/protocol.h>
 #include <engine/shared/protocol.h>
+#include <string>
+#include <vector> // infclassr spectators
 
 /* INFECTION MODIFICATION START ***************************************/
 enum
@@ -322,6 +324,8 @@ public:
 
 	virtual int* GetIdMap(int ClientID) = 0;
 	virtual void SetCustClt(int ClientID) = 0;
+	// InfClassR spectators vector
+	std::vector<int> spectators_id;
 };
 
 class IGameServer : public IInterface
