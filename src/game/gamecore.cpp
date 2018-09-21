@@ -384,6 +384,7 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 					if (!pCharCore->m_Passenger && (!m_Infected && !pCharCore->m_Infected && !m_HookProtected) && !IsChildCharacter(pCharCore, this)) {
 						pCharCore->m_Passenger = this;
 						m_IsPassenger = true;
+						m_HookedPlayer = -1;
 					}
 					// InfClassR taxi mode end
 				}
