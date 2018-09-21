@@ -250,6 +250,8 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 			for(int i = 0; i < MAX_CLIENTS; i++)
 			{
 				CCharacterCore *pCharCore = m_pWorld->m_apCharacters[i];
+				if (IsChildCharacter(pCharCore, this))
+					continue;
 				if(!pCharCore || pCharCore == this || (pCharCore->m_HookProtected && (m_Infected == pCharCore->m_Infected)) || m_IsPassenger || m_Passenger == pCharCore)
 					continue;
 
