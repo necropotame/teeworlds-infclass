@@ -385,6 +385,8 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 						pCharCore->m_Passenger = this;
 						m_IsPassenger = true;
 						m_HookedPlayer = -1;
+						m_HookState = HOOK_RETRACTED;
+						m_HookPos = m_Pos;
 					}
 					// InfClassR taxi mode end
 				}

@@ -25,6 +25,7 @@
 #include "bouncing-bullet.h"
 #include "merc-grenade.h"
 #include "merc-bomb.h"
+#include "medic-grenade.h"
 #include "hero-flag.h"
 #include "slug-slime.h"
 
@@ -541,7 +542,8 @@ void CCharacter::FireWeapon()
 	bool WillFire = false;
 	if(CountInput(m_LatestPrevInput.m_Fire, m_LatestInput.m_Fire).m_Presses)
 		WillFire = true;
-	else if(FullAuto && (m_LatestInput.m_Fire&1) && (m_aWeapons[m_ActiveWeapon].m_Ammo || (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GRENADE)))
+	else if(FullAuto && (m_LatestInput.m_Fire&1) && (m_aWeapons[m_ActiveWeapon].m_Ammo || (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MERCENARY_GRENADE)
+																					   || (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_MEDIC_GRENADE)))
 	{
 		AutoFire = true;
 		WillFire = true;
@@ -551,7 +553,8 @@ void CCharacter::FireWeapon()
 		return;
 
 	// check for ammo
-	if(!m_aWeapons[m_ActiveWeapon].m_Ammo && (GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_MERCENARY_GRENADE))
+	if(!m_aWeapons[m_ActiveWeapon].m_Ammo && (GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_MERCENARY_GRENADE)
+										  && (GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_MEDIC_GRENADE))
 	{
 		// 125ms is a magical limit of how fast a human can click
 		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
@@ -855,6 +858,7 @@ void CCharacter::FireWeapon()
 										Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass());
 										GameServer()->SendScoreSound(GetPlayer()->GetCID());
 										pTarget->m_NeedFullHeal = false;
+										m_aWeapons[WEAPON_GRENADE].m_Ammo++;
 									}
 									pTarget->m_EmoteType = EMOTE_HAPPY;
 									pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
@@ -1040,6 +1044,48 @@ void CCharacter::FireWeapon()
 						float a = GetAngle(Direction) + random_float()/5.0f;
 						
 						CMercenaryGrenade *pProj = new CMercenaryGrenade(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
+
+						// pack the Projectile and send it to the client Directly
+						CNetObj_Projectile p;
+						pProj->FillInfo(&p);
+
+						for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+							Msg.AddInt(((int *)&p)[i]);
+						Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
+					}
+
+					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+					
+					m_ReloadTimer = Server()->TickSpeed()/4;
+				}
+				else
+				{
+					m_aWeapons[m_ActiveWeapon].m_Ammo++;
+				}
+			}
+			else if(GetClass() == PLAYERCLASS_MEDIC)
+			{
+				//Find bomb
+				bool BombFound = false;
+				for(CMedicGrenade *pGrenade = (CMedicGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MEDIC_GRENADE); pGrenade; pGrenade = (CMedicGrenade*) pGrenade->TypeNext())
+				{
+					if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
+					pGrenade->Explode();
+					BombFound = true;
+				}
+				
+				if(!BombFound && m_aWeapons[m_ActiveWeapon].m_Ammo)
+				{
+					int ShotSpread = 0;
+					
+					CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
+					Msg.AddInt(ShotSpread*2+1);
+					
+					for(int i = -ShotSpread; i <= ShotSpread; ++i)
+					{
+						float a = GetAngle(Direction) + random_float()/5.0f;
+						
+						CMedicGrenade *pProj = new CMedicGrenade(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
 
 						// pack the Projectile and send it to the client Directly
 						CNetObj_Projectile p;
@@ -1881,6 +1927,7 @@ void CCharacter::Tick()
 					m_AntiFireTick = Server()->Tick();
 					m_pPlayer->m_MapMenuItem = 0;
 					m_pPlayer->SetClass(NewClass);
+					m_pPlayer->SetOldClass(NewClass);
 					
 					if(Bonus)
 						IncreaseArmor(10);
@@ -2096,6 +2143,8 @@ void CCharacter::GiveGift(int GiftType)
 			break;
 		case PLAYERCLASS_MEDIC:
 			GiveWeapon(WEAPON_SHOTGUN, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
 			break;
 		case PLAYERCLASS_HERO:
 			GiveWeapon(WEAPON_SHOTGUN, -1);
@@ -2251,6 +2300,12 @@ bool CCharacter::IncreaseOverallHp(int Amount)
 			success = true;
 	}
 	return success;
+}
+
+void CCharacter::SetHealthArmor(int HealthAmount, int ArmorAmount)
+{
+	m_Health = HealthAmount;
+	m_Armor = ArmorAmount;
 }
 
 void CCharacter::Die(int Killer, int Weapon)
@@ -2904,6 +2959,8 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
 			m_ActiveWeapon = WEAPON_SHOTGUN;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MEDIC);
@@ -3127,6 +3184,11 @@ void CCharacter::DestroyChildEntities()
 		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pGrenade);
 	}
+	for(CMedicGrenade* pGrenade = (CMedicGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MEDIC_GRENADE); pGrenade; pGrenade = (CMedicGrenade*) pGrenade->TypeNext())
+	{
+		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pGrenade);
+	}
 	for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
 	{
 		if(pBomb->m_Owner != m_pPlayer->GetCID()) continue;
@@ -3278,6 +3340,8 @@ int CCharacter::GetInfWeaponID(int WID)
 		{
 			case PLAYERCLASS_MERCENARY:
 				return INFWEAPON_MERCENARY_GRENADE;
+			case PLAYERCLASS_MEDIC:
+				return INFWEAPON_MEDIC_GRENADE;
 			case PLAYERCLASS_SOLDIER:
 				return INFWEAPON_SOLDIER_GRENADE;
 			case PLAYERCLASS_NINJA:
@@ -3304,6 +3368,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_HERO_RIFLE;
 			case PLAYERCLASS_BIOLOGIST:
 				return INFWEAPON_BIOLOGIST_RIFLE;
+			case PLAYERCLASS_MEDIC:
+				return INFWEAPON_MEDIC_RIFLE;
 			default:
 				return INFWEAPON_RIFLE;
 		}

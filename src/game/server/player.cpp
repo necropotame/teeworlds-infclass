@@ -704,6 +704,26 @@ void CPlayer::SetClass(int newClass)
 	}
 }
 
+int CPlayer::GetOldClass()
+{
+	bool hasOldClass = false;
+	for (int i = START_HUMANCLASS+1; i < END_HUMANCLASS; i++) {
+		if (m_classOld == i) {
+			hasOldClass = true;
+			break;
+		}
+	}
+	if (!hasOldClass)
+		return PLAYERCLASS_MEDIC; // if old class was not set, it defaults to medic
+	else
+		return m_classOld;
+}
+
+void CPlayer::SetOldClass(int oldClass)
+{
+	m_classOld = oldClass;
+}
+
 void CPlayer::StartInfection(bool force)
 {
 	if(!force && IsInfected())

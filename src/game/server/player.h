@@ -122,6 +122,7 @@ private:
 /* INFECTION MODIFICATION START ***************************************/
 private:
 	int m_class;
+	int m_classOld;
 	int m_ScoreMode;
 	int m_DefaultScoreMode;
 	char m_aLanguage[16];
@@ -146,6 +147,8 @@ public:
 	int GetClass();
 	void SetClassSkin(int newClass, int State = 0);
 	void SetClass(int newClass);
+	int GetOldClass();
+	void SetOldClass(int oldClass);
 	bool IsInfected() const;
 	void StartInfection(bool force = false);
 	bool IsKownClass(int c);

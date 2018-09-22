@@ -152,6 +152,12 @@ void CGrowingExplosion::Tick()
 								GameServer()->CreateDeath(TileCenter, m_Owner);
 							}
 							break;
+						case GROWINGEXPLOSIONEFFECT_HEAL_HUMANS:
+							if(random_prob(0.1f))
+							{
+								GameServer()->CreateDeath(TileCenter, m_Owner);
+							}
+							break;
 						case GROWINGEXPLOSIONEFFECT_LOVE_INFECTED:
 							if(random_prob(0.2f))
 							{
@@ -230,9 +236,6 @@ void CGrowingExplosion::Tick()
 		int tileX = m_MaxGrowing + static_cast<int>(round(p->m_Pos.x))/32 - m_SeedX;
 		int tileY = m_MaxGrowing + static_cast<int>(round(p->m_Pos.y))/32 - m_SeedY;
 		
-		if(!p->IsInfected())
-			continue;
-		
 		if(tileX < 0 || tileX >= m_GrowingMap_Length || tileY < 0 || tileY >= m_GrowingMap_Length)
 			continue;
 		
@@ -240,6 +243,25 @@ void CGrowingExplosion::Tick()
 			continue;
 		
 		int k = tileY*m_GrowingMap_Length+tileX;
+
+		if((m_pGrowingMap[k] >= 0) && !p->IsInfected())
+		{
+			if(tick - m_pGrowingMap[k] < Server()->TickSpeed()/4)
+			{
+				switch(m_ExplosionEffect)
+				{
+					case GROWINGEXPLOSIONEFFECT_HEAL_HUMANS:
+						p->IncreaseArmor(1);
+						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_EYES);
+						m_Hit[p->GetPlayer()->GetCID()] = true;
+						break;
+				}
+			}
+		}
+
+		if(!p->IsInfected())
+			continue;
+
 		if(m_pGrowingMap[k] >= 0)
 		{
 			if(tick - m_pGrowingMap[k] < Server()->TickSpeed()/4)
@@ -255,6 +277,9 @@ void CGrowingExplosion::Tick()
 						p->Poison(g_Config.m_InfPoisonDamage, m_Owner);
 						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_DROP);
 						m_Hit[p->GetPlayer()->GetCID()] = true;
+						break;
+					case GROWINGEXPLOSIONEFFECT_HEAL_HUMANS:
+						// empty
 						break;
 					case GROWINGEXPLOSIONEFFECT_BOOM_INFECTED:
 					{

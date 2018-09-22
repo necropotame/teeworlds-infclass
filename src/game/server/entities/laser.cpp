@@ -31,7 +31,14 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	m_Pos = At;
 	m_Energy = -1;
 	
-	pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+	if (pOwnerChar->GetClass() == PLAYERCLASS_MEDIC) { // Revive zombie
+		pHit->GetPlayer()->SetClass(pHit->GetPlayer()->GetOldClass());
+		pHit->GetPlayer()->GetCharacter()->SetHealthArmor(1, 0);
+		pOwnerChar->TakeDamage(vec2(0.f, 0.f), 38, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+	}
+	else {
+		pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+	}
 	return true;
 }
 
