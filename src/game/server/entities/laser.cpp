@@ -32,7 +32,7 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	m_Energy = -1;
 	
 	if (pOwnerChar->GetClass() == PLAYERCLASS_MEDIC) { // Revive zombie
-		const int MIN_ZOMBIES = 5;
+		const int MIN_ZOMBIES = 4;
 		int old_class = pHit->GetPlayer()->GetOldClass();
 		auto& medic = pOwnerChar;
 		auto& zombie = pHit;
