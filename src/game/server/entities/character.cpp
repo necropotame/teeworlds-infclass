@@ -2308,6 +2308,11 @@ void CCharacter::SetHealthArmor(int HealthAmount, int ArmorAmount)
 	m_Armor = ArmorAmount;
 }
 
+int CCharacter::GetHealthArmorSum()
+{
+	return m_Health + m_Armor;
+}
+
 void CCharacter::Die(int Killer, int Weapon)
 {
 /* INFECTION MODIFICATION START ***************************************/

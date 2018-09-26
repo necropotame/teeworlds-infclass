@@ -121,6 +121,18 @@ class CCharacter *CGameContext::GetPlayerChar(int ClientID)
 	return m_apPlayers[ClientID]->GetCharacter();
 }
 
+int CGameContext::GetZombieCount() {
+	int count = 0;
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (!m_apPlayers[i])
+			break;
+		if (m_apPlayers[i]->IsInfected())
+			count++;
+	}
+	return count;
+}
+
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
 {
 	float a = 3 * 3.14159f / 2 + Angle;

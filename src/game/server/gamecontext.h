@@ -126,6 +126,8 @@ public:
 
 	// helper functions
 	class CCharacter *GetPlayerChar(int ClientID);
+	// InfClassR zombie revive
+	int GetZombieCount();
 
 	// voting
 	void StartVote(const char *pDesc, const char *pCommand, const char *pReason);

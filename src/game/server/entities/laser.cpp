@@ -32,9 +32,24 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	m_Energy = -1;
 	
 	if (pOwnerChar->GetClass() == PLAYERCLASS_MEDIC) { // Revive zombie
-		pHit->GetPlayer()->SetClass(pHit->GetPlayer()->GetOldClass());
-		pHit->GetPlayer()->GetCharacter()->SetHealthArmor(1, 0);
-		pOwnerChar->TakeDamage(vec2(0.f, 0.f), 38, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+		const int MIN_ZOMBIES = 5;
+		int old_class = pHit->GetPlayer()->GetOldClass();
+		auto& medic = pOwnerChar;
+		auto& zombie = pHit;
+
+		if (medic->GetPlayer()->GetCharacter()->GetHealthArmorSum() < 20) {
+			GameServer()->SendBroadcast(m_Owner, "You need full health & armor", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+		}
+		else if (GameServer()->GetZombieCount() <= MIN_ZOMBIES) {
+			char aBuf[256];
+			str_format(aBuf, sizeof(aBuf), "Too few zombies (less than %d)", MIN_ZOMBIES+1);
+			GameServer()->SendBroadcast(m_Owner, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+		}
+		else {
+			zombie->GetPlayer()->SetClass(old_class);
+			zombie->GetPlayer()->GetCharacter()->SetHealthArmor(1, 0);
+			medic->TakeDamage(vec2(0.f, 0.f), 38, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+		}
 	}
 	else {
 		pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
