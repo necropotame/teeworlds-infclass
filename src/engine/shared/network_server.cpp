@@ -211,7 +211,7 @@ int CNetServer::TryAcceptClient(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
 	{
 		const char Msg[] = "Too many connections in a short time";
 		CNetBase::SendControlMsg(m_Socket, &Addr, 0, NET_CTRLMSG_CLOSE, Msg, sizeof(Msg), SecurityToken);
-		// dbg_msg("server", "Refusing connection from %s (too many from this client)", Addr); // causes server crash
+		dbg_msg("server", "Refusing connection from %s (too many from this client)", aAddrStr);
 		return -1; // failed to add client
 	}
 
