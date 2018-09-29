@@ -154,7 +154,7 @@ int CGameContext::RandomZombieToWitch() {
 	int id = random_int(0, zombies_id.size() - 1);
 	if (witch_count < MAX_WITCHES) {
 		m_apPlayers[zombies_id[id]]->SetClass(PLAYERCLASS_WITCH);
-		return id;
+		return zombies_id[id];
 	}
 	else {
 		return -1337; // false
@@ -3608,7 +3608,7 @@ bool CGameContext::ConWitch(IConsole::IResult *pResult, void *pUserData)
 	CGameContext *pSelf = (CGameContext *)pUserData;
 	int ClientID = pResult->GetClientID();
 	int callers_count = pSelf->m_WitchCallers.size();
-	const int REQUIRED_CALLERS_COUNT = 2;
+	const int REQUIRED_CALLERS_COUNT = 5;
 	const int MIN_ZOMBIES = 2;
 
 	char aBuf[256];
