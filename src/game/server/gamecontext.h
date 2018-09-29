@@ -126,8 +126,10 @@ public:
 
 	// helper functions
 	class CCharacter *GetPlayerChar(int ClientID);
-	// InfClassR zombie revive
+	// InfClassR
 	int GetZombieCount();
+	int RandomZombieToWitch();
+	std::vector<int> m_WitchCallers;
 
 	// voting
 	void StartVote(const char *pDesc, const char *pCommand, const char *pReason);
@@ -230,6 +232,7 @@ private:
 	static bool ConChallenge(IConsole::IResult *pResult, void *pUserData);
 	static bool ConRank(IConsole::IResult *pResult, void *pUserData);
 	static bool ConGoal(IConsole::IResult *pResult, void *pUserData);
+	static bool ConStats(IConsole::IResult *pResult, void *pUserData);
 #endif
 	static bool ConHelp(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCustomSkin(IConsole::IResult *pResult, void *pUserData);
@@ -237,6 +240,7 @@ private:
 	static bool ConAntiPing(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLanguage(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCmdList(IConsole::IResult *pResult, void *pUserData);
+	static bool ConWitch(IConsole::IResult *pResult, void *pUserData);
 	bool PrivateMessage(const char* pStr, int ClientID, bool TeamChat);
 	
 public:

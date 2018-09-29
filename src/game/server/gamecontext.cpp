@@ -133,6 +133,34 @@ int CGameContext::GetZombieCount() {
 	return count;
 }
 
+int CGameContext::RandomZombieToWitch() {
+	std::vector<int> zombies_id;
+	int witch_count = 0;
+	const int MAX_WITCHES = 2;
+
+	m_WitchCallers.clear();
+
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (!m_apPlayers[i])
+			continue;
+		if (m_apPlayers[i]->IsInfected()) {
+			zombies_id.push_back(i);
+			if (m_apPlayers[i]->GetClass() == PLAYERCLASS_WITCH)
+				witch_count++;
+		}
+	}
+	
+	int id = random_int(0, zombies_id.size() - 1);
+	if (witch_count < MAX_WITCHES) {
+		m_apPlayers[zombies_id[id]]->SetClass(PLAYERCLASS_WITCH);
+		return id;
+	}
+	else {
+		return -1337; // false
+	}
+}
+
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
 {
 	float a = 3 * 3.14159f / 2 + Angle;
@@ -3068,6 +3096,22 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+bool CGameContext::ConStats(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	
+	if(pResult->NumArguments()>0)
+	{
+		int arg = pResult->GetInteger(0);
+		pSelf->Server()->ShowStats(ClientID, arg);
+	}
+	else
+		pSelf->Server()->ShowStats(ClientID, -1);
+	
+	return true;
+}
+
 #endif
 
 bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
@@ -3559,6 +3603,50 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+bool CGameContext::ConWitch(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	int callers_count = pSelf->m_WitchCallers.size();
+	const int REQUIRED_CALLERS_COUNT = 2;
+	const int MIN_ZOMBIES = 2;
+
+	char aBuf[256];
+	str_format(aBuf, sizeof(aBuf), "ConWitch() called");
+	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "conwitch", aBuf);
+
+	if (pSelf->GetZombieCount() > MIN_ZOMBIES) {
+		if (callers_count < REQUIRED_CALLERS_COUNT) {
+			auto& wc = pSelf->m_WitchCallers;
+			if(!(std::find(wc.begin(), wc.end(), ClientID) != wc.end())) {
+				wc.push_back(ClientID); // add to witch callers vector
+				str_format(aBuf, sizeof(aBuf), "%s is calling for Witch! (%d/%d) To call witch write: /witch",
+						pSelf->Server()->ClientName(ClientID), callers_count + 1, REQUIRED_CALLERS_COUNT);
+			}
+			else {
+				str_format(aBuf, sizeof(aBuf), "You can't call witch twice");
+				pSelf->SendChatTarget(ClientID, aBuf);
+				return true;
+			}
+		}
+		else if (callers_count >= REQUIRED_CALLERS_COUNT) {
+			int witch_id = pSelf->RandomZombieToWitch();
+			if (witch_id >= 0)
+				str_format(aBuf, sizeof(aBuf), "Witch %s has arrived!", pSelf->Server()->ClientName(witch_id));
+			else
+				str_format(aBuf, sizeof(aBuf), "All witches are already here");
+		}
+	}
+	else {
+		str_format(aBuf, sizeof(aBuf), "Too few zombies");
+		pSelf->SendChatTarget(ClientID, aBuf);
+		return true;
+	}
+	
+	pSelf->SendChatTarget(-1, aBuf);
+	return true;
+}
+
 /* INFECTION MODIFICATION END *****************************************/
 
 void CGameContext::OnConsoleInit()
@@ -3603,6 +3691,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("challenge", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChallenge, this, "Show the current winner of the challenge");
 	Console()->Register("rank", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConRank, this, "Show your rank");
 	Console()->Register("goal", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConGoal, this, "Show your goal");
+	Console()->Register("stats", "i", CFGFLAG_CHAT|CFGFLAG_USER, ConStats, this, "Show stats by id");
 #endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
@@ -3610,6 +3699,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("antiping", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAntiPing, this, "Try to improve your ping");
 	Console()->Register("language", "s<en|fr|nl|de|bg|sr-Latn|hr|cs|pl|uk|ru|el|la|it|es|pt|hu|ar|tr|sah|fa|tl|zh-Hans|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
+	Console()->Register("witch", "", CFGFLAG_CHAT|CFGFLAG_USER, ConWitch, this, "Call Witch");
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);

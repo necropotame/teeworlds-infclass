@@ -347,6 +347,7 @@ public:
 	virtual void ShowTop10(int ClientID, int ScoreType);
 	virtual void ShowRank(int ClientID, int ScoreType);
 	virtual void ShowGoal(int ClientID, int ScoreType);
+	virtual void ShowStats(int ClientID, int UserId);
 	virtual void RefreshChallenge();
 	virtual int GetUserLevel(int ClientID);
 #endif

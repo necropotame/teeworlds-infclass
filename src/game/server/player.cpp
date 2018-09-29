@@ -694,7 +694,7 @@ void CPlayer::SetClass(int newClass)
 	if(m_class < END_HUMANCLASS)
 		HookProtection(true);
 	else
-		HookProtection(false);
+		HookProtection(true); // true = hook protection for zombies by default
 	
 	SetClassSkin(newClass);
 	

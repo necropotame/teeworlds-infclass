@@ -3882,6 +3882,90 @@ void CServer::ShowGoal(int ClientID, int ScoreType)
 	}
 }
 
+class CSqlJob_Server_ShowStats : public CSqlJob // under konstruktion (copypasted draft)
+{
+private:
+	CServer* m_pServer;
+	CSqlString<64> m_sMapName;
+	int m_ClientID;
+	int m_UserID;
+	int m_ScoreType;
+	
+public:
+	CSqlJob_Server_ShowStats(CServer* pServer, const char* pMapName, int ClientID, int UserID, int ScoreType)
+	{
+		m_pServer = pServer;
+		m_sMapName = CSqlString<64>(pMapName);
+		m_ClientID = ClientID;
+		m_UserID = UserID;
+		m_ScoreType = ScoreType;
+	}
+
+	virtual bool Job(CSqlServer* pSqlServer)
+	{
+		char aBuf[1024];
+		
+		try
+		{
+			//Get the list of best rounds
+			str_format(aBuf, sizeof(aBuf), 
+				"SELECT Score "
+				"FROM %s_infc_RoundScore "
+				"WHERE UserId = '%d' AND MapName = '%s' AND ScoreType = '%d' "
+				"ORDER BY Score DESC "
+				"LIMIT %d "
+				, pSqlServer->GetPrefix()
+				, m_UserID
+				, m_sMapName.ClrStr()
+				, m_ScoreType
+				, SQL_SCORE_NUMROUND
+			);
+			pSqlServer->executeSqlQuery(aBuf);
+			
+			int RoundCounter = 0;
+			int Score = 0;
+			while(pSqlServer->GetResults()->next())
+			{
+				Score = pSqlServer->GetResults()->getInt("Score")/10;
+				RoundCounter++;
+			}
+			
+			if(RoundCounter == SQL_SCORE_NUMROUND)
+			{
+				str_format(aBuf, sizeof(aBuf), "Stats - You must gain at least %d points to increase your score", (Score+1)); 
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, aBuf);
+				m_pServer->AddGameServerCmd(pCmd);
+			}
+			else
+			{
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(m_ClientID, "stats Gain at least one point to increase your score");
+				m_pServer->AddGameServerCmd(pCmd);
+			}
+		}
+		catch (sql::SQLException &e)
+		{
+			dbg_msg("sql", "Can't get rank (MySQL Error: %s)", e.what());
+			
+			return false;
+		}
+		
+		return true;
+	}
+};
+
+void CServer::ShowStats(int ClientID, int UserId)
+{
+	if(m_aClients[ClientID].m_UserID >= 0)
+	{
+		CSqlJob* pJob = new CSqlJob_Server_ShowStats(this, m_aCurrentMap, ClientID, m_aClients[ClientID].m_UserID, UserId);
+		pJob->Start();
+	}
+	else if(m_pGameServer)
+	{
+		m_pGameServer->SendChatTarget_Localization(ClientID, CHATCATEGORY_DEFAULT, _("You must be logged to see stats"), NULL);
+	}
+}
+
 #endif
 
 void CServer::Ban(int ClientID, int Seconds, const char* pReason)
