@@ -3620,8 +3620,12 @@ bool CGameContext::ConWitch(IConsole::IResult *pResult, void *pUserData)
 			auto& wc = pSelf->m_WitchCallers;
 			if(!(std::find(wc.begin(), wc.end(), ClientID) != wc.end())) {
 				wc.push_back(ClientID); // add to witch callers vector
-				str_format(aBuf, sizeof(aBuf), "%s is calling for Witch! (%d/%d) To call witch write: /witch",
-						pSelf->Server()->ClientName(ClientID), callers_count + 1, REQUIRED_CALLERS_COUNT);
+				callers_count += 1;
+				if (callers_count == 1)
+					str_format(aBuf, sizeof(aBuf), "%s is calling for Witch! (%d/%d) To call witch write: /witch",
+							pSelf->Server()->ClientName(ClientID), callers_count, REQUIRED_CALLERS_COUNT);
+				else
+					str_format(aBuf, sizeof(aBuf), "Witch (%d/%d)", callers_count, REQUIRED_CALLERS_COUNT);
 			}
 			else {
 				str_format(aBuf, sizeof(aBuf), "You can't call witch twice");
