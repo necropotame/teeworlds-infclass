@@ -133,10 +133,20 @@ int CGameContext::GetZombieCount() {
 	return count;
 }
 
+int CGameContext::GetZombieCount(int zombie_class) {
+	int count = 0;
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (!m_apPlayers[i])
+			continue;
+		if (m_apPlayers[i]->IsInfected() && m_apPlayers[i]->GetClass() == zombie_class)
+			count++;
+	}
+	return count;
+}
+
 int CGameContext::RandomZombieToWitch() {
 	std::vector<int> zombies_id;
-	int witch_count = 0;
-	const int MAX_WITCHES = 2;
 
 	m_WitchCallers.clear();
 
@@ -146,19 +156,12 @@ int CGameContext::RandomZombieToWitch() {
 			continue;
 		if (m_apPlayers[i]->IsInfected()) {
 			zombies_id.push_back(i);
-			if (m_apPlayers[i]->GetClass() == PLAYERCLASS_WITCH)
-				witch_count++;
 		}
 	}
 	
 	int id = random_int(0, zombies_id.size() - 1);
-	if (witch_count < MAX_WITCHES) {
-		m_apPlayers[zombies_id[id]]->SetClass(PLAYERCLASS_WITCH);
-		return zombies_id[id];
-	}
-	else {
-		return -1337; // false
-	}
+	m_apPlayers[zombies_id[id]]->SetClass(PLAYERCLASS_WITCH);
+	return zombies_id[id];
 }
 
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
@@ -3610,41 +3613,43 @@ bool CGameContext::ConWitch(IConsole::IResult *pResult, void *pUserData)
 	int callers_count = pSelf->m_WitchCallers.size();
 	const int REQUIRED_CALLERS_COUNT = 5;
 	const int MIN_ZOMBIES = 2;
+	const int MAX_WITCHES = 2;
 
 	char aBuf[256];
 	str_format(aBuf, sizeof(aBuf), "ConWitch() called");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "conwitch", aBuf);
 
-	if (pSelf->GetZombieCount() > MIN_ZOMBIES) {
-		if (callers_count < REQUIRED_CALLERS_COUNT) {
-			auto& wc = pSelf->m_WitchCallers;
-			if(!(std::find(wc.begin(), wc.end(), ClientID) != wc.end())) {
-				wc.push_back(ClientID); // add to witch callers vector
-				callers_count += 1;
-				if (callers_count == 1)
-					str_format(aBuf, sizeof(aBuf), "%s is calling for Witch! (%d/%d) To call witch write: /witch",
-							pSelf->Server()->ClientName(ClientID), callers_count, REQUIRED_CALLERS_COUNT);
-				else
-					str_format(aBuf, sizeof(aBuf), "Witch (%d/%d)", callers_count, REQUIRED_CALLERS_COUNT);
-			}
-			else {
-				str_format(aBuf, sizeof(aBuf), "You can't call witch twice");
-				pSelf->SendChatTarget(ClientID, aBuf);
-				return true;
-			}
-		}
-		else if (callers_count >= REQUIRED_CALLERS_COUNT) {
-			int witch_id = pSelf->RandomZombieToWitch();
-			if (witch_id >= 0)
-				str_format(aBuf, sizeof(aBuf), "Witch %s has arrived!", pSelf->Server()->ClientName(witch_id));
-			else
-				str_format(aBuf, sizeof(aBuf), "All witches are already here");
-		}
+	if (pSelf->GetZombieCount(PLAYERCLASS_WITCH) > MAX_WITCHES) {
+		str_format(aBuf, sizeof(aBuf), "All witches are already here", MAX_WITCHES);
+		pSelf->SendChatTarget(ClientID, aBuf);
+		return true;
 	}
-	else {
+	if (pSelf->GetZombieCount() <= MIN_ZOMBIES) {
 		str_format(aBuf, sizeof(aBuf), "Too few zombies");
 		pSelf->SendChatTarget(ClientID, aBuf);
 		return true;
+	}
+
+	if (callers_count < REQUIRED_CALLERS_COUNT) {
+		auto& wc = pSelf->m_WitchCallers;
+		if(!(std::find(wc.begin(), wc.end(), ClientID) != wc.end())) {
+			wc.push_back(ClientID); // add to witch callers vector
+			callers_count += 1;
+			if (callers_count == 1)
+				str_format(aBuf, sizeof(aBuf), "%s is calling for Witch! (%d/%d) To call witch write: /witch",
+						pSelf->Server()->ClientName(ClientID), callers_count, REQUIRED_CALLERS_COUNT);
+			else
+				str_format(aBuf, sizeof(aBuf), "Witch (%d/%d)", callers_count, REQUIRED_CALLERS_COUNT);
+		}
+		else {
+			str_format(aBuf, sizeof(aBuf), "You can't call witch twice");
+			pSelf->SendChatTarget(ClientID, aBuf);
+			return true;
+		}
+	}
+	else {
+		int witch_id = pSelf->RandomZombieToWitch();
+		str_format(aBuf, sizeof(aBuf), "Witch %s has arrived!", pSelf->Server()->ClientName(witch_id));
 	}
 	
 	pSelf->SendChatTarget(-1, aBuf);

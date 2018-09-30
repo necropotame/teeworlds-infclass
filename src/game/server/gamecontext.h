@@ -128,6 +128,7 @@ public:
 	class CCharacter *GetPlayerChar(int ClientID);
 	// InfClassR
 	int GetZombieCount();
+	int GetZombieCount(int zombie_class);
 	int RandomZombieToWitch();
 	std::vector<int> m_WitchCallers;
 
