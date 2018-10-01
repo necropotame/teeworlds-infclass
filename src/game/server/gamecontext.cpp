@@ -3619,7 +3619,7 @@ bool CGameContext::ConWitch(IConsole::IResult *pResult, void *pUserData)
 	str_format(aBuf, sizeof(aBuf), "ConWitch() called");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "conwitch", aBuf);
 
-	if (pSelf->GetZombieCount(PLAYERCLASS_WITCH) > MAX_WITCHES) {
+	if (pSelf->GetZombieCount(PLAYERCLASS_WITCH) >= MAX_WITCHES) {
 		str_format(aBuf, sizeof(aBuf), "All witches are already here", MAX_WITCHES);
 		pSelf->SendChatTarget(ClientID, aBuf);
 		return true;
