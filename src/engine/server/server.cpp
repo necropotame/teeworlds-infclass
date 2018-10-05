@@ -4191,7 +4191,8 @@ void CServer::OnRoundEnd()
 		str_comp(m_aCurrentMap, "infc_provence") != 0 &&
 		str_comp(m_aCurrentMap, "infc_newdust") != 0 &&
 		str_comp(m_aCurrentMap, "infc_normandie") != 0 &&
-		str_comp(m_aCurrentMap, "infc_junglewell") != 0
+		str_comp(m_aCurrentMap, "infc_junglewell") != 0 &&
+		str_comp(m_aCurrentMap, "infc_cherrytemple") != 0
 	)
 		return;
 	
