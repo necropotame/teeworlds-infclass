@@ -33,12 +33,15 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	
 	if (pOwnerChar->GetClass() == PLAYERCLASS_MEDIC) { // Revive zombie
 		const int MIN_ZOMBIES = 4;
+		const int DAMAGE_ON_REVIVE = 18;
 		int old_class = pHit->GetPlayer()->GetOldClass();
 		auto& medic = pOwnerChar;
 		auto& zombie = pHit;
 
-		if (medic->GetPlayer()->GetCharacter()->GetHealthArmorSum() < 20) {
-			GameServer()->SendBroadcast(m_Owner, "You need full health & armor", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+		if (medic->GetPlayer()->GetCharacter()->GetHealthArmorSum() < DAMAGE_ON_REVIVE) {
+			char aBuf[256];
+			str_format(aBuf, sizeof(aBuf), "You need at least %d hp", DAMAGE_ON_REVIVE);
+			GameServer()->SendBroadcast(m_Owner, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 		}
 		else if (GameServer()->GetZombieCount() <= MIN_ZOMBIES) {
 			char aBuf[256];
@@ -49,7 +52,7 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 			zombie->GetPlayer()->SetClass(old_class);
 			zombie->GetPlayer()->GetCharacter()->SetHealthArmor(1, 0);
 			zombie->Unfreeze();
-			medic->TakeDamage(vec2(0.f, 0.f), 38, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+			medic->TakeDamage(vec2(0.f, 0.f), DAMAGE_ON_REVIVE * 2, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
 		}
 	}
 	else {

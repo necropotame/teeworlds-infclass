@@ -1115,13 +1115,14 @@ void CCharacter::FireWeapon()
 				
 				if(FindPortalPosition(m_Pos + PortalShift, PortalPos))
 				{
+					const int DAMAGE_ON_TP = 1;
 					vec2 OldPos = m_Core.m_Pos;
 					m_Core.m_Pos = PortalPos;
 					m_Core.m_HookedPlayer = -1;
 					m_Core.m_HookState = HOOK_RETRACTED;
 					m_Core.m_HookPos = m_Core.m_Pos;
 					auto pScientist = GetPlayer()->GetCharacter();
-					pScientist->TakeDamage(vec2(0.0f, 0.0f), 4, GetPlayer()->GetCID(), WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+					pScientist->TakeDamage(vec2(0.0f, 0.0f), DAMAGE_ON_TP * 2, GetPlayer()->GetCID(), WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 					
 					GameServer()->CreateDeath(OldPos, GetPlayer()->GetCID());
 					GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
