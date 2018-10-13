@@ -6,7 +6,6 @@
 #include "player.h"
 #include <engine/shared/network.h>
 #include <engine/server/roundstatistics.h>
-#include <algorithm>
 
 
 MACRO_ALLOC_POOL_ID_IMPL(CPlayer, MAX_CLIENTS)

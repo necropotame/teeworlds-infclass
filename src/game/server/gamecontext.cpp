@@ -14,6 +14,7 @@
 #include <game/gamecore.h>
 #include <iostream>
 #include "gamemodes/mod.h"
+#include <algorithm>
 
 enum
 {
