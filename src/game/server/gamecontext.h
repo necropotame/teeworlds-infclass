@@ -325,7 +325,9 @@ public:
 	virtual int GetTargetToKillCoolDown() { return m_TargetToKillCoolDown; }
 /* INFECTION MODIFICATION END *****************************************/
 	// InfClassR begin
+	void AddSpectatorCID(int ClientID);
 	void RemoveSpectatorCID(int ClientID);
+	bool IsSpectatorCID(int ClientID);
 	// InfClassR end
 };
 

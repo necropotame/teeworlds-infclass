@@ -7,7 +7,7 @@
 #include <game/generated/protocol.h>
 #include <engine/shared/protocol.h>
 #include <string>
-#include <vector> // infclassr spectators
+#include <vector>
 
 /* INFECTION MODIFICATION START ***************************************/
 enum

@@ -14,7 +14,6 @@
 #include <game/gamecore.h>
 #include <iostream>
 #include "gamemodes/mod.h"
-#include <algorithm> // infclassr vector.find()
 
 enum
 {
@@ -1262,14 +1261,7 @@ void CGameContext::OnClientConnected(int ClientID)
 	// Check which team the player should be on
 	const int StartTeam = g_Config.m_SvTournamentMode ? TEAM_SPECTATORS : m_pController->GetAutoTeam(ClientID);
 
-	// infclassr check spectator vector
-	bool is_spectator = false;
-	for (auto& spec : Server()->spectators_id) {
-		if (ClientID == spec)
-			is_spectator = true;
-	}
-
-	if (is_spectator)
+	if (IsSpectatorCID(ClientID))
 		m_apPlayers[ClientID] = new(ClientID) CPlayer(this, ClientID, TEAM_SPECTATORS);
 	else
 		m_apPlayers[ClientID] = new(ClientID) CPlayer(this, ClientID, StartTeam);
@@ -1696,12 +1688,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						m_VoteUpdate = true;
 					pPlayer->SetTeam(pMsg->m_Team);
 					if (pPlayer->GetTeam() == TEAM_SPECTATORS) {
-						// Infclassr add client id to spectators id vector
-						auto& specs = Server()->spectators_id;
-						if(!(std::find(specs.begin(), specs.end(), ClientID) != specs.end())) {
-							specs.push_back(ClientID);
-						}
-						// Infclassr end
+						AddSpectatorCID(ClientID);
 					} else {
 						RemoveSpectatorCID(ClientID);
 					}
@@ -3989,12 +3976,28 @@ void CGameContext::List(int ClientID, const char* filter)
 	SendChatTarget(ClientID, buf);
 }
 
-void CGameContext::RemoveSpectatorCID(int ClientID) {
-		auto& specs = Server()->spectators_id;
-		for (auto it = specs.begin(); it != specs.end(); ) {
-			if (*it == ClientID)
-				it = specs.erase(it);
-			else
-				++it;
-		}
+void CGameContext::AddSpectatorCID(int ClientID) {
+	auto& specs = Server()->spectators_id;
+	if(!(std::find(specs.begin(), specs.end(), ClientID) != specs.end())) {
+		specs.push_back(ClientID);
 	}
+}
+
+void CGameContext::RemoveSpectatorCID(int ClientID) {
+	auto& specs = Server()->spectators_id;
+	for (auto it = specs.begin(); it != specs.end(); ) {
+		if (*it == ClientID)
+			it = specs.erase(it);
+		else
+			++it;
+	}
+}
+
+bool CGameContext::IsSpectatorCID(int ClientID) {
+	bool is_spectator = false;
+	for (auto& spec : Server()->spectators_id) {
+		if (ClientID == spec)
+			is_spectator = true;
+	}
+	return is_spectator;
+}
