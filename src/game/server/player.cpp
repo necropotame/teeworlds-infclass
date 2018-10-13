@@ -6,6 +6,7 @@
 #include "player.h"
 #include <engine/shared/network.h>
 #include <engine/server/roundstatistics.h>
+#include <algorithm> // infclassr vector.find()
 
 
 MACRO_ALLOC_POOL_ID_IMPL(CPlayer, MAX_CLIENTS)
@@ -505,6 +506,12 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 		if(Team == TEAM_SPECTATORS)
 		{
 			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} joined the spectators"), "PlayerName", Server()->ClientName(m_ClientID), NULL);
+			// Infclassr add client id to spectators id vector
+			auto& specs = Server()->spectators_id;
+			if(!(std::find(specs.begin(), specs.end(), m_ClientID) != specs.end())) {
+				specs.push_back(m_ClientID);
+			}
+			// Infclassr end
 		}
 		else
 		{
