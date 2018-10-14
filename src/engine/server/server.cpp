@@ -1513,6 +1513,12 @@ void CServer::SendServerInfoConnless(const NETADDR *pAddr, int Token, bool Exten
 	}
 	bool SendClients = m_ServerInfoNumRequests <= MaxRequests && !m_ServerInfoHighLoad;
 	SendServerInfo(pAddr, Token, Extended, SendClients);
+
+	if(!SendClients) {
+		char aBuf[256];
+		str_format(aBuf, sizeof(aBuf), "Too much info requests: %d > %d", m_ServerInfoNumRequests, MaxRequests);
+		Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "inforequests", aBuf);
+	}
 }
 
 void CServer::SendServerInfo(const NETADDR *pAddr, int Token, bool Extended, bool SendClients, int Offset)
@@ -1674,7 +1680,7 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, bool Extended, boo
 	m_NetServer.Send(&Packet);
 
 	if (Extended && Take < 0)
-		SendServerInfo(pAddr, Token, Extended, Offset + ClientsPerPacket);
+		SendServerInfo(pAddr, Token, Extended, SendClients, Offset + ClientsPerPacket);
 }
 
 void CServer::UpdateServerInfo()
