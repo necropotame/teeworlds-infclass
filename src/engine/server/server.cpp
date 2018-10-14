@@ -1516,7 +1516,8 @@ void CServer::SendServerInfoConnless(const NETADDR *pAddr, int Token, bool Exten
 
 	if(!SendClients) {
 		char aBuf[256];
-		str_format(aBuf, sizeof(aBuf), "Too much info requests: %d > %d", m_ServerInfoNumRequests, MaxRequests);
+		str_format(aBuf, sizeof(aBuf), "Too much info requests: %d > %d (Now = %d, mSIFR = %d)", m_ServerInfoNumRequests, MaxRequests, Now,
+				   m_ServerInfoFirstRequest);
 		Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "inforequests", aBuf);
 	}
 }
