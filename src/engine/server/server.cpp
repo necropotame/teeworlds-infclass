@@ -1511,14 +1511,17 @@ void CServer::SendServerInfoConnless(const NETADDR *pAddr, int Token, bool Exten
 		m_ServerInfoNumRequests = 1;
 		m_ServerInfoFirstRequest = Now;
 	}
-	bool SendClients = m_ServerInfoNumRequests <= MaxRequests && !m_ServerInfoHighLoad;
-	SendServerInfo(pAddr, Token, Extended, SendClients);
 
-	if(!SendClients) {
-		char aBuf[256];
-		str_format(aBuf, sizeof(aBuf), "Too much info requests: %d > %d (Now = %d, mSIFR = %d)", m_ServerInfoNumRequests, MaxRequests, Now,
-				   m_ServerInfoFirstRequest);
+	bool SendResponse = m_ServerInfoNumRequests <= MaxRequests && !m_ServerInfoHighLoad;
+	if(!SendResponse) {
+		char aBuf[256]
+		char aAddrStr[256];
+		net_addr_str(pAddr, aAddrStr, sizeof(aAddrStr), true);
+		str_format(aBuf, sizeof(aBuf), "Too much info requests from %s: %d > %d (Now = %d, mSIFR = %d)",
+				aAddrStr, m_ServerInfoNumRequests, MaxRequests, Now, m_ServerInfoFirstRequest);
 		Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "inforequests", aBuf);
+	} else {
+		SendServerInfo(pAddr, Token, Extended, true);
 	}
 }
 
