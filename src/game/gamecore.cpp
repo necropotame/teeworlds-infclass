@@ -91,16 +91,7 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 		Grounded = true;
 	
 	bool Stucked = false;
-	for (int epsilon = 0; epsilon <= PhysSize/2; epsilon++) {
-		if (m_pCollision->CheckPoint(m_Pos.x+PhysSize/2, m_Pos.y - PhysSize/2 + epsilon))
-			Stucked = true;
-		if(m_pCollision->CheckPoint(m_Pos.x-PhysSize/2, m_Pos.y - PhysSize/2 + epsilon))
-			Stucked = true;
-		if (m_pCollision->CheckPoint(m_Pos.x+PhysSize/2, m_Pos.y + PhysSize/2 - epsilon))
-			Stucked = true;
-		if(m_pCollision->CheckPoint(m_Pos.x-PhysSize/2, m_Pos.y + PhysSize/2 - epsilon))
-			Stucked = true;
-	}
+	Stucked = m_pCollision->TestBox(m_Pos, vec2(28.0f, 28.0f));
 	
 	vec2 TargetDirection = normalize(vec2(m_Input.m_TargetX, m_Input.m_TargetY));
 
