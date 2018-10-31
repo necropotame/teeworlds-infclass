@@ -1,6 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include "gamecore.h"
+#include <iostream>
 
 const char *CTuningParams::m_apNames[] =
 {
@@ -100,6 +101,12 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 	float MaxSpeed = Grounded ? pTuningParams->m_GroundControlSpeed : pTuningParams->m_AirControlSpeed;
 	float Accel = Grounded ? pTuningParams->m_GroundControlAccel : pTuningParams->m_AirControlAccel;
 	float Friction = Grounded ? pTuningParams->m_GroundFriction : pTuningParams->m_AirFriction;
+
+	const float MAX_MAP_HEIGHT = -100.0f;
+	const float TILE_SIZE = 32.0f;
+	if (m_Pos.y/TILE_SIZE <= MAX_MAP_HEIGHT) {
+		m_Vel.y = -m_Vel.y;
+	}
 
 	// InfClassR taxi mode, todo: cleanup
 	if (m_Passenger) {
