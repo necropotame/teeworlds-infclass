@@ -33,14 +33,14 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	
 	if (pOwnerChar->GetClass() == PLAYERCLASS_MEDIC) { // Revive zombie
 		const int MIN_ZOMBIES = 4;
-		const int DAMAGE_ON_REVIVE = 18;
+		const int DAMAGE_ON_REVIVE = 17;
 		int old_class = pHit->GetPlayer()->GetOldClass();
 		auto& medic = pOwnerChar;
 		auto& zombie = pHit;
 
-		if (medic->GetPlayer()->GetCharacter()->GetHealthArmorSum() < DAMAGE_ON_REVIVE) {
+		if (medic->GetPlayer()->GetCharacter()->GetHealthArmorSum() <= DAMAGE_ON_REVIVE) {
 			char aBuf[256];
-			str_format(aBuf, sizeof(aBuf), "You need at least %d hp", DAMAGE_ON_REVIVE);
+			str_format(aBuf, sizeof(aBuf), "You need at least %d hp", DAMAGE_ON_REVIVE + 1);
 			GameServer()->SendBroadcast(m_Owner, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 		}
 		else if (GameServer()->GetZombieCount() <= MIN_ZOMBIES) {
