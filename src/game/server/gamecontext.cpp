@@ -3978,27 +3978,18 @@ void CGameContext::List(int ClientID, const char* filter)
 }
 
 void CGameContext::AddSpectatorCID(int ClientID) {
-	auto& specs = Server()->spectators_id;
-	if(!(std::find(specs.begin(), specs.end(), ClientID) != specs.end())) {
-		specs.push_back(ClientID);
+	auto& vec = Server()->spectators_id;
+	if(!(std::find(vec.begin(), vec.end(), ClientID) != vec.end())) {
+		vec.push_back(ClientID);
 	}
 }
 
 void CGameContext::RemoveSpectatorCID(int ClientID) {
-	auto& specs = Server()->spectators_id;
-	for (auto it = specs.begin(); it != specs.end(); ) {
-		if (*it == ClientID)
-			it = specs.erase(it);
-		else
-			++it;
-	}
+	auto& vec = Server()->spectators_id;
+	vec.erase(std::remove(vec.begin(), vec.end(), ClientID), vec.end());
 }
 
 bool CGameContext::IsSpectatorCID(int ClientID) {
-	bool is_spectator = false;
-	for (auto& spec : Server()->spectators_id) {
-		if (ClientID == spec)
-			is_spectator = true;
-	}
-	return is_spectator;
+	auto& vec = Server()->spectators_id;
+	return std::find(vec.begin(), vec.end(), ClientID) != vec.end();
 }
