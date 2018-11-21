@@ -107,9 +107,11 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 		m_Vel.y = -m_Vel.y;
 	}
 
-	// InfClassR taxi mode, todo: cleanup
+	// InfClassR taxi mode, todo: cleanup & move out from core
 	if (m_Passenger) {
 		m_Passenger->m_Vel = m_Vel;
+		if (abs(m_Passenger->m_Vel.y) <= 1.0f)
+			m_Passenger->m_Vel.y = 0.0f;
 		m_Passenger->m_Pos.x = m_Pos.x;
 		m_Passenger->m_Pos.y = m_Pos.y - 50;
 		if (m_Passenger->m_Jumped || m_Passenger->m_Infected || (m_Infected || m_HookProtected)) {
