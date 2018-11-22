@@ -488,7 +488,7 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_AirControlAccel = 0.0f;
 		pTuningParams->m_HookLength = 0.0f;
 	}
-	if(FixedPosition)
+	if(FixedPosition || m_Core.m_IsPassenger)
 	{
 		pTuningParams->m_Gravity = 0.0f;
 	}
@@ -1443,13 +1443,6 @@ void CCharacter::Tick()
 			m_PositionLocked = false;
 		}
 	}
-
-	// InfClassR taxi mode
-	if(m_pPlayer->GetCharacter()->m_Core.m_IsPassenger) {
-		CTuningParams* pTuningParams = &m_pPlayer->m_NextTuningParams;
-		pTuningParams->m_Gravity = 0.0f;
-	}
-	// InfClassR taxi mode end
 	
 	if(!IsInfected() && IsAlive() && GameServer()->m_pController->IsInfectionStarted())
 	{
