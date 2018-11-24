@@ -845,6 +845,9 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	Probability[PLAYERCLASS_HUNTER - START_INFECTEDCLASS - 1] =
         (Server()->GetClassAvailability(PLAYERCLASS_HUNTER)) ?
         (double) g_Config.m_InfProbaHunter : 0.0f;
+	Probability[PLAYERCLASS_BIRD - START_INFECTEDCLASS - 1] =
+        (Server()->GetClassAvailability(PLAYERCLASS_BIRD)) ?
+        (double) g_Config.m_InfProbaBird : 0.0f;
 	Probability[PLAYERCLASS_BOOMER - START_INFECTEDCLASS - 1] =
         (Server()->GetClassAvailability(PLAYERCLASS_BOOMER)) ?
         (double) g_Config.m_InfProbaBoomer : 0.0f;

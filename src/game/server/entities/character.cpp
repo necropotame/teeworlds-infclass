@@ -826,6 +826,10 @@ void CCharacter::FireWeapon()
 										pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
 								}
 							}
+							else if(GetClass() == PLAYERCLASS_BIRD) {
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfBirdDamage,
+									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+							}
 							else
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
@@ -1781,6 +1785,14 @@ void CCharacter::Tick()
 		if(IsGrounded()) m_AirJumpCounter = 0;
 		if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < 1)
 		{
+			m_Core.m_Jumped &= ~2;
+			m_AirJumpCounter++;
+		}
+	}
+
+	if(GetClass() == PLAYERCLASS_BIRD) {
+		if(IsGrounded() || g_Config.m_InfBirdAirjumpLimit == 0) m_AirJumpCounter = 0;
+		else if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < g_Config.m_InfBirdAirjumpLimit) {
 			m_Core.m_Jumped &= ~2;
 			m_AirJumpCounter++;
 		}
@@ -3060,6 +3072,21 @@ void CCharacter::ClassSpawnAttributes()
 			{
 				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "hunter", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
+			}
+			break;
+		case PLAYERCLASS_BIRD:
+			m_Health = 10;
+			m_Armor = 0;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_BIRD);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BIRD))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "bird", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_BIRD] = true;
 			}
 			break;
 		case PLAYERCLASS_GHOST:

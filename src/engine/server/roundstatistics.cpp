@@ -80,6 +80,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_HUNTER:
 			m_HunterScore += Points;
 			break;
+		case PLAYERCLASS_BIRD:
+			m_BirdScore += Points;
+			break;
 		case PLAYERCLASS_BOOMER:
 			m_BoomerScore += Points;
 			break;

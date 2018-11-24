@@ -640,6 +640,7 @@ int CServer::Init()
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
+	SetClassAvailability(PLAYERCLASS_BIRD, 1);
 	SetClassAvailability(PLAYERCLASS_GHOST, 1);
 	SetClassAvailability(PLAYERCLASS_SPIDER, 1);
 	SetClassAvailability(PLAYERCLASS_GHOUL, 1);
