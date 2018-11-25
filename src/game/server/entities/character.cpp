@@ -826,8 +826,8 @@ void CCharacter::FireWeapon()
 										pTarget->m_Core.m_Vel += vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f;
 								}
 							}
-							else if(GetClass() == PLAYERCLASS_BIRD) {
-								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfBirdDamage,
+							else if(GetClass() == PLAYERCLASS_BAT) {
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfBatDamage,
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 							}
 							else
@@ -1790,9 +1790,9 @@ void CCharacter::Tick()
 		}
 	}
 
-	if(GetClass() == PLAYERCLASS_BIRD) {
-		if(IsGrounded() || g_Config.m_InfBirdAirjumpLimit == 0) m_AirJumpCounter = 0;
-		else if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < g_Config.m_InfBirdAirjumpLimit) {
+	if(GetClass() == PLAYERCLASS_BAT) {
+		if(IsGrounded() || g_Config.m_InfBatAirjumpLimit == 0) m_AirJumpCounter = 0;
+		else if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < g_Config.m_InfBatAirjumpLimit) {
 			m_Core.m_Jumped &= ~2;
 			m_AirJumpCounter++;
 		}
@@ -3074,7 +3074,7 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_HUNTER] = true;
 			}
 			break;
-		case PLAYERCLASS_BIRD:
+		case PLAYERCLASS_BAT:
 			m_Health = 10;
 			m_Armor = 0;
 			RemoveAllGun();
@@ -3082,11 +3082,11 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_BIRD);
-			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BIRD))
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_BAT);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_BAT))
 			{
-				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "bird", NULL);
-				m_pPlayer->m_knownClass[PLAYERCLASS_BIRD] = true;
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "bat", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_BAT] = true;
 			}
 			break;
 		case PLAYERCLASS_GHOST:
