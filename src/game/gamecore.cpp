@@ -114,7 +114,7 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 			m_Passenger->m_Vel.y = 0.0f;
 		m_Passenger->m_Pos.x = m_Pos.x;
 		m_Passenger->m_Pos.y = m_Pos.y - 50;
-		if (m_Passenger->m_Jumped || m_Passenger->m_Infected || (m_Infected || m_HookProtected)) {
+		if (m_Passenger->m_Input.m_Jump > 0 || m_Passenger->m_Infected || (m_Infected || m_HookProtected)) {
 			m_Passenger->m_IsPassenger = false;
 			m_Passenger->m_ProbablyStucked = true;
 			m_Passenger = nullptr;

@@ -2422,6 +2422,9 @@ void CCharacter::Die(int Killer, int Weapon)
 	{
 		m_pPlayer->StartInfection(false);
 	}	
+	if (m_Core.m_Passenger) {
+		m_Core.m_Passenger->m_IsPassenger = false; // InfClassR taxi mode
+	}
 /* INFECTION MODIFICATION END *****************************************/
 }
 
