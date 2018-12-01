@@ -104,7 +104,9 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 	const float MAX_MAP_HEIGHT = -100.0f;
 	const float TILE_SIZE = 32.0f;
 	if (m_Pos.y/TILE_SIZE <= MAX_MAP_HEIGHT) {
-		m_Vel.y = -m_Vel.y;
+		m_Vel.y = abs(m_Vel.y);
+		if (m_Vel.y <= 1.0f)
+			m_Vel.y = 1.1f;
 	}
 
 	// InfClassR taxi mode, todo: cleanup & move out from core
