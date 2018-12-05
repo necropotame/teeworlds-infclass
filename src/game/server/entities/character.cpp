@@ -1321,7 +1321,7 @@ void CCharacter::HandleWeapons()
 				if(GetClass() == PLAYERCLASS_SMOKER)
 				{
 					Rate = 0.5f;
-					Damage = 2;
+					Damage = g_Config.m_InfSmokerHookDamage;
 				}
 				else if(GetClass() == PLAYERCLASS_GHOUL)
 				{
@@ -1332,6 +1332,7 @@ void CCharacter::HandleWeapons()
 				{
 					m_HookDmgTick = Server()->Tick();
 					VictimChar->TakeDamage(vec2(0.0f,0.0f), Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+					IncreaseOverallHp(2);
 				}
 			}
 		}
