@@ -107,6 +107,10 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 		m_Vel.y = abs(m_Vel.y);
 		if (m_Vel.y <= 1.0f)
 			m_Vel.y = 1.1f;
+		if (abs(m_Vel.y) >= 10000.0f) {
+			m_Vel.y = 1.1f;
+			m_Pos.y = MAX_MAP_HEIGHT + TILE_SIZE;
+		}
 	}
 
 	// InfClassR taxi mode, todo: cleanup & move out from core
