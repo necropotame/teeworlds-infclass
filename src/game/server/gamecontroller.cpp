@@ -93,6 +93,9 @@ void IGameController::EndRound()
 	
 	//Send score to the server
 	Server()->OnRoundEnd();
+
+	if (GameServer()->m_FunRound)
+		GameServer()->EndFunRound();
 }
 
 void IGameController::ResetGame()

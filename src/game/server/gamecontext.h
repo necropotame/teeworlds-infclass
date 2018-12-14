@@ -93,6 +93,7 @@ class CGameContext : public IGameServer
 	static bool ConForceVote(IConsole::IResult *pResult, void *pUserData);
 	static bool ConClearVotes(IConsole::IResult *pResult, void *pUserData);
 	static bool ConVote(IConsole::IResult *pResult, void *pUserData);
+	static bool ConStartFunRound(IConsole::IResult *pResult, void *pUserData);
 	static bool ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
 	CGameContext(int Resetting);
@@ -131,6 +132,14 @@ public:
 	int GetZombieCount(int zombie_class);
 	int RandomZombieToWitch();
 	std::vector<int> m_WitchCallers;
+
+	// InfClassR fun round
+	void EndFunRound();
+	bool m_FunRound;
+	bool m_FunRoundAlreadyEnded;
+	std::vector<int> m_Availabilities, m_Probabilities;
+	void SetAvailabilities(std::vector<int> value);
+	void SetProbabilities(std::vector<int> value);
 
 	// voting
 	void StartVote(const char *pDesc, const char *pCommand, const char *pReason);

@@ -55,6 +55,9 @@ void CGameContext::Construct(int Resetting)
 
 	if(Resetting==NO_RESET)
 		m_pVoteOptionHeap = new CHeap();
+	
+	m_FunRound = false;
+	m_FunRoundAlreadyEnded = false;
 }
 
 CGameContext::CGameContext(int Resetting)
@@ -162,6 +165,34 @@ int CGameContext::RandomZombieToWitch() {
 	int id = random_int(0, zombies_id.size() - 1);
 	m_apPlayers[zombies_id[id]]->SetClass(PLAYERCLASS_WITCH);
 	return zombies_id[id];
+}
+
+void CGameContext::SetAvailabilities(std::vector<int> value) {
+	if (value.empty())
+		value = std::vector<int>(9);
+	g_Config.m_InfEnableBiologist = value[0];
+	g_Config.m_InfEnableEngineer = value[1];
+	g_Config.m_InfEnableHero = value[2];
+	g_Config.m_InfEnableMedic = value[3];
+	g_Config.m_InfEnableMercenary = value[4];
+	g_Config.m_InfEnableNinja = value[5];
+	g_Config.m_InfEnableScientist = value[6];
+	g_Config.m_InfEnableSniper = value[7];
+	g_Config.m_InfEnableSoldier = value[8];
+}
+
+void CGameContext::SetProbabilities(std::vector<int> value) {
+	if (value.empty())
+		value = std::vector<int>(9);
+	g_Config.m_InfProbaBat = value[0];
+	g_Config.m_InfProbaBoomer = value[1];
+	g_Config.m_InfProbaGhost = value[2];
+	g_Config.m_InfProbaGhoul = value[3];
+	g_Config.m_InfProbaHunter = value[4];
+	g_Config.m_InfProbaSlug = value[5];
+	g_Config.m_InfProbaSmoker = value[6];
+	g_Config.m_InfProbaSpider = value[7];
+	g_Config.m_InfGhoulThreshold = value[8];
 }
 
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
@@ -2488,6 +2519,109 @@ bool CGameContext::ConVote(IConsole::IResult *pResult, void *pUserData)
 	
 	return true;
 }
+bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+
+	if (pSelf->m_FunRound || pSelf->m_FunRoundAlreadyEnded) {
+		pSelf->SendChatTarget(-1, "You can play fun round only once per map");
+		return true;
+	}
+
+	// zombies
+	auto zero_probabilities = [pSelf] () {
+		pSelf->SetProbabilities(std::vector<int>());
+	};
+	std::vector<int> probabilities = {
+		g_Config.m_InfProbaBat,
+		g_Config.m_InfProbaBoomer,
+		g_Config.m_InfProbaGhost,
+		g_Config.m_InfProbaGhoul,
+		g_Config.m_InfProbaHunter,
+		g_Config.m_InfProbaSlug,
+		g_Config.m_InfProbaSmoker,
+		g_Config.m_InfProbaSpider,
+		g_Config.m_InfGhoulThreshold
+	};
+	auto default_probabilities = probabilities;
+
+	// humans
+	auto zero_availabilities = [pSelf] () {
+		pSelf->SetAvailabilities(std::vector<int>());
+	};
+	std::vector<int> availabilities = {
+		g_Config.m_InfEnableBiologist,
+		g_Config.m_InfEnableEngineer,
+		g_Config.m_InfEnableHero,
+		g_Config.m_InfEnableMedic,
+		g_Config.m_InfEnableMercenary,
+		g_Config.m_InfEnableNinja,
+		g_Config.m_InfEnableScientist,
+		g_Config.m_InfEnableSniper,
+		g_Config.m_InfEnableSoldier
+	};
+
+	std::vector<const char*> phrases = {
+		", glhf!",
+		", not ez!",
+		" c:",
+		" xd",
+		", that's gg",
+		", good luck!"
+	};
+	const char* random_phrase = phrases[random_int(0, phrases.size()-1)];
+	char aBuf[256];
+	int type = random_int(0, 4);
+	
+	switch (type) {
+		case 0:
+			zero_probabilities();
+			g_Config.m_InfProbaGhoul = 100;
+			str_format(aBuf, sizeof(aBuf), "Fun round! Ghouls against humans%s", random_phrase);
+			break;
+		case 1:
+			zero_probabilities();
+			zero_availabilities();
+			g_Config.m_InfProbaGhost = 100;
+			g_Config.m_InfEnableSniper = 1;
+			str_format(aBuf, sizeof(aBuf), "Fun round! Ghosts vs Snipers%s", random_phrase);
+			break;
+		case 2:
+			zero_probabilities();
+			zero_availabilities();
+			g_Config.m_InfProbaGhoul = 100;
+			g_Config.m_InfEnableMedic = 1;
+			g_Config.m_InfEnableBiologist = 1;
+			str_format(aBuf, sizeof(aBuf), "Fun round! Ghouls against Medics and Biologists%s", random_phrase);
+			break;
+		case 3:
+			zero_probabilities();
+			zero_availabilities();
+			g_Config.m_InfProbaBat = 100;
+			g_Config.m_InfEnableMercenary = 1;
+			str_format(aBuf, sizeof(aBuf), "Fun round! Bats vs Mercenaries%s", random_phrase);
+			break;
+		case 4:
+			zero_probabilities();
+			g_Config.m_InfProbaBat = 50;
+			g_Config.m_InfProbaBoomer = 50;
+			str_format(aBuf, sizeof(aBuf), "Fun round! Bats and Boomers against humans%s", random_phrase);
+	}
+	pSelf->SendChatTarget(-1, aBuf);
+	pSelf->m_pController->StartRound();
+	pSelf->m_FunRound = true;
+	pSelf->m_Availabilities = availabilities;
+	pSelf->m_Probabilities = probabilities;
+	return true;
+}
+
+void CGameContext::EndFunRound()
+{
+	SetAvailabilities(m_Availabilities);
+	SetProbabilities(m_Probabilities);
+	m_FunRound = false;
+	m_FunRoundAlreadyEnded = true;
+}
 
 bool CGameContext::ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
 {
@@ -3697,6 +3831,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("force_vote", "ss?r", CFGFLAG_SERVER, ConForceVote, this, "Force a voting option");
 	Console()->Register("clear_votes", "", CFGFLAG_SERVER, ConClearVotes, this, "Clears the voting options");
 	Console()->Register("vote", "r", CFGFLAG_SERVER, ConVote, this, "Force a vote to yes/no");
+	Console()->Register("start_fun_round", "", CFGFLAG_SERVER, ConStartFunRound, this, "Start fun round");
 	
 /* INFECTION MODIFICATION START ***************************************/
 	Console()->Register("inf_set_class", "is", CFGFLAG_SERVER, ConSetClass, this, "Set the class of a player");
