@@ -2543,7 +2543,6 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 		g_Config.m_InfProbaSpider,
 		g_Config.m_InfGhoulThreshold
 	};
-	auto default_probabilities = probabilities;
 
 	// humans
 	auto zero_availabilities = [pSelf] () {
