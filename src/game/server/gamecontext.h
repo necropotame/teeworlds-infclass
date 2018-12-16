@@ -136,7 +136,7 @@ public:
 	// InfClassR fun round
 	void EndFunRound();
 	bool m_FunRound;
-	bool m_FunRoundAlreadyEnded;
+	int m_FunRoundsPassed;
 	std::vector<int> m_Availabilities, m_Probabilities;
 	void SetAvailabilities(std::vector<int> value);
 	void SetProbabilities(std::vector<int> value);

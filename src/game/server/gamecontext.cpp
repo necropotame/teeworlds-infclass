@@ -57,7 +57,7 @@ void CGameContext::Construct(int Resetting)
 		m_pVoteOptionHeap = new CHeap();
 	
 	m_FunRound = false;
-	m_FunRoundAlreadyEnded = false;
+	m_FunRoundsPassed = 0;
 }
 
 CGameContext::CGameContext(int Resetting)
@@ -183,7 +183,7 @@ void CGameContext::SetAvailabilities(std::vector<int> value) {
 
 void CGameContext::SetProbabilities(std::vector<int> value) {
 	if (value.empty())
-		value = std::vector<int>(9);
+		value = std::vector<int>(10);
 	g_Config.m_InfProbaBat = value[0];
 	g_Config.m_InfProbaBoomer = value[1];
 	g_Config.m_InfProbaGhost = value[2];
@@ -193,6 +193,7 @@ void CGameContext::SetProbabilities(std::vector<int> value) {
 	g_Config.m_InfProbaSmoker = value[6];
 	g_Config.m_InfProbaSpider = value[7];
 	g_Config.m_InfGhoulThreshold = value[8];
+	g_Config.m_InfGhoulStomachSize = value[9];
 }
 
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
@@ -2522,9 +2523,21 @@ bool CGameContext::ConVote(IConsole::IResult *pResult, void *pUserData)
 bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
+	const char* title = g_Config.m_FunRoundTitle;
+	char aBuf[256];
 
-	if (pSelf->m_FunRound || pSelf->m_FunRoundAlreadyEnded) {
-		pSelf->SendChatTarget(-1, "You can play fun round only once per map");
+	if (pSelf->m_FunRound) {
+		str_format(aBuf, sizeof(aBuf), "%s is not over yet", title);
+		pSelf->SendChatTarget(-1, aBuf);
+		return true;
+	}
+	else if (pSelf->m_FunRoundsPassed >= g_Config.m_FunRoundLimit) {
+		switch (g_Config.m_FunRoundLimit) {
+			case 1: str_format(aBuf, sizeof(aBuf), "%s can be played only once per map", title); break;
+			case 2: str_format(aBuf, sizeof(aBuf), "%s can be played only twice per map", title); break;
+			default: str_format(aBuf, sizeof(aBuf), "%s can be played only %d times per map", title, g_Config.m_FunRoundLimit);
+		}
+		pSelf->SendChatTarget(-1, aBuf);
 		return true;
 	}
 
@@ -2541,7 +2554,8 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 		g_Config.m_InfProbaSlug,
 		g_Config.m_InfProbaSmoker,
 		g_Config.m_InfProbaSpider,
-		g_Config.m_InfGhoulThreshold
+		g_Config.m_InfGhoulThreshold,
+		g_Config.m_InfGhoulStomachSize
 	};
 
 	// humans
@@ -2569,45 +2583,56 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 		", good luck!"
 	};
 	const char* random_phrase = phrases[random_int(0, phrases.size()-1)];
-	char aBuf[256];
-	int type = random_int(0, 4);
-	
-	switch (type) {
+	zero_probabilities();
+	zero_availabilities();
+	g_Config.m_InfGhoulStomachSize = g_Config.m_FunRoundGhoulStomachSize;
+
+	int type = random_int(0, 7);
+	switch (type) { // todo: generalize and shrink
 		case 0:
-			zero_probabilities();
 			g_Config.m_InfProbaGhoul = 100;
-			str_format(aBuf, sizeof(aBuf), "Fun round! Ghouls against humans%s", random_phrase);
+			g_Config.m_InfEnableNinja = 1;
+			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Ninjas%s", title, random_phrase);
 			break;
 		case 1:
-			zero_probabilities();
-			zero_availabilities();
 			g_Config.m_InfProbaGhost = 100;
 			g_Config.m_InfEnableSniper = 1;
-			str_format(aBuf, sizeof(aBuf), "Fun round! Ghosts vs Snipers%s", random_phrase);
+			str_format(aBuf, sizeof(aBuf), "%s! Ghosts vs Snipers%s", title, random_phrase);
 			break;
 		case 2:
-			zero_probabilities();
-			zero_availabilities();
 			g_Config.m_InfProbaGhoul = 100;
-			g_Config.m_InfEnableMedic = 1;
-			g_Config.m_InfEnableBiologist = 1;
-			str_format(aBuf, sizeof(aBuf), "Fun round! Ghouls against Medics and Biologists%s", random_phrase);
+			g_Config.m_InfEnableHero = 1;
+			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Heroes%s", title, random_phrase);
 			break;
 		case 3:
-			zero_probabilities();
-			zero_availabilities();
 			g_Config.m_InfProbaBat = 100;
 			g_Config.m_InfEnableMercenary = 1;
-			str_format(aBuf, sizeof(aBuf), "Fun round! Bats vs Mercenaries%s", random_phrase);
+			str_format(aBuf, sizeof(aBuf), "%s! Bats vs Mercenaries%s", title, random_phrase);
 			break;
-		case 4:
-			zero_probabilities();
-			g_Config.m_InfProbaBat = 50;
-			g_Config.m_InfProbaBoomer = 50;
-			str_format(aBuf, sizeof(aBuf), "Fun round! Bats and Boomers against humans%s", random_phrase);
+		case 4:;
+			g_Config.m_InfProbaBat = 100;
+			g_Config.m_InfEnableNinja = 1;
+			str_format(aBuf, sizeof(aBuf), "%s! Bats vs Ninjas%s", title, random_phrase);
+			break;
+		case 5:
+			g_Config.m_InfProbaGhoul = 100;
+			g_Config.m_InfEnableMedic = 1;
+			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Medics%s", title, random_phrase);
+			break;
+		case 6:
+			g_Config.m_InfProbaBoomer = 100;
+			g_Config.m_InfEnableNinja = 1;
+			str_format(aBuf, sizeof(aBuf), "%s! Boomers vs Ninjas%s", title, random_phrase);
+			break;
+		case 7:
+			g_Config.m_InfProbaGhoul = 100;
+			g_Config.m_InfEnableSoldier = 1;
+			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Soldiers%s", title, random_phrase);
+			break;
 	}
-	pSelf->SendChatTarget(-1, aBuf);
 	pSelf->m_pController->StartRound();
+	pSelf->CreateSoundGlobal(SOUND_CTF_CAPTURE);
+	pSelf->SendChatTarget(-1, aBuf);
 	pSelf->m_FunRound = true;
 	pSelf->m_Availabilities = availabilities;
 	pSelf->m_Probabilities = probabilities;
@@ -2619,7 +2644,7 @@ void CGameContext::EndFunRound()
 	SetAvailabilities(m_Availabilities);
 	SetProbabilities(m_Probabilities);
 	m_FunRound = false;
-	m_FunRoundAlreadyEnded = true;
+	m_FunRoundsPassed++;
 }
 
 bool CGameContext::ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
