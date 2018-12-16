@@ -2586,6 +2586,9 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 	zero_probabilities();
 	zero_availabilities();
 	g_Config.m_InfGhoulStomachSize = g_Config.m_FunRoundGhoulStomachSize;
+	pSelf->m_DefaultTimelimit = g_Config.m_SvTimelimit;
+	if (g_Config.m_SvTimelimit > g_Config.m_FunRoundDuration)
+		g_Config.m_SvTimelimit = g_Config.m_FunRoundDuration;
 
 	int type = random_int(0, 7);
 	switch (type) { // todo: generalize and shrink
@@ -2634,17 +2637,18 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 	pSelf->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 	pSelf->SendChatTarget(-1, aBuf);
 	pSelf->m_FunRound = true;
-	pSelf->m_Availabilities = availabilities;
-	pSelf->m_Probabilities = probabilities;
+	pSelf->m_DefaultAvailabilities = availabilities;
+	pSelf->m_DefaultProbabilities = probabilities;
 	return true;
 }
 
 void CGameContext::EndFunRound()
 {
-	SetAvailabilities(m_Availabilities);
-	SetProbabilities(m_Probabilities);
+	SetAvailabilities(m_DefaultAvailabilities);
+	SetProbabilities(m_DefaultProbabilities);
 	m_FunRound = false;
 	m_FunRoundsPassed++;
+	g_Config.m_SvTimelimit = m_DefaultTimelimit;
 }
 
 bool CGameContext::ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
