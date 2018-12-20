@@ -655,7 +655,7 @@ void CCharacter::FireWeapon()
 					}
 				}
 			}
-			else if(GetClass() == PLAYERCLASS_MERCENARY && g_Config.m_InfMercLove)
+			else if(GetClass() == PLAYERCLASS_MERCENARY && g_Config.m_InfMercLove && !GameServer()->m_FunRound)
 			{
 				CMercenaryBomb* pCurrentBomb = NULL;
 				for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
