@@ -810,14 +810,16 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 		(nbHero < g_Config.m_InfHeroLimit && g_Config.m_InfEnableHero) ?
 		1.0f : 0.0f;
 	
+	/* commented because it breaks newly added "Fun Rounds"
 	//Random is not fair enough. We keep the last two classes took by the player, and avoid to give him those again
+	
 	for(unsigned int i=0; i<sizeof(pPlayer->m_LastHumanClasses)/sizeof(int); i++)
 	{
 		if(pPlayer->m_LastHumanClasses[i] > START_HUMANCLASS && pPlayer->m_LastHumanClasses[i] < END_HUMANCLASS)
 		{
 			Probability[pPlayer->m_LastHumanClasses[i] - 1 - START_HUMANCLASS] = 0.0f;
 		}
-	}
+	}*/
 	
 	return START_HUMANCLASS + 1 + random_distribution(Probability, Probability + NB_HUMANCLASS);
 }
