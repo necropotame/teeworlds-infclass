@@ -59,8 +59,9 @@ CInputCount CountInput(int Prev, int Cur)
 MACRO_ALLOC_POOL_ID_IMPL(CCharacter, MAX_CLIENTS)
 
 // Character, "physical" player's part
-CCharacter::CCharacter(CGameWorld *pWorld)
-: CEntity(pWorld, CGameWorld::ENTTYPE_CHARACTER)
+CCharacter::CCharacter(CGameWorld *pWorld, IConsole *pConsole)
+: CEntity(pWorld, CGameWorld::ENTTYPE_CHARACTER),
+m_pConsole(pConsole)
 {
 	m_ProximityRadius = ms_PhysSize;
 	m_Health = 0;
@@ -1947,6 +1948,9 @@ void CCharacter::Tick()
 					m_pPlayer->SetClass(NewClass);
 					m_pPlayer->SetOldClass(NewClass);
 					
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "choose_class player='%s' class='%d'", Server()->ClientName(m_pPlayer->GetCID()), NewClass);
+					Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "game", aBuf);
 					if(Bonus)
 						IncreaseArmor(10);
 				}

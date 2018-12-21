@@ -1365,6 +1365,11 @@ void CGameContext::OnClientDrop(int ClientID, int Type, const char *pReason)
 	}
 	// InfClassR remove spectators
 	RemoveSpectatorCID(ClientID);
+
+	char aBuf[256];
+	str_format(aBuf, sizeof(aBuf), "leave player='%d:%s'", ClientID, Server()->ClientName(ClientID));
+	Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
+
 	// InfClassR end
 }
 

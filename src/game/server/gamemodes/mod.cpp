@@ -297,6 +297,10 @@ void CGameControllerMOD::Tick()
 			
 			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTED, _("Infected won the round in {sec:RoundDuration}"), "RoundDuration", &Seconds, NULL);
 			
+			char aBuf[512];
+			str_format(aBuf, sizeof(aBuf), "round_end infected won");
+			GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
+
 			EndRound();
 		}
 		
@@ -384,6 +388,10 @@ void CGameControllerMOD::Tick()
 				{
 					GameServer()->SendChatTarget_Localization_P(-1, CHATCATEGORY_HUMANS, NumHumans, _P("One human won the round", "{int:NumHumans} humans won the round"), "NumHumans", &NumHumans, NULL);
 					
+					char aBuf[512];
+					str_format(aBuf, sizeof(aBuf), "round_end human won");
+					GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
+
 					CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 					while(Iter.Next())
 					{
