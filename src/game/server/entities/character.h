@@ -40,13 +40,17 @@ enum
 
 class CCharacter : public CEntity
 {
+	class IConsole *m_pConsole;
+
 	MACRO_ALLOC_POOL_ID()
 
 public:
+	class IConsole *Console() { return m_pConsole; }
+
 	//character's size
 	static const int ms_PhysSize = 28;
 
-	CCharacter(CGameWorld *pWorld);
+	CCharacter(CGameWorld *pWorld, IConsole *pConsole);
 
 	virtual void Reset();
 	virtual void Destroy();
