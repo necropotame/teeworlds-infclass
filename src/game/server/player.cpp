@@ -625,7 +625,7 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			break;
 		case PLAYERCLASS_BAT:
 			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
+			str_copy(m_TeeInfos.m_SkinName, "limekitty", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 2866368;
 			m_TeeInfos.m_ColorFeet = 3866368;
 			break;
