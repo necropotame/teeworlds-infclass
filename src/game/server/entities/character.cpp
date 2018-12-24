@@ -1948,9 +1948,12 @@ void CCharacter::Tick()
 					m_pPlayer->SetClass(NewClass);
 					m_pPlayer->SetOldClass(NewClass);
 					
+					// class '11' counts as picking "Random"
 					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "choose_class player='%s' class='%d'", Server()->ClientName(m_pPlayer->GetCID()), NewClass);
+					const char *format = Bonus ? "choose_class player='%s' class='11'" : "choose_class player='%s' class='%d'";
+					str_format(aBuf, sizeof(aBuf), format, Server()->ClientName(m_pPlayer->GetCID()));
 					Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "game", aBuf);
+					
 					if(Bonus)
 						IncreaseArmor(10);
 				}
@@ -2373,9 +2376,11 @@ void CCharacter::Die(int Killer, int Weapon)
 	int ModeSpecial = GameServer()->m_pController->OnCharacterDeath(this, GameServer()->m_apPlayers[Killer], Weapon);
 
 	char aBuf[256];
-	str_format(aBuf, sizeof(aBuf), "kill killer='%d:%s' victim='%d:%s' weapon=%d special=%d",
+	CPlayer* killerPlayer = GameServer()->m_apPlayers[Killer];
+	str_format(aBuf, sizeof(aBuf), "kill killer='%d:%s' victim='%d:%s' weapon=%d special=%d killer_is_zombie='%d'",
 		Killer, Server()->ClientName(Killer),
-		m_pPlayer->GetCID(), Server()->ClientName(m_pPlayer->GetCID()), Weapon, ModeSpecial);
+		m_pPlayer->GetCID(), Server()->ClientName(m_pPlayer->GetCID()), Weapon, ModeSpecial, 
+		killerPlayer->IsInfected());
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 
 	// send the kill message
