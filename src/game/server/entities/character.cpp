@@ -1948,9 +1948,12 @@ void CCharacter::Tick()
 					m_pPlayer->SetClass(NewClass);
 					m_pPlayer->SetOldClass(NewClass);
 					
+					// class '11' counts as picking "Random"
 					char aBuf[256];
-					str_format(aBuf, sizeof(aBuf), "choose_class player='%s' class='%d'", Server()->ClientName(m_pPlayer->GetCID()), NewClass);
+					const char *format = Bonus ? "choose_class player='%s' class='11'" : "choose_class player='%s' class='%d'";
+					str_format(aBuf, sizeof(aBuf), format, Server()->ClientName(m_pPlayer->GetCID()));
 					Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "game", aBuf);
+					
 					if(Bonus)
 						IncreaseArmor(10);
 				}
