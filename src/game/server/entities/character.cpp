@@ -1950,8 +1950,7 @@ void CCharacter::Tick()
 					
 					// class '11' counts as picking "Random"
 					char aBuf[256];
-					const char *format = Bonus ? "choose_class player='%s' class='11'" : "choose_class player='%s' class='%d'";
-					str_format(aBuf, sizeof(aBuf), format, Server()->ClientName(m_pPlayer->GetCID()));
+					str_format(aBuf, sizeof(aBuf), "choose_class player='%s' class='%d'", Server()->ClientName(m_pPlayer->GetCID()), Bonus ? 11 : NewClass);
 					Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "game", aBuf);
 					
 					if(Bonus)
