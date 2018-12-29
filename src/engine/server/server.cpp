@@ -3005,8 +3005,15 @@ public:
 					int UserLevel = (int)pSqlServer->GetResults()->getInt("Level");
 					m_pServer->m_aClients[m_ClientID].m_UserID = UserID;
 					m_pServer->m_aClients[m_ClientID].m_UserLevel = UserLevel;
+
+					char aOldName[MAX_NAME_LENGTH];
+					str_copy(aOldName, m_pServer->m_aClients[m_ClientID].m_aName, sizeof(aOldName));
 					str_copy(m_pServer->m_aClients[m_ClientID].m_aUsername, m_sName.Str(), sizeof(m_pServer->m_aClients[m_ClientID].m_aUsername));
-					
+
+					char aBuf[256];
+					str_format(aBuf, sizeof(aBuf), "change_name previous='%s' now='%s'", aOldName, m_pServer->m_aClients[m_ClientID].m_aUsername);
+					m_pServer->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
+
 					//If we are really unlucky, the client can deconnect and another one connect during this small code
 					if(m_pServer->m_aClients[m_ClientID].m_LogInstance != GetInstance())
 					{
@@ -3069,6 +3076,9 @@ void CServer::Logout(int ClientID)
 {
 	m_aClients[ClientID].m_UserID = -1;
 	m_aClients[ClientID].m_UserLevel = SQL_USERLEVEL_NORMAL;
+	char aBuf[256];
+	str_format(aBuf, sizeof(aBuf), "change_name previous='%s' now='%s'", m_aClients[ClientID].m_aUsername, m_aClients[ClientID].m_aName);
+	Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 }
 
 class CSqlJob_Server_SetEmail : public CSqlJob
