@@ -97,7 +97,8 @@ m_pConsole(pConsole)
 /* INFECTION MODIFICATION END *****************************************/
 }
 
-bool CCharacter::FindWitchSpawnPosition(vec2& Pos)
+bool CCharacter::
+FindWitchSpawnPosition(vec2& Pos)
 {
 	float Angle = atan2f(m_Input.m_TargetY, m_Input.m_TargetX);//atan2f instead of atan2
 	
@@ -2738,6 +2739,27 @@ void CCharacter::Snap(int SnappingClient)
 				pObj->m_VelY = 0;
 				pObj->m_StartTick = Server()->Tick();
 				pObj->m_Type = WEAPON_HAMMER;
+			}
+		}
+		else if(GetClass() == PLAYERCLASS_HERO) 
+		{
+			CHeroFlag *pFlag = (CHeroFlag*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_HERO_FLAG);
+			
+			// Guide hero to flag
+			if(pFlag->GetCoolDown() <= 0)
+			{
+				CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_CursorID, sizeof(CNetObj_Projectile)));
+				if(!pObj)
+					return;
+
+				float Angle = atan2f(pFlag->m_Pos.y-m_Pos.y, pFlag->m_Pos.x-m_Pos.x);
+				vec2 Indicator = m_Pos + vec2(cos(Angle), sin(Angle)) * 84.0f; 
+
+				pObj->m_X = (int)Indicator.x;
+				pObj->m_Y = (int)Indicator.y;
+				pObj->m_VelX = 0;
+				pObj->m_VelY = 0;
+				pObj->m_StartTick = Server()->Tick();
 			}
 		}
 	}
