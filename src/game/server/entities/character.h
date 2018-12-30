@@ -183,6 +183,7 @@ private:
 	int m_HeartID;
 	int m_BarrierHintID;
 	int m_CursorID;
+	int m_IndicatorID;
 	int m_AntiFireTick;
 	
 	bool m_IsFrozen;
