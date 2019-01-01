@@ -509,7 +509,6 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 		{
 			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} joined the spectators"), "PlayerName", Server()->ClientName(m_ClientID), NULL);
 			GameServer()->AddSpectatorCID(m_ClientID);
-			SetClass(PLAYERCLASS_NONE);
 			Server()->InfecteClient(m_ClientID);
 		}
 		else
