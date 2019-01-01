@@ -41,6 +41,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case SCOREEVENT_BONUS:
 			Points = 50;
 			break;
+		case SCOREEVENT_MEDIC_REVIVE:
+			Points = 50;
+			break;
 	}
 	
 	m_Score += Points;
