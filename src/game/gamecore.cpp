@@ -101,18 +101,6 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 	float Accel = Grounded ? pTuningParams->m_GroundControlAccel : pTuningParams->m_AirControlAccel;
 	float Friction = Grounded ? pTuningParams->m_GroundFriction : pTuningParams->m_AirFriction;
 
-	const float MAX_MAP_HEIGHT = -100.0f;
-	const float TILE_SIZE = 32.0f;
-	if (m_Pos.y/TILE_SIZE <= MAX_MAP_HEIGHT) {
-		m_Vel.y = abs(m_Vel.y);
-		if (m_Vel.y <= 1.0f)
-			m_Vel.y = 1.1f;
-		if (abs(m_Vel.y) >= 10000.0f) {
-			m_Vel.y = 1.1f;
-			m_Pos.y = MAX_MAP_HEIGHT + TILE_SIZE;
-		}
-	}
-
 	// InfClassR taxi mode, todo: cleanup & move out from core
 	if (m_Passenger) {
 		m_Passenger->m_Vel = m_Vel;

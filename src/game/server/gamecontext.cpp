@@ -309,15 +309,17 @@ void CGameContext::CreateExplosionDisk(vec2 Pos, float InnerRadius, float Damage
 		for(int i = 0; i < Num; i++)
 		{
 			vec2 Diff = apEnts[i]->m_Pos - Pos;
+			if (Diff.x == 0.0f && Diff.y == 0.0f)
+				Diff.y = -0.5f;
 			vec2 ForceDir(0,1);
-			float l = length(Diff);
-			l = 1-clamp((l-InnerRadius)/(DamageRadius-InnerRadius), 0.0f, 1.0f);
+			float len = length(Diff);
+			len = 1-clamp((len-InnerRadius)/(DamageRadius-InnerRadius), 0.0f, 1.0f);
 			
-			if(l)
+			if(len)
 				ForceDir = normalize(Diff);
 			
-			float DamageToDeal = 1 + ((Damage - 1) * l);
-			apEnts[i]->TakeDamage(ForceDir*Force*l, DamageToDeal, Owner, Weapon, TakeDamageMode);
+			float DamageToDeal = 1 + ((Damage - 1) * len);
+			apEnts[i]->TakeDamage(ForceDir*Force*len, DamageToDeal, Owner, Weapon, TakeDamageMode);
 		}
 	}
 	
