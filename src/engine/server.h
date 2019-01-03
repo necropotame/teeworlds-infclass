@@ -1,5 +1,5 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
-/* If you are missing that file, acquire a complete release at teeworlds.com.                */
+/* If you are missing that file, acquire a complete release at teeworlds.com.				*/
 #ifndef ENGINE_SERVER_H
 #define ENGINE_SERVER_H
 #include "kernel.h"
@@ -39,8 +39,8 @@ enum
 	
 	INFWEAPON_BIOLOGIST_SHOTGUN,
 	INFWEAPON_BIOLOGIST_RIFLE,
-    
-    INFWEAPON_LOOPER_RIFLE,
+	
+	INFWEAPON_LOOPER_RIFLE,
 	
 	INFWEAPON_NINJA_HAMMER,
 	INFWEAPON_NINJA_GRENADE,

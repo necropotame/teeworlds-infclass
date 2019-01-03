@@ -1,5 +1,5 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
-/* If you are missing that file, acquire a complete release at teeworlds.com.                */
+/* If you are missing that file, acquire a complete release at teeworlds.com.				*/
 
 #include <base/math.h>
 #include <base/vmath.h>
@@ -78,7 +78,7 @@ m_pConsole(pConsole)
 	m_BarrierHintID = Server()->SnapNewID();
 	m_AntiFireTick = 0;
 	m_IsFrozen = false;
-    m_IsInSlowMotion = false;
+	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
 	m_DartLifeSpan = -1;
 	m_IsInvisible = false;
@@ -183,10 +183,10 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 /* INFECTION MODIFICATION START ***************************************/
 	m_AntiFireTick = Server()->Tick();
 	m_IsFrozen = false;
-    m_IsInSlowMotion = false;
+	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
-    m_SlowMotionTick = -1;
+	m_SlowMotionTick = -1;
 	m_HallucinationTick = -1;
 	m_SlipperyTick = -1;
 	m_PositionLockTick = -Server()->TickSpeed()*10;
@@ -465,9 +465,9 @@ void CCharacter::UpdateTuningParam()
 		NoActions = true;
 	}
 	
-    if(m_SlowMotionTick > 0)
+	if(m_SlowMotionTick > 0)
 	{
-        float Factor = 1;
+		float Factor = 1;
 		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f - 0.7f*Factor);
 		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f - 0.7f*Factor);
 		//pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f - 0.5f*Factor);
@@ -640,43 +640,43 @@ void CCharacter::FireWeapon()
 					}
 				}
 			}
-            else if(GetClass() == PLAYERCLASS_LOOPER)
-            {
-                //Potential variable name conflicts with engineers wall (for example *pWall is used twice for both Looper and Engineer)
-                for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
-                {
-                    if(pWall->m_Owner == m_pPlayer->GetCID())
-                        GameServer()->m_World.DestroyEntity(pWall);
-                }
-                    
-                if(m_FirstShot)
-                {
-                    m_FirstShot = false;
-                    m_FirstShotCoord = m_Pos;
-                }
-                else if(distance(m_FirstShotCoord, m_Pos) > 10.0)
-                {
-                    //Check if the barrier is in toxic gases
-                    bool isAccepted = true;
-                    for(int i=0; i<15; i++)
-                    {
-                        vec2 TestPos = m_FirstShotCoord + (m_Pos - m_FirstShotCoord)*(static_cast<float>(i)/14.0f);
-                        if(GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Damage, TestPos) == ZONE_DAMAGE_INFECTION)
-                        {
-                            isAccepted = false;
-                        }
-                    }
-                    
-                    if(isAccepted)
-                    {
-                        m_FirstShot = true;
-                        
-                        new CLooperWall(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
-                        
-                        GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
-                    }
-                }
-            }
+			else if(GetClass() == PLAYERCLASS_LOOPER)
+			{
+				//Potential variable name conflicts with engineers wall (for example *pWall is used twice for both Looper and Engineer)
+				for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
+				{
+					if(pWall->m_Owner == m_pPlayer->GetCID())
+						GameServer()->m_World.DestroyEntity(pWall);
+				}
+					
+				if(m_FirstShot)
+				{
+					m_FirstShot = false;
+					m_FirstShotCoord = m_Pos;
+				}
+				else if(distance(m_FirstShotCoord, m_Pos) > 10.0)
+				{
+					//Check if the barrier is in toxic gases
+					bool isAccepted = true;
+					for(int i=0; i<15; i++)
+					{
+						vec2 TestPos = m_FirstShotCoord + (m_Pos - m_FirstShotCoord)*(static_cast<float>(i)/14.0f);
+						if(GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Damage, TestPos) == ZONE_DAMAGE_INFECTION)
+						{
+							isAccepted = false;
+						}
+					}
+					
+					if(isAccepted)
+					{
+						m_FirstShot = true;
+						
+						new CLooperWall(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
+						
+						GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					}
+				}
+			}
 			else if(GetClass() == PLAYERCLASS_SOLDIER)
 			{
 				bool BombFound = false;
@@ -1258,12 +1258,12 @@ void CCharacter::FireWeapon()
 					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				}
 				
-                if (GetClass() == PLAYERCLASS_LOOPER) {
-                    Damage = 5;
-                    new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.7f, m_pPlayer->GetCID(), Damage);
-                    GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
-                }
-                
+				if (GetClass() == PLAYERCLASS_LOOPER) {
+					Damage = 5;
+					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.7f, m_pPlayer->GetCID(), Damage);
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				}
+				
 				else
 				{
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
@@ -1599,7 +1599,7 @@ void CCharacter::Tick()
 	}
 	
 	
-    --m_SlowMotionTick;
+	--m_SlowMotionTick;
 	if(m_SlowMotionTick > 0)
 	{
 		if(m_SlowMotionTick <= 0)
@@ -1640,7 +1640,7 @@ void CCharacter::Tick()
 		}
 	}
 	
-    if(m_SlowMotionTick > 0)
+	if(m_SlowMotionTick > 0)
 		--m_SlowMotionTick;
 	
 	//NeedHeal
@@ -1941,13 +1941,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
-                    case CMapConverter::MENUCLASS_LOOPER:
-                        if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_LOOPER))
-                        {
-                            GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Looper"), NULL);
-                            Broadcast = true;
-                        }
-                        break;
+					case CMapConverter::MENUCLASS_LOOPER:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_LOOPER))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Looper"), NULL);
+							Broadcast = true;
+						}
+						break;
 					case CMapConverter::MENUCLASS_MEDIC:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
 						{
@@ -2030,9 +2030,9 @@ void CCharacter::Tick()
 					case CMapConverter::MENUCLASS_BIOLOGIST:
 						NewClass = PLAYERCLASS_BIOLOGIST;
 						break;
-                    case CMapConverter::MENUCLASS_LOOPER:
-                        NewClass = PLAYERCLASS_LOOPER;
-                        break;
+					case CMapConverter::MENUCLASS_LOOPER:
+						NewClass = PLAYERCLASS_LOOPER;
+						break;
 				}
 				
 				if(NewClass >= 0 && GameServer()->m_pController->IsChoosableClass(NewClass))
@@ -2076,29 +2076,29 @@ void CCharacter::Tick()
 			);
 		}
 	}
-    else if(GetClass() == PLAYERCLASS_LOOPER)
-    {
-        //Potential variable name conflict with engineerwall with pCurrentWall
-        CLooperWall* pCurrentWall = NULL;
-        for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
-        {
-            if(pWall->m_Owner == m_pPlayer->GetCID())
-            {
-                pCurrentWall = pWall;
-                break;
-            }
-        }
-        
-        if(pCurrentWall)
-        {
-            int Seconds = 1+pCurrentWall->GetTick()/Server()->TickSpeed();
-            GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
-                _("Looper laser wall: {sec:RemainingTime}"),
-                "RemainingTime", &Seconds,
-                NULL
-            );
-        }
-    }
+	else if(GetClass() == PLAYERCLASS_LOOPER)
+	{
+		//Potential variable name conflict with engineerwall with pCurrentWall
+		CLooperWall* pCurrentWall = NULL;
+		for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
+		{
+			if(pWall->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentWall = pWall;
+				break;
+			}
+		}
+		
+		if(pCurrentWall)
+		{
+			int Seconds = 1+pCurrentWall->GetTick()/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Looper laser wall: {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
+	}
 	else if(GetClass() == PLAYERCLASS_SOLDIER)
 	{
 		int NumBombs = 0;
@@ -2282,9 +2282,9 @@ void CCharacter::GiveGift(int GiftType)
 			GiveWeapon(WEAPON_RIFLE, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			break;
-        case PLAYERCLASS_LOOPER:
-            GiveWeapon(WEAPON_RIFLE, -1);
-            break;
+		case PLAYERCLASS_LOOPER:
+			GiveWeapon(WEAPON_RIFLE, -1);
+			break;
 		case PLAYERCLASS_MEDIC:
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
@@ -2818,32 +2818,32 @@ void CCharacter::Snap(int SnappingClient)
 			pObj->m_StartTick = Server()->Tick();
 		}
 	}
-    if(pClient && !pClient->IsInfected() && GetClass() == PLAYERCLASS_LOOPER && !m_FirstShot)
-    {
-        //potential variable name conflict pCurrentWall with engineers pCurrentwall
-        CLooperWall* pCurrentWall = NULL;
-        for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
-        {
-            if(pWall->m_Owner == m_pPlayer->GetCID())
-            {
-                pCurrentWall = pWall;
-                break;
-            }
-        }
-        
-        if(!pCurrentWall)
-        {
-            CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_BarrierHintID, sizeof(CNetObj_Laser)));
-            if(!pObj)
-                return;
+	if(pClient && !pClient->IsInfected() && GetClass() == PLAYERCLASS_LOOPER && !m_FirstShot)
+	{
+		//potential variable name conflict pCurrentWall with engineers pCurrentwall
+		CLooperWall* pCurrentWall = NULL;
+		for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
+		{
+			if(pWall->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentWall = pWall;
+				break;
+			}
+		}
+		
+		if(!pCurrentWall)
+		{
+			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_BarrierHintID, sizeof(CNetObj_Laser)));
+			if(!pObj)
+				return;
 
-            pObj->m_X = (int)m_FirstShotCoord.x;
-            pObj->m_Y = (int)m_FirstShotCoord.y;
-            pObj->m_FromX = (int)m_FirstShotCoord.x;
-            pObj->m_FromY = (int)m_FirstShotCoord.y;
-            pObj->m_StartTick = Server()->Tick();
-        }
-    }
+			pObj->m_X = (int)m_FirstShotCoord.x;
+			pObj->m_Y = (int)m_FirstShotCoord.y;
+			pObj->m_FromX = (int)m_FirstShotCoord.x;
+			pObj->m_FromY = (int)m_FirstShotCoord.y;
+			pObj->m_StartTick = Server()->Tick();
+		}
+	}
 	
 	if(SnappingClient == m_pPlayer->GetCID())
 	{
@@ -3156,24 +3156,24 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_BIOLOGIST] = true;
 			}
 			break;
-        case PLAYERCLASS_LOOPER:
-            RemoveAllGun();
-            m_pPlayer->m_InfectionTick = -1;
-            m_Health = 10;
-            m_aWeapons[WEAPON_HAMMER].m_Got = true;
-            GiveWeapon(WEAPON_HAMMER, -1);
-            GiveWeapon(WEAPON_RIFLE, -1);
-            GiveWeapon(WEAPON_GRENADE, -1);
-            m_ActiveWeapon = WEAPON_RIFLE;
-            
-            GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_LOOPER);
-            if(!m_pPlayer->IsKownClass(PLAYERCLASS_LOOPER))
-            {
-                GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "looper", NULL);
-                m_pPlayer->m_knownClass[PLAYERCLASS_LOOPER] = true;
-            }
-            break;
-    
+		case PLAYERCLASS_LOOPER:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
+			m_ActiveWeapon = WEAPON_RIFLE;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_LOOPER);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_LOOPER))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "looper", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_LOOPER] = true;
+			}
+			break;
+	
 		case PLAYERCLASS_MEDIC:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
@@ -3413,11 +3413,11 @@ void CCharacter::DestroyChildEntities()
 			GameServer()->m_World.DestroyEntity(pWall);
 	}
 	//Potential name conflict pWall
-    for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
-    {
-        if(pWall->m_Owner != m_pPlayer->GetCID()) continue;
-            GameServer()->m_World.DestroyEntity(pWall);
-    }
+	for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
+	{
+		if(pWall->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pWall);
+	}
 	for(CSoldierBomb *pBomb = (CSoldierBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SOLDIER_BOMB); pBomb; pBomb = (CSoldierBomb*) pBomb->TypeNext())
 	{
 		if(pBomb->m_Owner != m_pPlayer->GetCID()) continue;
@@ -3480,7 +3480,7 @@ bool CCharacter::IsInfected() const
 
 bool CCharacter::IsInLove() const
 {
-    return m_LoveTick > 0;
+	return m_LoveTick > 0;
 }
 
 void CCharacter::LoveEffect()
@@ -3543,17 +3543,17 @@ bool CCharacter::IsFrozen() const
 
 bool CCharacter::IsInSlowMotion() const
 {
-    return m_SlowMotionTick > 0;
+	return m_SlowMotionTick > 0;
 }
 
 
 void CCharacter::SlowMotionEffect()
 {
-    if(m_SlowMotionTick <= 0)
-    {
-        m_SlowMotionTick = Server()->TickSpeed()*6;
-        m_IsInSlowMotion = true;
-    }
+	if(m_SlowMotionTick <= 0)
+	{
+		m_SlowMotionTick = Server()->TickSpeed()*6;
+		m_IsInSlowMotion = true;
+	}
 }
 
 int CCharacter::GetInfWeaponID(int WID)
@@ -3619,7 +3619,7 @@ int CCharacter::GetInfWeaponID(int WID)
 		{
 			case PLAYERCLASS_ENGINEER:
 				return INFWEAPON_ENGINEER_RIFLE;
-            case PLAYERCLASS_LOOPER:
+			case PLAYERCLASS_LOOPER:
 				return INFWEAPON_LOOPER_RIFLE;
 			case PLAYERCLASS_SCIENTIST:
 				return INFWEAPON_SCIENTIST_RIFLE;
