@@ -487,6 +487,9 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_HERO:
 					Hero++;
 					break;
+                case PLAYERCLASS_LOOPER:
+					Defender++;
+					break;
 					
 			}
 		}
@@ -784,6 +787,9 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 			case PLAYERCLASS_BIOLOGIST:
 				nbDefender++;
 				break;
+            case PLAYERCLASS_LOOPER:
+                nbDefender++;
+                break;
 		}
 	}
 	
@@ -818,6 +824,9 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	Probability[PLAYERCLASS_HERO - START_HUMANCLASS - 1] =
 		(nbHero < g_Config.m_InfHeroLimit && g_Config.m_InfEnableHero) ?
 		1.0f : 0.0f;
+    Probability[PLAYERCLASS_LOOPER - START_HUMANCLASS - 1] =
+        (nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableLooper) ?
+        1.0f : 0.0f;
 	
 	/* commented because it breaks newly added "Fun Rounds"
 	//Random is not fair enough. We keep the last two classes took by the player, and avoid to give him those again
@@ -913,6 +922,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableMercenary;
 		case PLAYERCLASS_SNIPER:
 			return g_Config.m_InfEnableSniper;
+        case PLAYERCLASS_LOOPER:
+            return g_Config.m_InfEnableLooper;
 		default:
 			return false;
 	}
@@ -950,6 +961,9 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_BIOLOGIST:
 				nbDefender++;
 				break;
+            case PLAYERCLASS_LOOPER:
+                nbDefender++;
+                break;
 		}
 	}
 	
@@ -968,6 +982,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_MERCENARY:
 		case PLAYERCLASS_SNIPER:
 			return (nbSupport < g_Config.m_InfSupportLimit);
+        case PLAYERCLASS_LOOPER:
+            return (nbDefender < g_Config.m_InfDefenderLimit);
 	}
 	
 	return false;

@@ -277,6 +277,9 @@ void CPlayer::Snap(int SnappingClient)
 				case PLAYERCLASS_BIOLOGIST:
 					str_format(aClanName, sizeof(aClanName), "%sBiologist", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
+                case PLAYERCLASS_LOOPER:
+                    str_format(aClanName, sizeof(aClanName), "%sLooper", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+                    break;
 				case PLAYERCLASS_MEDIC:
 					str_format(aClanName, sizeof(aClanName), "%sMedic", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
@@ -590,6 +593,12 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
 			break;
+        case PLAYERCLASS_LOOPER:
+            m_TeeInfos.m_UseCustomColor = 1;
+            str_copy(m_TeeInfos.m_SkinName, "bluekitty", sizeof(m_TeeInfos.m_SkinName));
+            m_TeeInfos.m_ColorBody = 255;
+            m_TeeInfos.m_ColorFeet = 0;
+            break;
 		case PLAYERCLASS_MEDIC:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));

@@ -187,6 +187,7 @@ private:
 	
 	bool m_IsFrozen;
 	int m_FrozenTime;
+    bool m_IsInSlowMotion; //LooperClass changes here
 	int m_FreezeReason;
 	int m_InAirTick;
 	
@@ -203,6 +204,7 @@ public:
 	int m_SlipperyTick;
 	int m_PoisonTick;
 	int m_Poison;
+    int m_SlowMotionTick; //LooperClass changes here
 	int m_PoisonFrom;
 	int m_LastFreezer;
 	int m_HookMode;
@@ -224,6 +226,8 @@ public:
 	void RemoveAllGun();
 	void Freeze(float Time, int Player, int Reason);
 	bool IsFrozen() const;
+    bool IsInSlowMotion() const; //LooperClass changes here
+    void SlowMotionEffect();    //LooperClass changes here
 	void Unfreeze();
 	void Poison(int Count, int From);
 	bool IsInLove() const;

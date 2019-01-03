@@ -93,6 +93,8 @@ static inline int ChallengeTypeToScoreType(int ChallengeType)
 			return SQL_SCORETYPE_HERO_SCORE;
 		case 8:
 			return SQL_SCORETYPE_BIOLOGIST_SCORE;
+        case 9:
+            return SQL_SCORETYPE_LOOPER_SCORE;
 	}
 	
 	return SQL_SCORETYPE_ROUND_SCORE;
@@ -569,6 +571,7 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_HERO_SHOTGUN, 250);
 	SetFireDelay(INFWEAPON_BIOLOGIST_SHOTGUN, 250);
 	SetFireDelay(INFWEAPON_BIOLOGIST_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
+    SetFireDelay(INFWEAPON_LOOPER_RIFLE, 250);
 	SetFireDelay(INFWEAPON_HERO_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
 	SetFireDelay(INFWEAPON_HERO_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_SNIPER_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
@@ -602,6 +605,7 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_NINJA_GRENADE, 15000);
 	SetAmmoRegenTime(INFWEAPON_BIOLOGIST_RIFLE, 175);
 	SetAmmoRegenTime(INFWEAPON_BIOLOGIST_SHOTGUN, 675);
+    SetAmmoRegenTime(INFWEAPON_LOOPER_RIFLE, 750);
 	
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
@@ -627,6 +631,7 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_MERCENARY_GUN, 40);
 	SetMaxAmmo(INFWEAPON_BIOLOGIST_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_BIOLOGIST_SHOTGUN, 10);
+    SetMaxAmmo(INFWEAPON_LOOPER_RIFLE, 10);
 	
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
@@ -637,6 +642,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_HERO, 2);
 	SetClassAvailability(PLAYERCLASS_SCIENTIST, 2);
 	SetClassAvailability(PLAYERCLASS_BIOLOGIST, 2);
+    SetClassAvailability(PLAYERCLASS_LOOPER, 2);
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
@@ -1579,6 +1585,9 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, bool Extended, boo
 				case SQL_SCORETYPE_BIOLOGIST_SCORE:
 					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "BiologistOfTheDay", m_aChallengeWinner);
 					break;
+                case SQL_SCORETYPE_LOOPER_SCORE:
+                    str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "LoooperOfTheDay", m_aChallengeWinner);
+                    break;
 				case SQL_SCORETYPE_NINJA_SCORE:
 					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "NinjaOfTheDay", m_aChallengeWinner);
 					break;
@@ -3392,6 +3401,10 @@ public:
 					str_copy(pMOTD, "== Best Biologist ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
+                case SQL_SCORETYPE_LOOPER_SCORE:
+                    str_copy(pMOTD, "== Best Looper ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+                    pMOTD += str_length(pMOTD);
+                    break;
 				case SQL_SCORETYPE_MEDIC_SCORE:
 					str_copy(pMOTD, "== Best Medic ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
@@ -3547,6 +3560,9 @@ public:
 					case SQL_SCORETYPE_BIOLOGIST_SCORE:
 						str_copy(pMOTD, "== Biologist of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
 						break;
+                    case SQL_SCORETYPE_LOOPER_SCORE:
+                        str_copy(pMOTD, "== Looper of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
+                        break;
 					case SQL_SCORETYPE_MEDIC_SCORE:
 						str_copy(pMOTD, "== Medic of the day ==\nBest score in one round\n\n", sizeof(aMotdBuf)-(pMOTD-aMotdBuf));
 						break;
@@ -4159,6 +4175,8 @@ public:
 				UpdateScore(pSqlServer, SQL_SCORETYPE_SCIENTIST_SCORE, m_PlayerStatistics.m_ScientistScore, "Scientist");
 			if(m_PlayerStatistics.m_BiologistScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_BIOLOGIST_SCORE, m_PlayerStatistics.m_BiologistScore, "Biologist");
+            if(m_PlayerStatistics.m_LooperScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_LOOPER_SCORE, m_PlayerStatistics.m_LooperScore, "Looper");
 			if(m_PlayerStatistics.m_MedicScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_MEDIC_SCORE, m_PlayerStatistics.m_MedicScore, "Medic");
 			if(m_PlayerStatistics.m_HeroScore > 0)

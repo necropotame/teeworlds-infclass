@@ -66,6 +66,7 @@ MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 15, 1, 100, CFGFLAG_SERVER, "Numb
 MACRO_CONFIG_INT(InfMercLove, inf_merc_love, 1, 0, 1, CFGFLAG_SERVER, "Enables love bombs for the mercenary (hammer)")
 MACRO_CONFIG_INT(InfBarrierLifeSpan, inf_barrier_lifespan, 30, 0, 100, CFGFLAG_SERVER, "Barrier lifespan")
 MACRO_CONFIG_INT(InfBarrierTimeReduce, inf_barrier_timereduce, 150, 0, 10000, CFGFLAG_SERVER, "Time to remove from a barrier lifespan when an infected dies (centisec)")
+MACRO_CONFIG_INT(InfLooperBarrierTimeReduce, inf_looper_barrier_timereduce, 350, 0, 10000, CFGFLAG_SERVER, "Time to remove from a barrier lifespan when an infected dies (centisec)")
 MACRO_CONFIG_INT(InfMineRadius, inf_mine_radius, 46, 0, 1024, CFGFLAG_SERVER, "Radius of mines")
 MACRO_CONFIG_INT(InfMineLimit, inf_mine_limit, 2, 0, 1024, CFGFLAG_SERVER, "Maximum number of mines per player")
 MACRO_CONFIG_INT(InfNinjaJump, inf_ninja_jump, 2, 0, 1024, CFGFLAG_SERVER, "Maximum number of katana attacks")
@@ -101,6 +102,7 @@ MACRO_CONFIG_INT(InfEnableEngineer, inf_enable_engineer, 1, 0, 1, CFGFLAG_SERVER
 MACRO_CONFIG_INT(InfEnableSoldier, inf_enable_soldier, 1, 0, 1, CFGFLAG_SERVER, "Makes the soldier class available")
 MACRO_CONFIG_INT(InfEnableScientist, inf_enable_scientist, 1, 0, 1, CFGFLAG_SERVER, "Makes the scientist class available")
 MACRO_CONFIG_INT(InfEnableBiologist, inf_enable_biologist, 1, 0, 1, CFGFLAG_SERVER, "Makes the biologist class available")
+MACRO_CONFIG_INT(InfEnableLooper, inf_enable_looper, 1, 0, 1, CFGFLAG_SERVER, "Makes the looper class available")
 MACRO_CONFIG_INT(InfEnableMercenary, inf_enable_mercenary, 1, 0, 1, CFGFLAG_SERVER, "Makes the mercenary class available")
 MACRO_CONFIG_INT(InfEnableSniper, inf_enable_sniper, 1, 0, 1, CFGFLAG_SERVER, "Makes the sniper class available")
 MACRO_CONFIG_INT(InfEnableNinja, inf_enable_ninja, 1, 0, 1, CFGFLAG_SERVER, "Makes the ninja class available")
@@ -111,5 +113,19 @@ MACRO_CONFIG_STR(FunRoundTitle, funround_title, 64, "Fun round", CFGFLAG_SERVER,
 MACRO_CONFIG_INT(FunRoundLimit, funround_limit, 1, 0, 100, CFGFLAG_SERVER, "Number of possible fun rounds per map")
 MACRO_CONFIG_INT(FunRoundDuration, funround_duration, 3, 0, 100, CFGFLAG_SERVER, "Fun round duration (min)")
 MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 10000, CFGFLAG_SERVER, "Number of dead that the ghoul can eat")
+
+//Looper class config
+MACRO_CONFIG_INT(InfSlowMotionDuration, inf_slow_motion_duration, 3, 0, 1024, CFGFLAG_SERVER, "How long slow motion will slow down zombies (in seconds)")
+MACRO_CONFIG_INT(InfLooperBarrierLifeSpan, inf_looper_barrier_life_span, 30, 0, 1024, CFGFLAG_SERVER, "How long looper barrier will last (in seconds)")
+
+//Not working
+//MACRO_CONFIG_INT(InfLooperLaserDmg, inf_looper_laser_dmg, 4, 0, 1024, CFGFLAG_SERVER, "Damage of Looper laser")
+//MACRO_CONFIG_INT(InfLooperLaserDelay, inf_looper_laser_delay, 400, 0, 1024, CFGFLAG_SERVER, "Fire delay of Looper laser")
+//MACRO_CONFIG_INT(InfLooperLaserRegen, inf_looper_laser_regen, 1000, 0, 1024, CFGFLAG_SERVER, "Regen time of Looper laser")
+//MACRO_CONFIG_INT(InfLooperLaserAmmo, inf_looper_laser_ammo, 12, 0, 16, CFGFLAG_SERVER, "Maximum ammo of Looper laser")
+//MACRO_CONFIG_INT(InfLooperLaserRange, inf_looper_laser_range, 0.4f, 0, 1, CFGFLAG_SERVER, "Percentage factor of laser rifle Range for Looper laser")
+
+
+
 
 #endif
