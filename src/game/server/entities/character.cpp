@@ -3612,7 +3612,7 @@ int CCharacter::GetInfWeaponID(int WID)
 			case PLAYERCLASS_HERO:
 				return INFWEAPON_HERO_GRENADE;
 			case PLAYERCLASS_LOOPER:
-				return INFWEAPON_LOOPER_RIFLE;
+				return INFWEAPON_LOOPER_GRENADE;
 			default:
 				return INFWEAPON_GRENADE;
 		}
