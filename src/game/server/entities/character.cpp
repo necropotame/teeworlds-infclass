@@ -1252,19 +1252,16 @@ void CCharacter::FireWeapon()
 					else
 						Damage = random_int(10, 13);
 				}
-				
-				if(GetClass() == PLAYERCLASS_SCIENTIST)
+				else if(GetClass() == PLAYERCLASS_SCIENTIST)
 				{
 					new CScientistLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.6f, m_pPlayer->GetCID(), Damage);
 					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				}
-				
-				if (GetClass() == PLAYERCLASS_LOOPER) {
+				else if (GetClass() == PLAYERCLASS_LOOPER) {
 					Damage = 5;
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.7f, m_pPlayer->GetCID(), Damage);
 					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				}
-				
 				else
 				{
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
