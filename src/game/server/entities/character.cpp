@@ -470,6 +470,7 @@ void CCharacter::UpdateTuningParam()
 		float Factor = 1;
 		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f - 0.7f*Factor);
 		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f - 0.7f*Factor);
+		pTuningParams->m_HookFireSpeed = pTuningParams->m_HookFireSpeed * (1.0f - 0.7f*Factor);
 		//pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f - 0.5f*Factor);
 		//pTuningParams->m_AirJumpImpulse = pTuningParams->m_AirJumpImpulse * (1.0f - 0.5f*Factor);
 		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * (1.0f - 0.5f*Factor);
