@@ -115,8 +115,8 @@ MACRO_CONFIG_INT(FunRoundDuration, funround_duration, 3, 0, 100, CFGFLAG_SERVER,
 MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 10000, CFGFLAG_SERVER, "Number of dead that the ghoul can eat")
 
 //Looper class config
-MACRO_CONFIG_INT(InfSlowMotionDuration, inf_slow_motion_duration, 3, 0, 1024, CFGFLAG_SERVER, "How long slow motion will slow down zombies (in seconds)")
-MACRO_CONFIG_INT(InfLooperBarrierLifeSpan, inf_looper_barrier_life_span, 30, 0, 1024, CFGFLAG_SERVER, "How long looper barrier will last (in seconds)")
+MACRO_CONFIG_INT(InfSlowMotionDuration, inf_slow_motion_duration, 7, 0, 1024, CFGFLAG_SERVER, "How long slow motion will slow down zombies (in seconds)")
+MACRO_CONFIG_INT(InfLooperBarrierLifeSpan, inf_looper_barrier_life_span, 35, 0, 1024, CFGFLAG_SERVER, "How long looper barrier will last (in seconds)")
 
 //Not working
 //MACRO_CONFIG_INT(InfLooperLaserDmg, inf_looper_laser_dmg, 4, 0, 1024, CFGFLAG_SERVER, "Damage of Looper laser")
