@@ -3553,6 +3553,7 @@ void CCharacter::SlowMotionEffect()
 	{
 		m_SlowMotionTick = Server()->TickSpeed()*6;
 		m_IsInSlowMotion = true;
+		m_Core.m_Vel *= 0.3;
 	}
 }
 
