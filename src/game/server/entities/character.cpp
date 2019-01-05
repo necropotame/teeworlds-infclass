@@ -191,6 +191,9 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_PositionLocked = false;
 	m_PositionLockAvailable = false;
 	m_Poison = 0;
+	m_VoodooAboutToDie = false;
+  	m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
+  	m_pPlayer->SetToSpirit(false);
 
 	ClassSpawnAttributes();
 	DestroyChildEntities();
@@ -2384,11 +2387,6 @@ void CCharacter::Die(int Killer, int Weapon)
   // If about to die, yet killed again, dont kill him either
   } else if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0) {
     return;
-  // Finally when about to die, reset everything
-  } else {
-    m_VoodooAboutToDie = false;
-    m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
-    m_pPlayer->SetToSpirit(false);
   }
 	
 
