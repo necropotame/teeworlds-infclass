@@ -162,6 +162,9 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_ActiveWeapon = WEAPON_GUN;
 	m_LastWeapon = WEAPON_HAMMER;
 	m_QueuedWeapon = -1;
+  m_VoodooAboutToDie = false;
+  m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
+  m_pPlayer->SetToSpirit(false);
 
 	m_pPlayer = pPlayer;
 	m_Pos = Pos;
@@ -2384,12 +2387,8 @@ void CCharacter::Die(int Killer, int Weapon)
   // If about to die, yet killed again, dont kill him either
   } else if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0) {
     return;
-  // Finally when about to die, reset everything
-  } else {
-    m_VoodooAboutToDie = false;
-    m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
-    m_pPlayer->SetToSpirit(false);
   }
+  
 	
 
 	//Find the nearest ghoul
