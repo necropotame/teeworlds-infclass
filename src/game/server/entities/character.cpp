@@ -1871,7 +1871,7 @@ void CCharacter::Tick()
 	HandleWaterJump();
 	HandleWeapons();
 
-	if(GetClass() == PLAYERCLASS_HUNTER || GetClass() == PLAYERCLASS_SNIPER)
+	if(GetClass() == PLAYERCLASS_HUNTER || GetClass() == PLAYERCLASS_SNIPER ||GetClass() == PLAYERCLASS_LOOPER)
 	{
 		if(IsGrounded()) m_AirJumpCounter = 0;
 		if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < 1)
