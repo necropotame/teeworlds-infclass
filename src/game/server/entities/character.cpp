@@ -467,16 +467,16 @@ void CCharacter::UpdateTuningParam()
 	
 	if(m_SlowMotionTick > 0)
 	{
-		float Factor = 1;
-		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f - 0.7f*Factor);
-		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f - 0.7f*Factor);
-		pTuningParams->m_HookFireSpeed = pTuningParams->m_HookFireSpeed * (1.0f - 0.7f*Factor);
-		//pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f - 0.5f*Factor);
-		//pTuningParams->m_AirJumpImpulse = pTuningParams->m_AirJumpImpulse * (1.0f - 0.5f*Factor);
-		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * (1.0f - 0.5f*Factor);
-		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f - 0.5f*Factor);
-		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f - 0.5f*Factor);
-		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f - 0.5f*Factor);
+		float Factor = 1.0f - ((float)g_Config.m_InfSlowMotionPercent / 100);
+		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * Factor;
+		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * Factor;
+		pTuningParams->m_HookFireSpeed = pTuningParams->m_HookFireSpeed * Factor;
+		//pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * Factor;
+		//pTuningParams->m_AirJumpImpulse = pTuningParams->m_AirJumpImpulse * Factor;
+		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * Factor;
+		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * Factor;
+		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * Factor;
+		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * Factor;
 	}
 	
 	if(m_HookMode == 1)
@@ -1600,9 +1600,11 @@ void CCharacter::Tick()
 	}
 	
 	
-	--m_SlowMotionTick;
+	
 	if(m_SlowMotionTick > 0)
 	{
+		--m_SlowMotionTick;
+		
 		if(m_SlowMotionTick <= 0)
 		{
 			m_IsInSlowMotion = false;
@@ -1641,8 +1643,6 @@ void CCharacter::Tick()
 		}
 	}
 	
-	if(m_SlowMotionTick > 0)
-		--m_SlowMotionTick;
 	
 	//NeedHeal
 	if(m_Armor >= 10)
@@ -3554,7 +3554,7 @@ void CCharacter::SlowMotionEffect()
 	{
 		m_SlowMotionTick = Server()->TickSpeed()*g_Config.m_InfSlowMotionDuration;
 		m_IsInSlowMotion = true;
-		m_Core.m_Vel *= 0.3;
+		m_Core.m_Vel *= 0.4;
 	}
 }
 
