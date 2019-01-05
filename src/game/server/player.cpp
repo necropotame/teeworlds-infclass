@@ -675,14 +675,14 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			break;
     case PLAYERCLASS_VOODOO:
 			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
+			str_copy(m_TeeInfos.m_SkinName, "bluestripe", sizeof(m_TeeInfos.m_SkinName));
 			if(State == 1)
       {
         m_TeeInfos.m_ColorBody = 3866368;
       }
       else
       {
-        m_TeeInfos.m_ColorBody = 8978176; // blue
+        m_TeeInfos.m_ColorBody = 6183936; // grey-green
       }
 			m_TeeInfos.m_ColorFeet = 65414;
 			break;
