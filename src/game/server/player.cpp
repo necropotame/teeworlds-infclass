@@ -59,7 +59,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	for(unsigned int i=0; i<sizeof(m_LastHumanClasses)/sizeof(int); i++)
 		m_LastHumanClasses[i] = -1;
 
-  m_VoodooIsSpirit = false;
+	m_VoodooIsSpirit = false;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -163,9 +163,7 @@ void CPlayer::Tick()
 		{
 			SetClassSkin(PLAYERCLASS_VOODOO, 1); // 1 = normal skin
 		}
-  }
-
-
+	}
 	
  	HandleTuningParams();
 }
