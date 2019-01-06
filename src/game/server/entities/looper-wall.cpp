@@ -22,12 +22,20 @@ CLooperWall::CLooperWall(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner
 	m_Owner = Owner;
 	m_LifeSpan = Server()->TickSpeed()*g_Config.m_InfLooperBarrierLifeSpan;
 	GameWorld()->InsertEntity(this);
-	m_EndPointID = Server()->SnapNewID();
+	
+	m_EndPointIDs.set_size(2);
+	for(int i=0; i<2; i++)
+	{
+		m_EndPointIDs[i] = Server()->SnapNewID();
+	}
+	
+	
 }
 
 CLooperWall::~CLooperWall()
 {
-	Server()->SnapFreeID(m_EndPointID);
+	for(int i=0; i<2; i++)
+		Server()->SnapFreeID(m_EndPointIDs[i]);
 }
 
 void CLooperWall::Reset()
@@ -113,59 +121,54 @@ void CLooperWall::TickPaused()
 
 void CLooperWall::Snap(int SnappingClient)
 {
-	if(NetworkClipped(SnappingClient))
-		return;
-
+		
+	
 	// Laser dieing animation
 	int LifeDiff = 0;
 	if (m_LifeSpan < 1*Server()->TickSpeed())
-		LifeDiff = random_int(4, 5);
+		LifeDiff = 6;
 	else if (m_LifeSpan < 2*Server()->TickSpeed())
-		LifeDiff = random_int(3, 5);
-	else if (m_LifeSpan < 3*Server()->TickSpeed())
-		LifeDiff = random_int(2, 4);
-	else if (m_LifeSpan < 4*Server()->TickSpeed())
-		LifeDiff = random_int(1, 3);
+		LifeDiff = random_int(4, 6);
 	else if (m_LifeSpan < 5*Server()->TickSpeed())
-		LifeDiff = random_int(0, 2);
-	else if (m_LifeSpan < 6*Server()->TickSpeed())
-		LifeDiff = random_int(0, 1);
-	else if (m_LifeSpan < 7*Server()->TickSpeed())
-		LifeDiff = (random_prob(3.0f/4.0f)) ? 1 : 0;
-	else if (m_LifeSpan < 8*Server()->TickSpeed())
-		LifeDiff = (random_prob(5.0f/6.0f)) ? 1 : 0;
-	else if (m_LifeSpan < 9*Server()->TickSpeed())
-		LifeDiff = (random_prob(5.0f/6.0f)) ? 0 : -1;
-	else if (m_LifeSpan < 10*Server()->TickSpeed())
-		LifeDiff = (random_prob(5.0f/6.0f)) ? 0 : -1;
-	else if (m_LifeSpan < 11*Server()->TickSpeed())
-		LifeDiff = (random_prob(5.0f/6.0f)) ? -1 : -Server()->TickSpeed()*2;
-	else
-		LifeDiff = -Server()->TickSpeed()*2;
+		LifeDiff = random_int(3, 5);
+	else 
+		LifeDiff = 3;
 	
+	for(int i=0; i<2; i++) 
 	{
-		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));
-		if(!pObj)
-			return;
-
-		pObj->m_X = (int)m_Pos.x;
-		pObj->m_Y = (int)m_Pos.y;
-		pObj->m_FromX = (int)m_Pos2.x;
-		pObj->m_FromY = (int)m_Pos2.y;
-		pObj->m_StartTick = Server()->Tick()-LifeDiff;
-	}
-	if(!Server()->GetClientAntiPing(SnappingClient))
-	{
-		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_EndPointID, sizeof(CNetObj_Laser)));
-		if(!pObj)
+		if(NetworkClipped(SnappingClient))
 			return;
 		
-		vec2 Pos = m_Pos2;
+		{
+			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser))); //removed m_ID
+			if(!pObj)
+				return;
 
-		pObj->m_X = (int)Pos.x;
-		pObj->m_Y = (int)Pos.y;
-		pObj->m_FromX = (int)Pos.x;
-		pObj->m_FromY = (int)Pos.y;
-		pObj->m_StartTick = Server()->Tick();
+			pObj->m_X = (int)m_Pos.x-20*(-i); // changes sign with i with values from [0 or 1]
+			pObj->m_Y = (int)m_Pos.y;
+			pObj->m_FromX = (int)m_Pos2.x-20*(-i);
+			pObj->m_FromY = (int)m_Pos2.y;
+			pObj->m_StartTick = Server()->Tick()-LifeDiff;
+			
+		}
+		
+		if(!Server()->GetClientAntiPing(SnappingClient))
+		{
+			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_EndPointIDs[i], sizeof(CNetObj_Laser)));
+			if(!pObj)
+				return;
+			
+			vec2 Pos = m_Pos2;
+
+			pObj->m_X = (int)Pos.x-20*(-i);
+			pObj->m_Y = (int)Pos.y;
+			pObj->m_FromX = (int)Pos.x-20*(-i);
+			pObj->m_FromY = (int)Pos.y;
+			pObj->m_StartTick = Server()->Tick();
+			
+			
+		}
+		
 	}
+
 }

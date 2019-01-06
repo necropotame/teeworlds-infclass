@@ -21,7 +21,7 @@ public:
 private:
 	vec2 m_Pos2;
 	int m_LifeSpan;
-	int m_EndPointID;
+	array<int> m_EndPointIDs;
 };
 
 #endif

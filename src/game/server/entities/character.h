@@ -182,6 +182,7 @@ private:
 	int m_FlagID;
 	int m_HeartID;
 	int m_BarrierHintID;
+	array<int> m_BarrierHintIDs;
 	int m_CursorID;
 	int m_AntiFireTick;
 	

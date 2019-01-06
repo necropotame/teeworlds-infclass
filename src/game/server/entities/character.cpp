@@ -76,6 +76,11 @@ m_pConsole(pConsole)
 	m_HeartID = Server()->SnapNewID();
 	m_CursorID = Server()->SnapNewID();
 	m_BarrierHintID = Server()->SnapNewID();
+	m_BarrierHintIDs.set_size(2);
+	for(int i=0; i<2; i++)
+	{
+		m_BarrierHintIDs[i] = Server()->SnapNewID();
+	}
 	m_AntiFireTick = 0;
 	m_IsFrozen = false;
 	m_IsInSlowMotion = false;
@@ -226,10 +231,21 @@ void CCharacter::Destroy()
 		Server()->SnapFreeID(m_CursorID);
 		m_CursorID = -1;
 	}
+	
 	if(m_BarrierHintID >= 0)
 	{
 		Server()->SnapFreeID(m_BarrierHintID);
 		m_BarrierHintID = -1;
+	}
+	
+	if(m_BarrierHintIDs[0] >= 0)
+	{
+		for(int i=0; i<2; i++) 
+		{
+			Server()->SnapFreeID(m_BarrierHintIDs[i]);
+			m_BarrierHintIDs[i] = -1;
+		}
+
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -2818,11 +2834,11 @@ void CCharacter::Snap(int SnappingClient)
 			pObj->m_FromX = (int)m_FirstShotCoord.x;
 			pObj->m_FromY = (int)m_FirstShotCoord.y;
 			pObj->m_StartTick = Server()->Tick();
+			
 		}
 	}
 	if(pClient && !pClient->IsInfected() && GetClass() == PLAYERCLASS_LOOPER && !m_FirstShot)
 	{
-		//potential variable name conflict pCurrentWall with engineers pCurrentwall
 		CLooperWall* pCurrentWall = NULL;
 		for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
 		{
@@ -2835,15 +2851,21 @@ void CCharacter::Snap(int SnappingClient)
 		
 		if(!pCurrentWall)
 		{
-			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_BarrierHintID, sizeof(CNetObj_Laser)));
-			if(!pObj)
-				return;
+			for(int i=0; i<2; i++) 
+			{
+				
+				CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_BarrierHintIDs[i], sizeof(CNetObj_Laser)));
+				
+				if(!pObj)
+					return;
+				
+				pObj->m_X = (int)m_FirstShotCoord.x-20*(i);
+				pObj->m_Y = (int)m_FirstShotCoord.y;
+				pObj->m_FromX = (int)m_FirstShotCoord.x-20*(i);
+				pObj->m_FromY = (int)m_FirstShotCoord.y;
+				pObj->m_StartTick = Server()->Tick();
+			}
 
-			pObj->m_X = (int)m_FirstShotCoord.x;
-			pObj->m_Y = (int)m_FirstShotCoord.y;
-			pObj->m_FromX = (int)m_FirstShotCoord.x;
-			pObj->m_FromY = (int)m_FirstShotCoord.y;
-			pObj->m_StartTick = Server()->Tick();
 		}
 	}
 	
