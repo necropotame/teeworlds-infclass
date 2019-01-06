@@ -40,7 +40,7 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 		auto& zombie = pHit;
 
 		char aBuf[256];
-		if (medic->GetPlayer()->GetCharacter()->GetHealthArmorSum() <= DAMAGE_ON_REVIVE) {
+		if (medic->GetPlayer()->GetCharacter() && medic->GetPlayer()->GetCharacter()->GetHealthArmorSum() <= DAMAGE_ON_REVIVE) {
 			str_format(aBuf, sizeof(aBuf), "You need at least %d hp", DAMAGE_ON_REVIVE + 1);
 			GameServer()->SendBroadcast(m_Owner, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 		}
@@ -50,14 +50,16 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 		}
 		else {
 			zombie->GetPlayer()->SetClass(old_class);
-			zombie->GetPlayer()->GetCharacter()->SetHealthArmor(1, 0);
-			zombie->Unfreeze();
-			medic->TakeDamage(vec2(0.f, 0.f), DAMAGE_ON_REVIVE * 2, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
-			str_format(aBuf, sizeof(aBuf), "Medic %s revived %s",
-					Server()->ClientName(medic->GetPlayer()->GetCID()),
-					Server()->ClientName(zombie->GetPlayer()->GetCID()));
-			GameServer()->SendChatTarget(-1, aBuf);
-			Server()->RoundStatistics()->OnScoreEvent(medic->GetPlayer()->GetCID(), SCOREEVENT_MEDIC_REVIVE, medic->GetClass());
+			if (zombie->GetPlayer->GerCharacter()) {
+				zombie->GetPlayer()->GetCharacter()->SetHealthArmor(1, 0);
+				zombie->Unfreeze();
+				medic->TakeDamage(vec2(0.f, 0.f), DAMAGE_ON_REVIVE * 2, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+				str_format(aBuf, sizeof(aBuf), "Medic %s revived %s",
+						Server()->ClientName(medic->GetPlayer()->GetCID()),
+						Server()->ClientName(zombie->GetPlayer()->GetCID()));
+				GameServer()->SendChatTarget(-1, aBuf);
+				Server()->RoundStatistics()->OnScoreEvent(medic->GetPlayer()->GetCID(), SCOREEVENT_MEDIC_REVIVE, medic->GetClass());
+			}
 		}
 	}
 	else {
