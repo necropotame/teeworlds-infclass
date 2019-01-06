@@ -1452,7 +1452,7 @@ void CCharacter::Tick()
 	// Delayed Death
 	if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0)
 	{
-		m_VoodooTimeAlive -= Server()->TickSpeed();
+		m_VoodooTimeAlive--;
 	}
 	else if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive <= 0)
 	{
@@ -1463,7 +1463,7 @@ void CCharacter::Tick()
 	if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie)
 	{
 	GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
-	  _("Staying alive for: {sec:RemainingTime}"),
+	  _("Staying alive for: {int:RemainingTime}"),
 	  "RemainingTime", &m_VoodooTimeAlive,
 	  NULL
 	);
