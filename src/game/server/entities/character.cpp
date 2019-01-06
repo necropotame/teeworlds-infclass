@@ -162,9 +162,6 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_ActiveWeapon = WEAPON_GUN;
 	m_LastWeapon = WEAPON_HAMMER;
 	m_QueuedWeapon = -1;
-	m_VoodooAboutToDie = false;
-	m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
-	m_pPlayer->SetToSpirit(false);
 
 	m_pPlayer = pPlayer;
 	m_Pos = Pos;
