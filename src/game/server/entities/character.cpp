@@ -1677,7 +1677,7 @@ void CCharacter::Tick()
 	//Ghost
 	if(GetClass() == PLAYERCLASS_GHOST)
 	{
-		if(Server()->Tick() < m_InvisibleTick + 3*Server()->TickSpeed() || IsFrozen())
+		if(Server()->Tick() < m_InvisibleTick + 3*Server()->TickSpeed() || IsFrozen() || IsInSlowMotion())
 		{
 			m_IsInvisible = false;
 		}
