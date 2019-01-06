@@ -144,9 +144,9 @@ void CLooperWall::Snap(int SnappingClient)
 			if(!pObj)
 				return;
 
-			pObj->m_X = (int)m_Pos.x-20*(-i); // changes sign with i with values from [0 or 1]
+			pObj->m_X = (int)m_Pos.x-20*(i)+10; // changes sign with i with values from [0 or 1]
 			pObj->m_Y = (int)m_Pos.y;
-			pObj->m_FromX = (int)m_Pos2.x-20*(-i);
+			pObj->m_FromX = (int)m_Pos2.x-20*(i)+10;
 			pObj->m_FromY = (int)m_Pos2.y;
 			pObj->m_StartTick = Server()->Tick()-LifeDiff;
 			
@@ -160,9 +160,9 @@ void CLooperWall::Snap(int SnappingClient)
 			
 			vec2 Pos = m_Pos2;
 
-			pObj->m_X = (int)Pos.x-20*(-i);
+			pObj->m_X = (int)Pos.x-20*(i)+10;
 			pObj->m_Y = (int)Pos.y;
-			pObj->m_FromX = (int)Pos.x-20*(-i);
+			pObj->m_FromX = (int)Pos.x-20*(i)+10;
 			pObj->m_FromY = (int)Pos.y;
 			pObj->m_StartTick = Server()->Tick();
 			
