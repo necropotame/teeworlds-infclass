@@ -50,7 +50,7 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 		}
 		else {
 			zombie->GetPlayer()->SetClass(old_class);
-			if (zombie->GetPlayer()->GerCharacter()) {
+			if (zombie->GetPlayer()->GetCharacter()) {
 				zombie->GetPlayer()->GetCharacter()->SetHealthArmor(1, 0);
 				zombie->Unfreeze();
 				medic->TakeDamage(vec2(0.f, 0.f), DAMAGE_ON_REVIVE * 2, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
