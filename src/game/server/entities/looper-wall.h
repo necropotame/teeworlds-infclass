@@ -6,6 +6,11 @@
 class CLooperWall : public CEntity
 {
 public:
+	enum
+	{
+		THICKNESS = 15,
+	};
+public:
 	CLooperWall(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, int Owner);
 	virtual ~CLooperWall();
 	
@@ -17,7 +22,6 @@ public:
 
 public:
 	int m_Owner;
-
 private:
 	vec2 m_Pos2;
 	int m_LifeSpan;

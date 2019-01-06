@@ -7,7 +7,7 @@
 #include <engine/shared/config.h>
 #include "looper-wall.h"
 
-const float g_BarrierMaxLength = 300.0;
+const float g_BarrierMaxLength = 400.0;
 const float g_BarrierRadius = 0.0;
 
 CLooperWall::CLooperWall(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner)
@@ -120,9 +120,7 @@ void CLooperWall::TickPaused()
 }
 
 void CLooperWall::Snap(int SnappingClient)
-{
-		
-	
+{	
 	// Laser dieing animation
 	int LifeDiff = 0;
 	if (m_LifeSpan < 1*Server()->TickSpeed())
@@ -134,6 +132,9 @@ void CLooperWall::Snap(int SnappingClient)
 	else 
 		LifeDiff = 3;
 	
+
+	vec2 dirVec = normalize(vec2(m_Pos.x-m_Pos2.x, m_Pos.y-m_Pos2.y));
+
 	for(int i=0; i<2; i++) 
 	{
 		if(NetworkClipped(SnappingClient))
@@ -143,13 +144,23 @@ void CLooperWall::Snap(int SnappingClient)
 			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser))); //removed m_ID
 			if(!pObj)
 				return;
-
-			pObj->m_X = (int)m_Pos.x-20*(i)+10; // changes sign with i with values from [0 or 1]
-			pObj->m_Y = (int)m_Pos.y;
-			pObj->m_FromX = (int)m_Pos2.x-20*(i)+10;
-			pObj->m_FromY = (int)m_Pos2.y;
-			pObj->m_StartTick = Server()->Tick()-LifeDiff;
 			
+			if (i == 0) 
+			{
+				pObj->m_X = (int)m_Pos.x+dirVec.y*(THICKNESS*0.5f); 
+				pObj->m_Y = (int)m_Pos.y-dirVec.x*(THICKNESS*0.5f);
+				pObj->m_FromX = (int)m_Pos2.x+dirVec.y*(THICKNESS*0.5f); 
+				pObj->m_FromY = (int)m_Pos2.y-dirVec.x*(THICKNESS*0.5f);
+			} 
+			else // i == 1
+			{
+				pObj->m_X = (int)m_Pos.x-dirVec.y*(THICKNESS*0.5f); 
+				pObj->m_Y = (int)m_Pos.y+dirVec.x*(THICKNESS*0.5f);
+				pObj->m_FromX = (int)m_Pos2.x-dirVec.y*(THICKNESS*0.5f); 
+				pObj->m_FromY = (int)m_Pos2.y+dirVec.x*(THICKNESS*0.5f);
+			}
+
+			pObj->m_StartTick = Server()->Tick()-LifeDiff;
 		}
 		
 		if(!Server()->GetClientAntiPing(SnappingClient))
@@ -160,15 +171,22 @@ void CLooperWall::Snap(int SnappingClient)
 			
 			vec2 Pos = m_Pos2;
 
-			pObj->m_X = (int)Pos.x-20*(i)+10;
-			pObj->m_Y = (int)Pos.y;
-			pObj->m_FromX = (int)Pos.x-20*(i)+10;
-			pObj->m_FromY = (int)Pos.y;
-			pObj->m_StartTick = Server()->Tick();
-			
-			
-		}
-		
-	}
+			if (i == 0) 
+			{
+				pObj->m_X = (int)Pos.x+dirVec.y*(THICKNESS*0.5f); 
+				pObj->m_Y = (int)Pos.y-dirVec.x*(THICKNESS*0.5f);
+				pObj->m_FromX = (int)Pos.x+dirVec.y*(THICKNESS*0.5f); 
+				pObj->m_FromY = (int)Pos.y-dirVec.x*(THICKNESS*0.5f);
+			} 
+			else // i == 1
+			{
+				pObj->m_X = (int)Pos.x-dirVec.y*(THICKNESS*0.5f); 
+				pObj->m_Y = (int)Pos.y+dirVec.x*(THICKNESS*0.5f);
+				pObj->m_FromX = (int)Pos.x-dirVec.y*(THICKNESS*0.5f); 
+				pObj->m_FromY = (int)Pos.y+dirVec.x*(THICKNESS*0.5f);
+			}
 
+			pObj->m_StartTick = Server()->Tick();
+		}
+	}
 }
