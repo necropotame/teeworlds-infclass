@@ -646,7 +646,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_GHOUL, 1);
 	SetClassAvailability(PLAYERCLASS_SLUG, 1);
 	SetClassAvailability(PLAYERCLASS_BOOMER, 1);
-  SetClassAvailability(PLAYERCLASS_VOODOO, 1);
+	SetClassAvailability(PLAYERCLASS_VOODOO, 1);
 	SetClassAvailability(PLAYERCLASS_UNDEAD, 1);
 	SetClassAvailability(PLAYERCLASS_WITCH, 1);
 	

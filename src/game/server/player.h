@@ -133,7 +133,7 @@ private:
 	int m_GhoulLevel;
 	int m_GhoulLevelTick;
 
-  	bool m_VoodooIsSpirit;
+	bool m_VoodooIsSpirit;
 
 public:
 	int m_Authed;
@@ -182,7 +182,7 @@ public:
 	
 	int m_LastHumanClasses[2];
 
-  void SetToSpirit(bool IsSpirit);
+	void SetToSpirit(bool IsSpirit);
 /* INFECTION MODIFICATION END *****************************************/
 };
 

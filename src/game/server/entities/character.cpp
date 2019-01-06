@@ -2385,7 +2385,8 @@ void CCharacter::Die(int Killer, int Weapon)
     m_pPlayer->SetToSpirit(true);
     return;
   // If about to die, yet killed again, dont kill him either
-  } else if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0) {
+	} else if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0)
+	{
     return;
   }
   

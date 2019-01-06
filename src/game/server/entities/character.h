@@ -194,10 +194,10 @@ private:
 	
 	vec2 m_SpawnPosition;
 
-  int m_VoodooTimeAlive;
-  bool m_VoodooAboutToDie;
-  int m_VoodooKiller; // Save killer + weapon for delayed kill message
-  int m_VoodooWeapon;
+	int m_VoodooTimeAlive;
+	bool m_VoodooAboutToDie;
+	int m_VoodooKiller; // Save killer + weapon for delayed kill message
+	int m_VoodooWeapon;
 public:
 	int m_PositionLockTick;
 	bool m_PositionLocked;
