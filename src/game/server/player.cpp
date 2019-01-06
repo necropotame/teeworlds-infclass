@@ -1,5 +1,5 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
-/* If you are missing that file, acquire a complete release at teeworlds.com.                */
+/* If you are missing that file, acquire a complete release at teeworlds.com.				*/
 #include <new>
 #include <iostream>
 #include <engine/shared/config.h>
@@ -36,11 +36,11 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	for(int i=0; i<NB_PLAYERCLASS; i++)
 	{
 		m_knownClass[i] = false;
-
+	
 	int* idMap = Server()->GetIdMap(ClientID);
 	for (int i = 1;i < VANILLA_MAX_CLIENTS;i++)
 	{
-	    idMap[i] = -1;
+		idMap[i] = -1;
 	}
 	idMap[0] = ClientID;
 
@@ -289,6 +289,9 @@ void CPlayer::Snap(int SnappingClient)
 					break;
 				case PLAYERCLASS_BIOLOGIST:
 					str_format(aClanName, sizeof(aClanName), "%sBiologist", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					break;
+				case PLAYERCLASS_LOOPER:
+					str_format(aClanName, sizeof(aClanName), "%sLooper", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_MEDIC:
 					str_format(aClanName, sizeof(aClanName), "%sMedic", Server()->IsClientLogged(GetCID()) ? "@" : " ");
@@ -605,6 +608,12 @@ void CPlayer::SetClassSkin(int newClass, int State)
 		case PLAYERCLASS_BIOLOGIST:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_LOOPER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "bluekitty", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 255;
+			m_TeeInfos.m_ColorFeet = 0;
 			break;
 		case PLAYERCLASS_MEDIC:
 			m_TeeInfos.m_UseCustomColor = 0;

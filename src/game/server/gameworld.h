@@ -1,5 +1,5 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
-/* If you are missing that file, acquire a complete release at teeworlds.com.                */
+/* If you are missing that file, acquire a complete release at teeworlds.com.				*/
 #ifndef GAME_SERVER_GAMEWORLD_H
 #define GAME_SERVER_GAMEWORLD_H
 
@@ -35,6 +35,7 @@ public:
 		ENTTYPE_BIOLOGIST_MINE,
 		ENTTYPE_SLUG_SLIME,
 		ENTTYPE_BOUNCING_BULLET,
+		ENTTYPE_LOOPER_WALL,
 		
 		NUM_ENTTYPES
 	};

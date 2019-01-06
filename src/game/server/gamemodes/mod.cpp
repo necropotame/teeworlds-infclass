@@ -1,5 +1,5 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
-/* If you are missing that file, acquire a complete release at teeworlds.com.                */
+/* If you are missing that file, acquire a complete release at teeworlds.com.				*/
 #include "mod.h"
 
 #include <game/server/player.h>
@@ -487,6 +487,9 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_HERO:
 					Hero++;
 					break;
+				case PLAYERCLASS_LOOPER:
+					Defender++;
+					break;
 					
 			}
 		}
@@ -784,6 +787,9 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 			case PLAYERCLASS_BIOLOGIST:
 				nbDefender++;
 				break;
+			case PLAYERCLASS_LOOPER:
+				nbDefender++;
+				break;
 		}
 	}
 	
@@ -818,6 +824,9 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	Probability[PLAYERCLASS_HERO - START_HUMANCLASS - 1] =
 		(nbHero < g_Config.m_InfHeroLimit && g_Config.m_InfEnableHero) ?
 		1.0f : 0.0f;
+	Probability[PLAYERCLASS_LOOPER - START_HUMANCLASS - 1] =
+		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableLooper) ?
+		1.0f : 0.0f;
 	
 	/* commented because it breaks newly added "Fun Rounds"
 	//Random is not fair enough. We keep the last two classes took by the player, and avoid to give him those again
@@ -851,27 +860,27 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	double Probability[NB_INFECTEDCLASS];
 	
 	Probability[PLAYERCLASS_SMOKER - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_SMOKER)) ?
-        (double) g_Config.m_InfProbaSmoker : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_SMOKER)) ?
+		(double) g_Config.m_InfProbaSmoker : 0.0f;
 	Probability[PLAYERCLASS_HUNTER - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_HUNTER)) ?
-        (double) g_Config.m_InfProbaHunter : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_HUNTER)) ?
+		(double) g_Config.m_InfProbaHunter : 0.0f;
 	Probability[PLAYERCLASS_BAT - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_BAT)) ?
-        (double) g_Config.m_InfProbaBat : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_BAT)) ?
+		(double) g_Config.m_InfProbaBat : 0.0f;
 	Probability[PLAYERCLASS_BOOMER - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_BOOMER)) ?
-        (double) g_Config.m_InfProbaBoomer : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_BOOMER)) ?
+		(double) g_Config.m_InfProbaBoomer : 0.0f;
 	
 	Probability[PLAYERCLASS_GHOST - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_GHOST)) ?
-        (double) g_Config.m_InfProbaGhost : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_GHOST)) ?
+		(double) g_Config.m_InfProbaGhost : 0.0f;
 	Probability[PLAYERCLASS_SPIDER - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_SPIDER)) ?
-        (double) g_Config.m_InfProbaSpider : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_SPIDER)) ?
+		(double) g_Config.m_InfProbaSpider : 0.0f;
 	Probability[PLAYERCLASS_GHOUL - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_GHOUL) && nbInfected >= g_Config.m_InfGhoulThreshold) ?
-        (double) g_Config.m_InfProbaGhoul : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_GHOUL) && nbInfected >= g_Config.m_InfGhoulThreshold) ?
+		(double) g_Config.m_InfProbaGhoul : 0.0f;
 	Probability[PLAYERCLASS_SLUG - START_INFECTEDCLASS - 1] =
         (Server()->GetClassAvailability(PLAYERCLASS_SLUG)) ?
         (double) g_Config.m_InfProbaSlug : 0.0f;
@@ -880,11 +889,11 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		(double) g_Config.m_InfProbaVoodoo : 0.0f;
 	
 	Probability[PLAYERCLASS_WITCH - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_WITCH) && nbInfected > 2 && !thereIsAWitch) ?
-        (double) g_Config.m_InfProbaWitch : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_WITCH) && nbInfected > 2 && !thereIsAWitch) ?
+		(double) g_Config.m_InfProbaWitch : 0.0f;
 	Probability[PLAYERCLASS_UNDEAD - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) && nbInfected > 2 && !thereIsAnUndead) ?
-        (double) g_Config.m_InfProbaUndead : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) && nbInfected > 2 && !thereIsAnUndead) ?
+		(double) g_Config.m_InfProbaUndead : 0.0f;
 	
 	int Seconds = (Server()->Tick()-m_RoundStartTick)/((float)Server()->TickSpeed());
 	char aBuf[256];
@@ -916,6 +925,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableMercenary;
 		case PLAYERCLASS_SNIPER:
 			return g_Config.m_InfEnableSniper;
+		case PLAYERCLASS_LOOPER:
+			return g_Config.m_InfEnableLooper;
 		default:
 			return false;
 	}
@@ -953,6 +964,9 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_BIOLOGIST:
 				nbDefender++;
 				break;
+			case PLAYERCLASS_LOOPER:
+				nbDefender++;
+				break;
 		}
 	}
 	
@@ -971,6 +985,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_MERCENARY:
 		case PLAYERCLASS_SNIPER:
 			return (nbSupport < g_Config.m_InfSupportLimit);
+		case PLAYERCLASS_LOOPER:
+			return (nbDefender < g_Config.m_InfDefenderLimit);
 	}
 	
 	return false;

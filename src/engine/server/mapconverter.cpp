@@ -119,10 +119,10 @@ bool CMapConverter::Load()
 
 void CMapConverter::InitQuad(CQuad* pQuad)
 {
-    for (int i=0; i<5; i++) {
-        pQuad->m_aPoints[i].x = 0;
-        pQuad->m_aPoints[i].y = 0;
-    }
+	for (int i=0; i<5; i++) {
+		pQuad->m_aPoints[i].x = 0;
+		pQuad->m_aPoints[i].y = 0;
+	}
 	pQuad->m_aColors[0].r = pQuad->m_aColors[1].r = 255;
 	pQuad->m_aColors[0].g = pQuad->m_aColors[1].g = 255;
 	pQuad->m_aColors[0].b = pQuad->m_aColors[1].b = 255;
@@ -560,6 +560,7 @@ void CMapConverter::Finalize()
 	int SoldierImageID = AddExternalImage("../skins/brownbear", 256, 128);
 	int ScientistImageID = AddExternalImage("../skins/toptri", 256, 128);
 	int BiologistImageID = AddExternalImage("../skins/twintri", 256, 128);
+	int LooperImageID = AddExternalImage("../skins/bluekitty", 256, 128);
 	int MedicImageID = AddExternalImage("../skins/twinbop", 256, 128);
 	int HeroImageID = AddExternalImage("../skins/redstripe", 256, 128);
 	int NinjaImageID = AddExternalImage("../skins/x_ninja", 256, 128);
@@ -583,7 +584,7 @@ void CMapConverter::Finalize()
 			Item.m_OffsetX = 0;
 			Item.m_OffsetY = 0;
 			Item.m_StartLayer = m_NumLayers;
-			Item.m_NumLayers = 11;
+			Item.m_NumLayers = NUM_MENUCLASS+1; // not sure why +1 tho
 			Item.m_UseClipping = 0;
 			Item.m_ClipX = 0;
 			Item.m_ClipY = 0;
@@ -644,6 +645,9 @@ void CMapConverter::Finalize()
 						case MENUCLASS_SOLDIER:
 						case MENUCLASS_SCIENTIST:
 						case MENUCLASS_BIOLOGIST:
+							ClassMask = MASK_DEFENDER;
+							break;
+						case MENUCLASS_LOOPER:
 							ClassMask = MASK_DEFENDER;
 							break;
 						case MENUCLASS_MEDIC:
@@ -795,6 +799,9 @@ void CMapConverter::Finalize()
 								break;
 							case MENUCLASS_BIOLOGIST:
 								AddTeeLayer("Biologist", BiologistImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_LOOPER:
+								AddTeeLayer("Looper", LooperImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
 							case MENUCLASS_MEDIC:
 								AddTeeLayer("Medic", MedicImageID, Pos, 64.0f, m_NumEnvs-1);
