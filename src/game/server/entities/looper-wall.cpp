@@ -28,8 +28,6 @@ CLooperWall::CLooperWall(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner
 	{
 		m_EndPointIDs[i] = Server()->SnapNewID();
 	}
-	
-	
 }
 
 CLooperWall::~CLooperWall()
@@ -66,43 +64,19 @@ void CLooperWall::Tick()
 			{
 				if(p->GetPlayer())
 				{
-					for(CCharacter *pHook = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pHook; pHook = (CCharacter *)pHook->TypeNext())
+					int LifeSpanReducer = ((Server()->TickSpeed()*g_Config.m_InfLooperBarrierTimeReduce)/100);
+					if(!p->IsInSlowMotion()) 
 					{
-						if(
-							pHook->GetPlayer() &&
-							!pHook->IsInfected() &&
-							pHook->m_Core.m_HookedPlayer == p->GetPlayer()->GetCID() &&
-							pHook->GetPlayer()->GetCID() != m_Owner && //The engineer will get the point when the infected dies
-							p->m_LastFreezer != pHook->GetPlayer()->GetCID() && //The ninja will get the point when the infected dies
-							p->GetClass() != PLAYERCLASS_UNDEAD //Or exploit with score
-						)
+						if(p->GetClass() == PLAYERCLASS_GHOUL)
 						{
-							Server()->RoundStatistics()->OnScoreEvent(pHook->GetPlayer()->GetCID(), SCOREEVENT_HELP_HOOK_BARRIER, pHook->GetClass());
-							GameServer()->SendScoreSound(pHook->GetPlayer()->GetCID());
+							float Factor = p->GetPlayer()->GetGhoulPercent();
+							LifeSpanReducer += Server()->TickSpeed() * 5.0f * Factor;
 						}
-					}
-					
-					if(p->GetClass() != PLAYERCLASS_UNDEAD)
-					{
-						int LifeSpanReducer = ((Server()->TickSpeed()*g_Config.m_InfLooperBarrierTimeReduce)/100);
-						if(!p->IsInSlowMotion()) 
-						{
-							if(p->GetClass() == PLAYERCLASS_GHOUL)
-							{
-								float Factor = p->GetPlayer()->GetGhoulPercent();
-								LifeSpanReducer += Server()->TickSpeed() * 5.0f * Factor;
-							}
 							
-							m_LifeSpan -= LifeSpanReducer;
-						}
+						m_LifeSpan -= LifeSpanReducer;
 					}
 				}
-				
-				
-				//old engineer wall kills character (zombie)
-				//p->Die(m_Owner, WEAPON_HAMMER);
-				
-				
+
 				//Slow-Motion modification here
 				if (!p->IsInSlowMotion())
 				{
@@ -134,7 +108,6 @@ void CLooperWall::Snap(int SnappingClient)
 	
 
 	vec2 dirVec = normalize(vec2(m_Pos.x-m_Pos2.x, m_Pos.y-m_Pos2.y));
-
 	vec2 dirVec2 = vec2(dirVec.y*THICKNESS*0.5f, -dirVec.x*THICKNESS*0.5f);
 
 	for(int i=0; i<2; i++) 
