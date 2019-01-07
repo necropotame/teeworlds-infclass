@@ -3576,10 +3576,11 @@ bool CCharacter::IsInSlowMotion() const
 	return m_SlowMotionTick > 0;
 }
 
-
+// duration in centiSec (10 == 1 second)
 void CCharacter::SlowMotionEffect(float duration)
 {
 	if (duration == 0) return;
+	duration *= 0.1f;
 	if(m_SlowMotionTick <= 0)
 	{
 		m_SlowMotionTick = Server()->TickSpeed()*duration;
