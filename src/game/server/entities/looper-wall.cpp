@@ -7,9 +7,6 @@
 #include <engine/shared/config.h>
 #include "looper-wall.h"
 
-const float g_BarrierMaxLength = 400.0;
-const float g_BarrierRadius = 0.0;
-
 CLooperWall::CLooperWall(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_LOOPER_WALL)
 {
@@ -28,12 +25,22 @@ CLooperWall::CLooperWall(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner
 	{
 		m_EndPointIDs[i] = Server()->SnapNewID();
 	}
+	for(int i=0; i<NUM_PARTICLES; i++)
+	{
+		m_ParticleIDs[i] = Server()->SnapNewID();
+	}
 }
 
 CLooperWall::~CLooperWall()
 {
 	for(int i=0; i<2; i++)
+	{
 		Server()->SnapFreeID(m_EndPointIDs[i]);
+	}
+	for(int i=0; i<NUM_PARTICLES; i++)
+	{
+		Server()->SnapFreeID(m_ParticleIDs[i]);
+	}
 }
 
 void CLooperWall::Reset()
@@ -106,9 +113,9 @@ void CLooperWall::Snap(int SnappingClient)
 	else 
 		LifeDiff = 3;
 	
-
-	vec2 dirVec = normalize(vec2(m_Pos.x-m_Pos2.x, m_Pos.y-m_Pos2.y));
-	vec2 dirVec2 = vec2(dirVec.y*THICKNESS*0.5f, -dirVec.x*THICKNESS*0.5f);
+	vec2 dirVec = vec2(m_Pos.x-m_Pos2.x, m_Pos.y-m_Pos2.y);
+	vec2 dirVecN = normalize(dirVec);
+	vec2 dirVecT = vec2(dirVecN.y*THICKNESS*0.5f, -dirVecN.x*THICKNESS*0.5f);
 
 	for(int i=0; i<2; i++) 
 	{
@@ -117,8 +124,8 @@ void CLooperWall::Snap(int SnappingClient)
 
 		if (i == 1)
 		{
-			dirVec2.x = -dirVec2.x;
-			dirVec2.y = -dirVec2.y;
+			dirVecT.x = -dirVecT.x;
+			dirVecT.y = -dirVecT.y;
 		}
 		
 		// draws the first two dots + the lasers
@@ -127,10 +134,10 @@ void CLooperWall::Snap(int SnappingClient)
 			if(!pObj)
 				return;
 
-			pObj->m_X = (int)m_Pos.x+dirVec2.x; 
-			pObj->m_Y = (int)m_Pos.y+dirVec2.y;
-			pObj->m_FromX = (int)m_Pos2.x+dirVec2.x; 
-			pObj->m_FromY = (int)m_Pos2.y+dirVec2.y;
+			pObj->m_X = (int)m_Pos.x+dirVecT.x; 
+			pObj->m_Y = (int)m_Pos.y+dirVecT.y;
+			pObj->m_FromX = (int)m_Pos2.x+dirVecT.x; 
+			pObj->m_FromY = (int)m_Pos2.y+dirVecT.y;
 
 			pObj->m_StartTick = Server()->Tick()-LifeDiff;
 		}
@@ -142,12 +149,37 @@ void CLooperWall::Snap(int SnappingClient)
 			if(!pObj)
 				return;
 
-			pObj->m_X = (int)m_Pos2.x+dirVec2.x; 
-			pObj->m_Y = (int)m_Pos2.y+dirVec2.y;
-			pObj->m_FromX = (int)m_Pos2.x+dirVec2.x; 
-			pObj->m_FromY = (int)m_Pos2.y+dirVec2.y;
+			pObj->m_X = (int)m_Pos2.x+dirVecT.x; 
+			pObj->m_Y = (int)m_Pos2.y+dirVecT.y;
+			pObj->m_FromX = (int)m_Pos2.x+dirVecT.x; 
+			pObj->m_FromY = (int)m_Pos2.y+dirVecT.y;
 
 			pObj->m_StartTick = Server()->Tick();
+		}
+	}
+
+	// draw particles inside wall
+	if(!Server()->GetClientAntiPing(SnappingClient))
+	{
+		vec2 startPos = vec2(m_Pos2.x+dirVecT.x, m_Pos2.y+dirVecT.y);
+		dirVecT.x = -dirVecT.x*2.0f;
+		dirVecT.y = -dirVecT.y*2.0f;
+		
+		int particleCount = length(dirVec)/g_BarrierMaxLength*NUM_PARTICLES;
+		for(int i=0; i<particleCount; i++)
+		{
+			CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ParticleIDs[i], sizeof(CNetObj_Projectile)));
+			if(pObj)
+			{
+				float fRandom1 = random_float();
+				float fRandom2 = random_float();
+				pObj->m_X = (int)startPos.x + fRandom1*dirVec.x + fRandom2*dirVecT.x;
+				pObj->m_Y = (int)startPos.y + fRandom1*dirVec.y + fRandom2*dirVecT.y;
+				pObj->m_VelX = 0;
+				pObj->m_VelY = 0;
+				pObj->m_StartTick = Server()->Tick();
+				pObj->m_Type = WEAPON_HAMMER;
+			}
 		}
 	}
 }
