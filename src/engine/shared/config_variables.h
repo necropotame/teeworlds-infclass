@@ -116,7 +116,7 @@ MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 1
 
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionDuration, inf_slow_motion_duration, 5, 0, 1024, CFGFLAG_SERVER, "How long slow motion will slow down zombies (in seconds)")
-MACRO_CONFIG_INT(InfLooperBarrierLifeSpan, inf_looper_barrier_life_span, 70, 0, 1024, CFGFLAG_SERVER, "How long looper barrier will last (in seconds)")
+MACRO_CONFIG_INT(InfLooperBarrierLifeSpan, inf_looper_barrier_life_span, 59, 0, 1024, CFGFLAG_SERVER, "How long looper barrier will last (in seconds)")
 MACRO_CONFIG_INT(InfSlowMotionPercent, inf_slow_motion_percent, 55, 0, 90, CFGFLAG_SERVER, "Factor that manipulates the slowmotion intensity")
 
 
