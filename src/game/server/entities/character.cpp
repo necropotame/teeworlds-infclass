@@ -2859,9 +2859,9 @@ void CCharacter::Snap(int SnappingClient)
 				if(!pObj)
 					return;
 				
-				pObj->m_X = (int)m_FirstShotCoord.x-20*(i)+10;
+				pObj->m_X = (int)m_FirstShotCoord.x-CLooperWall::THICKNESS*i+(CLooperWall::THICKNESS*0.5);
 				pObj->m_Y = (int)m_FirstShotCoord.y;
-				pObj->m_FromX = (int)m_FirstShotCoord.x-20*(i)+10;
+				pObj->m_FromX = (int)m_FirstShotCoord.x-CLooperWall::THICKNESS*i+(CLooperWall::THICKNESS*0.5);
 				pObj->m_FromY = (int)m_FirstShotCoord.y;
 				pObj->m_StartTick = Server()->Tick();
 			}

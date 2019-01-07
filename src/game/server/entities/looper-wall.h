@@ -6,6 +6,12 @@
 class CLooperWall : public CEntity
 {
 public:
+	enum
+	{
+		THICKNESS = 17,
+		NUM_PARTICLES = 18,
+	};
+public:
 	CLooperWall(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, int Owner);
 	virtual ~CLooperWall();
 	
@@ -17,11 +23,13 @@ public:
 
 public:
 	int m_Owner;
-
 private:
 	vec2 m_Pos2;
 	int m_LifeSpan;
 	array<int> m_EndPointIDs;
+	const float g_BarrierMaxLength = 400.0;
+	const float g_BarrierRadius = 0.0;
+	int m_ParticleIDs[NUM_PARTICLES];
 };
 
 #endif
