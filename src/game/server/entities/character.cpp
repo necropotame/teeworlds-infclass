@@ -2633,6 +2633,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			if(!pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
 		}
 	}
+
+	// slow down zombies that get hit by looper rifle
+	if(pKillerPlayer->GetClass() == PLAYERCLASS_LOOPER && Weapon == WEAPON_RIFLE && IsInfected()) { 
+		SlowMotionEffect(g_Config.m_InfSlowMotionGunDuration);
+		if (g_Config.m_InfSlowMotionGunDuration != 0) GameServer()->SendEmoticon(GetPlayer()->GetCID(), EMOTICON_EXCLAMATION);	
+	}
 	
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -3571,11 +3577,12 @@ bool CCharacter::IsInSlowMotion() const
 }
 
 
-void CCharacter::SlowMotionEffect()
+void CCharacter::SlowMotionEffect(float duration)
 {
+	if (duration == 0) return;
 	if(m_SlowMotionTick <= 0)
 	{
-		m_SlowMotionTick = Server()->TickSpeed()*g_Config.m_InfSlowMotionDuration;
+		m_SlowMotionTick = Server()->TickSpeed()*duration;
 		m_IsInSlowMotion = true;
 		m_Core.m_Vel *= 0.4;
 	}
