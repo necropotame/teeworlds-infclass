@@ -21,3 +21,4 @@ src/game/generated
 /infclass_client*
 /infclass_srv*
 /infclass_editor*
+/bin/server_d
