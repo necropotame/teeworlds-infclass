@@ -135,56 +135,44 @@ void CLooperWall::Snap(int SnappingClient)
 
 	vec2 dirVec = normalize(vec2(m_Pos.x-m_Pos2.x, m_Pos.y-m_Pos2.y));
 
+	vec2 dirVec2 = vec2(dirVec.y*THICKNESS*0.5f, -dirVec.x*THICKNESS*0.5f);
+
 	for(int i=0; i<2; i++) 
 	{
 		if(NetworkClipped(SnappingClient))
 			return;
+
+		if (i == 1)
+		{
+			dirVec2.x = -dirVec2.x;
+			dirVec2.y = -dirVec2.y;
+		}
 		
+		// draws the first two dots + the lasers
 		{
 			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser))); //removed m_ID
 			if(!pObj)
 				return;
-			
-			if (i == 0) 
-			{
-				pObj->m_X = (int)m_Pos.x+dirVec.y*(THICKNESS*0.5f); 
-				pObj->m_Y = (int)m_Pos.y-dirVec.x*(THICKNESS*0.5f);
-				pObj->m_FromX = (int)m_Pos2.x+dirVec.y*(THICKNESS*0.5f); 
-				pObj->m_FromY = (int)m_Pos2.y-dirVec.x*(THICKNESS*0.5f);
-			} 
-			else // i == 1
-			{
-				pObj->m_X = (int)m_Pos.x-dirVec.y*(THICKNESS*0.5f); 
-				pObj->m_Y = (int)m_Pos.y+dirVec.x*(THICKNESS*0.5f);
-				pObj->m_FromX = (int)m_Pos2.x-dirVec.y*(THICKNESS*0.5f); 
-				pObj->m_FromY = (int)m_Pos2.y+dirVec.x*(THICKNESS*0.5f);
-			}
+
+			pObj->m_X = (int)m_Pos.x+dirVec2.x; 
+			pObj->m_Y = (int)m_Pos.y+dirVec2.y;
+			pObj->m_FromX = (int)m_Pos2.x+dirVec2.x; 
+			pObj->m_FromY = (int)m_Pos2.y+dirVec2.y;
 
 			pObj->m_StartTick = Server()->Tick()-LifeDiff;
 		}
 		
+		// draws one dot at the end of each laser
 		if(!Server()->GetClientAntiPing(SnappingClient))
 		{
 			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_EndPointIDs[i], sizeof(CNetObj_Laser)));
 			if(!pObj)
 				return;
-			
-			vec2 Pos = m_Pos2;
 
-			if (i == 0) 
-			{
-				pObj->m_X = (int)Pos.x+dirVec.y*(THICKNESS*0.5f); 
-				pObj->m_Y = (int)Pos.y-dirVec.x*(THICKNESS*0.5f);
-				pObj->m_FromX = (int)Pos.x+dirVec.y*(THICKNESS*0.5f); 
-				pObj->m_FromY = (int)Pos.y-dirVec.x*(THICKNESS*0.5f);
-			} 
-			else // i == 1
-			{
-				pObj->m_X = (int)Pos.x-dirVec.y*(THICKNESS*0.5f); 
-				pObj->m_Y = (int)Pos.y+dirVec.x*(THICKNESS*0.5f);
-				pObj->m_FromX = (int)Pos.x-dirVec.y*(THICKNESS*0.5f); 
-				pObj->m_FromY = (int)Pos.y+dirVec.x*(THICKNESS*0.5f);
-			}
+			pObj->m_X = (int)m_Pos2.x+dirVec2.x; 
+			pObj->m_Y = (int)m_Pos2.y+dirVec2.y;
+			pObj->m_FromX = (int)m_Pos2.x+dirVec2.x; 
+			pObj->m_FromY = (int)m_Pos2.y+dirVec2.y;
 
 			pObj->m_StartTick = Server()->Tick();
 		}
