@@ -1,7 +1,7 @@
 #ifndef INFCLASSR_GEOLOCATION_H
 #define INFCLASSR_GEOLOCATION_H
 
-#include <GeoLite2PP.hpp>
+#include <infclassr/GeoLite2PP/GeoLite2PP.hpp>
 #include <iostream>
 
 class Geolocation {
