@@ -10,11 +10,14 @@ class CWhiteHole : public CEntity
 public:
 	enum
 	{
-		NUM_SIDE = 16,
-		NUM_PARTICLES = 48,
-		NUM_IDS = NUM_SIDE + NUM_PARTICLES,
+		NUM_PARTICLES = 300,
+		NUM_IDS = NUM_PARTICLES,
 	};
 	
+private:
+	void StartVisualEffect();
+	void MoveParticles();
+
 public:
 	CWhiteHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID);
 	virtual ~CWhiteHole();
@@ -29,7 +32,11 @@ public:
 	int GetTick() { return m_LifeSpan; }
 	
 private:
+	const float m_ParticleStartSpeed = 1.1f; 
+	const float m_ParticleAcceleration = 1.013f;
 	int m_IDs[NUM_IDS];
+	vec2 m_ParticlePos[NUM_PARTICLES];
+	vec2 m_ParticleVec[NUM_PARTICLES];
 	
 public:
 	int m_StartTick;
