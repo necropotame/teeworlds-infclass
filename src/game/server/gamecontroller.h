@@ -78,6 +78,7 @@ public:
 	void StartRound();
 	virtual void EndRound();
 	void ChangeMap(const char *pToMap);
+	int GetRoundCount();
 
 	bool IsFriendlyFire(int ClientID1, int ClientID2);
 
