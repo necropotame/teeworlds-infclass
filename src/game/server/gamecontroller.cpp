@@ -123,6 +123,10 @@ const char *IGameController::GetTeamName(int Team)
 
 static bool IsSeparator(char c) { return c == ';' || c == ' ' || c == ',' || c == '\t'; }
 
+int IGameController::GetRoundCount() {
+	return m_RoundCount;
+}
+
 void IGameController::StartRound()
 {
 	ResetGame();

@@ -1551,6 +1551,14 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					return;
 				}
 
+				if (g_Config.m_InfMinRoundsForMapVote > m_pController->GetRoundCount())
+				{
+					char aBufVoteMap[128];
+					str_format(aBufVoteMap, sizeof(aBufVoteMap), "Each map must be played at least %i rounds before calling a map vote", g_Config.m_InfMinRoundsForMapVote);
+					SendChatTarget(ClientID, aBufVoteMap);
+					return;
+				}
+
 				if(!m_pController->CanVote())
 				{
 					SendChatTarget(ClientID, "Votes are only allowed when the round start.");
