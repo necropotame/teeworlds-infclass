@@ -63,7 +63,6 @@ void CEngineerWall::Tick()
 			{
 				if(p->GetPlayer())
 				{
-					m_WallFlashTicks = 10;
 					for(CCharacter *pHook = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pHook; pHook = (CCharacter *)pHook->TypeNext())
 					{
 						if(
@@ -83,6 +82,7 @@ void CEngineerWall::Tick()
 					if(p->GetClass() != PLAYERCLASS_UNDEAD)
 					{
 						int LifeSpanReducer = ((Server()->TickSpeed()*g_Config.m_InfBarrierTimeReduce)/100);
+						m_WallFlashTicks = 10;
 						
 						if(p->GetClass() == PLAYERCLASS_GHOUL)
 						{
