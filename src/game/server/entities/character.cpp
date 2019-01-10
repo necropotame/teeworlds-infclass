@@ -103,7 +103,8 @@ m_pConsole(pConsole)
 	m_NinjaVelocityBuff = 0;
 	m_NinjaStrengthBuff = 0;
 	m_NinjaAmmoBuff = 0;
-	m_HasWhiteHole = true;
+	m_HasWhiteHole = false;
+	m_HasIndicator = false;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -1316,29 +1317,31 @@ void CCharacter::FireWeapon()
 
 void CCharacter::CheckSuperWeaponAccess()
 {
-	
-	// check kills of player
-	int kills = m_pPlayer->GetNumberKills();
-
-	
-	if (m_HasWhiteHole == false) // Can't receive a white hole while having one available
+	//Only scientists can receive white holes
+	if(GetClass() == PLAYERCLASS_SCIENTIST)
 	{
-		// enable white hole probabilities
-		if ( kills > g_Config.m_InfSuperWeaponMinimalKills) 
+		// check kills of player
+		int kills = m_pPlayer->GetNumberKills();
+		
+		if (m_HasWhiteHole == false) // Can't receive a white hole while having one available
 		{
-			if (random_int(0,100)/100 < g_Config.m_InfSuperWeaponProbability/100 ) 
+			// enable white hole probabilities
+			if (kills > g_Config.m_InfSuperWeaponMinimalKills) 
 			{
-				// Make white hole available
-				m_HasWhiteHole = true;
-				
-				//Scientist-laser.cpp will make it unavailable after usage
-				
-				//create an indicator object
-				new CSuperWeaponIndicator(GameWorld(), m_Pos, m_pPlayer->GetCID());
+				if (random_int(0,100) < g_Config.m_InfSuperWeaponProbability ) 
+				{
+					//Scientist-laser.cpp will make it unavailable after usage
+					
+					//create an indicator object
+					if (m_HasIndicator == false) {
+						m_HasIndicator = true;
+						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("white hole found, adjusting scientific parameters..."), NULL);
+						new CSuperWeaponIndicator(GameWorld(), m_Pos, m_pPlayer->GetCID());
+					}
+				} 
 			} 
-		} 
+		}
 	}
-
 }
 
 
@@ -2708,7 +2711,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(From == m_pPlayer->GetCID())
 	{
 		if(GetClass() == PLAYERCLASS_HERO || (GetClass() == PLAYERCLASS_SOLDIER && m_ActiveWeapon == WEAPON_GRENADE)
-										  || (GetClass() == PLAYERCLASS_SCIENTIST && m_ActiveWeapon == WEAPON_RIFLE)
+										  || (GetClass() == PLAYERCLASS_SCIENTIST && Mode == TAKEDAMAGEMODE_NOINFECTION)
 										  || (GetClass() == PLAYERCLASS_LOOPER && m_ActiveWeapon == WEAPON_GRENADE))
 			return false; // no self harm
 		else
@@ -2811,12 +2814,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			}
 		}
 		
-		// increase number of kills of killer
-		pKillerPlayer->IncreaseNumberKills();
+		if (pKillerChar)
+		{
+			pKillerPlayer->IncreaseNumberKills();
+			pKillerChar->CheckSuperWeaponAccess();
+		}
 		
-		pKillerChar->CheckSuperWeaponAccess();
-		
-
 		return false;
 	}
 

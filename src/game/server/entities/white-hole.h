@@ -10,13 +10,14 @@ class CWhiteHole : public CEntity
 public:
 	enum
 	{
-		NUM_PARTICLES = 300,
+		NUM_PARTICLES = 330, // change this to create more or less particles for the visual white hole effect
 		NUM_IDS = NUM_PARTICLES,
 	};
 	
 private:
 	void StartVisualEffect();
 	void MoveParticles();
+	void MovePlayers();
 
 public:
 	CWhiteHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID);
@@ -28,22 +29,29 @@ public:
 	virtual void Tick();
 	
 	int GetOwner() const;
-	void Pull(CCharacter *pPlayer,float intensity);
 	int GetTick() { return m_LifeSpan; }
 	
 private:
+	// physics
+	const float m_PlayerPullStrength = 4.0f; // change this to define how strong the white hole pulls
+	const float m_RadiusGrowthRate = 6.0f; // how fast the hole growths when it is created
+	const float m_PlayerDrag = 0.9f;
+	// visual - its recommended not to change this
 	const float m_ParticleStartSpeed = 1.1f; 
-	const float m_ParticleAcceleration = 1.013f;
+	const float m_ParticleAcceleration = 1.01f;
+	int m_ParticleStopTickTime; // when X time is left stop creating particles - close animation
+
 	int m_IDs[NUM_IDS];
 	vec2 m_ParticlePos[NUM_PARTICLES];
 	vec2 m_ParticleVec[NUM_PARTICLES];
+
+	bool isDieing;
 	
 public:
 	int m_StartTick;
-	//float m_DetectionRadius;
 	int m_Owner;
 	int m_LifeSpan;
-	vec2 m_InitialVel;
+	int m_Radius; // changes overtime - grows when created - shrinks when dieing
 };
 
 #endif

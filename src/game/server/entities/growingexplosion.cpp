@@ -202,7 +202,8 @@ void CGrowingExplosion::Tick()
 								{
 									int randNb = random_int(0, NumPossibleStartPoint-1);
 									vec2 StartPoint = PossibleStartPoint[randNb];
-									GameServer()->CreateLaserDotEvent(StartPoint, EndPoint, Server()->TickSpeed()/6);
+									if (StartPoint.x > 0 && StartPoint.y > 0) // dirty fix - there is a bug which causes StartPoint to be 0 sometimes, i dont know why
+										GameServer()->CreateLaserDotEvent(StartPoint, EndPoint, Server()->TickSpeed()/6);
 								}
 								
 								if(random_prob(0.1f))

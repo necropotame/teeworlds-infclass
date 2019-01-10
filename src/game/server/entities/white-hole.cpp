@@ -4,17 +4,18 @@
 #include <engine/shared/config.h>
 
 #include "white-hole.h"
+#include "growingexplosion.h"
 
 CWhiteHole::CWhiteHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_WHITE_HOLE)
 {
 	m_Pos = CenterPos;
 	GameWorld()->InsertEntity(this);
-	//m_DetectionRadius = 60.0f;
 	m_StartTick = Server()->Tick();
 	m_Owner = OwnerClientID;
-	m_InitialVel = GameServer()->GetPlayerChar(m_Owner)->m_Core.m_Vel;
 	m_LifeSpan = Server()->TickSpeed()*g_Config.m_InfWhiteHoleLifeSpan;
+	m_Radius = 0.0f;
+	isDieing = false;
 	
 	for(int i=0; i<NUM_IDS; i++)
 	{
@@ -42,31 +43,11 @@ int CWhiteHole::GetOwner() const
 	return m_Owner;
 }
 
-void CWhiteHole::Pull(CCharacter *pPlayer, float intensity)
-{
-	if(pPlayer) //If there is a player to pull
-	{
-		float Dist = distance(m_Pos, pPlayer->m_Pos);
-		if(Dist < pPlayer->m_ProximityRadius+g_Config.m_InfWhiteHoleSingularitySize) //should be 50 at start
-		{
-			//Player remains at m_Pos
-			return; // Do not pull anymore
-		}
-		else
-		{
-			//calculate direction and speed of pull
-			vec2 Dir = normalize(pPlayer->m_Pos - m_Pos);
-			pPlayer->m_Pos += Dir*clamp(Dist, 0.0f, 16.0f) * (1.0f - intensity) + m_InitialVel * intensity;
-		}
-	}
-}
-
 void CWhiteHole::StartVisualEffect()
 {
 	float Radius = g_Config.m_InfWhiteHoleRadius;
 	float RandomRadius, RandomAngle;
 	float VecX, VecY;
-	vec2 tPos, tVec, tVec2;
 	for(int i=0; i<CWhiteHole::NUM_PARTICLES; i++)
 	{
 		RandomRadius = random_float()*(Radius-4.0f);
@@ -74,18 +55,28 @@ void CWhiteHole::StartVisualEffect()
 		VecX = cos(RandomAngle);
 		VecY = sin(RandomAngle);
 		m_ParticlePos[i] = m_Pos + vec2(RandomRadius * VecX, RandomRadius * VecY);
-		tPos = m_Pos + vec2(Radius * VecX, Radius * VecY);
-		tVec = vec2(m_ParticleStartSpeed * -VecX, m_ParticleStartSpeed * -VecY);
-		for (int k = 0; k < 500; k++) 
-		{
-			tPos += tVec; 
-			tVec2 = m_ParticlePos[i] - tPos;
-			if (dot(tVec2, tVec) <= 0)
-				break;
-			tVec *= m_ParticleAcceleration; 
-		}
-		m_ParticleVec[i] = vec2(tVec);
+		m_ParticleVec[i] = vec2(-VecX, -VecY);
 	}
+	// find out how long it takes for a particle to reach the mid
+	RandomRadius = random_float()*(Radius-4.0f);
+	RandomAngle = 2.0f * pi * random_float();
+	VecX = cos(RandomAngle);
+	VecY = sin(RandomAngle);
+	vec2 ParticlePos = m_Pos + vec2(Radius * VecX, Radius * VecY);
+	vec2 ParticleVec = vec2(-VecX, -VecY);
+	vec2 VecMid;
+	float Speed;
+	int i=0;
+	for ( ; i<500; i++) {
+		VecMid = m_Pos - ParticlePos;
+		Speed = m_ParticleStartSpeed * clamp(1.0f-length(VecMid)/Radius+0.5f, 0.0f, 1.0f);
+		ParticlePos += vec2(ParticleVec.x*Speed, ParticleVec.y*Speed); 
+		if (dot(VecMid, ParticleVec) <= 0)
+			break;
+		ParticleVec *= m_ParticleAcceleration; 
+	}
+	//if (i > 499) dbg_msg("CWhiteHole::StartVisualEffect()", "Problem in finding out how long a particle needs to reach the mid"); // this should never happen
+	m_ParticleStopTickTime = i;
 }
 
 void CWhiteHole::Snap(int SnappingClient)
@@ -95,6 +86,8 @@ void CWhiteHole::Snap(int SnappingClient)
 	{
 		for(int i=0; i<CWhiteHole::NUM_PARTICLES; i++)
 		{
+			if (!isDieing && distance(m_ParticlePos[i], m_Pos) > m_Radius) continue; // start animation
+
 			CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[i], sizeof(CNetObj_Projectile)));
 			if(pObj)
 			{
@@ -112,63 +105,79 @@ void CWhiteHole::Snap(int SnappingClient)
 void CWhiteHole::MoveParticles()
 {
 	float Radius = g_Config.m_InfWhiteHoleRadius;
-	float RandomAngle;
+	float RandomAngle, Speed;
 	float VecX, VecY;
 	vec2 VecMid;
 	for(int i=0; i<CWhiteHole::NUM_PARTICLES; i++)
 	{
-		m_ParticlePos[i] += m_ParticleVec[i]; 
 		VecMid = m_Pos - m_ParticlePos[i];
+		Speed = m_ParticleStartSpeed * clamp(1.0f-length(VecMid)/Radius+0.5f, 0.0f, 1.0f);
+		m_ParticlePos[i] += vec2(m_ParticleVec[i].x*Speed, m_ParticleVec[i].y*Speed); 
 		if (dot(VecMid, m_ParticleVec[i]) <= 0)
 		{
+			if (m_LifeSpan < m_ParticleStopTickTime)
+			{
+				// make particles disappear
+				m_ParticlePos[i] = vec2(-99999.0f, -99999.0f);
+				m_ParticleVec[i] = vec2(0.0f, 0.0f);
+				continue;
+			}
 			RandomAngle = 2.0f * pi * random_float();
 			VecX = cos(RandomAngle);
 			VecY = sin(RandomAngle);
 			m_ParticlePos[i] = m_Pos + vec2(Radius * VecX, Radius * VecY);
-			m_ParticleVec[i] = vec2(m_ParticleStartSpeed * -VecX, m_ParticleStartSpeed * -VecY);
+			m_ParticleVec[i] = vec2(-VecX, -VecY);
 			continue;
 		}
 		m_ParticleVec[i] *= m_ParticleAcceleration; 
 	}
 }
 
+void CWhiteHole::MovePlayers()
+{
+	vec2 Dir;
+	float Distance, Intensity;
+	// Find a player to pull
+	for(CCharacter *pPlayer = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pPlayer; pPlayer = (CCharacter *)pPlayer->TypeNext())
+	{
+		//if(!pPlayer->IsInfected()) continue; All players are affected when commented
+		
+		Dir = m_Pos - pPlayer->m_Pos;
+		Distance = length(Dir);
+		if(Distance < m_Radius)
+		{
+			Intensity = clamp(1.0f-Distance/m_Radius+0.5f, 0.0f, 1.0f)*m_PlayerPullStrength;
+			pPlayer->m_Core.m_Vel += normalize(Dir)*Intensity;
+			pPlayer->m_Core.m_Vel *= m_PlayerDrag;
+		}
+	}
+}
+
 void CWhiteHole::Tick()
 {
-	
 	m_LifeSpan--;
 	if(m_LifeSpan < 0)
 	{
+		new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 20, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED);
 		GameServer()->m_World.DestroyEntity(this);
 	}
 	else 
 	{
-		MoveParticles();
-
-		// Find a player to pull
-		for(CCharacter *pPlayer = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pPlayer; pPlayer = (CCharacter *)pPlayer->TypeNext())
+		if (m_LifeSpan < m_ParticleStopTickTime) // shrink radius
 		{
-			//if(!pPlayer->IsInfected()) continue; All players are affected when commented
-			
-			
-			//Calculate distance to white hole
-			float Len = distance(pPlayer->m_Pos, m_Pos);
-			
-			//Decide the pull strength on the basis of distance to m_Pos
-			if(Len < pPlayer->m_ProximityRadius+g_Config.m_InfWhiteHoleRadius)
-			{
-				Pull(pPlayer,0.33f); //light pull
-			} 
-			else if (Len < pPlayer->m_ProximityRadius+g_Config.m_InfWhiteHoleRadius * (2/3))
-			{
-				Pull(pPlayer,0.66f); //stronger pull
-			}
-			else if (Len < pPlayer->m_ProximityRadius+g_Config.m_InfWhiteHoleRadius * (1/3))
-			{
-				Pull(pPlayer,1.0f); //strongest pull
-			}
+			m_Radius = m_LifeSpan/(float)m_ParticleStopTickTime * g_Config.m_InfWhiteHoleRadius;
+			isDieing = true;
 		}
+		else if (m_Radius < g_Config.m_InfWhiteHoleRadius) // grow radius
+		{
+			m_Radius += m_RadiusGrowthRate;
+			if (m_Radius > g_Config.m_InfWhiteHoleRadius)
+				m_Radius = g_Config.m_InfWhiteHoleRadius;
+		}
+
+		MoveParticles();
+		MovePlayers();
 	}
-	
 }
 
 

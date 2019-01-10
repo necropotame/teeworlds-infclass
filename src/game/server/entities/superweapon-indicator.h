@@ -19,6 +19,8 @@ public:
 	
 private:
 	int m_StartTick;
+	int m_warmUpCounter;
+	bool m_IsWarmingUp;
 	array<int> m_IDs;
 	CCharacter *m_OwnerChar;
 	

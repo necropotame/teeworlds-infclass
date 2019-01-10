@@ -6,6 +6,7 @@
 
 
 #include "white-hole.h"
+#include "growingexplosion.h"
 
 CScientistLaser::CScientistLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, float StartEnergy, int Owner, int Dmg)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_LASER)
@@ -71,12 +72,15 @@ void CScientistLaser::DoBounce()
 	GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_RIFLE, false, TAKEDAMAGEMODE_NOINFECTION);
 	
 	//Create a white hole entity
-	if(m_OwnerChar->m_HasWhiteHole == true)
+	if(m_OwnerChar->m_HasWhiteHole)
 	{
+		new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 5, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED);
 		new CWhiteHole(GameWorld(), To, m_Owner);
 		
 		//Make it unavailable
 		m_OwnerChar->m_HasWhiteHole = false;
+		m_OwnerChar->m_HasIndicator = false;
+		m_OwnerChar->GetPlayer()->ResetNumberKills();
 	}
 }
 
