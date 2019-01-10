@@ -2632,6 +2632,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			if(!pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
 		}
 	}
+
+	// slow down zombies that get hit by looper rifle
+	if(pKillerPlayer->GetClass() == PLAYERCLASS_LOOPER && Weapon == WEAPON_RIFLE && IsInfected()) { 
+		SlowMotionEffect(g_Config.m_InfSlowMotionGunDuration);
+		if (g_Config.m_InfSlowMotionGunDuration != 0) GameServer()->SendEmoticon(GetPlayer()->GetCID(), EMOTICON_EXCLAMATION);	
+	}
 	
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -2859,9 +2865,9 @@ void CCharacter::Snap(int SnappingClient)
 				if(!pObj)
 					return;
 				
-				pObj->m_X = (int)m_FirstShotCoord.x-20*(i)+10;
+				pObj->m_X = (int)m_FirstShotCoord.x-CLooperWall::THICKNESS*i+(CLooperWall::THICKNESS*0.5);
 				pObj->m_Y = (int)m_FirstShotCoord.y;
-				pObj->m_FromX = (int)m_FirstShotCoord.x-20*(i)+10;
+				pObj->m_FromX = (int)m_FirstShotCoord.x-CLooperWall::THICKNESS*i+(CLooperWall::THICKNESS*0.5);
 				pObj->m_FromY = (int)m_FirstShotCoord.y;
 				pObj->m_StartTick = Server()->Tick();
 			}
@@ -3570,12 +3576,14 @@ bool CCharacter::IsInSlowMotion() const
 	return m_SlowMotionTick > 0;
 }
 
-
-void CCharacter::SlowMotionEffect()
+// duration in centiSec (10 == 1 second)
+void CCharacter::SlowMotionEffect(float duration)
 {
+	if (duration == 0) return;
+	duration *= 0.1f;
 	if(m_SlowMotionTick <= 0)
 	{
-		m_SlowMotionTick = Server()->TickSpeed()*g_Config.m_InfSlowMotionDuration;
+		m_SlowMotionTick = Server()->TickSpeed()*duration;
 		m_IsInSlowMotion = true;
 		m_Core.m_Vel *= 0.4;
 	}
