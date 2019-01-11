@@ -882,8 +882,8 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 		(Server()->GetClassAvailability(PLAYERCLASS_GHOUL) && nbInfected >= g_Config.m_InfGhoulThreshold) ?
 		(double) g_Config.m_InfProbaGhoul : 0.0f;
 	Probability[PLAYERCLASS_SLUG - START_INFECTEDCLASS - 1] =
-        (Server()->GetClassAvailability(PLAYERCLASS_SLUG)) ?
-        (double) g_Config.m_InfProbaSlug : 0.0f;
+		(Server()->GetClassAvailability(PLAYERCLASS_SLUG)) ?
+		(double) g_Config.m_InfProbaSlug : 0.0f;
 	Probability[PLAYERCLASS_VOODOO - START_INFECTEDCLASS - 1] =
 		(Server()->GetClassAvailability(PLAYERCLASS_VOODOO)) ?
 		(double) g_Config.m_InfProbaVoodoo : 0.0f;
