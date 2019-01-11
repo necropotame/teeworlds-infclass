@@ -32,6 +32,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_WinAsHuman = 0;
 	m_class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
+	m_NumberKills = 0;
 	SetLanguage(Server()->GetClientLanguage(ClientID));
 	for(int i=0; i<NB_PLAYERCLASS; i++)
 	{
@@ -779,6 +780,25 @@ void CPlayer::SetScoreMode(int Mode)
 {
 	m_ScoreMode = Mode;
 }
+
+int CPlayer::GetNumberKills()
+{
+	if( GetClass() == PLAYERCLASS_NONE )
+		return 0;
+	else
+		return m_NumberKills;
+}
+
+void CPlayer::IncreaseNumberKills()
+{
+	m_NumberKills++;
+}
+
+void CPlayer::ResetNumberKills()
+{
+	m_NumberKills = 0;
+}
+
 
 const char* CPlayer::GetLanguage()
 {

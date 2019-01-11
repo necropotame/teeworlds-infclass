@@ -132,6 +132,7 @@ private:
 	
 	int m_GhoulLevel;
 	int m_GhoulLevelTick;
+	int m_NumberKills;
 	
 public:
 	int m_Authed;
@@ -143,6 +144,9 @@ public:
 	
 	int GetScoreMode();
 	void SetScoreMode(int Mode);
+	int GetNumberKills();
+	void IncreaseNumberKills();
+	void ResetNumberKills();
 	
 	int GetClass();
 	void SetClassSkin(int newClass, int State = 0);

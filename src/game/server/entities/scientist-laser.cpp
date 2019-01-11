@@ -4,6 +4,10 @@
 #include <game/server/gamecontext.h>
 #include "scientist-laser.h"
 
+
+#include "white-hole.h"
+#include "growingexplosion.h"
+
 CScientistLaser::CScientistLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, float StartEnergy, int Owner, int Dmg)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_LASER)
 {
@@ -14,6 +18,7 @@ CScientistLaser::CScientistLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Directio
 	m_Dir = Direction;
 	m_Bounces = 0;
 	m_EvalTick = 0;
+	m_OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 	GameWorld()->InsertEntity(this);
 	DoBounce();
 }
@@ -22,8 +27,7 @@ CScientistLaser::CScientistLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Directio
 bool CScientistLaser::HitCharacter(vec2 From, vec2 To)
 {
 	vec2 At;
-	CCharacter *pOwnerChar = GameServer()->GetPlayerChar(m_Owner);
-	CCharacter *pHit = GameServer()->m_World.IntersectCharacter(m_Pos, To, 0.f, At, pOwnerChar);
+	CCharacter *pHit = GameServer()->m_World.IntersectCharacter(m_Pos, To, 0.f, At, m_OwnerChar);
 	if(!pHit)
 		return false;
 
@@ -66,6 +70,18 @@ void CScientistLaser::DoBounce()
 	}
 	
 	GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_RIFLE, false, TAKEDAMAGEMODE_NOINFECTION);
+	
+	//Create a white hole entity
+	if(m_OwnerChar->m_HasWhiteHole)
+	{
+		new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 5, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED);
+		new CWhiteHole(GameWorld(), To, m_Owner);
+		
+		//Make it unavailable
+		m_OwnerChar->m_HasWhiteHole = false;
+		m_OwnerChar->m_HasIndicator = false;
+		m_OwnerChar->GetPlayer()->ResetNumberKills();
+	}
 }
 
 void CScientistLaser::Reset()

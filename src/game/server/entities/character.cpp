@@ -29,6 +29,8 @@
 #include "medic-grenade.h"
 #include "hero-flag.h"
 #include "slug-slime.h"
+#include "white-hole.h"
+#include "superweapon-indicator.h"
 
 //input count
 struct CInputCount
@@ -101,6 +103,8 @@ m_pConsole(pConsole)
 	m_NinjaVelocityBuff = 0;
 	m_NinjaStrengthBuff = 0;
 	m_NinjaAmmoBuff = 0;
+	m_HasWhiteHole = false;
+	m_HasIndicator = false;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -198,7 +202,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_PositionLocked = false;
 	m_PositionLockAvailable = false;
 	m_Poison = 0;
-
+	
 	ClassSpawnAttributes();
 	DestroyChildEntities();
 	GiveArmorIfLonely();
@@ -215,6 +219,8 @@ void CCharacter::Destroy()
 {	
 /* INFECTION MODIFICATION START ***************************************/
 	DestroyChildEntities();
+	
+	m_pPlayer->ResetNumberKills();
 	
 	if(m_FlagID >= 0)
 	{
@@ -247,6 +253,7 @@ void CCharacter::Destroy()
 		}
 
 	}
+	
 /* INFECTION MODIFICATION END *****************************************/
 
 	GameServer()->m_World.m_Core.m_apCharacters[m_pPlayer->GetCID()] = 0;
@@ -1272,6 +1279,8 @@ void CCharacter::FireWeapon()
 				}
 				else if(GetClass() == PLAYERCLASS_SCIENTIST)
 				{
+					//white hole activation in scientist-laser
+					
 					new CScientistLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.6f, m_pPlayer->GetCID(), Damage);
 					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				}
@@ -1301,6 +1310,36 @@ void CCharacter::FireWeapon()
 		m_ReloadTimer = Server()->GetFireDelay(GetInfWeaponID(m_ActiveWeapon)) * Server()->TickSpeed() / 1000;
 	}
 }
+
+void CCharacter::CheckSuperWeaponAccess()
+{
+	//Only scientists can receive white holes
+	if(GetClass() == PLAYERCLASS_SCIENTIST)
+	{
+		// check kills of player
+		int kills = m_pPlayer->GetNumberKills();
+		
+		if (m_HasWhiteHole == false) // Can't receive a white hole while having one available
+		{
+			// enable white hole probabilities
+			if (kills > g_Config.m_InfSuperWeaponMinimalKills) 
+			{
+				if (random_int(0,100) < g_Config.m_InfSuperWeaponProbability ) 
+				{
+					//Scientist-laser.cpp will make it unavailable after usage
+					
+					//create an indicator object
+					if (m_HasIndicator == false) {
+						m_HasIndicator = true;
+						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("white hole found, adjusting scientific parameters..."), NULL);
+						new CSuperWeaponIndicator(GameWorld(), m_Pos, m_pPlayer->GetCID());
+					}
+				} 
+			} 
+		}
+	}
+}
+
 
 void CCharacter::SaturateVelocity(vec2 Force, float MaxSpeed)
 {
@@ -2151,6 +2190,33 @@ void CCharacter::Tick()
 				NULL
 			);
 		}
+		
+		
+		CWhiteHole* pCurrentWhiteHole = NULL;
+		for(CWhiteHole *pWhiteHole = (CWhiteHole*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_WHITE_HOLE); pWhiteHole; pWhiteHole = (CWhiteHole*) pWhiteHole->TypeNext())
+		{
+			if(pWhiteHole->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentWhiteHole = pWhiteHole;
+				break;
+			}
+		}
+		
+		
+		
+		//POTENTIAL CONFLICT WITH MINE BROADCAST --> make this Broadcast higher priority
+		if(pCurrentWhiteHole)
+		{
+			int Seconds = 1+pCurrentWhiteHole->GetTick()/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+													 _("White hole: {sec:RemainingTime}"),
+													 "RemainingTime", &Seconds,
+											NULL
+			);
+		}
+		
+		
+		
 	}
 	else if(GetClass() == PLAYERCLASS_BIOLOGIST)
 	{
@@ -2504,6 +2570,7 @@ void CCharacter::Die(int Killer, int Weapon)
 		m_pPlayer->IncreaseGhoulLevel(-20);
 	}
 	
+	
 	DestroyChildEntities();
 /* INFECTION MODIFICATION END *****************************************/
 	
@@ -2580,6 +2647,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 {
 /* INFECTION MODIFICATION START ***************************************/
 
+	//KillerPlayer
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
 	
 	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected())
@@ -2645,7 +2713,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(From == m_pPlayer->GetCID())
 	{
 		if(GetClass() == PLAYERCLASS_HERO || (GetClass() == PLAYERCLASS_SOLDIER && m_ActiveWeapon == WEAPON_GRENADE)
-										  || (GetClass() == PLAYERCLASS_SCIENTIST && m_ActiveWeapon == WEAPON_RIFLE)
+										  || (GetClass() == PLAYERCLASS_SCIENTIST && Mode == TAKEDAMAGEMODE_NOINFECTION)
 										  || (GetClass() == PLAYERCLASS_LOOPER && m_ActiveWeapon == WEAPON_GRENADE))
 			return false; // no self harm
 		else
@@ -2688,7 +2756,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		if(From != m_pPlayer->GetCID())
 			m_NeedFullHeal = true;
 			
-		if(From >= 0 && From != m_pPlayer->GetCID() && GameServer()->m_apPlayers[From])
+		if(From >= 0 && From != m_pPlayer->GetCID() && pKillerPlayer)
 			GameServer()->SendHitSound(From);
 	}
 /* INFECTION MODIFICATION END *****************************************/
@@ -2699,12 +2767,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	// do damage Hit sound
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(Mode == TAKEDAMAGEMODE_INFECTION && GameServer()->m_apPlayers[From]->IsInfected() && !IsInfected() && GetClass() != PLAYERCLASS_HERO)
+	if(Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer->IsInfected() && !IsInfected() && GetClass() != PLAYERCLASS_HERO)
 	{
 		m_pPlayer->StartInfection();
 		
 		GameServer()->SendChatTarget_Localization(From, CHATCATEGORY_SCORE, _("You have infected {str:VictimName}, +3 points"), "VictimName", Server()->ClientName(m_pPlayer->GetCID()), NULL);
-		Server()->RoundStatistics()->OnScoreEvent(From, SCOREEVENT_INFECTION, GameServer()->m_apPlayers[From]->GetClass());
+		Server()->RoundStatistics()->OnScoreEvent(From, SCOREEVENT_INFECTION, pKillerPlayer->GetClass());
 		GameServer()->SendScoreSound(From);
 	
 		//Search for hook
@@ -2734,18 +2802,26 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(m_Health <= 0)
 	{
 		Die(From, Weapon);
+		
+		//KillerChar
+		CCharacter *pKillerChar = pKillerPlayer->GetCharacter();
 
 		// set attacker's face to happy (taunt!)
-		if (From >= 0 && From != m_pPlayer->GetCID() && GameServer()->m_apPlayers[From])
+		if (From >= 0 && From != m_pPlayer->GetCID() && pKillerPlayer)
 		{
-			CCharacter *pChr = GameServer()->m_apPlayers[From]->GetCharacter();
-			if (pChr)
+			if (pKillerChar)
 			{
-				pChr->m_EmoteType = EMOTE_HAPPY;
-				pChr->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+				pKillerChar->m_EmoteType = EMOTE_HAPPY;
+				pKillerChar->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 			}
 		}
-
+		
+		if (pKillerChar)
+		{
+			pKillerPlayer->IncreaseNumberKills();
+			pKillerChar->CheckSuperWeaponAccess();
+		}
+		
 		return false;
 	}
 
