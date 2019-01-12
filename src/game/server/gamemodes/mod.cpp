@@ -405,6 +405,11 @@ void CGameControllerMOD::Tick()
 							Iter.Player()->m_WinAsHuman++;
 							
 							GameServer()->SendChatTarget_Localization(Iter.ClientID(), CHATCATEGORY_SCORE, _("You have survived, +5 points"), NULL);
+
+							char aBuf[256];
+							str_format(aBuf, sizeof(aBuf), "survived player='%s'", Server()->ClientName(Iter.ClientID()));
+							GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
+
 						}
 					}
 				}
