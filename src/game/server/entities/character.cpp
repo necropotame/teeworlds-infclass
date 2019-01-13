@@ -2693,14 +2693,20 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	//KillerPlayer
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
-	if (!pKillerPlayer || !pKillerPlayer->GetCharacter()) {
+	if (!pKillerPlayer) 
+	{
+		return false;  // something is wrong with the killer player
+	}
+	CCharacter *pKillerChar = pKillerPlayer->GetCharacter();
+	if (!pKillerChar) 
+	{
 		return false;  // something is wrong with the killer player
 	}
 	
 	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer->IsInfected())
 		Dmg = 12;
 	
-	if(pKillerPlayer->GetCharacter()->IsInLove())
+	if(pKillerChar->IsInLove())
 	{
 		Dmg = 0;
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
@@ -2849,9 +2855,6 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if(m_Health <= 0)
 	{
 		Die(From, Weapon);
-		
-		//KillerChar
-		CCharacter *pKillerChar = pKillerPlayer->GetCharacter();
 
 		// set attacker's face to happy (taunt!)
 		if (From >= 0 && From != m_pPlayer->GetCID())
