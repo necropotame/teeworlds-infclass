@@ -59,6 +59,8 @@ void CSuperWeaponIndicator::Snap(int SnappingClient)
 
 void CSuperWeaponIndicator::Tick()
 {
+	if (!m_OwnerChar) return;
+
 	//refresh indicator position
 	m_Pos = m_OwnerChar->m_Core.m_Pos;
 	

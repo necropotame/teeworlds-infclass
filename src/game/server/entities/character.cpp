@@ -2649,11 +2649,14 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	//KillerPlayer
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
+	if (!pKillerPlayer || !pKillerPlayer->GetCharacter()) {
+		return false;  // something is wrong with the killer player
+	}
 	
-	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected())
+	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer->IsInfected())
 		Dmg = 12;
 	
-	if(pKillerPlayer && pKillerPlayer->GetCharacter() && pKillerPlayer->GetCharacter()->IsInLove())
+	if(pKillerPlayer->GetCharacter()->IsInLove())
 	{
 		Dmg = 0;
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
@@ -2675,7 +2678,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Dmg = DamageAccepted;
 	}
 
-	if(From != m_pPlayer->GetCID() && pKillerPlayer)
+	if(From != m_pPlayer->GetCID())
 	{
 		if(IsInfected())
 		{
@@ -2756,7 +2759,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		if(From != m_pPlayer->GetCID())
 			m_NeedFullHeal = true;
 			
-		if(From >= 0 && From != m_pPlayer->GetCID() && pKillerPlayer)
+		if(From >= 0 && From != m_pPlayer->GetCID())
 			GameServer()->SendHitSound(From);
 	}
 /* INFECTION MODIFICATION END *****************************************/
@@ -2807,7 +2810,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		CCharacter *pKillerChar = pKillerPlayer->GetCharacter();
 
 		// set attacker's face to happy (taunt!)
-		if (From >= 0 && From != m_pPlayer->GetCID() && pKillerPlayer)
+		if (From >= 0 && From != m_pPlayer->GetCID())
 		{
 			if (pKillerChar)
 			{
@@ -2816,11 +2819,8 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			}
 		}
 		
-		if (pKillerChar)
-		{
-			pKillerPlayer->IncreaseNumberKills();
-			pKillerChar->CheckSuperWeaponAccess();
-		}
+		pKillerPlayer->IncreaseNumberKills();
+		pKillerChar->CheckSuperWeaponAccess();
 		
 		return false;
 	}
