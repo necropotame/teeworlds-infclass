@@ -169,6 +169,7 @@ void CGrowingExplosion::Tick()
 							{
 								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION, true);
 							}
+							break;
 						case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
 							{
 								vec2 EndPoint = m_SeedPos + vec2(32.0f*(i-m_MaxGrowing) - 16.0f + random_float()*32.0f, 32.0f*(j-m_MaxGrowing) - 16.0f + random_float()*32.0f);
@@ -202,8 +203,7 @@ void CGrowingExplosion::Tick()
 								{
 									int randNb = random_int(0, NumPossibleStartPoint-1);
 									vec2 StartPoint = PossibleStartPoint[randNb];
-									if (StartPoint.x > 0 && StartPoint.y > 0) // dirty fix - there is a bug which causes StartPoint to be 0 sometimes, i dont know why
-										GameServer()->CreateLaserDotEvent(StartPoint, EndPoint, Server()->TickSpeed()/6);
+									GameServer()->CreateLaserDotEvent(StartPoint, EndPoint, Server()->TickSpeed()/6);
 								}
 								
 								if(random_prob(0.1f))
