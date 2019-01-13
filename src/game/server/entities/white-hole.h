@@ -7,12 +7,6 @@
 
 class CWhiteHole : public CEntity
 {
-public:
-	enum
-	{
-		NUM_PARTICLES = 330, // change this to create more or less particles for the visual white hole effect
-		NUM_IDS = NUM_PARTICLES,
-	};
 	
 private:
 	void StartVisualEffect();
@@ -33,17 +27,18 @@ public:
 	
 private:
 	// physics
-	const float m_PlayerPullStrength = 4.0f; // change this to define how strong the white hole pulls
+	float m_PlayerPullStrength; // will be set with a config var
 	const float m_RadiusGrowthRate = 6.0f; // how fast the hole growths when it is created
 	const float m_PlayerDrag = 0.9f;
-	// visual - its recommended not to change this
+	// visual
 	const float m_ParticleStartSpeed = 1.1f; 
 	const float m_ParticleAcceleration = 1.01f;
 	int m_ParticleStopTickTime; // when X time is left stop creating particles - close animation
 
-	int m_IDs[NUM_IDS];
-	vec2 m_ParticlePos[NUM_PARTICLES];
-	vec2 m_ParticleVec[NUM_PARTICLES];
+	int m_NumParticles; // will be set with a config var
+	int *m_IDs;
+	vec2 *m_ParticlePos;
+	vec2 *m_ParticleVec;
 
 	bool isDieing;
 	

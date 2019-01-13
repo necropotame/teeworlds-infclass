@@ -139,6 +139,8 @@ MACRO_CONFIG_INT(InfWhiteHoleProbability, inf_white_hole_probability, 20, 0, 100
 MACRO_CONFIG_INT(InfWhiteHoleLifeSpan, inf_white_hole_life_span, 20, 0, 100, CFGFLAG_SERVER, "White hole life span")
 MACRO_CONFIG_INT(InfWhiteHoleRadius, inf_white_hole_radius, 430, 0, 500, CFGFLAG_SERVER, "Radius of white holes")
 MACRO_CONFIG_INT(InfWhiteHoleAffectsHumans, inf_white_hole_affects_humans, 1, 0, 1, CFGFLAG_SERVER, "Makes white holes suck in humans")
+MACRO_CONFIG_INT(InfWhiteHoleNumParticles, inf_white_hole_num_particles, 330, 50, 800, CFGFLAG_SERVER, "Number of particles that will be used for a white hole animation")
+MACRO_CONFIG_INT(InfWhiteHolePullStrength, inf_white_hole_pull_strength, 40, 0, 1000, CFGFLAG_SERVER, "How strong a white hole sucks players in")
 
 
 #endif

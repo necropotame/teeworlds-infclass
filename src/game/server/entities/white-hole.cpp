@@ -16,8 +16,13 @@ CWhiteHole::CWhiteHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID
 	m_LifeSpan = Server()->TickSpeed()*g_Config.m_InfWhiteHoleLifeSpan;
 	m_Radius = 0.0f;
 	isDieing = false;
-	
-	for(int i=0; i<NUM_IDS; i++)
+	m_PlayerPullStrength = g_Config.m_InfWhiteHolePullStrength/10.0f;
+
+	m_NumParticles = g_Config.m_InfWhiteHoleNumParticles;
+	m_IDs = new int[m_NumParticles];
+	m_ParticlePos = new vec2[m_NumParticles];
+	m_ParticleVec = new vec2[m_NumParticles];
+	for(int i=0; i<m_NumParticles; i++)
 	{
 		m_IDs[i] = Server()->SnapNewID();
 	}
@@ -27,10 +32,13 @@ CWhiteHole::CWhiteHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID
 
 CWhiteHole::~CWhiteHole()
 {
-	for(int i=0; i<NUM_IDS; i++)
+	for(int i=0; i<m_NumParticles; i++)
 	{
 		Server()->SnapFreeID(m_IDs[i]);
 	}
+	delete[] m_IDs;
+	delete[] m_ParticlePos;
+	delete[] m_ParticleVec;
 }
 
 void CWhiteHole::Reset()
@@ -48,7 +56,7 @@ void CWhiteHole::StartVisualEffect()
 	float Radius = g_Config.m_InfWhiteHoleRadius;
 	float RandomRadius, RandomAngle;
 	float VecX, VecY;
-	for(int i=0; i<CWhiteHole::NUM_PARTICLES; i++)
+	for(int i=0; i<m_NumParticles; i++)
 	{
 		RandomRadius = random_float()*(Radius-4.0f);
 		RandomAngle = 2.0f * pi * random_float();
@@ -84,7 +92,7 @@ void CWhiteHole::Snap(int SnappingClient)
 	// Draw ParticleEffect
 	if(!Server()->GetClientAntiPing(SnappingClient))
 	{
-		for(int i=0; i<CWhiteHole::NUM_PARTICLES; i++)
+		for(int i=0; i<m_NumParticles; i++)
 		{
 			if (!isDieing && distance(m_ParticlePos[i], m_Pos) > m_Radius) continue; // start animation
 
@@ -108,7 +116,7 @@ void CWhiteHole::MoveParticles()
 	float RandomAngle, Speed;
 	float VecX, VecY;
 	vec2 VecMid;
-	for(int i=0; i<CWhiteHole::NUM_PARTICLES; i++)
+	for(int i=0; i<m_NumParticles; i++)
 	{
 		VecMid = m_Pos - m_ParticlePos[i];
 		Speed = m_ParticleStartSpeed * clamp(1.0f-length(VecMid)/Radius+0.5f, 0.0f, 1.0f);
