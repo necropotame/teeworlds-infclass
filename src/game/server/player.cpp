@@ -58,6 +58,8 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	
 	for(unsigned int i=0; i<sizeof(m_LastHumanClasses)/sizeof(int); i++)
 		m_LastHumanClasses[i] = -1;
+
+	m_VoodooIsSpirit = false;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -150,6 +152,17 @@ void CPlayer::Tick()
 		}
 		
 		SetClassSkin(PLAYERCLASS_GHOUL, m_GhoulLevel);
+	}
+	else if (GetClass() == PLAYERCLASS_VOODOO)
+	{
+		if(m_VoodooIsSpirit)
+		{
+			SetClassSkin(PLAYERCLASS_VOODOO, 0); // 0 = spirit skin
+		}
+		else
+		{
+			SetClassSkin(PLAYERCLASS_VOODOO, 1); // 1 = normal skin
+		}
 	}
 	
  	HandleTuningParams();
@@ -312,6 +325,9 @@ void CPlayer::Snap(int SnappingClient)
 					break;
 				case PLAYERCLASS_SLUG:
 					str_format(aClanName, sizeof(aClanName), "%sSlug", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					break;
+				case PLAYERCLASS_VOODOO:
+					str_format(aClanName, sizeof(aClanName), "%sVoodoo", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
 				case PLAYERCLASS_UNDEAD:
 					str_format(aClanName, sizeof(aClanName), "%sUndead", Server()->IsClientLogged(GetCID()) ? "@" : " ");
@@ -664,6 +680,19 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
 			break;
+		case PLAYERCLASS_VOODOO:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "bluestripe", sizeof(m_TeeInfos.m_SkinName));
+			if(State == 1)
+			{
+				m_TeeInfos.m_ColorBody = 3866368;
+			}
+			else
+			{
+				m_TeeInfos.m_ColorBody = 6183936; // grey-green
+			}
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
 		case PLAYERCLASS_UNDEAD:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "redstripe", sizeof(m_TeeInfos.m_SkinName));
@@ -820,6 +849,11 @@ void CPlayer::IncreaseGhoulLevel(int Diff)
 		NewGhoulLevel = g_Config.m_InfGhoulStomachSize;
 	
 	m_GhoulLevel = NewGhoulLevel;
+}
+
+void CPlayer::SetToSpirit(bool IsSpirit)
+{
+	m_VoodooIsSpirit = IsSpirit;
 }
 
 /* INFECTION MODIFICATION END *****************************************/

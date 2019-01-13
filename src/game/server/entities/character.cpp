@@ -101,6 +101,8 @@ m_pConsole(pConsole)
 	m_NinjaVelocityBuff = 0;
 	m_NinjaStrengthBuff = 0;
 	m_NinjaAmmoBuff = 0;
+	m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
+	m_VoodooAboutToDie = false;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -198,6 +200,9 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_PositionLocked = false;
 	m_PositionLockAvailable = false;
 	m_Poison = 0;
+	m_VoodooAboutToDie = false;
+  	m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
+  	m_pPlayer->SetToSpirit(false);
 
 	ClassSpawnAttributes();
 	DestroyChildEntities();
@@ -1524,6 +1529,28 @@ void CCharacter::Tick()
 	//~ }
 	//~ else
 		//~ m_InWater = 0;
+	// Delayed Death
+	if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0)
+	{
+		m_VoodooTimeAlive-=1000;
+	}
+	else if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive <= 0)
+	{
+		Die(m_VoodooKiller, m_VoodooWeapon);
+	}
+
+	// Display time left to live
+	if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie)
+	{
+		int Time = m_VoodooTimeAlive/Server()->TickSpeed();
+		GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+		_("Staying alive for: {int:RemainingTime}"),
+		"RemainingTime", &Time,
+		NULL
+		);
+	}
+
+
 	if(GetClass() == PLAYERCLASS_SNIPER && m_PositionLocked)
 	{
 		if(m_Input.m_Jump && !m_PrevInput.m_Jump)
@@ -2483,6 +2510,22 @@ void CCharacter::Die(int Killer, int Weapon)
 		return;
 	}
 	
+	// Start counting down, delay killer message for later
+	if(GetClass() == PLAYERCLASS_VOODOO && !m_VoodooAboutToDie)
+	{
+		m_VoodooAboutToDie = true;
+		m_VoodooKiller = Killer;
+		m_VoodooWeapon = Weapon;
+		m_pPlayer->SetToSpirit(true);
+		return;
+	// If about to die, yet killed again, dont kill him either
+	} else if(GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0)
+	{
+		return;
+	}
+  
+	
+
 	//Find the nearest ghoul
 	{
 		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
@@ -3352,6 +3395,21 @@ void CCharacter::ClassSpawnAttributes()
 			{
 				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "spider", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_SPIDER] = true;
+			}
+			break;
+		case PLAYERCLASS_VOODOO:
+			m_Health = 10;
+			m_Armor = 0;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_VOODOO);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_VOODOO))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "voodoo", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_VOODOO] = true;
 			}
 			break;
 		case PLAYERCLASS_GHOUL:

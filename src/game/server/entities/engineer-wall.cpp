@@ -79,7 +79,7 @@ void CEngineerWall::Tick()
 						}
 					}
 					
-					if(p->GetClass() != PLAYERCLASS_UNDEAD)
+					if(p->GetClass() != PLAYERCLASS_UNDEAD && p->GetClass() != PLAYERCLASS_VOODOO)
 					{
 						int LifeSpanReducer = ((Server()->TickSpeed()*g_Config.m_InfBarrierTimeReduce)/100);
 						m_WallFlashTicks = 10;
