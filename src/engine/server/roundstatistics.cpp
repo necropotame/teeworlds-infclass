@@ -104,6 +104,9 @@ void CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_SLUG:
 			m_SlugScore += Points;
 			break;
+		case PLAYERCLASS_VOODOO:
+			m_VoodooScore += Points;
+			break;
 		case PLAYERCLASS_UNDEAD:
 			m_UndeadScore += Points;
 			break;

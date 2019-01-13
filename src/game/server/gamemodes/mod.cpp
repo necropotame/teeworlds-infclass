@@ -405,6 +405,11 @@ void CGameControllerMOD::Tick()
 							Iter.Player()->m_WinAsHuman++;
 							
 							GameServer()->SendChatTarget_Localization(Iter.ClientID(), CHATCATEGORY_SCORE, _("You have survived, +5 points"), NULL);
+
+							char aBuf[256];
+							str_format(aBuf, sizeof(aBuf), "survived player='%s'", Server()->ClientName(Iter.ClientID()));
+							GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
+
 						}
 					}
 				}
@@ -884,6 +889,9 @@ int CGameControllerMOD::ChooseInfectedClass(CPlayer* pPlayer)
 	Probability[PLAYERCLASS_SLUG - START_INFECTEDCLASS - 1] =
 		(Server()->GetClassAvailability(PLAYERCLASS_SLUG)) ?
 		(double) g_Config.m_InfProbaSlug : 0.0f;
+	Probability[PLAYERCLASS_VOODOO - START_INFECTEDCLASS - 1] =
+		(Server()->GetClassAvailability(PLAYERCLASS_VOODOO)) ?
+		(double) g_Config.m_InfProbaVoodoo : 0.0f;
 	
 	Probability[PLAYERCLASS_WITCH - START_INFECTEDCLASS - 1] =
 		(Server()->GetClassAvailability(PLAYERCLASS_WITCH) && nbInfected > 2 && !thereIsAWitch) ?

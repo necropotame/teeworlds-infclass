@@ -47,6 +47,7 @@ public:
 		int m_SpiderScore;
 		int m_GhoulScore;
 		int m_SlugScore;
+		int m_VoodooScore;
 		int m_UndeadScore;
 		int m_WitchScore;
 		

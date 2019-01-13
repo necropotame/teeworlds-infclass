@@ -49,7 +49,6 @@ function DuplicateDirectoryStructure(orgpath, srcpath, dstpath)
 		DuplicateDirectoryStructure(orgpath, v, dstpath)
 	end
 end
-
 DuplicateDirectoryStructure("src", "src", "objs")
 ]]
 
@@ -162,6 +161,10 @@ function build(settings)
 		if family == "windows" then
 			-- disable visibility attribute support for gcc on windows
 			settings.cc.defines:Add("NO_VIZ")
+			if config.stackprotector.value then
+				settings.cc.flags:Add("-fstack-protector", "-fstack-protector-all")
+				settings.link.flags:Add("-fstack-protector", "-fstack-protector-all")
+			end
 		elseif platform == "macosx" then
 			settings.cc.flags:Add("-mmacosx-version-min=10.5")
 			settings.link.flags:Add("-mmacosx-version-min=10.5")
