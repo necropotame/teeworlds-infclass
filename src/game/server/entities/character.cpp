@@ -2693,20 +2693,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	//KillerPlayer
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
-	if (!pKillerPlayer) 
-	{
-		return false;  // something is wrong with the killer player
-	}
 	CCharacter *pKillerChar = pKillerPlayer->GetCharacter();
-	if (!pKillerChar) 
-	{
-		return false;  // something is wrong with the killer player
-	}
 	
-	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer->IsInfected())
+	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected())
 		Dmg = 12;
 	
-	if(pKillerChar->IsInLove())
+	if(pKillerChar && pKillerChar->IsInLove())
 	{
 		Dmg = 0;
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
@@ -2728,7 +2720,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Dmg = DamageAccepted;
 	}
 
-	if(From != m_pPlayer->GetCID())
+	if(From != m_pPlayer->GetCID() && pKillerPlayer)
 	{
 		if(IsInfected())
 		{
@@ -2806,7 +2798,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 		m_Health -= Dmg;
 	
-		if(From != m_pPlayer->GetCID())
+		if(From != m_pPlayer->GetCID() && pKillerPlayer)
 			m_NeedFullHeal = true;
 			
 		if(From >= 0 && From != m_pPlayer->GetCID())
@@ -2820,7 +2812,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	// do damage Hit sound
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer->IsInfected() && !IsInfected() && GetClass() != PLAYERCLASS_HERO)
+	if(Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected() && !IsInfected() && GetClass() != PLAYERCLASS_HERO)
 	{
 		m_pPlayer->StartInfection();
 		
@@ -2857,7 +2849,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Die(From, Weapon);
 
 		// set attacker's face to happy (taunt!)
-		if (From >= 0 && From != m_pPlayer->GetCID())
+		if (From >= 0 && From != m_pPlayer->GetCID() && pKillerPlayer)
 		{
 			if (pKillerChar)
 			{
@@ -2866,8 +2858,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			}
 		}
 		
-		pKillerPlayer->IncreaseNumberKills();
-		pKillerChar->CheckSuperWeaponAccess();
+		if (pKillerPlayer)
+			pKillerPlayer->IncreaseNumberKills();
+		if (pKillerChar)
+			pKillerChar->CheckSuperWeaponAccess();
 		
 		return false;
 	}
