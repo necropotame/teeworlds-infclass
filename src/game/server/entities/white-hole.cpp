@@ -140,7 +140,7 @@ void CWhiteHole::MovePlayers()
 	// Find a player to pull
 	for(CCharacter *pPlayer = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pPlayer; pPlayer = (CCharacter *)pPlayer->TypeNext())
 	{
-		//if(!pPlayer->IsInfected()) continue; All players are affected when commented
+		if(!g_Config.m_InfWhiteHoleAffectsHumans && !pPlayer->IsInfected()) continue; // stops humans from being sucked in, if config var is set
 		
 		Dir = m_Pos - pPlayer->m_Pos;
 		Distance = length(Dir);

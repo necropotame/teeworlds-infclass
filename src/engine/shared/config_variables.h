@@ -134,10 +134,11 @@ MACRO_CONFIG_INT(InfSlowMotionPercent, inf_slow_motion_percent, 55, 0, 90, CFGFL
 
 
 //SuperWeapons
-MACRO_CONFIG_INT(InfSuperWeaponMinimalKills, inf_super_weapon_minimal_kills, 6, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before super weapons become available")
-MACRO_CONFIG_INT(InfSuperWeaponProbability, inf_super_weapon_probability, 20, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
+MACRO_CONFIG_INT(InfWhiteHoleMinimalKills, inf_white_hole_minimal_kills, 6, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before super weapons become available")
+MACRO_CONFIG_INT(InfWhiteHoleProbability, inf_white_hole_probability, 20, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
 MACRO_CONFIG_INT(InfWhiteHoleLifeSpan, inf_white_hole_life_span, 20, 0, 100, CFGFLAG_SERVER, "White hole life span")
 MACRO_CONFIG_INT(InfWhiteHoleRadius, inf_white_hole_radius, 430, 0, 500, CFGFLAG_SERVER, "Radius of white holes")
+MACRO_CONFIG_INT(InfWhiteHoleAffectsHumans, inf_white_hole_affects_humans, 1, 0, 1, CFGFLAG_SERVER, "Makes white holes suck in humans")
 
 
 #endif

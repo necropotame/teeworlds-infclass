@@ -1328,9 +1328,9 @@ void CCharacter::CheckSuperWeaponAccess()
 		if (m_HasWhiteHole == false) // Can't receive a white hole while having one available
 		{
 			// enable white hole probabilities
-			if (kills > g_Config.m_InfSuperWeaponMinimalKills) 
+			if (kills > g_Config.m_InfWhiteHoleMinimalKills) 
 			{
-				if (random_int(0,100) < g_Config.m_InfSuperWeaponProbability ) 
+				if (random_int(0,100) < g_Config.m_InfWhiteHoleProbability) 
 				{
 					//Scientist-laser.cpp will make it unavailable after usage
 					
