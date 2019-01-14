@@ -277,6 +277,8 @@ void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamag
 		int Num = m_World.FindEntities(Pos, Radius, (CEntity**)apEnts, MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
 		for(int i = 0; i < Num; i++)
 		{
+			if (MercBomb && !m_apPlayers[Owner]) // this can be improved
+				break;
 			if (MercBomb && m_apPlayers[Owner]->IsInfected())
 				break;
 			vec2 Diff = apEnts[i]->m_Pos - Pos;
