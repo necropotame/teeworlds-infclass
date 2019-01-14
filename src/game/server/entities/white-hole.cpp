@@ -87,25 +87,46 @@ void CWhiteHole::StartVisualEffect()
 	m_ParticleStopTickTime = i;
 }
 
+// Draw ParticleEffect
 void CWhiteHole::Snap(int SnappingClient)
 {
-	// Draw ParticleEffect
-	if(!Server()->GetClientAntiPing(SnappingClient))
-	{
-		for(int i=0; i<m_NumParticles; i++)
+	// Draw AntiPing white hole effect
+	if (Server()->GetClientAntiPing(SnappingClient)) {	
+		int NumSide = 6;
+		float AngleStep = 2.0f * pi / NumSide;
+		float Radius = g_Config.m_InfWhiteHoleRadius;
+		for(int i=0; i<NumSide; i++)
 		{
-			if (!isDieing && distance(m_ParticlePos[i], m_Pos) > m_Radius) continue; // start animation
+			vec2 PartPosStart = m_Pos + vec2(Radius * cos(AngleStep*i), Radius * sin(AngleStep*i));
+			vec2 PartPosEnd = m_Pos + vec2(Radius * cos(AngleStep*(i+1)), Radius * sin(AngleStep*(i+1)));
+		
+			CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser)));
+			if(!pObj)
+				return;
 
-			CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[i], sizeof(CNetObj_Projectile)));
-			if(pObj)
-			{
-				pObj->m_X = (int)m_ParticlePos[i].x;
-				pObj->m_Y = (int)m_ParticlePos[i].y;
-				pObj->m_VelX = 0;
-				pObj->m_VelY = 0;
-				pObj->m_StartTick = Server()->Tick();
-				pObj->m_Type = WEAPON_HAMMER;
-			}
+			pObj->m_X = (int)PartPosStart.x;
+			pObj->m_Y = (int)PartPosStart.y;
+			pObj->m_FromX = (int)PartPosEnd.x;
+			pObj->m_FromY = (int)PartPosEnd.y;
+			pObj->m_StartTick = Server()->Tick();
+		}
+		return;
+	}
+
+	// Draw full particle effect - if anti ping is not set to true
+	for(int i=0; i<m_NumParticles; i++)
+	{
+		if (!isDieing && distance(m_ParticlePos[i], m_Pos) > m_Radius) continue; // start animation
+
+		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[i], sizeof(CNetObj_Projectile)));
+		if(pObj)
+		{
+			pObj->m_X = (int)m_ParticlePos[i].x;
+			pObj->m_Y = (int)m_ParticlePos[i].y;
+			pObj->m_VelX = 0;
+			pObj->m_VelY = 0;
+			pObj->m_StartTick = Server()->Tick();
+			pObj->m_Type = WEAPON_HAMMER;
 		}
 	}
 }

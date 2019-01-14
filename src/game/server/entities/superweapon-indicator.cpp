@@ -37,14 +37,16 @@ void CSuperWeaponIndicator::Reset()
 
 void CSuperWeaponIndicator::Snap(int SnappingClient)
 {
+	if(NetworkClipped(SnappingClient))
+		return;
+	if (Server()->GetClientAntiPing(SnappingClient))
+		return;
+
 	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	float angle = fmodf(time*pi/2, 2.0f*pi);
 	
 	for(int i=0; i<m_IDs.size(); i++)
-	{
-		if(NetworkClipped(SnappingClient))
-			return;
-		
+	{	
 		float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_IDs.size());
 		
 		CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[i], sizeof(CNetObj_Projectile)));
