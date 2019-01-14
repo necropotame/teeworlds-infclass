@@ -31,6 +31,7 @@
 #include "slug-slime.h"
 #include "white-hole.h"
 #include "superweapon-indicator.h"
+#include "laser-teleport.h"
 
 //input count
 struct CInputCount
@@ -1218,6 +1219,7 @@ void CCharacter::FireWeapon()
 					GameServer()->CreateDeath(OldPos, GetPlayer()->GetCID());
 					GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
 					GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
+					new CLaserTeleport(GameWorld(), PortalPos, OldPos);
 				}
 			}
 			else
