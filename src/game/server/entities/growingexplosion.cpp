@@ -117,6 +117,8 @@ int CGrowingExplosion::GetOwner() const
 
 void CGrowingExplosion::Tick()
 {
+	if(m_MarkedForDestroy) return;
+
 	int tick = Server()->Tick();
 	//~ if((tick - m_StartTick) > Server()->TickSpeed())
 	if((tick - m_StartTick) > m_MaxGrowing)
