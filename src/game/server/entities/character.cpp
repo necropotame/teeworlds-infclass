@@ -2729,7 +2729,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	{
 		if(IsInfected())
 		{
-			if(pKillerPlayer && pKillerPlayer->IsInfected())
+			if(pKillerPlayer->IsInfected())
 			{
 				//Heal and unfreeze
 				if(pKillerPlayer->GetClass() == PLAYERCLASS_BOOMER && Weapon == WEAPON_HAMMER)
@@ -2747,8 +2747,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		else
 		{
 			//If the player is a new infected, don't infected other -> nobody knows that he is infected.
-			if (pKillerPlayer)
-				if(!pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
+			if(!pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
 		}
 	}
 
