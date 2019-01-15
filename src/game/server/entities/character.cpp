@@ -2698,7 +2698,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From]; // before using this variable check if it exists with "if (pKillerPlayer)"
 	CCharacter *pKillerChar = 0; // before using this variable check if it exists with "if (pKillerChar)"
 	if (pKillerPlayer)
-		pKillerPlayer->GetCharacter();
+		pKillerChar = pKillerPlayer->GetCharacter();
 	
 	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected())
 		Dmg = 12;
