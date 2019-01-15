@@ -34,6 +34,10 @@ void CSuperWeaponIndicator::Reset()
 	GameServer()->m_World.DestroyEntity(this);
 }
 
+int CSuperWeaponIndicator::GetOwner() const
+{
+	return m_Owner;
+}
 
 void CSuperWeaponIndicator::Snap(int SnappingClient)
 {
@@ -61,6 +65,7 @@ void CSuperWeaponIndicator::Snap(int SnappingClient)
 
 void CSuperWeaponIndicator::Tick()
 {
+	if(m_MarkedForDestroy) return;
 	if (!m_OwnerChar) return;
 
 	//refresh indicator position

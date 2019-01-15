@@ -16,6 +16,7 @@ public:
 	virtual void Reset();
 	virtual void Tick();
 	
+	int GetOwner() const;
 	
 private:
 	int m_StartTick;

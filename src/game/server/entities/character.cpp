@@ -3634,6 +3634,11 @@ void CCharacter::DestroyChildEntities()
 		if(pWhiteHole->GetOwner() != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pWhiteHole);
 	}
+	for(CSuperWeaponIndicator* pIndicator = (CSuperWeaponIndicator*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SUPERWEAPON_INDICATOR); pIndicator; pIndicator = (CSuperWeaponIndicator*) pIndicator->TypeNext())
+	{
+		if(pIndicator->GetOwner() != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pIndicator);
+	}
 			
 	m_FirstShot = true;
 	m_HookMode = 0;
