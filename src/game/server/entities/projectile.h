@@ -17,6 +17,8 @@ public:
 	virtual void TickPaused();
 	virtual void Snap(int SnappingClient);
 
+	int GetOwner() const;
+
 private:
 	vec2 m_Direction;
 	int m_LifeSpan;

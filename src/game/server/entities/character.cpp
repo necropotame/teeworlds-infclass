@@ -29,6 +29,7 @@
 #include "medic-grenade.h"
 #include "hero-flag.h"
 #include "slug-slime.h"
+#include "growingexplosion.h"
 #include "white-hole.h"
 #include "superweapon-indicator.h"
 #include "laser-teleport.h"
@@ -2694,8 +2695,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 /* INFECTION MODIFICATION START ***************************************/
 
 	//KillerPlayer
-	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From];
-	CCharacter *pKillerChar = pKillerPlayer->GetCharacter();
+	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[From]; // before using this variable check if it exists with "if (pKillerPlayer)"
+	CCharacter *pKillerChar = 0; // before using this variable check if it exists with "if (pKillerChar)"
+	if (pKillerPlayer)
+		pKillerPlayer->GetCharacter();
 	
 	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION && pKillerPlayer && pKillerPlayer->IsInfected())
 		Dmg = 12;
@@ -2726,7 +2729,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	{
 		if(IsInfected())
 		{
-			if(pKillerPlayer->IsInfected())
+			if(pKillerPlayer && pKillerPlayer->IsInfected())
 			{
 				//Heal and unfreeze
 				if(pKillerPlayer->GetClass() == PLAYERCLASS_BOOMER && Weapon == WEAPON_HAMMER)
@@ -2744,12 +2747,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		else
 		{
 			//If the player is a new infected, don't infected other -> nobody knows that he is infected.
-			if(!pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
+			if(pKillerPlayer && !pKillerPlayer->IsInfected() || (Server()->Tick() - pKillerPlayer->m_InfectionTick)*Server()->TickSpeed() < 0.5) return false;
 		}
 	}
 
 	// slow down zombies that get hit by looper rifle
-	if(pKillerPlayer->GetClass() == PLAYERCLASS_LOOPER && Weapon == WEAPON_RIFLE && IsInfected()) { 
+	if(pKillerPlayer && pKillerPlayer->GetClass() == PLAYERCLASS_LOOPER && Weapon == WEAPON_RIFLE && IsInfected()) { 
 		SlowMotionEffect(g_Config.m_InfSlowMotionGunDuration);
 		if (g_Config.m_InfSlowMotionGunDuration != 0) GameServer()->SendEmoticon(GetPlayer()->GetCID(), EMOTICON_EXCLAMATION);	
 	}
@@ -3571,12 +3574,16 @@ void CCharacter::DestroyChildEntities()
 	m_NinjaStrengthBuff = 0;
 	m_NinjaAmmoBuff = 0;
 	
+	for(CProjectile *pProjectile = (CProjectile*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_PROJECTILE); pProjectile; pProjectile = (CProjectile*) pProjectile->TypeNext())
+	{
+		if(pProjectile->GetOwner() != m_pPlayer->GetCID()) continue;
+			//GameServer()->m_World.DestroyEntity(pProjectile);
+	}
 	for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
 	{
 		if(pWall->m_Owner != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pWall);
 	}
-	//Potential name conflict pWall
 	for(CLooperWall *pWall = (CLooperWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_LOOPER_WALL); pWall; pWall = (CLooperWall*) pWall->TypeNext())
 	{
 		if(pWall->m_Owner != m_pPlayer->GetCID()) continue;
@@ -3616,6 +3623,16 @@ void CCharacter::DestroyChildEntities()
 	{
 		if(pSlime->GetOwner() != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pSlime);
+	}
+	for(CGrowingExplosion* pGrowiExpl = (CGrowingExplosion*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_GROWINGEXPLOSION); pGrowiExpl; pGrowiExpl = (CGrowingExplosion*) pGrowiExpl->TypeNext())
+	{
+		if(pGrowiExpl->GetOwner() != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pGrowiExpl);
+	}
+	for(CWhiteHole* pWhiteHole = (CWhiteHole*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_WHITE_HOLE); pWhiteHole; pWhiteHole = (CWhiteHole*) pWhiteHole->TypeNext())
+	{
+		if(pWhiteHole->GetOwner() != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pWhiteHole);
 	}
 			
 	m_FirstShot = true;

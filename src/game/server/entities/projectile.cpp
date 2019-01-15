@@ -37,6 +37,11 @@ void CProjectile::Reset()
 	GameServer()->m_World.DestroyEntity(this);
 }
 
+int CProjectile::GetOwner() const
+{
+	return m_Owner;
+}
+
 vec2 CProjectile::GetPos(float Time)
 {
 	float Curvature = 0;

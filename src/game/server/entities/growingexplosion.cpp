@@ -110,6 +110,11 @@ void CGrowingExplosion::Reset()
 	GameServer()->m_World.DestroyEntity(this);
 }
 
+int CGrowingExplosion::GetOwner() const
+{
+	return m_Owner;
+}
+
 void CGrowingExplosion::Tick()
 {
 	int tick = Server()->Tick();
@@ -167,7 +172,7 @@ void CGrowingExplosion::Tick()
 						case GROWINGEXPLOSIONEFFECT_BOOM_INFECTED:
 							if (random_prob(0.2f))
 							{
-								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION, true);
+								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
