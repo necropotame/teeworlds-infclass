@@ -3578,7 +3578,7 @@ void CCharacter::DestroyChildEntities()
 	for(CProjectile *pProjectile = (CProjectile*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_PROJECTILE); pProjectile; pProjectile = (CProjectile*) pProjectile->TypeNext())
 	{
 		if(pProjectile->GetOwner() != m_pPlayer->GetCID()) continue;
-			//GameServer()->m_World.DestroyEntity(pProjectile);
+			GameServer()->m_World.DestroyEntity(pProjectile);
 	}
 	for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
 	{
