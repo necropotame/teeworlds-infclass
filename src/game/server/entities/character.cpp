@@ -109,6 +109,7 @@ m_pConsole(pConsole)
 	m_HasIndicator = false;
 	m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
 	m_VoodooAboutToDie = false;
+	m_BroadcastWhiteHoleReady = -100;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
