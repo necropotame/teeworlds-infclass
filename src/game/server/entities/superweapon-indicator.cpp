@@ -79,6 +79,7 @@ void CSuperWeaponIndicator::Tick()
 		} else {
 			m_IsWarmingUp = false;
 			m_OwnerChar->m_HasWhiteHole = true;
+			m_OwnerChar->m_BroadcastWhiteHoleReady = Server()->Tick();
 			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("white hole ready, your laser rifle now disrupts space time"), NULL);	
 		}
 	} 

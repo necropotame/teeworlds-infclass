@@ -2212,17 +2212,7 @@ void CCharacter::Tick()
 			if(pMine->m_Owner == m_pPlayer->GetCID())
 				NumMines++;
 		}
-		
-		if(NumMines > 0)
-		{
-			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumMines,
-				_P("One mine is active", "{int:NumMines} mines are active"),
-				"NumMines", &NumMines,
-				NULL
-			);
-		}
-		
-		
+
 		CWhiteHole* pCurrentWhiteHole = NULL;
 		for(CWhiteHole *pWhiteHole = (CWhiteHole*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_WHITE_HOLE); pWhiteHole; pWhiteHole = (CWhiteHole*) pWhiteHole->TypeNext())
 		{
@@ -2233,20 +2223,40 @@ void CCharacter::Tick()
 			}
 		}
 		
-		
-		
-		//POTENTIAL CONFLICT WITH MINE BROADCAST --> make this Broadcast higher priority
-		if(pCurrentWhiteHole)
+		if(m_BroadcastWhiteHoleReady+(2*Server()->TickSpeed()) > Server()->Tick())
+		{
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("WhiteHole ready !"),
+				NULL
+			);
+		}
+		else if(NumMines > 0 && !pCurrentWhiteHole)
+		{
+			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumMines,
+				_P("One mine is active", "{int:NumMines} mines are active"),
+				"NumMines", &NumMines,
+				NULL
+			);
+		}
+		else if(NumMines <= 0 && pCurrentWhiteHole)
 		{
 			int Seconds = 1+pCurrentWhiteHole->GetTick()/Server()->TickSpeed();
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
-													 _("White hole: {sec:RemainingTime}"),
-													 "RemainingTime", &Seconds,
-											NULL
+				_("White hole: {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
 			);
 		}
-		
-		
+		else if(NumMines > 0 && pCurrentWhiteHole)
+		{
+			int Seconds = 1+pCurrentWhiteHole->GetTick()/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("{int:NumMines} mines are active\nWhite hole: {sec:RemainingTime}"),
+				"NumMines", &NumMines,
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
 		
 	}
 	else if(GetClass() == PLAYERCLASS_BIOLOGIST)
