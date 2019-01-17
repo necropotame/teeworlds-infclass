@@ -258,7 +258,7 @@ void CGameContext::CreateLoveEvent(vec2 Pos)
 	m_LoveDots.add(State);
 }
 
-void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage, int TakeDamageMode, bool MercBomb)
+void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage, int TakeDamageMode)
 {
 	// create the event
 	CNetEvent_Explosion *pEvent = (CNetEvent_Explosion *)m_Events.Create(NETEVENTTYPE_EXPLOSION, sizeof(CNetEvent_Explosion));
@@ -277,8 +277,6 @@ void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamag
 		int Num = m_World.FindEntities(Pos, Radius, (CEntity**)apEnts, MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
 		for(int i = 0; i < Num; i++)
 		{
-			if (MercBomb && m_apPlayers[Owner]->IsInfected())
-				break;
 			vec2 Diff = apEnts[i]->m_Pos - Pos;
 			vec2 ForceDir(0,1);
 			float l = length(Diff);
@@ -3410,6 +3408,8 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also grenades that teleport him."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Additionally he can place white holes with the laser rifle. Further information on /help whitehole"), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
@@ -3609,7 +3609,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
-    else if(str_comp_nocase(pHelpPage, "voodoo") == 0)
+		else if(str_comp_nocase(pHelpPage, "voodoo") == 0)
 		{
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Voodoo"), NULL);
@@ -3619,6 +3619,20 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He does not die immediately when killed but instead enters Spirit mode and defies death for a brief span of time."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("While in Spirit mode he cannot be killed. When his time is up he finally dies."), NULL);
+			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "whitehole") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("White hole"), NULL);
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_LP(Buffer, pLanguage, g_Config.m_InfMineLimit, _P("Receive it by killing at least one zombie.","Receive it by killing at least {int:NumKills} zombies as scientist."),
+					"NumKills", &g_Config.m_InfWhiteHoleMinimalKills, NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use it with your laser rifle, the indicator around your Tee will show you if it is available"), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Puts humans and zombies into a vulnerable state by pulling them into its center"), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
@@ -3695,7 +3709,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		);
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", Buffer.buffer());
 		
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, medic, hero, ninja, mercenary, sniper,");		
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, medic, hero, ninja, mercenary, sniper, whitehole");		
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "smoker, hunter, bat, boomer, ghost, spider, ghoul, voodoo, undead, witch.");		
 	}
 	

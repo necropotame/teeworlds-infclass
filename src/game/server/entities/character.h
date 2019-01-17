@@ -73,6 +73,7 @@ public:
 	void OnDirectInput(CNetObj_PlayerInput *pNewInput);
 	void ResetInput();
 	void FireWeapon();
+	void CheckSuperWeaponAccess();
 
 	void Die(int Killer, int Weapon);
 	bool TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode);
@@ -204,6 +205,9 @@ public:
 	int m_PositionLockTick;
 	bool m_PositionLocked;
 	bool m_PositionLockAvailable;
+	bool m_HasWhiteHole; //White hole changes here
+	bool m_HasIndicator; //White hole changes here
+	int m_BroadcastWhiteHoleReady; // used to broadcast "WhiteHole ready" for a short period of time
 	int m_LoveTick;
 	int m_HallucinationTick;
 	int m_SlipperyTick;
@@ -218,6 +222,7 @@ public:
 	int m_NinjaStrengthBuff;
 	int m_NinjaAmmoBuff;
 	int m_RefreshTime;
+	
 
 public:
 	void DestroyChildEntities();
@@ -225,6 +230,7 @@ public:
 	void GiveArmorIfLonely();
 	void OpenClassChooser();
 	int GetClass();
+
 	void SetClass(int ClassChoosed);
 	bool IsInfected() const;
 	void Infection(bool v);

@@ -27,6 +27,8 @@ public:
 	virtual void Tick();
 	virtual void TickPaused();
 
+	int GetOwner() const;
+
 private:
 	int m_MaxGrowing;
 	int m_GrowingMap_Length;

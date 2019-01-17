@@ -18,6 +18,7 @@ public:
 protected:
 	bool HitCharacter(vec2 From, vec2 To);
 	void DoBounce();
+	void CreateWhiteHole(vec2 CenterPos);
 
 private:
 	vec2 m_From;
@@ -27,6 +28,7 @@ private:
 	int m_EvalTick;
 	int m_Owner;
 	int m_Dmg;
+	CCharacter *m_OwnerChar;
 };
 
 #endif

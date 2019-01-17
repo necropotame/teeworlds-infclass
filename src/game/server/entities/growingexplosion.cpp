@@ -110,8 +110,15 @@ void CGrowingExplosion::Reset()
 	GameServer()->m_World.DestroyEntity(this);
 }
 
+int CGrowingExplosion::GetOwner() const
+{
+	return m_Owner;
+}
+
 void CGrowingExplosion::Tick()
 {
+	if(m_MarkedForDestroy) return;
+
 	int tick = Server()->Tick();
 	//~ if((tick - m_StartTick) > Server()->TickSpeed())
 	if((tick - m_StartTick) > m_MaxGrowing)
@@ -167,8 +174,9 @@ void CGrowingExplosion::Tick()
 						case GROWINGEXPLOSIONEFFECT_BOOM_INFECTED:
 							if (random_prob(0.2f))
 							{
-								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION, true);
+								GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 							}
+							break;
 						case GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED:
 							{
 								vec2 EndPoint = m_SeedPos + vec2(32.0f*(i-m_MaxGrowing) - 16.0f + random_float()*32.0f, 32.0f*(j-m_MaxGrowing) - 16.0f + random_float()*32.0f);
