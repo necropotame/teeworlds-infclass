@@ -3627,14 +3627,14 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("White hole"), NULL);
 			Buffer.append(" ~~\n\n");
-			pSelf->Server()->Localization()->Format_LP(Buffer, pLanguage, g_Config.m_InfMineLimit, _P("Receive it by killing at least one zombie.","Receive it by killing at least {int:NumKills} zombies as scientist."), 
-													   "NumKills", &g_Config.m_InfWhiteHoleMinimalKills, NULL);
+			pSelf->Server()->Localization()->Format_LP(Buffer, pLanguage, g_Config.m_InfMineLimit, _P("Receive it by killing at least one zombie.","Receive it by killing at least {int:NumKills} zombies as scientist."),
+					"NumKills", &g_Config.m_InfWhiteHoleMinimalKills, NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Use it with your laser rifle, the indicator around your Tee will show you if it is available"), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Puts humans and zombies into a vulnerable state by pulling them into its center"), NULL);
 			
-			pSelf->SendMOTD(ClientID, Buffer.buffer());			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "undead") == 0)
 		{
@@ -3709,7 +3709,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		);
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", Buffer.buffer());
 		
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, medic, hero, ninja, mercenary, sniper,whitehole");		
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, medic, hero, ninja, mercenary, sniper, whitehole");		
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "smoker, hunter, bat, boomer, ghost, spider, ghoul, voodoo, undead, witch.");		
 	}
 	
