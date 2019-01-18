@@ -119,6 +119,7 @@ void CScientistMine::Tick()
 	{
 		if(!p->IsInfected()) continue;
 		if(p->GetClass() == PLAYERCLASS_UNDEAD && p->IsFrozen()) continue;
+		if(p->GetClass() == PLAYERCLASS_VOODOO && p->m_VoodooAboutToDie) continue;
 
 		float Len = distance(p->m_Pos, m_Pos);
 		if(Len < p->m_ProximityRadius+g_Config.m_InfMineRadius)

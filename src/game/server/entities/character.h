@@ -198,7 +198,6 @@ private:
 	vec2 m_SpawnPosition;
 
 	int m_VoodooTimeAlive;
-	bool m_VoodooAboutToDie;
 	int m_VoodooKiller; // Save killer + weapon for delayed kill message
 	int m_VoodooWeapon;
 public:
@@ -222,6 +221,7 @@ public:
 	int m_NinjaStrengthBuff;
 	int m_NinjaAmmoBuff;
 	int m_RefreshTime;
+	bool m_VoodooAboutToDie;
 	
 
 public:
